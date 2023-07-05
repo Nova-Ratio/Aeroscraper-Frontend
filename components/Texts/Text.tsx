@@ -1,0 +1,42 @@
+"use client"
+
+import React, { FC, PropsWithChildren } from 'react'
+
+export type TextSizes = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+type Props = {
+    className?: string,
+    size?: TextSizes,
+    responsive?: boolean,
+    weight?: string,
+    color?: string
+}
+
+const textResponsiveSizes: Record<TextSizes, string> = {
+    'xs': 'text-xs',
+    'sm': 'lg:text-sm text-xs',
+    'base': 'lg:text-base sm:text-sm text-xs',
+    'lg': 'lg:text-lg md:text-base sm:text-sm text-xs',
+    'xl': 'lg:text-xl sm:text-base text-xs',
+    '2xl': 'lg:text-2xl sm:text-lg text-sm',
+    '3xl': 'xl:text-3xl sm:text-2xl text-lg',
+    '4xl': 'xl:text-4xl sm:text-3xl text-2xl'
+}
+
+const Text: FC<PropsWithChildren<Props>> = ({
+    children,
+    className,
+    size = 'xl',
+    responsive = true,
+    weight = 'font-normal',
+    color
+}) => {
+
+    return (
+        <span className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} text-ghost-white`} style={{ color }}>
+            {children}
+        </span>
+    )
+}
+
+export default Text
