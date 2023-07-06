@@ -1,5 +1,3 @@
-"use client"
-
 import React, { FC, PropsWithChildren } from 'react'
 
 export type TextSizes = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
@@ -9,7 +7,7 @@ type Props = {
     size?: TextSizes,
     responsive?: boolean,
     weight?: string,
-    color?: string
+    textColor?: string
 }
 
 const textResponsiveSizes: Record<TextSizes, string> = {
@@ -29,11 +27,11 @@ const Text: FC<PropsWithChildren<Props>> = ({
     size = 'xl',
     responsive = true,
     weight = 'font-normal',
-    color
+    textColor = 'text-ghost-white'
 }) => {
 
     return (
-        <span className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} text-ghost-white`} style={{ color }}>
+        <span className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} ${textColor}`}>
             {children}
         </span>
     )

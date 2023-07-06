@@ -12,7 +12,9 @@ module.exports = {
     colors: {
       ...colors,
       'ghost-white': '#F7F7FF',
-      'licorice': '#1A0B1C'
+      'licorice': '#1A0B1C',
+      'dark-silver': '#6F6F73',
+      'raisin-black': '#271A2A'
     }
   },
   plugins: [],
