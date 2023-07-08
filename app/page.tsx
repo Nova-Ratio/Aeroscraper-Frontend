@@ -1,3 +1,4 @@
+import ShapeContainer from '@/components/ShapeContainer'
 import Text from '@/components/Texts/Text'
 
 export default function Home() {
@@ -18,10 +19,44 @@ export default function Home() {
           Aeroscraper has a 0% interest rate that charges users a one-time fee, instead of charging a variable interest rate for taking out loans.
         </Text>
       </div>
-      <div className='flex flex-col gap-8 pr-[50%] mt-16'>
+      <div className='flex flex-col gap-8 pr-[20%] mt-16 mb-20'>
         <Text size='4xl'>What’s the main benefits of Aeroscraper?</Text>
-        <div className='h-[600px]'>
-          {/* PLACEHOLDER */}
+        <div className='relative flex flex-wrap'>
+          <ShapeContainer>
+            <div className='flex items-end h-1/2'>
+              <Text size='lg'>
+                0% interest rate
+              </Text>
+            </div>
+          </ShapeContainer>
+          <ShapeContainer width='w-[399px]' height='h-[343px]'>
+            <div className='flex items-center h-full'>
+              <Text size='lg'>
+                Only a 110% coverage rate
+              </Text>
+            </div>
+          </ShapeContainer>
+          <ShapeContainer width='w-[323px]' height='h-[303px]' className='mt-40'>
+            <div className='flex items-center h-full'>
+              <Text size='lg'>
+                Censorship resistant - protocol not controlled by anyone
+              </Text>
+            </div>
+          </ShapeContainer>
+          <ShapeContainer width='w-[363px]' height='h-[323px]' className='ml-40 -mt-20'>
+            <div className='flex items-center h-full'>
+              <Text size='lg'>
+                No management is required - all operations are algorithmic and fully automated
+              </Text>
+            </div>
+          </ShapeContainer>
+          <ShapeContainer width='w-[405px]' height='h-[361px]'>
+            <div className='flex items-center h-full'>
+              <Text size='lg'>
+                Direct redeemable – stablecoin can be redeemed at face value for underlying collateral anytime and anywhere
+              </Text>
+            </div>
+          </ShapeContainer>
         </div>
       </div>
     </main>
