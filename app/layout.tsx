@@ -21,14 +21,14 @@ export default function RootLayout({
       <body className={`${exo.className} relative min-h-screen flex flex-col`}>
         <img src='/images/left-secondary-wave.svg' className='absolute left-0 top-0 w-[60%] max-w-[871px] object-contain -z-20 select-none pointer-events-none' alt="left-wave-shadow" />
         <img src='/images/left-gradient-wave.svg' className='absolute left-0 top-0 w-1/2 max-w-[711px] object-contain -z-10 select-none pointer-events-none' alt="left-wave" />
-        <img src='/images/landing-wave.svg' className='absolute right-0 top-[213px] w-1/2 max-w-[900px] object-contain -z-10 select-none pointer-events-none' alt="landing-wave" />
+        <img src='/images/landing-wave.svg' className='absolute right-0 lg:opacity-100 opacity-25 top-[213px] w-1/2 max-w-[900px] object-contain -z-10 select-none pointer-events-none' alt="landing-wave" />
         <header className='w-full flex flex-col items-end gap-10 pt-8 pb-10 px-8'>
           <div className='flex items-center gap-6'>
             <Text size='4xl'>Aerocraper</Text>
-            <Logo />
+            <Logo className='lg:w-[96px] lg:h-[96px] w-[64px] h-[64px]'/>
           </div>
           <GradientButton
-            className='w-[314px] self-end px-8 group'
+            className='w-full lg:w-[314px] self-end px-8 group'
             endIcon={<RightArrow className='group-hover:translate-x-2 transition-all' />}
           >
             <Text size='3xl'>Launch App</Text>
