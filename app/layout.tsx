@@ -34,7 +34,7 @@ export default function RootLayout({
             <Text size='3xl'>Launch App</Text>
           </GradientButton>
         </header>
-        <div className='container mx-auto'>
+        <div className='container mx-auto px-8'>
           {children}
         </div>
         <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-center flex-wrap px-24 py-16 bg-raisin-black mt-auto'>

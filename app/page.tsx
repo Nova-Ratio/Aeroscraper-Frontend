@@ -19,7 +19,7 @@ export default function Home() {
           Aeroscraper has a 0% interest rate that charges users a one-time fee, instead of charging a variable interest rate for taking out loans.
         </Text>
       </div>
-      <div className='flex flex-col gap-8 pr-[20%] mt-16 mb-20'>
+      <div className='flex flex-col gap-8 mt-16 mb-20'>
         <Text size='4xl'>What’s the main benefits of Aeroscraper?</Text>
         <div className='relative flex flex-wrap'>
           <ShapeContainer>
