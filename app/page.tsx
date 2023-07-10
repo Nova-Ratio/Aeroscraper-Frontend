@@ -7,16 +7,16 @@ export default function Home() {
       <div className='flex flex-col gap-4 lg:pr-[50%] mt-11'>
         <Text size='4xl'>What is Aeroscraper?</Text>
         <Text size='2xl'>
-          Aeroscraper is a decentralized lending-borrowing protocol that offers an interest-free, over-collateralized stable coin and DeFi loans, built specifically to be user-centric.
+          Aeroscraper is a user-centric decentralized lending-borrowing protocol that revolutionizes the DeFi space with its interest-free, over-collateralized stablecoin and DeFi loans.
         </Text>
         <Text size='2xl'>
-          Aeroscraper is a fully automated and governance-free decentralized protocol designed to allow unauthorized lending and borrowing for users.
+          This fully automated and governance-free protocol enables unauthorized lending and borrowing, empowering users with autonomy and direct transactions.
         </Text>
         <Text size='2xl'>
-          Aeroscraper allows users to deposit collateral and get loans in stablecoins pegged to US dollars.
+          By depositing collateral, users can access loans in stablecoins pegged to the US dollar, all without incurring any interest.
         </Text>
         <Text size='2xl'>
-          Aeroscraper has a 0% interest rate that charges users a one-time fee, instead of charging a variable interest rate for taking out loans.
+          Instead, Aeroscraper charges a one-time fee, eliminating the complexities of variable interest rates. With its innovative approach, Aeroscraper enhances the user experience, promotes financial inclusion, and represents the future of decentralized finance.
         </Text>
       </div>
       <div className='flex flex-col gap-8 mt-16 mb-20'>
@@ -32,7 +32,7 @@ export default function Home() {
           <ShapeContainer width='w-full lg:w-[399px]' height='h-[343px]'>
             <div className='flex items-center h-1/2 lg:h-full'>
               <Text size='lg'>
-                Only a 110% coverage rate
+                Only a 115% coverage rate
               </Text>
             </div>
           </ShapeContainer>
