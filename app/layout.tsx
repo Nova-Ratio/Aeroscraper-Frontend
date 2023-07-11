@@ -24,7 +24,7 @@ export default function RootLayout({
         <img src='/images/landing-wave.svg' className='absolute right-0 lg:opacity-100 opacity-25 top-[213px] w-1/2 max-w-[900px] object-contain -z-10 select-none pointer-events-none' alt="landing-wave" />
         <header className='w-full flex flex-col items-end gap-10 pt-8 pb-10 px-8'>
           <div className='flex items-center gap-6'>
-            <Text size='4xl'>Aerocraper</Text>
+            <Text size='4xl'>Aeroscraper</Text>
             <Logo className='lg:w-[96px] lg:h-[96px] w-[64px] h-[64px]'/>
           </div>
           <GradientButton
