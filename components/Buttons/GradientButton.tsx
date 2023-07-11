@@ -21,7 +21,7 @@ const GradientButton: React.FC<PropsWithChildren<Props>> = ({
             {...rest}
         >
             {startIcon}
-            <div className='flex-1'>{children}</div>
+            <div className='flex-1 text-ghost-white'>{children}</div>
             {endIcon}
         </button>
     )

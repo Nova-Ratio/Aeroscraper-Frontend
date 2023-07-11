@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from 'react'
-import { ShapeIcon } from './Icons/Icons'
-import Text from '@/components/Texts/Text'
+import { ShapeIcon } from '@/components/Icons/Icons'
 
 type Props = {
   width?: string,

@@ -7,6 +7,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './layouts/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     colors: {
@@ -14,7 +15,9 @@ module.exports = {
       'ghost-white': '#F7F7FF',
       'licorice': '#1A0B1C',
       'dark-silver': '#6F6F73',
-      'raisin-black': '#271A2A'
+      'raisin-black': '#271A2A',
+      'dark-purple': '#322136',
+      'english-violet': '#543B59'
     }
   },
   plugins: [],

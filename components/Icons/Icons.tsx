@@ -154,7 +154,7 @@ export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
                     <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                     <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_72" />
                 </filter>
-                
+
                 <linearGradient id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#56235C" />
                     <stop offset="0.294825" stop-color="#D43752" />
@@ -176,4 +176,13 @@ export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
     )
 }
 
+export const InfoIcon: React.FC<IconProps> = ({ className, width = "12", height = "12" }) => {
+    return (
+        <svg className={className} width={width} height={height} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.1333 2C3.92416 2 2.1333 3.79086 2.1333 6C2.1333 8.20914 3.92416 10 6.1333 10C8.34244 10 10.1333 8.20914 10.1333 6C10.1333 3.79086 8.34244 2 6.1333 2ZM1.1333 6C1.1333 3.23858 3.37188 1 6.1333 1C8.89472 1 11.1333 3.23858 11.1333 6C11.1333 8.76142 8.89472 11 6.1333 11C3.37188 11 1.1333 8.76142 1.1333 6Z" fill="white" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.1333 5.5C6.40944 5.5 6.6333 5.72386 6.6333 6V8C6.6333 8.27614 6.40944 8.5 6.1333 8.5C5.85716 8.5 5.6333 8.27614 5.6333 8V6C5.6333 5.72386 5.85716 5.5 6.1333 5.5Z" fill="white" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.6333 4C5.6333 3.72386 5.85716 3.5 6.1333 3.5H6.1383C6.41444 3.5 6.6383 3.72386 6.6383 4C6.6383 4.27614 6.41444 4.5 6.1383 4.5H6.1333C5.85716 4.5 5.6333 4.27614 5.6333 4Z" fill="white" />
+        </svg>
 
+    )
+}
