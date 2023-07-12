@@ -1,3 +1,4 @@
+import { WalletProvider } from '@/contexts/WalletProvider'
 import './globals.css'
 import { Exo } from 'next/font/google'
 
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${exo.className} relative min-h-screen flex flex-col`}>
-        {children}
+        <WalletProvider>
+          {children}
+        </WalletProvider>
       </body>
     </html>
   )

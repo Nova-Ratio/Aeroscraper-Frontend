@@ -1,4 +1,5 @@
 import GradientButton from "@/components/Buttons/GradientButton";
+import WalletButton from "@/components/Buttons/WalletButton";
 import StatisticCard from "@/components/Cards/StatisticCard";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import ShapeContainer from "@/components/Containers/ShapeContainer";
@@ -25,9 +26,7 @@ export default function Dashboard() {
                         <Text>$0.976923</Text>
                     </div>
                 </div>
-                <GradientButton className="w-[268px] h-[69px]">
-                    <Text>Connect Wallet</Text>
-                </GradientButton>
+                <WalletButton />
             </BorderedContainer>
             <BorderedContainer className="w-full p-3 mt-4">
                 <div className="w-full rounded-lg bg-dark-purple px-4 py-2">
