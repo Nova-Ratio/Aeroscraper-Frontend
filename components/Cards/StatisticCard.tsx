@@ -17,7 +17,7 @@ const StatisticCard: FC<Props> = ({ title, description, tooltip, className }) =>
             <Text size="base">{description}</Text>
             <div className='absolute right-1 top-1'>
                 <Tooltip title={<Text size='base'>{tooltip}</Text>} width='w-[191px]'>
-                    <InfoIcon />
+                    <InfoIcon className='text-white'/>
                 </Tooltip>
             </div>
         </div>

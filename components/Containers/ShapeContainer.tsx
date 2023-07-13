@@ -17,7 +17,7 @@ const ShapeContainer: React.FC<PropsWithChildren<Props>> = ({
   return (
     <div className={`relative ${width} ${height} ${className}`}>
       <ShapeIcon />
-      <div className='absolute top-[28%] left-[28%] right-[20%] h-[55%] overflow-hidden'>
+      <div className='absolute top-[28%] left-[28%] right-[20%] h-[55%]'>
         {children}
       </div>
     </div>
