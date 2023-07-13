@@ -12,10 +12,39 @@ body {
   background: var(--background-color);
 }
 
-body::-webkit-scrollbar{
+body::-webkit-scrollbar {
   display: none;
 }
 
 .main-gradient {
   background: linear-gradient(90deg, #56235C 0%, #D43752 25.18%, #E4462D 75.44%, #F8B810 100%);
+}
+
+@keyframes loader {
+  0% {
+    stroke-dasharray: 84.0955352783 104.0955352783;
+  }
+
+  100% {
+    stroke-dasharray: 178.19107055664062 10;
+  }
+}
+
+@keyframes loader2 {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -188.19107055664062;
+  }
+}
+
+.loading-circle {
+  animation: 1.5s loader ease infinite alternate, 1s loader2 linear infinite;
+  stroke: url(#Gradient);
+  stroke-linecap: round;
+  stroke-width: 5;
+  stroke-dasharray: 94.0955352783 94.0955352783;
+  stroke-dashoffset: 0;
 }
