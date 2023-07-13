@@ -17,7 +17,7 @@ const GradientButton: React.FC<PropsWithChildren<Props>> = ({
 ) => {
     return (
         <button
-            className={`${className} main-gradient flex justify-between gap-2 items-center py-5 ${rounded} active:scale-95 transition-all`}
+            className={`py-5 ${className} main-gradient flex justify-between gap-2 items-center ${rounded} active:scale-95 transition-all`}
             {...rest}
         >
             {startIcon}

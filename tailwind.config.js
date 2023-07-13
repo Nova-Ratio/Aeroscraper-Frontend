@@ -17,7 +17,8 @@ module.exports = {
       'dark-silver': '#6F6F73',
       'raisin-black': '#271A2A',
       'dark-purple': '#322136',
-      'english-violet': '#543B59'
+      'english-violet': '#543B59',
+      'dark-red': '#D43752'
     }
   },
   plugins: [],
