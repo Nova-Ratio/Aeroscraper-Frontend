@@ -5,7 +5,7 @@ import { Exo } from 'next/font/google'
 const exo = Exo({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Aeroscraper',
+  title: 'Aeroscraper', 
 }
 
 export default function RootLayout({

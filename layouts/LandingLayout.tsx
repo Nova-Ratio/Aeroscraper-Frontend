@@ -26,22 +26,35 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
             <div className='container mx-auto px-8'>
                 {children}
             </div>
-            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-center flex-wrap px-24 py-16 bg-raisin-black mt-auto'>
-                <div className='flex flex-col items-center gap-6'>
-                    <Logo />
-                    <Text textColor='text-dark-silver'>Terms of service</Text>
+            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-center flex-wrap px-24 py-16 bg-raisin-black mt-auto relative'>
+                <div className="flex-row flex gap-20 items-center">
+                    <div className='flex flex-col items-center gap-6'>
+                        <Logo />
+                        <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
+                    </div>
+                    <div className='flex flex-col items-center gap-4'>
+                        <Text size="2xl" textColor='text-white'>Product</Text>
+                        <Text textColor='text-ghost-white/75'>Terms of service</Text>
+                    </div>
                 </div>
                 <div className='flex flex-col items-center gap-6'>
                     <Text size="2xl">Community</Text>
-                    <div className='flex items-center gap-8'>
-                        <Link href={'#'} className='hover:scale-105 transition-all'>
+                    <div className='flex flex-col items-center gap-4'>
+                        <Link href={'#'} className='hover:scale-105 transition-all flex gap-2'>
                             <TwitterLogo />
+                            <Text textColor='text-white'>Twitter</Text>
                         </Link>
-                        <Link href={'#'} className='hover:scale-105 transition-all'>
+                        <Link href={'#'} className='hover:scale-105 transition-all flex gap-2'>
                             <DiscordLogo />
+                            <Text textColor='text-white'>Discord</Text>
                         </Link>
                     </div>
                 </div>
+                <Text size="base" textColor='text-white' className="absolute left-1/2 right-1/2 -translate-x-20 bottom-4 whitespace-nowrap">Product by
+                    <Link style={{ fontFamily: "Melodrama" }} className="font-medium text-2xl ml-2" href={"https://www.novaratio.tech/"}>
+                        Nova Ratio
+                    </Link>
+                </Text>
             </footer>
         </>
     )

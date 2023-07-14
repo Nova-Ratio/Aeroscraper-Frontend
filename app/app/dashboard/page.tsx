@@ -103,7 +103,7 @@ export default function Dashboard() {
                         <Text size="3xl" weight="font-normal">Trove</Text>
                         <Text weight="font-normal" className="mt-4">You haven’t borrowed any AUSD yet.</Text>
                         <Text size="base" className="mt-2">You can borrow AUSD by opening a Trove.</Text>
-                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[221px] h-11 mt-10 ml-auto md:mx-auto" rounded="rounded-lg">
+                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[101px] md:max-w-[221px] h-11 mt-10 ml-auto md:mx-auto" rounded="rounded-lg">
                             <Text>Open Trove</Text>
                         </GradientButton>
                     </div>
@@ -151,7 +151,7 @@ export default function Dashboard() {
                             tooltip="The total amount of AUSD your Trove will hold."
                         />
                         <StatisticCard
-                            title="Liquidation price (Normal mode)"
+                            title="Liquidation price"
                             description="$XXXXXXX.XX"
                             className="w-full h-14 col-span-6"
                             tooltip="The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
@@ -164,10 +164,7 @@ export default function Dashboard() {
                         />
                     </div>
                     <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-                        <OutlinedButton className="min-w-[221px] h-11 mt-4">
-                            <Text>Cancel</Text>
-                        </OutlinedButton>
-                        <GradientButton className="min-w-[221px] h-11 mt-4" rounded="rounded-lg">
+                        <GradientButton className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
                             <Text>Confirm</Text>
                         </GradientButton>
                     </div>
@@ -200,9 +197,9 @@ export default function Dashboard() {
                         header={<div className="grid-cols-5 grid gap-5 lg:gap-0 mt-4">
                             <TableHeaderCol col={1} text="Owner" />
                             <TableHeaderCol col={1} text="Collateral" />
-                            <TableHeaderCol col={1} text="Debt" textCenter/>
-                            <TableHeaderCol col={1} text="Coll. Ratio" textCenter/>
-                            <TableHeaderCol col={1} text=""  />
+                            <TableHeaderCol col={1} text="Debt" textCenter />
+                            <TableHeaderCol col={1} text="Coll. Ratio" textCenter />
+                            <TableHeaderCol col={1} text="" />
                         </div>}
                         renderItem={(item: any, index: number) => {
                             return <div className="grid grid-cols-5">
