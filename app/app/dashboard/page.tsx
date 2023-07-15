@@ -49,7 +49,7 @@ export default function Dashboard() {
                 <WalletButton />
             </BorderedContainer>
             <BorderedContainer className="w-full p-3 mt-4">
-                <div className="w-full rounded-lg bg-dark-purple px-4 py-2">
+                <div className="w-full rounded-lg px-4 py-2">
                     <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>
                     <div className="flex flex-wrap justify-center gap-6 mt-2 px-24">
                         <StatisticCard
@@ -103,7 +103,7 @@ export default function Dashboard() {
                         <Text size="3xl" weight="font-normal">Trove</Text>
                         <Text weight="font-normal" className="mt-4">You haven’t borrowed any AUSD yet.</Text>
                         <Text size="base" className="mt-2">You can borrow AUSD by opening a Trove.</Text>
-                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[101px] md:max-w-[221px] h-11 mt-10 ml-auto md:mx-auto" rounded="rounded-lg">
+                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto 2xl:mx-auto" rounded="rounded-lg">
                             <Text>Open Trove</Text>
                         </GradientButton>
                     </div>
@@ -113,7 +113,7 @@ export default function Dashboard() {
                         <Text size="3xl" weight="font-normal">Stability Pool</Text>
                         <Text weight="font-normal" className="mt-4">You have no AUSD in the Stability Pool.</Text>
                         <Text size="base" className="mt-2">You can earn ATOM and AUSD rewards by deposting AUSD.</Text>
-                        <GradientButton onClick={() => { setStabilityModal(true); }} className="w-full max-w-[221px] h-11 mt-10 ml-auto" rounded="rounded-lg">
+                        <GradientButton onClick={() => { setStabilityModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto" rounded="rounded-lg">
                             <Text>Enter</Text>
                         </GradientButton>
                     </div>
