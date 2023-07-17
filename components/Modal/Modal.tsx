@@ -77,37 +77,38 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
 
   useOutsideHandler(ref, closeModal);
 
-  if (!props.showModal) return null;
-
   //#endregion
 
   return ReactDOM.createPortal(
-    <div className="inset-0 fixed flex items-center justify-center px-2 z-50">
+    <div>
       <AnimatePresence>
-        <motion.div
+        {props.showModal &&
+          <motion.div  
           ref={ref}
-          initial={{ scale: 0.85, opacity: 0.8 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 900,
-            damping: 25,
-          }}
-          className={`z-[60]`}>
-          <ShapeContainer width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
-            <div className={`w-1/2 absolute flex justify-between ${TITLE_POSITION_VARIANT[modalSize]}`}>
-              <Text size={TITLE_SIZE_VARIANT[modalSize]}>{props.title}</Text>
-              <button onClick={closeModal}>
-                <CloseIcon className="w-6 h-6" />
-              </button>
-            </div>
-            <div className={`${props.childrenClassName}`}>
-              {props.children}
-            </div>
-          </ShapeContainer>
-        </motion.div>
+            initial={{ scale: 0.55, opacity: 0.8 }}
+            exit={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 25
+            }}
+            className={`z-[60] fixed inset-0 w-screen h-screen flex justify-center items-center`}>
+            <ShapeContainer width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
+              <div className={`w-1/2 absolute flex justify-between ${TITLE_POSITION_VARIANT[modalSize]}`}>
+                <Text size={TITLE_SIZE_VARIANT[modalSize]}>{props.title}</Text>
+                <button onClick={closeModal}>
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <div className={`${props.childrenClassName}`}>
+                {props.children}
+              </div>
+            </ShapeContainer>
+          </motion.div>
+        }
       </AnimatePresence>
-      <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60"></div>
+      {props.showModal && <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60"></div>}
     </div>
     , document.body);
 };
