@@ -1,13 +1,12 @@
 'use client';
 
 import useOutsideHandler from "@/hooks/useOutsideHandler";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { FunctionComponent, ReactElement, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import ShapeContainer from "../Containers/ShapeContainer";
 import Text from '@/components/Texts/Text';
 import { CloseIcon } from "../Icons/Icons";
-
 
 interface ModalProps {
   title?: string,
@@ -15,7 +14,8 @@ interface ModalProps {
   showModal: boolean,
   onClose?: () => void,
   modalSize?: "sm" | "md" | "lg",
-  childrenClassName?: string
+  childrenClassName?: string,
+  layoutId?: string
 }
 
 const SIZE_VARIANT = {
@@ -79,36 +79,33 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
 
   //#endregion
 
+  if (!props.showModal) return null;
+
   return ReactDOM.createPortal(
-    <div>
-      <AnimatePresence>
-        {props.showModal &&
-          <motion.div  
-          ref={ref}
-            initial={{ scale: 0.55, opacity: 0.8 }}
-            exit={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 25
-            }}
-            className={`z-[60] fixed inset-0 w-screen h-screen flex justify-center items-center`}>
-            <ShapeContainer width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
-              <div className={`w-1/2 absolute flex justify-between ${TITLE_POSITION_VARIANT[modalSize]}`}>
-                <Text size={TITLE_SIZE_VARIANT[modalSize]}>{props.title}</Text>
-                <button onClick={closeModal}>
-                  <CloseIcon className="w-6 h-6" />
-                </button>
-              </div>
-              <div className={`${props.childrenClassName}`}>
-                {props.children}
-              </div>
-            </ShapeContainer>
-          </motion.div>
-        }
-      </AnimatePresence>
-      {props.showModal && <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60"></div>}
+    <div className="inset-0 fixed flex items-center justify-center px-2 z-50">
+      <motion.div
+        ref={ref}
+        initial={props.layoutId ? undefined : { scale: 0.85, opacity: 0.8 }}
+        animate={props.layoutId ? undefined : { scale: 1, opacity: 1 }}
+        transition={props.layoutId ? undefined : {
+          type: "spring",
+          stiffness: 900,
+          damping: 25,
+        }}
+        className={`z-[60]`}
+        layoutId={props.layoutId}
+      >
+        <ShapeContainer width='w-[1140px]' height='h-[1100px]'>
+          <div className="w-1/2 absolute -top-16 flex justify-between">
+            <Text size="2xl">{props.title}</Text>
+            <button onClick={closeModal}>
+              <CloseIcon className="w-6 h-6" />
+            </button>
+          </div>
+          {props.children}
+        </ShapeContainer>
+      </motion.div>
+      <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60"></div>
     </div>
     , document.body);
 };
