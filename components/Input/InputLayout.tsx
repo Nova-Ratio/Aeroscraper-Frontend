@@ -20,12 +20,12 @@ const InputLayout: FC<Props> = ({ label, hintTitle, value, onValueChange, classN
       <BorderedNumberInput value={value} onValueChange={onValueChange} hintContent={hintTitle} containerClassName="w-1/2 ml-auto" />
       <div className="px-2">
         {hasPercentButton?.min && (
-          <OutlinedButton className="h-7 w-16" rounded="lg">
+          <OutlinedButton containerClassName="h-7 min-w-16" rounded="lg">
             <Text size='sm'>MIN</Text>
           </OutlinedButton>
         )}
         {hasPercentButton?.max && (
-          <OutlinedButton className="h-7 w-16" rounded="lg">
+          <OutlinedButton containerClassName="h-7 w-16" rounded="lg">
             <Text size='sm'>MAX</Text>
           </OutlinedButton>
         )}

@@ -18,6 +18,7 @@ import Tooltip from "@/components/Tooltip/Tooltip";
 import Link from "next/link";
 import { useState } from "react";
 import { NumericFormat } from 'react-number-format'
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
 
@@ -49,7 +50,7 @@ export default function Dashboard() {
                 <WalletButton />
             </BorderedContainer>
             <BorderedContainer className="w-full p-3 mt-4">
-                <div className="w-full rounded-lg bg-dark-purple px-4 py-2">
+                <div className="w-full rounded-lg px-4 py-2">
                     <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>
                     <div className="flex flex-wrap justify-center gap-6 mt-2 px-24">
                         <StatisticCard
@@ -103,7 +104,7 @@ export default function Dashboard() {
                         <Text size="3xl" weight="font-normal">Trove</Text>
                         <Text weight="font-normal" className="mt-4">You haven’t borrowed any AUSD yet.</Text>
                         <Text size="base" className="mt-2">You can borrow AUSD by opening a Trove.</Text>
-                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[221px] h-11 mt-10 ml-auto md:mx-auto" rounded="rounded-lg">
+                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto 2xl:mx-auto" rounded="rounded-lg">
                             <Text>Open Trove</Text>
                         </GradientButton>
                     </div>
@@ -113,7 +114,7 @@ export default function Dashboard() {
                         <Text size="3xl" weight="font-normal">Stability Pool</Text>
                         <Text weight="font-normal" className="mt-4">You have no AUSD in the Stability Pool.</Text>
                         <Text size="base" className="mt-2">You can earn ATOM and AUSD rewards by deposting AUSD.</Text>
-                        <GradientButton onClick={() => { setStabilityModal(true); }} className="w-full max-w-[221px] h-11 mt-10 ml-auto" rounded="rounded-lg">
+                        <GradientButton onClick={() => { setStabilityModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto" rounded="rounded-lg">
                             <Text>Enter</Text>
                         </GradientButton>
                     </div>
@@ -127,52 +128,57 @@ export default function Dashboard() {
             </div>
 
             <Modal title="Trove" showModal={troveModal} onClose={() => { setTroveModal(false); }}>
-                <div>
-                    <Info message={"Collateral ratio must be at least 110%."} status={"normal"} />
-                    <InputLayout label="Collateral" hintTitle="ATOM" value={0} hasPercentButton={{ max: true, min: false }} />
-                    <InputLayout label="Borrow" hintTitle="AUSD" value={0} className="mt-4 mb-6" />
-                    <div className="grid grid-cols-12 content-center gap-6 mt-2">
-                        <StatisticCard
-                            title="Liquidation Reserve"
-                            description="XXX AUSD"
-                            className="w-full h-14 col-span-6"
-                            tooltip="An amount set aside to cover the liquidator’s gas costs if your Trove needs to be liquidated. The amount increases your debt and is refunded if you close your Trove by fully paying off its net debt."
-                        />
-                        <StatisticCard
-                            title="Borrowing Fee"
-                            description="X.XX AUSD (X.XX%)"
-                            className="w-full h-14 col-span-6"
-                            tooltip="This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free."
-                        />
-                        <StatisticCard
-                            title="Total debt"
-                            description="X.XXX,XX AUSD"
-                            className="w-full h-14 col-span-6"
-                            tooltip="The total amount of AUSD your Trove will hold."
-                        />
-                        <StatisticCard
-                            title="Liquidation price (Normal mode)"
-                            description="$XXXXXXX.XX"
-                            className="w-full h-14 col-span-6"
-                            tooltip="The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
-                        />
-                        <StatisticCard
-                            title="Collateral ratio"
-                            description="X.XX%"
-                            className="w-full h-14 col-span-6 col-start-4"
-                            tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety."
-                        />
-                    </div>
-                    <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-                        <OutlinedButton className="min-w-[221px] h-11 mt-4">
-                            <Text>Cancel</Text>
-                        </OutlinedButton>
-                        <GradientButton className="min-w-[221px] h-11 mt-4" rounded="rounded-lg">
-                            <Text>Confirm</Text>
-                        </GradientButton>
-                    </div>
-                </div>
-            </Modal>
+                            <div>
+                                <Info message={"Collateral ratio must be at least 110%."} status={"normal"} />
+                                <InputLayout label="Collateral" hintTitle="ATOM" value={0} hasPercentButton={{ max: true, min: false }} />
+                                <InputLayout label="Borrow" hintTitle="AUSD" value={0} className="mt-4 mb-6" />
+                                <motion.div
+                                    initial={{ y: 200, x: 200, opacity: 0.1 }}
+                                    animate={{ y: 0, x: 0, opacity: 1 }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 150,
+                                        damping: 25,
+                                    }}
+                                    className="grid grid-cols-12 content-center gap-6 mt-2">
+                                    <StatisticCard
+                                        title="Liquidation Reserve"
+                                        description="XXX AUSD"
+                                        className="w-full h-14 col-span-6"
+                                        tooltip="An amount set aside to cover the liquidator’s gas costs if your Trove needs to be liquidated. The amount increases your debt and is refunded if you close your Trove by fully paying off its net debt."
+                                    />
+                                    <StatisticCard
+                                        title="Borrowing Fee"
+                                        description="X.XX AUSD (X.XX%)"
+                                        className="w-full h-14 col-span-6"
+                                        tooltip="This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free."
+                                    />
+                                    <StatisticCard
+                                        title="Total debt"
+                                        description="X.XXX,XX AUSD"
+                                        className="w-full h-14 col-span-6"
+                                        tooltip="The total amount of AUSD your Trove will hold."
+                                    />
+                                    <StatisticCard
+                                        title="Liquidation price"
+                                        description="$XXXXXXX.XX"
+                                        className="w-full h-14 col-span-6"
+                                        tooltip="The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
+                                    />
+                                    <StatisticCard
+                                        title="Collateral ratio"
+                                        description="X.XX%"
+                                        className="w-full h-14 col-span-6 col-start-4"
+                                        tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety."
+                                    />
+                                </motion.div>
+                                <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
+                                    <GradientButton className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                                        <Text>Confirm</Text>
+                                    </GradientButton>
+                                </div>
+                            </div>
+             </Modal>
 
             <Modal title="Stability Pool" showModal={stabilityModal} onClose={() => { setStabilityModal(false); }}>
                 <div className="-ml-4">
@@ -200,9 +206,9 @@ export default function Dashboard() {
                         header={<div className="grid-cols-5 grid gap-5 lg:gap-0 mt-4">
                             <TableHeaderCol col={1} text="Owner" />
                             <TableHeaderCol col={1} text="Collateral" />
-                            <TableHeaderCol col={1} text="Debt" textCenter/>
-                            <TableHeaderCol col={1} text="Coll. Ratio" textCenter/>
-                            <TableHeaderCol col={1} text=""  />
+                            <TableHeaderCol col={1} text="Debt" textCenter />
+                            <TableHeaderCol col={1} text="Coll. Ratio" textCenter />
+                            <TableHeaderCol col={1} text="" />
                         </div>}
                         renderItem={(item: any, index: number) => {
                             return <div className="grid grid-cols-5">

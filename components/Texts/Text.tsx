@@ -31,9 +31,9 @@ const Text: FC<PropsWithChildren<Props>> = ({
 }) => {
 
     return (
-        <span className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} ${textColor}`}>
+        <p className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} ${textColor}`}>
             {children}
-        </span>
+        </p>
     )
 }
 
