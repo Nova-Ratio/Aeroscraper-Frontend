@@ -95,9 +95,9 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
         className={`z-[60]`}
         layoutId={props.layoutId}
       >
-        <ShapeContainer width='w-[1140px]' height='h-[1100px]'>
-          <div className="w-1/2 absolute -top-16 flex justify-between">
-            <Text size="2xl">{props.title}</Text>
+        <ShapeContainer width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
+          <div className={`w-1/2 absolute flex justify-between ${TITLE_POSITION_VARIANT[modalSize]}`}>
+            <Text size={TITLE_SIZE_VARIANT[modalSize]}>{props.title}</Text>
             <button onClick={closeModal}>
               <CloseIcon className="w-6 h-6" />
             </button>
