@@ -113,7 +113,7 @@ export default function Dashboard() {
                     <div className='flex flex-col w-full h-full'>
                         <Text size="3xl" weight="font-normal">Stability Pool</Text>
                         <Text weight="font-normal" className="mt-4">You have no AUSD in the Stability Pool.</Text>
-                        <Text size="base" className="mt-2">You can earn ATOM and AUSD rewards by deposting AUSD.</Text>
+                        <Text size="base" className="mt-2">You can earn AUSD rewards by deposting AUSD.</Text>
                         <GradientButton onClick={() => { setStabilityModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto" rounded="rounded-lg">
                             <Text>Enter</Text>
                         </GradientButton>
