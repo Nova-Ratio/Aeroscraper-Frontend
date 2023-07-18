@@ -2,8 +2,6 @@ import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 
-const AUSD_DECIMAL = 18;
-
 export const getAppContract = (client: SigningCosmWasmClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
 
@@ -33,10 +31,10 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.execute(
             senderAddress,
             contractAddress,
-            { open_trove: { loan_amount: getRequestAmount(amount) } }, //TODO: Missing Decimal Arg, Default 6
+            { open_trove: { loan_amount: getRequestAmount(amount) } },
             "auto",
             "Open Trove",
-            [coin(getRequestAmount(amount), "DENOM_HERE")] //TODO: Missing Decimal, Denom and fund calculation
+            [coin(getRequestAmount(amount), "usei")]
         )
     }
 
@@ -47,7 +45,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             { add_collateral: {} },
             "auto",
             "Add Collateral",
-            [coin(getRequestAmount(amount), "DENOM_HERE")] //TODO: Missing Decimal, Denom and fund calculation
+            [coin(getRequestAmount(amount), "usei")]
         )
     }
 
@@ -55,7 +53,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.execute(
             senderAddress,
             contractAddress,
-            { remove_collateral: { collateral_amount: getRequestAmount(amount) } }, //TODO: Missing Decimal Arg, Default 6
+            { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
             "auto",
             "Remove Collateral"
         )
@@ -65,17 +63,17 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.execute(
             senderAddress,
             contractAddress,
-            { borrow_loan: { loan_amount: getRequestAmount(amount) } }, //TODO: Missing Decimal Arg, Default 6
+            { borrow_loan: { loan_amount: getRequestAmount(amount) } },
             "auto",
             "Borrow Loan"
         )
     }
 
-    const repayLoan = async (senderAddress: string, cw20Address: string, amount: number) => {
+    const repayLoan = async (senderAddress: string, amount: number) => {
         const msg = {
             send: {
-                contract: cw20Address,  //TODO: If CW20 address will be static, define a constant value at the top of this file and use it in here
-                amount: getRequestAmount(amount),   //TODO: Missing Decimal Arg, Default 6
+                contract: "CW20_ADDRESS_HERE",
+                amount: getRequestAmount(amount),
                 msg: jsonToBinary({ repay_loan: {} })
             }
         }
@@ -89,11 +87,11 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         )
     }
 
-    const stake = async (senderAddress: string, cw20Address: string, amount: number) => {
+    const stake = async (senderAddress: string, amount: number) => {
         const msg = {
             send: {
-                contract: cw20Address,  //TODO: If CW20 address will be static, define a constant value at the top of this file and use it in here
-                amount: getRequestAmount(amount),   //TODO: Missing Decimal Arg, Default 6
+                contract: "CW20_ADDRESS_HERE",
+                amount: getRequestAmount(amount),
                 msg: jsonToBinary({ stake: {} })
             }
         }
@@ -111,17 +109,17 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.execute(
             senderAddress,
             contractAddress,
-            { unstake: { amount: getRequestAmount(amount) } }, //TODO: Missing Decimal Arg, Default 6
+            { unstake: { amount: getRequestAmount(amount) } },
             "auto",
             "Unstake"
         )
     }
 
-    const redeem = async (senderAddress: string, cw20Address: string, amount: number) => {
+    const redeem = async (senderAddress: string, amount: number) => {
         const msg = {
             send: {
-                contract: cw20Address, //TODO: If CW20 address will be static, define a constant value at the top of this file and use it in here
-                amount: getRequestAmount(amount), //TODO: Missing Decimal Arg, Default 6
+                contract: "CW20_ADDRESS_HERE",
+                amount: getRequestAmount(amount),
                 msg: jsonToBinary({ redeem: {} })
             }
         }

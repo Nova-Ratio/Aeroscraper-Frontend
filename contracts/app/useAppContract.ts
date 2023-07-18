@@ -33,18 +33,88 @@ const useAppContract = () => {
         return await contract.getCollateralPrice();
     }, [contract])
 
+    const openTrove = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.openTrove(wallet.address, amount);
+    }, [wallet, contract])
+
+    const addCollateral = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.addCollateral(wallet.address, amount);
+    }, [wallet, contract])
+
+    const removeCollateral = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.removeCollateral(wallet.address, amount);
+    }, [wallet, contract])
+
+    const borrowLoan = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.borrowLoan(wallet.address, amount);
+    }, [wallet, contract])
+
+    const repayLoan = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.repayLoan(wallet.address, amount);
+    }, [wallet, contract])
+
+    const stake = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.stake(wallet.address, amount);
+    }, [wallet, contract])
+
+    const unstake = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.unstake(wallet.address, amount);
+    }, [wallet, contract])
+
+    const redeem = useCallback(async (amount: number) => {
+        if (isNil(contract)) return;
+        return await contract.redeem(wallet.address, amount);
+    }, [wallet, contract])
+
+    const liquidateTroves = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.liquidateTroves(wallet.address);
+    }, [wallet, contract])
+
+    const withdrawLiquidationGains = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.withdrawLiquidationGains(wallet.address);
+    }, [wallet, contract])
+
     const value = useMemo(() => ({
         getTotalCollateralAmount,
         getTotalDebtAmount,
         getTrove,
         getStake,
-        getCollateralPrice
+        getCollateralPrice,
+        openTrove,
+        addCollateral,
+        removeCollateral,
+        borrowLoan,
+        repayLoan,
+        stake,
+        unstake,
+        redeem,
+        liquidateTroves,
+        withdrawLiquidationGains
     }), [
         getTotalCollateralAmount,
         getTotalDebtAmount,
         getTrove,
         getStake,
-        getCollateralPrice
+        getCollateralPrice,
+        openTrove,
+        addCollateral,
+        removeCollateral,
+        borrowLoan,
+        repayLoan,
+        stake,
+        unstake,
+        redeem,
+        liquidateTroves,
+        withdrawLiquidationGains
     ])
 
     return value;
