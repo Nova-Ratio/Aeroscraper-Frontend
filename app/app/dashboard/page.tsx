@@ -119,7 +119,7 @@ export default function Dashboard() {
                         </GradientButton>
                     </div>
                 </ShapeContainer>
-                <ShapeContainer layoutId="risky-troves" className="flex-1 cursor-pointer active:scale-95 transition-all" width="" height="">
+                <ShapeContainer layoutId="risky-troves" className="flex-1 cursor-pointer" width="" height="">
                     <div onClick={() => { setRiskyModal(true); }} className="w-full h-full flex flex-wrap justify-center items-center">
                         <Text size="base" className="whitespace-nowrap">Risky Troves</Text>
                         <RightArrow width="24" height="24" />
@@ -139,6 +139,7 @@ export default function Dashboard() {
                             type: "spring",
                             stiffness: 150,
                             damping: 25,
+                            delay:0.1
                         }}
                         className="grid grid-cols-12 content-center gap-6 mt-2">
                         <StatisticCard
