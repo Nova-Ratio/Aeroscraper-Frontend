@@ -89,7 +89,7 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
         animate={props.layoutId ? undefined : { scale: 1, opacity: 1 }}
         transition={props.layoutId ? undefined : {
           type: "spring",
-          stiffness: 900,
+          stiffness: 200,
           damping: 25,
         }}
         className={`z-[60]`}

@@ -14,6 +14,7 @@ import { useFin } from '@/services/fin'
 import { useLeap } from '@/services/leap'
 import Loading from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
+import AccountModal from '../AccountModal/AccountModal'
 
 type Props = {
     className?: string;
@@ -28,6 +29,8 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     const fin = useFin();
     const compass = useCompass();
     const wallet = useWallet();
+
+    const [accountModal, setAccountModal] = useState(false);
 
     const connectWallet = (walletType: WalletType) => {
         const anyWindow: any = window;
@@ -55,17 +58,13 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
         setWalletSelectionOpen(false);
     }
 
-    const disconnectWallet = () => {
-        keplr.disconnect()
-        leap.disconnect()
-        fin.disconnect()
-        compass.disconnect()
+    const openAccountModal = () => {
+        setAccountModal(true);
     }
 
     const toggleWallet = () => {
         if (wallet.initialized) {
-            //TODO: Open wallet info modal
-            disconnectWallet();
+            openAccountModal();
         }
         else {
             setWalletSelectionOpen(prev => !prev);
@@ -75,20 +74,24 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     const closeWalletSelection = () => {
         setWalletSelectionOpen(false);
     }
+    console.log(accountModal);
 
     useOutsideHandler(ref, closeWalletSelection);
 
     if (wallet.initialized) {
         return (
-            <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[200]' onClick={disconnectWallet}>
-                <BorderedContainer className={`${className} flex items-center justify-center space-x-4 p-4`}>
-                    <img alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
-                    <div className='w-[85%] flex flex-col'>
-                        <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
-                        <Text size='sm' className='truncate'>{wallet.address}</Text>
-                    </div>
-                </BorderedContainer>
-            </div>
+            <>
+                <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50]' onClick={openAccountModal}>
+                    <BorderedContainer className={`${className} flex items-center justify-center space-x-4 p-4`}>
+                        <motion.img layoutId="profile"  alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
+                        <div className='w-[85%] flex flex-col'>
+                            <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
+                            <Text size='sm' className='truncate'>{wallet.address}</Text>
+                        </div>
+                    </BorderedContainer>
+                </div>
+                <AccountModal showModal={accountModal} onClose={() => { setAccountModal(false); }} />
+            </>
         )
     }
 
