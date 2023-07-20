@@ -74,7 +74,6 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     const closeWalletSelection = () => {
         setWalletSelectionOpen(false);
     }
-    console.log(accountModal);
 
     useOutsideHandler(ref, closeWalletSelection);
 
@@ -83,7 +82,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
             <>
                 <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50]' onClick={openAccountModal}>
                     <BorderedContainer className={`${className} flex items-center justify-center space-x-4 p-4`}>
-                        <motion.img layoutId="profile"  alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
+                        <motion.img layoutId="profile" alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
                         <div className='w-[85%] flex flex-col'>
                             <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
                             <Text size='sm' className='truncate'>{wallet.address}</Text>

@@ -1,9 +1,11 @@
 import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
+import { CW20BalanceResponse, GetTroveResponse } from "./types";
 
 export const getAppContract = (client: SigningCosmWasmClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+    const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;
 
     //GET QUERIES
     const getTotalCollateralAmount = async () => {
@@ -14,7 +16,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.queryContractSmart(contractAddress, { total_debt_amount: {} });
     }
 
-    const getTrove = async (user_addr: string) => {
+    const getTrove = async (user_addr: string): Promise<GetTroveResponse> => {
         return await client.queryContractSmart(contractAddress, { trove: { user_addr } });
     }
 
@@ -24,6 +26,10 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
 
     const getCollateralPrice = async () => {
         return await client.queryContractSmart(contractAddress, { collateral_price: {} });
+    }
+
+    const getAusdBalance = async (address: string): Promise<CW20BalanceResponse> => {
+        return await client.queryContractSmart(ausdContractAddress, { balance: { address } })
     }
 
     //EXECUTE QUERIES
@@ -159,6 +165,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         getTrove,
         getStake,
         getCollateralPrice,
+        getAusdBalance,
         openTrove,
         addCollateral,
         removeCollateral,

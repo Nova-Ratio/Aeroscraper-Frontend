@@ -278,7 +278,6 @@ export function WalletProvider({
 
     useEffect(() => {
         const listenFunc = (e: any) => {
-            console.log(e)
             setProcessLoader(e?.detail?.fetching ?? false);
         }
         window.addEventListener('process-loading', listenFunc);
