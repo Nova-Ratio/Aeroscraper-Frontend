@@ -19,13 +19,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { NumericFormat } from 'react-number-format'
 import { motion } from "framer-motion";
+import { useNotification } from "@/contexts/NotificationProvider";
 
 export default function Dashboard() {
 
+    const { addNotification } = useNotification();
+
     const [troveModal, setTroveModal] = useState(false);
-
     const [stabilityModal, setStabilityModal] = useState(false);
-
     const [riskyModal, setRiskyModal] = useState(false);
 
     return (
@@ -98,7 +99,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </BorderedContainer>
-            <div className="flex items-center">
+            <div key={"stability-pool"} className="flex items-center">
                 <ShapeContainer layoutId="trove" className="flex-[3]" width="" height="">
                     <div className='flex flex-col w-full h-full'>
                         <Text size="3xl" weight="font-normal">Trove</Text>
@@ -139,7 +140,7 @@ export default function Dashboard() {
                             type: "spring",
                             stiffness: 150,
                             damping: 25,
-                            delay:0.1
+                            delay: 0.1
                         }}
                         className="grid grid-cols-12 content-center gap-6 mt-2">
                         <StatisticCard
@@ -174,14 +175,14 @@ export default function Dashboard() {
                         />
                     </motion.div>
                     <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-                        <GradientButton className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                        <GradientButton onClick={() => { addNotification({ message: "", status: "success" }); }} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
                             <Text>Confirm</Text>
                         </GradientButton>
                     </div>
                 </div>
             </Modal>
 
-            <Modal layoutId="stability-pool" title="Stability Pool" showModal={stabilityModal} onClose={() => { setStabilityModal(false); }}>
+            <Modal key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={stabilityModal} onClose={() => { setStabilityModal(false); }}>
                 <div className="-ml-4">
                     <Info message={"Enter the amount of AUSD you'd like to deposit."} status={"normal"} />
                     <div className="flex flex-row w-1/2 ml-10 gap-6 mt-6 mb-10">

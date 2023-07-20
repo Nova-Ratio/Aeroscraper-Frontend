@@ -7,6 +7,7 @@ import ReactDOM from "react-dom";
 import ShapeContainer from "../Containers/ShapeContainer";
 import Text from '@/components/Texts/Text';
 import { CloseIcon } from "../Icons/Icons";
+import ModalNotification from "./Notification";
 
 interface ModalProps {
   title?: string,
@@ -103,6 +104,9 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
             </button>
           </div>
           {props.children}
+          <div className='absolute -right-10 top-0 overflow-hidden'>
+            <ModalNotification />
+          </div>
         </ShapeContainer>
       </motion.div>
       <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60"></div>

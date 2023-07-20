@@ -212,3 +212,21 @@ export const UploadIcon: React.FC<IconProps> = () => {
         </svg>
     )
 }
+
+export const ShapeNotification: React.FC<IconProps> = () => {
+    return (
+        <svg width="297" height="156" viewBox="0 0 297 156" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.500968 78.4269C-2.1734 54.1456 27.5064 35.5734 52.4218 20.336C73.8649 7.22217 99.9872 0.670903 127.465 0.77978C154.346 0.886281 191.227 -0.361951 212.797 11.881C228 15.881 258 22.8808 278.5 56.3808C288.5 67.3807 300.499 88.8813 294.999 141.381C272.009 155.341 159.473 156.437 130.247 154.148C104.563 152.136 84.7618 139.723 64.2528 127.753C39.2635 113.169 3.13601 102.351 0.500968 78.4269Z" fill="url(#paint0_linear_745_2827)" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.420207 76.2348C-2.11234 51.2412 25.9936 33.6538 49.5877 19.2244C69.8937 6.80599 94.6309 0.602127 120.652 0.705214C146.107 0.806079 169.305 8.18597 189.731 19.7797C214.199 33.6678 243.21 48.4466 245.635 71.6448C248.13 95.5146 226.01 117.055 201.458 131.965C179.687 145.185 150.962 148.108 123.286 145.94C98.9642 144.035 80.2128 132.28 60.7914 120.946C37.1272 107.135 2.91551 96.8904 0.420207 74.2348Z" fill="#1A0B1C" className='translate-x-4 translate-y-1.5'/>
+            <defs>
+                <linearGradient id="paint0_linear_745_2827" x1="-62.001" y1="23.8804" x2="276.164" y2="173.788" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#B43255" />
+                    <stop offset="0.370783" stop-color="#D73A4E" />
+                    <stop offset="0.569842" stop-color="#DB3E43" />
+                    <stop offset="0.835184" stop-color="#E5482D" />
+                    <stop offset="1" stop-color="#EA6825" />
+                </linearGradient>
+            </defs>
+        </svg>
+    )
+}
