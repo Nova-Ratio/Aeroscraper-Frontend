@@ -4,12 +4,13 @@ import React, { FC } from 'react'
 
 type Props = {
     width?: number
-    height?: number
+    height?: number,
+    className?: string
 }
 
-const Loading: FC<Props> = ({ width = 200, height = 200 }) => {
+const Loading: FC<Props> = ({ width = 200, height = 200, className }) => {
     return (
-        <svg viewBox="0 0 100 100" style={{ width, height, margin: '0 auto' }}>
+        <svg viewBox="0 0 100 100" className={className || ""} style={{ width, height, margin: '0 auto' }}>
             <defs>
                 <linearGradient id="Gradient" x1="50%" y1="0%" x2="50%" y2="100%" >
 
