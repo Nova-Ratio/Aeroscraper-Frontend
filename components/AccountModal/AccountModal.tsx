@@ -7,17 +7,16 @@ import { useLeap } from "@/services/leap";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { FC, useRef, useState } from "react";
-import GradientButton from "../Buttons/GradientButton";
-import BorderedContainer from "../Containers/BorderedContainer";
 import { Modal } from "../Modal/Modal";
 import TooltipWrapper from "./TooltipWrapper";
 import QRCode from 'react-qr-code';
 import { WalletType } from "@/enums/WalletType";
 import { NumericFormat } from "react-number-format";
 import { CounterUp } from "../CounterUp";
-import { UploadIcon } from "../Icons/Icons";
 import Text from '../Texts/Text';
 import ImageUpload from "./ImageUpload";
+import Loading from "../Loading/Loading";
+import GradientButton from "../Buttons/GradientButton";
 
 interface Props {
     showModal: boolean,
@@ -25,6 +24,8 @@ interface Props {
 }
 
 const AccountModal: FC<Props> = (props: Props) => {
+
+
     const avatarSelectRef = useRef<HTMLDivElement>(null);
     const qrCodeViewRef = useRef<HTMLDivElement>(null);
 
@@ -33,11 +34,14 @@ const AccountModal: FC<Props> = (props: Props) => {
     const fin = useFin();
     const compass = useCompass();
 
-    const { walletType, name, balanceByDenom, address } = useWallet();
+    const { walletType, name, balanceByDenom, address, profileDetail, setProfileDetail } = useWallet();
 
     const [avatarSelectionOpen, setAvatarSelectionOpen] = useState(false);
     const [qrCodeViewOpen, setQrCodeViewOpen] = useState(false);
     const [isClipped, setIsClipped] = useState<"QR" | "WALLET" | null>(null);
+
+    const [photoUrlInput, setPhotoUrlInput] = useState<string>("");
+    const [processLoading, setProcessLoading] = useState<{ status: boolean, idx?: number }>({ status: false, idx: -1 });
 
     const openAvatarSelection = () => {
         setAvatarSelectionOpen(true);
@@ -66,7 +70,49 @@ const AccountModal: FC<Props> = (props: Props) => {
         leap.disconnect();
         fin.disconnect();
         compass.disconnect();
+        setProfileDetail(undefined);
+        localStorage.removeItem("profile-detail");
         closeModal();
+    }
+console.log(process.env.PROFILE_API);
+
+    const updateProfilePhoto = async (photoUrl: string, idx?: number) => {
+
+        const walletAddress = localStorage.getItem("wallet_address");
+
+        if (walletAddress) {
+            setProcessLoading({ status: true, idx });
+
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_PROFILE_API}/api/users/update-profile-detail`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        walletAddress,
+                        photoUrl: photoUrl
+                    })
+                });
+                if (response.status === 200) {
+                    const data = await response.json();
+
+                    localStorage.setItem("profile-detail", JSON.stringify(data.user));
+
+                    setPhotoUrlInput("");
+
+                    setProfileDetail({
+                        walletAddress,
+                        photoUrl: photoUrl,
+                        appType: 999
+                    });
+
+                    closeAvatarSelection();
+                }
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
+        setProcessLoading({ status: false, idx: -1 });
     }
 
     useOutsideHandler(avatarSelectRef, closeAvatarSelection);
@@ -77,9 +123,11 @@ const AccountModal: FC<Props> = (props: Props) => {
             <div>
                 <div className="flex items-center gap-14 mb-4">
                     <div onClick={openAvatarSelection} className="secondary-gradient w-[148px] h-[148px] p-0.5 rounded-lg flex justify-between items-center gap-2 cursor-pointer">
-                        <div className="w-full h-full flex rounded-md justify-center items-center bg-licorice">
-                            <Text size='sm' textColor='text-white'>Profile Picture</Text>
-                        </div>
+                        <img
+                            alt="user-profile-image"
+                            src={profileDetail?.photoUrl ?? profilePhotos[0]}
+                            className='w-full h-full rounded-md bg-raisin-black'
+                        />
                     </div>
                     <Text size='3xl' textColor='text-white'>{name}</Text>
                 </div>
@@ -206,14 +254,11 @@ const AccountModal: FC<Props> = (props: Props) => {
                                         profilePhotos.map((photoURL, idx) => (
                                             <div
                                                 key={photoURL}
-                                                className='relative cursor-pointer hover:opacity-80 transition secondary-gradient flex items-center rounded-md justify-center p-0.5'
-                                                onClick={() => { }}
+                                                className={`relative cursor-pointer hover:opacity-80 transition secondary-gradient flex items-center rounded-md justify-center p-0.5 ${profileDetail?.photoUrl === photoURL ? "opacity-50 cursor-not-allowed" : ""}`}
+                                                onClick={() => { updateProfilePhoto(photoURL, idx); }}
                                             >
-                                                {photoURL ?
-                                                    <img alt={`profile_photo_${idx + 1}`} className='w-20 h-20 rounded bg-[#6F6F73]' src={photoURL} />
-                                                    :
-                                                    <Text size='xs' textColor="text-[#6F6F73]" className="w-20 h-20 rounded bg-[#3e2d41] flex items-center justify-center">Profile Pic</Text>
-                                                }
+                                                <img alt={`profile_photo`} className='w-20 h-20 rounded bg-[#6F6F73]' src={photoURL} />
+                                                {(processLoading.status && processLoading.idx == idx) && <Loading height={48} width={48} className="absolute" />}
                                             </div>
                                         ))
                                     }
@@ -221,10 +266,19 @@ const AccountModal: FC<Props> = (props: Props) => {
                                 <Text size='xl' className="mr-auto">Uplod an Avatar</Text>
                                 <div className="relative bg-[#74517A] w-full px-2 py-2.5 rounded flex items-center">
                                     <Text size='base' className="mr-auto">Upload with URL:</Text>
-                                    <input placeholder="https://" className="focus:outline-none text-white bg-transparent flex-1 ml-3" />
+                                    <input value={photoUrlInput} onChange={(e) => { setPhotoUrlInput(e.target.value); }} placeholder="https://" className="focus:outline-none text-white bg-transparent flex-1 ml-3" />
+                                    {photoUrlInput.includes("http") &&
+                                        <GradientButton onClick={() => { updateProfilePhoto(photoUrlInput); }} className="w-[121px] h-0 absolute right-0" rounded="rounded-lg">
+                                            {processLoading.status ?
+                                                <Loading width={20} height={20} />
+                                                :
+                                                <Text>Save</Text>
+                                            }
+                                        </GradientButton>
+                                    }
                                 </div>
                                 <Text size='sm' className="mx-auto" >or</Text>
-                                <ImageUpload onImageUpload={(e) => { closeAvatarSelection(); }} />
+                                <ImageUpload processLoading={processLoading.status} onImageUpload={(e) => { updateProfilePhoto(e); }} />
                                 <button onClick={closeAvatarSelection}>
                                     <img alt="close-qr-view" src="/images/close.svg" className='absolute top-5 right-5' />
                                 </button>
@@ -248,10 +302,10 @@ export const WalletIconMap: Record<WalletType, string> = {
 }
 
 const profilePhotos = [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "/images/profile-images/profile-i-1.jpg",
+    "/images/profile-images/profile-i-2.jpg",
+    "/images/profile-images/profile-i-3.jpg",
+    "/images/profile-images/profile-i-4.jpg",
+    "/images/profile-images/profile-i-5.jpg",
+    "/images/profile-images/profile-i-6.jpg",
 ]

@@ -19,7 +19,7 @@ export const CounterUp = ({ from, to, duration = 1, fixed = 2 }: CounterProps) =
       controls.current = animate(parseFloat(from), parseFloat(to), {
         duration: duration,
         onUpdate(value) {
-          node.textContent = value.toFixed(fixed);
+          node.textContent = fixed ? value.toFixed(fixed) : value.toString();
         },
       });
     }

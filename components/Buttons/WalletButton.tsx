@@ -15,6 +15,8 @@ import { useLeap } from '@/services/leap'
 import Loading from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import AccountModal from '../AccountModal/AccountModal'
+import { NumericFormat } from 'react-number-format'
+import { CounterUp } from '../CounterUp'
 
 type Props = {
     className?: string;
@@ -81,14 +83,54 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     if (wallet.initialized) {
         return (
             <>
-                <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50]' onClick={openAccountModal}>
-                    <BorderedContainer className={`${className} flex items-center justify-center space-x-4 p-4`}>
-                        <motion.img layoutId="profile"  alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
-                        <div className='w-[85%] flex flex-col'>
-                            <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
-                            <Text size='sm' className='truncate'>{wallet.address}</Text>
+                <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50] flex items-center gap-4' onClick={openAccountModal}>
+                    <div className="secondary-gradient w-[72px] h-[72px] p-0.5 rounded flex justify-between items-center gap-2 cursor-pointer">
+                        <img
+                            alt="user-profile-image"
+                            src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
+                            className='w-full h-full rounded-sm bg-raisin-black'
+                        />
+                        <motion.div layoutId="profile"/>
+                    </div>
+                    <div className='max-w-[300px]'>
+                        <div className='flex gap-4  items-center'>
+                            <img alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
+                            <div className='w-[75%] flex flex-col'>
+                                <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
+                                <Text size='sm' className='truncate'>{wallet.address}</Text>
+                            </div>
                         </div>
-                    </BorderedContainer>
+                        <div className='flex items-center mt-2'>
+                            <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
+                            <NumericFormat
+                                value={99322.23}
+                                thousandsGroupStyle="thousand"
+                                thousandSeparator=","
+                                fixedDecimalScale
+                                decimalScale={2}
+                                displayType="text"
+                                renderText={(value) =>
+                                    <Text size='base' className='flex ml-2 gap-2'>
+                                        AUSD:<CounterUp from={"0"} to={value} duration={0.5} />
+                                    </Text>
+                                }
+                            />
+                            <img alt="sei" className="w-6 h-6 ml-4" src="/images/sei.png" />
+                            <NumericFormat
+                                value={2104}
+                                thousandsGroupStyle="thousand"
+                                thousandSeparator=","
+                                fixedDecimalScale
+                                decimalScale={2}
+                                displayType="text"
+                                renderText={(value) =>
+                                    <Text size='base' className='flex ml-2 gap-2'>
+                                        SEI: {value}
+                                    </Text>
+                                }
+                            />
+                        </div>
+                    </div>
                 </div>
                 <AccountModal showModal={accountModal} onClose={() => { setAccountModal(false); }} />
             </>

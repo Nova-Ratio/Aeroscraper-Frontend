@@ -41,8 +41,8 @@ export default function Dashboard() {
                     </div>
                     <div className="flex flex-col items-center gap-2">
                         <div className="flex items-center gap-2">
-                            <img alt="ausd" className="w-10 h-10" src="/images/atom.svg" />
-                            <Text size="2xl">ATOM</Text>
+                            <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
+                            <Text size="2xl">SEI</Text>
                         </div>
                         <Text>$0.976923</Text>
                     </div>
