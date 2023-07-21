@@ -23,11 +23,12 @@ import { convertAmount } from "@/utils/contractUtils";
 
 import { motion } from "framer-motion";
 import { useNotification } from "@/contexts/NotificationProvider";
+import StabilityPoolModal from "./_components/StabilityPoolModal";
 
 export default function Dashboard() {
 
     const { addNotification } = useNotification();
-  
+
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -189,25 +190,10 @@ export default function Dashboard() {
                 pageData={pageData}
             />
 
-
-            <Modal key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={stabilityModal} onClose={() => { setStabilityModal(false); }}>
-                <div className="-ml-4">
-                    <Info message={"Enter the amount of AUSD you'd like to deposit."} status={"normal"} />
-                    <div className="flex flex-row w-1/2 ml-10 gap-6 mt-6 mb-10">
-                        <GradientButton className="min-w-[221px] h-16 mt-4" rounded="rounded-lg">
-                            <Text>Deposit</Text>
-                        </GradientButton>
-                        <OutlinedButton className="min-w-[221px] h-16 mt-4">
-                            <Text>Withdraw</Text>
-                        </OutlinedButton>
-                    </div>
-                    <InputLayout label="Deposit" hintTitle="AUSD" value={0} hasPercentButton={{ max: true, min: false }} />
-                    <InputLayout label="Pool Share" hintTitle="%" value={0} className="mt-4 mb-6" />
-                    <GradientButton className="min-w-[221px] h-11 mt-6 ml-auto" rounded="rounded-lg">
-                        <Text>Confirm</Text>
-                    </GradientButton>
-                </div>
-            </Modal>
+            <StabilityPoolModal
+                open={stabilityModal}
+                onClose={() => { setStabilityModal(false); }}
+            />
 
             <Modal layoutId="risky-troves" title="Risky Troves" showModal={riskyModal} onClose={() => { setRiskyModal(false); }}>
                 <div className="-ml-10">
