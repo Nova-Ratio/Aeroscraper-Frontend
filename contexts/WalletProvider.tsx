@@ -90,6 +90,8 @@ export interface WalletContextType {
     readonly balanceByDenom: Dictionary<Coin | undefined>;
     readonly walletLoading: boolean;
     readonly walletType: WalletType | undefined;
+    readonly profileDetail: ProfileDetailModel | undefined;
+    readonly setProfileDetail: (profile: ProfileDetailModel | undefined) => void;
     readonly processLoader: boolean;
     readonly setProcessLoader: (arg: boolean) => void;
     // readonly accountNumber: number;
@@ -117,12 +119,21 @@ const defaultContext: WalletContextType = {
     walletLoading: false,
     walletType: undefined,
     processLoader: false,
+    profileDetail: undefined,
+    setProfileDetail: throwNotInitialized,
     setProcessLoader: throwNotInitialized
     // accountNumber: 0,
 };
 
 const groupBalanceByDenom = (balances: Coin[]): Dictionary<Coin> => {
     return _.chain(balances).keyBy(balance => balance.denom).value();
+}
+
+export interface ProfileDetailModel {
+    walletAddress: string,
+    photoUrl: string,
+    appType: number
+    balance?: number
 }
 
 export const WalletContext =
@@ -141,6 +152,8 @@ export function WalletProvider({
     const [signer, setSigner] = useState<OfflineSigner>();
     const [client, setClient] = useState<SigningCosmWasmClient>();
     const [walletType, setWalletType] = useState<WalletType | undefined>(undefined);
+    const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
+
     const config = getConfig(network);
 
     const init = React.useCallback((signer: OfflineSigner, walletType: WalletType) => {
@@ -192,6 +205,38 @@ export function WalletProvider({
     const updateSigner = (signer: OfflineSigner) => {
         setSigner(signer);
     };
+
+    useEffect(() => {
+        const getProfileDetail = async () => {
+            const walletAddress = localStorage.getItem("wallet_address");
+
+            if (walletAddress) {
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_PROFILE_API}/api/users/profile-detail`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            walletAddress,
+                            appType: 999
+                        })
+                    });
+                    if (response.status === 200) {
+                        const data = await response.json();
+
+                        setProfileDetail(data);
+
+                        localStorage.setItem("profile-detail", JSON.stringify(data));
+                    }
+
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+
+        getProfileDetail();
+    }, [signer, client, walletType]);
 
     useEffect(() => {
         if (!signer) return;
@@ -260,6 +305,12 @@ export function WalletProvider({
                     balanceByDenom: groupBalanceByDenom(balance),
                     walletLoading: false,
                     walletType,
+                    profileDetail,
+                    setProfileDetail(profile) {
+                        console.log(profile);
+
+                        setProfileDetail(profile)
+                    },
                     processLoader,
                     setProcessLoader
                 })
@@ -288,8 +339,9 @@ export function WalletProvider({
         ...value,
         walletLoading,
         walletType,
-        processLoader
-    }), [value, walletLoading, walletType, processLoader])
+        processLoader,
+        profileDetail
+    }), [value, walletLoading, walletType, processLoader, profileDetail])
 
     return (
         <WalletContext.Provider value={providedValue}>

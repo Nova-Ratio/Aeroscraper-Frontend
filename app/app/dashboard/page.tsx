@@ -21,7 +21,13 @@ import useAppContract from "@/contracts/app/useAppContract";
 import { PageData } from "./_types/types";
 import { convertAmount } from "@/utils/contractUtils";
 
+import { motion } from "framer-motion";
+import { useNotification } from "@/contexts/NotificationProvider";
+
 export default function Dashboard() {
+
+    const { addNotification } = useNotification();
+  
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -70,8 +76,8 @@ export default function Dashboard() {
                     </div>
                     <div className="flex flex-col items-center gap-2">
                         <div className="flex items-center gap-2">
-                            <img alt="ausd" className="w-10 h-10" src="/images/atom.svg" />
-                            <Text size="2xl">ATOM</Text>
+                            <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
+                            <Text size="2xl">SEI</Text>
                         </div>
                         <Text>$0.976923</Text>
                     </div>
@@ -127,7 +133,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </BorderedContainer>
-            <div className="flex items-center">
+            <div key={"stability-pool"} className="flex items-center">
                 <ShapeContainer layoutId="trove" className="flex-[3]" width="" height="">
                     <div className='flex flex-col w-full h-full'>
                         <Text size="3xl" weight="font-normal">Trove</Text>
@@ -183,7 +189,8 @@ export default function Dashboard() {
                 pageData={pageData}
             />
 
-            <Modal layoutId="stability-pool" title="Stability Pool" showModal={stabilityModal} onClose={() => { setStabilityModal(false); }}>
+
+            <Modal key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={stabilityModal} onClose={() => { setStabilityModal(false); }}>
                 <div className="-ml-4">
                     <Info message={"Enter the amount of AUSD you'd like to deposit."} status={"normal"} />
                     <div className="flex flex-row w-1/2 ml-10 gap-6 mt-6 mb-10">

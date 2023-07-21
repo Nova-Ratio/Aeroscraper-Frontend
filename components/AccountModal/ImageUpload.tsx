@@ -1,8 +1,9 @@
 import { ChangeEvent, FC, useRef } from 'react';
 import { UploadIcon } from "../Icons/Icons";
+import Loading from '../Loading/Loading';
 import Text from '../Texts/Text';
 
-const ImageUpload: FC<{ onImageUpload: (image: string) => void }> = ({ onImageUpload }) => {
+const ImageUpload: FC<{ onImageUpload: (image: string) => void, processLoading?: boolean }> = ({ onImageUpload, processLoading }) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,7 +30,7 @@ const ImageUpload: FC<{ onImageUpload: (image: string) => void }> = ({ onImageUp
     <div className='w-full h-full'>
       <button onClick={handleButtonClick} className="bg-[#74517A] px-2 py-2.5 w-full rounded flex justify-between items-center relative">
         <Text size='base' className="mr-auto">Drop an image or select from your device</Text>
-        <UploadIcon />
+        {processLoading ? <Loading height={16} width={16} className="ml-auto"/> : <UploadIcon />}
       </button>
       <input
         type='file'
