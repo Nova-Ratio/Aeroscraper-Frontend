@@ -76,7 +76,6 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     const closeWalletSelection = () => {
         setWalletSelectionOpen(false);
     }
-    console.log(accountModal);
 
     useOutsideHandler(ref, closeWalletSelection);
 
