@@ -101,10 +101,6 @@ const AccountModal: FC<Props> = (props: Props) => {
                                     </Text>
                                 }
                             />
-
-                            <Link href='/wallet' onClick={closeModal}>
-                                <Text textColor='text-dark-silver' className='underline'>View all assets</Text>
-                            </Link>
                         </div>
                     </div>
                     <div className="bg-raisin-black px-6 py-4 rounded-lg">
