@@ -4,6 +4,7 @@ type IconProps = {
     className?: string;
     width?: string;
     height?: string;
+    animate?:boolean;
 }
 
 export const Logo: React.FC<IconProps> = ({ className, width = "96", height = "96" }) => {
@@ -140,7 +141,7 @@ export const TwitterLogo: React.FC<IconProps> = ({ className, width = "32", heig
     )
 }
 
-export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
+export const ShapeIcon: React.FC<IconProps> = ({ className,animate }) => {
     return (
         <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_f_321_72)">
@@ -155,7 +156,7 @@ export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
                     <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_72" />
                 </filter>
 
-                <linearGradient id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                <linearGradient className={animate?"shape-animation":""} id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#56235C" />
                     <stop offset="0.294825" stop-color="#D43752" />
                     <stop offset="0.402713" stop-color="#E4462D" />
@@ -163,7 +164,7 @@ export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
                     <stop offset="0.827343" stop-color="#29499C" />
                     <stop offset="1" stop-color="#2C3384" />
                 </linearGradient>
-                <linearGradient id="paint1_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint1_linear_321_72" x1="60.7876" className={animate?"shape-animation":""} y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#56235C" />
                     <stop offset="0.294825" stop-color="#D43752" />
                     <stop offset="0.402713" stop-color="#E4462D" />

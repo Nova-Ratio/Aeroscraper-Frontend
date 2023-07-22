@@ -70,11 +70,11 @@ body::-webkit-scrollbar {
 }
 
 .shape-animation stop:nth-child(6) {
-  animation-delay: 1s;
+  animation-delay: 1s
 }
 
 .shape-animation stop{
-  animation: gradient-animation 1.5s ease-in infinite alternate;
+  animation: gradient-animation 1.5s ease-in infinite alternate
 }
 
 .main-gradient {

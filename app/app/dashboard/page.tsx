@@ -190,10 +190,13 @@ export default function Dashboard() {
                 pageData={pageData}
             />
 
-            <StabilityPoolModal
-                open={stabilityModal}
-                onClose={() => { setStabilityModal(false); }}
-            />
+            {stabilityModal &&
+                <StabilityPoolModal
+                    open={stabilityModal}
+                    onClose={() => { setStabilityModal(false); }}
+                    pageData={pageData}
+                />
+            }
 
             <Modal layoutId="risky-troves" title="Risky Troves" showModal={riskyModal} onClose={() => { setRiskyModal(false); }}>
                 <div className="-ml-10">

@@ -12,6 +12,7 @@ import { PageData } from '../_types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import Accordion from '@/components/Accordion/Accordion';
+import { useNotification } from '@/contexts/NotificationProvider';
 
 enum TABS {
     COLLATERAL = 0,
@@ -26,8 +27,16 @@ type Props = {
 
 const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
     const contract = useAppContract();
+
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
+    const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
+    const [borrowAmount, setBorrowAmount] = useState<number>(0);
+    const [repayAmount, setRepayAmount] = useState<number>(0);
+
     const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
+
+    const [processLoading, setProcessLoading] = useState<boolean>(false);
+    const { addNotification } = useNotification();
 
     const isTroveOpened = useMemo(() => pageData.ausdBalance > 0, [pageData]);
 
@@ -35,14 +44,116 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
         setOpenTroveAmount(Number(values.value));
     }
 
-    const openTrove = async () => {
+    const changeWithdrawAmount = (values: NumberFormatValues) => {
+        setWithdrawAmount(Number(values.value));
+    }
+
+    const changeBarrowAmount = (values: NumberFormatValues) => {
+        setBorrowAmount(Number(values.value));
+    }
+
+    const changeRepayAmount = (values: NumberFormatValues) => {
+        setRepayAmount(Number(values.value));
+    }
+
+    const queryAddColletral = async () => {
+        setProcessLoading(true);
+
         try {
-            const res = await contract.openTrove(openTroveAmount);
-            console.log(res);
+            const res = await contract.addCollateral(openTroveAmount);
+
+            addNotification({
+                status: 'success',
+                directLink: res?.transactionHash
+            });
+            setOpenTroveAmount(0);
         }
         catch (err) {
             console.error(err);
+
+            addNotification({
+                message: "",
+                status: 'error',
+                directLink: ""
+            })
         }
+
+        setProcessLoading(false);
+    }
+
+    const queryWithdraw = async () => {
+        setProcessLoading(true);
+
+        try {
+            const res = await contract.removeCollateral(withdrawAmount);
+
+            addNotification({
+                status: 'success',
+                directLink: res?.transactionHash
+            });
+            setWithdrawAmount(0);
+        }
+        catch (err) {
+            console.error(err);
+
+            addNotification({
+                message: "",
+                status: 'error',
+                directLink: ""
+            })
+        }
+
+        setProcessLoading(false);
+    }
+
+    const queryBorrow = async () => {
+        setProcessLoading(true);
+
+        try {
+            const res = await contract.borrowLoan(borrowAmount);
+
+            addNotification({
+                status: 'success',
+                directLink: res?.transactionHash
+            });
+            setWithdrawAmount(0);
+        }
+        catch (err) {
+            console.error(err);
+
+            addNotification({
+                message: "",
+                status: 'error',
+                directLink: ""
+            })
+        }
+
+        setProcessLoading(false);
+    }
+
+    const queryRepay = async () => {
+        setProcessLoading(true);
+
+        try {
+            const res = await contract.repayLoan(repayAmount);
+
+            addNotification({
+                status: 'success',
+                directLink: res?.transactionHash
+            });
+            setRepayAmount(0);
+        }
+        catch (err) {
+            console.error(err);
+
+            addNotification({
+                message: "",
+                status: 'error',
+                directLink: ""
+            })
+        }
+
+        setProcessLoading(false);
     }
 
     return (
@@ -116,10 +227,10 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                                             <InputLayout label="Borrow" hintTitle="AUSD" value={0} />
                                         </div>
                                         <div className='pl-[35%] mt-2'>
-                                            <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false, custom: true }} customButtonText='Withdraw' />
+                                            <InputLayout label="Collateral" hintTitle="SEI" value={withdrawAmount} onValueChange={changeWithdrawAmount} hasPercentButton={{ max: false, min: false, custom: true }} customButtonText='Withdraw' customButtonOnClick={queryWithdraw} />
                                         </div>
                                         <div className="flex pr-[10%]">
-                                            <GradientButton onClick={openTrove} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                                            <GradientButton loading={processLoading} onClick={queryAddColletral} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
                                                 <Text>Deposit</Text>
                                             </GradientButton>
                                         </div>
@@ -181,21 +292,23 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                                             label="Borrow"
                                             hintTitle="AUSD"
                                             className='mt-2'
-                                            value={openTroveAmount}
-                                            onValueChange={changeOpenTroveAmount}
+                                            value={borrowAmount}
+                                            onValueChange={changeBarrowAmount}
                                             hasPercentButton={{ max: true, min: false }}
                                         />
                                         <div className='pl-[10%] mt-2'>
                                             <InputLayout
                                                 label="Debt: 0 AUSD"
                                                 hintTitle="AUSD"
-                                                value={0}
+                                                value={repayAmount}
+                                                onValueChange={changeRepayAmount}
                                                 hasPercentButton={{ custom: true, min: false, max: false }}
                                                 customButtonText='Repay'
+                                                customButtonOnClick={queryRepay}
                                             />
                                         </div>
                                         <div className="flex pr-[10%]">
-                                            <GradientButton onClick={openTrove} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                                            <GradientButton loading={processLoading} onClick={() => { queryBorrow(); }}className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
                                                 <Text>Borrow</Text>
                                             </GradientButton>
                                         </div>
@@ -206,8 +319,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                     :
                     <div>
                         <Info message={"Collateral ratio must be at least 110%."} status={"normal"} />
-                        <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: true, min: false }} />
-                        <InputLayout label="Borrow" hintTitle="AUSD" value={0} className="mt-4 mb-6" />
+                        <InputLayout label="Collateral" hintTitle="SEI" value={borrowAmount} onValueChange={changeBarrowAmount} hasPercentButton={{ max: true, min: false }} />
+                        <InputLayout label="Borrow" hintTitle="AUSD" value={repayAmount} onValueChange={changeRepayAmount} className="mt-4 mb-6" />
                         <motion.div
                             initial={{ y: 200, x: 200, opacity: 0.1 }}
                             animate={{ y: 0, x: 0, opacity: 1 }}
@@ -250,7 +363,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                             />
                         </motion.div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-                            <GradientButton onClick={openTrove} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                            <GradientButton className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
                                 <Text>Confirm</Text>
                             </GradientButton>
                         </div>
