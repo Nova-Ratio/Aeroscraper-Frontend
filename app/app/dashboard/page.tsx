@@ -97,9 +97,9 @@ export default function Dashboard() {
                         />
                         <StatisticCard
                             title="TVL"
-                            description="XXXK ATOM ($XXXM)"
+                            description="XXXK SEI ($XXXM)"
                             className="w-[191px] h-14"
-                            tooltip="The Total Value Locked (TVL) is the total value of Atom locked as collateral in the system, given in AUSD and ATOM."
+                            tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system, given in AUSD and SEI."
                         />
                         <StatisticCard
                             title="Troves"
@@ -117,7 +117,7 @@ export default function Dashboard() {
                             title="Kickback Rate"
                             description="XXX%"
                             className="w-[191px] h-14"
-                            tooltip="A rate between 0 and 100% set by the Frontend Operator that determines the fraction of ATOM that will be paid out as a kickback to the Stability Providers using the frontend."
+                            tooltip="A rate between 0 and 100% set by the Frontend Operator that determines the fraction of SEI that will be paid out as a kickback to the Stability Providers using the frontend."
                         />
                         <StatisticCard
                             title="AUSD in Stability Pool"
@@ -129,7 +129,7 @@ export default function Dashboard() {
                             title="Total Collateral Ratio"
                             description="XXX.X%"
                             className="w-[191px] h-14"
-                            tooltip="The ratio of the Dollar value of the entire system collateral at the current ATOM:AUSD price, to the entire system debt."
+                            tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                         />
                     </div>
                 </div>
