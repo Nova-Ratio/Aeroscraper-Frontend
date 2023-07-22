@@ -78,7 +78,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     const repayLoan = async (senderAddress: string, amount: number) => {
         const msg = {
             send: {
-                contract: "CW20_ADDRESS_HERE",
+                contract: contractAddress,
                 amount: getRequestAmount(amount),
                 msg: jsonToBinary({ repay_loan: {} })
             }
@@ -86,7 +86,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
 
         return client.execute(
             senderAddress,
-            contractAddress,
+            ausdContractAddress,
             msg,
             "auto",
             "Repay Loan"
@@ -96,15 +96,15 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     const stake = async (senderAddress: string, amount: number) => {
         const msg = {
             send: {
-                contract: "CW20_ADDRESS_HERE",
+                contract: contractAddress,
                 amount: getRequestAmount(amount),
                 msg: jsonToBinary({ stake: {} })
             }
         }
-
+        
         return client.execute(
             senderAddress,
-            contractAddress,
+            ausdContractAddress,
             msg,
             "auto",
             "Stake"

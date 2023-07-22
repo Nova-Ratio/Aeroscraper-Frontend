@@ -16,7 +16,8 @@ interface ModalProps {
   onClose?: () => void,
   modalSize?: "sm" | "md" | "lg",
   childrenClassName?: string,
-  layoutId?: string
+  layoutId?: string,
+  processLoading?:boolean
 }
 
 const SIZE_VARIANT = {
@@ -96,7 +97,7 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
         className={`z-[60]`}
         layoutId={props.layoutId}
       >
-        <ShapeContainer width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
+        <ShapeContainer hasAnimation={props.processLoading} width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
           <div className={`w-1/2 absolute flex justify-between ${TITLE_POSITION_VARIANT[modalSize]}`}>
             <Text size={TITLE_SIZE_VARIANT[modalSize]}>{props.title}</Text>
             <button onClick={closeModal}>

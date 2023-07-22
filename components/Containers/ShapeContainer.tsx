@@ -1,6 +1,6 @@
 "use client"
 
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { ShapeIcon } from '@/components/Icons/Icons'
 import { motion } from 'framer-motion'
 
@@ -10,6 +10,7 @@ type Props = {
   className?: string,
   containerClassName?: string
   layoutId?: string
+  hasAnimation?: boolean
 }
 
 const ShapeContainer: React.FC<PropsWithChildren<Props>> = ({
@@ -18,12 +19,14 @@ const ShapeContainer: React.FC<PropsWithChildren<Props>> = ({
   children,
   className = "",
   containerClassName = "",
-  layoutId
+  layoutId,
+  hasAnimation = false
 }
 ) => {
+
   return (
     <motion.div layoutId={layoutId} className={`relative ${width} ${height} ${className}`}>
-      <ShapeIcon />
+      <ShapeIcon animate={hasAnimation}/>
       <div className={`absolute top-[28%] left-[28%] right-[20%] h-[55%] ${containerClassName}`}>
         {children}
       </div>

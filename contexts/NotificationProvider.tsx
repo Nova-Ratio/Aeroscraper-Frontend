@@ -3,7 +3,7 @@
 import React, { createContext, FC, PropsWithChildren, useContext, useRef, useState } from 'react';
 
 interface INotification {
-  message: string;
+  message?: string;
   status: 'success' | 'error';
   directLink?: string;
 }
@@ -28,7 +28,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
 
     setTimeout(() => {
       clearNotification();
-    }, 1500);
+    }, 2500);
   }
   const clearNotification = () => {
     setNotification(null);
