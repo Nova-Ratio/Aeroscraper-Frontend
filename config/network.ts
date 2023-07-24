@@ -23,8 +23,8 @@ export const uniTestnetConfig: AppConfig = {
     chainId: 'atlantic-2',
     chainName: 'Sei Testnet',
     addressPrefix: 'sei',
-    rpcUrl: 'https://sei.kingnodes.com/',
-    httpUrl: 'https://rest.atlantic-2.seinetwork.io/',
+    rpcUrl: 'https://test-sei.kingnodes.com/',
+    httpUrl: 'https://test-sei-grpc@kingnodes.com/',
     feeToken: 'usei',
     stakingToken: 'usei',
     coinMap: {
