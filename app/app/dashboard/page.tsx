@@ -57,6 +57,12 @@ export default function Dashboard() {
         }
         catch (err) {
             console.error(err);
+
+            setPageData({
+                collateralAmount: 0,
+                debtAmount: 0,
+                ausdBalance: 0
+            })
         }
     }, [contract])
 
@@ -188,6 +194,7 @@ export default function Dashboard() {
                 open={troveModal}
                 onClose={() => { setTroveModal(false); }}
                 pageData={pageData}
+                getPageData={getPageData}
             />
 
             {stabilityModal &&

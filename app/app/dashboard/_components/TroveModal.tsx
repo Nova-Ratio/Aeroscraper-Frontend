@@ -23,15 +23,15 @@ type Props = {
     open: boolean;
     onClose?: () => void;
     pageData: PageData;
+    getPageData: () => void;
 }
 
-const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
+const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const contract = useAppContract();
 
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
-    const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-    const [borrowAmount, setBorrowAmount] = useState<number>(0);
-    const [repayAmount, setRepayAmount] = useState<number>(0);
+    const [collateralAmount, setCollateralAmount] = useState<number>(0);
+    const [borrowingAmount, setBorrowingAmount] = useState<number>(0);
 
     const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
 
@@ -44,16 +44,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
         setOpenTroveAmount(Number(values.value));
     }
 
-    const changeWithdrawAmount = (values: NumberFormatValues) => {
-        setWithdrawAmount(Number(values.value));
+    const changeCollateralAmount = (values: NumberFormatValues) => {
+        setCollateralAmount(Number(values.value));
     }
 
-    const changeBarrowAmount = (values: NumberFormatValues) => {
-        setBorrowAmount(Number(values.value));
-    }
-
-    const changeRepayAmount = (values: NumberFormatValues) => {
-        setRepayAmount(Number(values.value));
+    const changeBorrowingAmount = (values: NumberFormatValues) => {
+        setBorrowingAmount(Number(values.value));
     }
 
     const queryAddColletral = async () => {
@@ -66,7 +62,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                 status: 'success',
                 directLink: res?.transactionHash
             });
-            setOpenTroveAmount(0);
+            getPageData();
         }
         catch (err) {
             console.error(err);
@@ -85,13 +81,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
         setProcessLoading(true);
 
         try {
-            const res = await contract.removeCollateral(withdrawAmount);
+            const res = await contract.removeCollateral(collateralAmount);
 
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash
             });
-            setWithdrawAmount(0);
+            getPageData();
         }
         catch (err) {
             console.error(err);
@@ -110,13 +106,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
         setProcessLoading(true);
 
         try {
-            const res = await contract.borrowLoan(borrowAmount);
+            const res = await contract.borrowLoan(borrowingAmount);
 
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash
             });
-            setWithdrawAmount(0);
+            getPageData();
         }
         catch (err) {
             console.error(err);
@@ -135,13 +131,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
         setProcessLoading(true);
 
         try {
-            const res = await contract.repayLoan(repayAmount);
+            const res = await contract.repayLoan(borrowingAmount);
 
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash
             });
-            setRepayAmount(0);
+            getPageData();
         }
         catch (err) {
             console.error(err);
@@ -154,6 +150,30 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
         }
 
         setProcessLoading(false);
+    }
+
+    const openTrove = async () => {
+        try {
+            setProcessLoading(true);
+
+            const res = await contract.openTrove(openTroveAmount);
+
+            addNotification({
+                status: 'success',
+                directLink: res?.transactionHash
+            });
+            getPageData();
+        }
+        catch (err) {
+            addNotification({
+                message: "",
+                status: 'error',
+                directLink: ""
+            })
+        }
+        finally {
+            setProcessLoading(false);
+        }
     }
 
     return (
@@ -173,64 +193,50 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                             selectedTab === TABS.COLLATERAL ?
                                 (
                                     <div className='flex flex-col'>
-                                        <div className='flex mt-2'>
-                                            <Accordion text='Trove Details'>
-                                                <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
-                                                    <StatisticCard
-                                                        title='Borrowing Fee'
-                                                        description='X.XX AUSD (X.XX%)'
-                                                        tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
-                                                    />
-                                                    <StatisticCard
-                                                        title='Total Debt'
-                                                        description='X.XXX.XXX AUSD'
-                                                        tooltip='The total amount of AUSD your Trove will hold.'
-                                                    />
-                                                    <StatisticCard
-                                                        title='Liquidation price'
-                                                        description='-'
-                                                        tooltip='The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
-                                                    />
-                                                    <StatisticCard
-                                                        title='Collateral ratio'
-                                                        description='-'
-                                                        tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
-                                                    />
-                                                </div>
-                                            </Accordion>
-                                        </div>
-                                        <BorderedContainer containerClassName='mt-2' className='flex flex-col gap-2 p-4'>
+                                        <BorderedContainer containerClassName='mt-2' className='flex flex-col gap-2 p-2'>
                                             <InputLayout
                                                 label='In Wallet'
                                                 hintTitle="SEI"
                                                 value={0}
+                                                bgVariant='transparent'
+                                                inputClassName='w-full pr-[20%] text-end'
                                             />
-                                            <div className='flex items-center gap-4'>
-                                                <InputLayout
-                                                    label='Deposit Balance'
-                                                    labelSize='sm'
-                                                    hintTitle="SEI"
-                                                    value={0}
-                                                    className='w-[calc(50%-8px)]'
-                                                />
-                                                <InputLayout
-                                                    label='New Deposit Balance'
-                                                    labelSize='sm'
-                                                    hintTitle="SEI"
-                                                    value={0}
-                                                    className='w-[calc(50%-8px)]'
-                                                />
-                                            </div>
+                                            <InputLayout
+                                                label='In Trove Balance'
+                                                hintTitle="SEI"
+                                                value={0}
+                                                bgVariant='transparent'
+                                                inputClassName='w-full pr-[20%] text-end'
+                                            />
                                         </BorderedContainer>
-                                        <InputLayout label="Collateral" hintTitle="SEI" className='mt-2' value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: true, min: false }} />
-                                        <div className='pl-[10%] mt-2'>
-                                            <InputLayout label="Borrow" hintTitle="AUSD" value={0} />
+                                        <InputLayout label="Collateral" hintTitle="SEI" className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} hasPercentButton={{ max: true, min: false }} />
+                                        <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
+                                            <StatisticCard
+                                                title='Borrowing Fee'
+                                                description='X.XX AUSD (X.XX%)'
+                                                tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
+                                            />
+                                            <StatisticCard
+                                                title='Total Debt'
+                                                description='X.XXX.XXX AUSD'
+                                                tooltip='The total amount of AUSD your Trove will hold.'
+                                            />
+                                            <StatisticCard
+                                                title='Liquidation price'
+                                                description='-'
+                                                tooltip='The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
+                                            />
+                                            <StatisticCard
+                                                title='Collateral ratio'
+                                                description='-'
+                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
+                                            />
                                         </div>
-                                        <div className='pl-[35%] mt-2'>
-                                            <InputLayout label="Collateral" hintTitle="SEI" value={withdrawAmount} onValueChange={changeWithdrawAmount} hasPercentButton={{ max: false, min: false, custom: true }} customButtonText='Withdraw' customButtonOnClick={queryWithdraw} />
-                                        </div>
-                                        <div className="flex pr-[10%]">
-                                            <GradientButton loading={processLoading} onClick={queryAddColletral} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                                        <div className="flex items-center justify-end pr-4 gap-4">
+                                            <OutlinedButton loading={processLoading} onClick={queryWithdraw} className="min-w-[201px] h-11">
+                                                <Text>Withdraw</Text>
+                                            </OutlinedButton>
+                                            <GradientButton loading={processLoading} onClick={queryAddColletral} className="min-w-[201px] h-11" rounded="rounded-lg">
                                                 <Text>Deposit</Text>
                                             </GradientButton>
                                         </div>
@@ -239,76 +245,50 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                                 :
                                 (
                                     <div className='flex flex-col'>
-                                        <div className='flex mt-2'>
-                                            <Accordion text='Trove Details'>
-                                                <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
-                                                    <StatisticCard
-                                                        title='Borrowing Fee'
-                                                        description='X.XX AUSD (X.XX%)'
-                                                        tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
-                                                    />
-                                                    <StatisticCard
-                                                        title='Total Debt'
-                                                        description='X.XXX.XXX AUSD'
-                                                        tooltip='The total amount of AUSD your Trove will hold.'
-                                                    />
-                                                    <StatisticCard
-                                                        title='Liquidation price'
-                                                        description='-'
-                                                        tooltip='The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
-                                                    />
-                                                    <StatisticCard
-                                                        title='Collateral ratio'
-                                                        description='-'
-                                                        tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
-                                                    />
-                                                </div>
-                                            </Accordion>
-                                        </div>
-                                        <BorderedContainer containerClassName='mt-2' className='flex flex-col gap-2 p-4'>
+                                        <BorderedContainer containerClassName='mt-2' className='flex flex-col gap-2 p-2'>
                                             <InputLayout
                                                 label='Borrowing Capacity'
                                                 hintTitle="AUSD"
                                                 value={0}
+                                                bgVariant='transparent'
+                                                inputClassName='w-full pr-[25%] text-end'
                                             />
-                                            <div className='flex items-center gap-4'>
-                                                <InputLayout
-                                                    label='Borrowed Balance'
-                                                    labelSize='sm'
-                                                    hintTitle="AUSD"
-                                                    value={0}
-                                                    className='w-[calc(50%-8px)]'
-                                                />
-                                                <InputLayout
-                                                    label='New Borrowed Balance'
-                                                    labelSize='sm'
-                                                    hintTitle="AUSD"
-                                                    value={0}
-                                                    className='w-[calc(50%-8px)]'
-                                                />
-                                            </div>
-                                        </BorderedContainer>
-                                        <InputLayout
-                                            label="Borrow"
-                                            hintTitle="AUSD"
-                                            className='mt-2'
-                                            value={borrowAmount}
-                                            onValueChange={changeBarrowAmount}
-                                            hasPercentButton={{ max: true, min: false }}
-                                        />
-                                        <div className='pl-[10%] mt-2'>
                                             <InputLayout
-                                                label="Debt: 0 AUSD"
+                                                label='Debt'
                                                 hintTitle="AUSD"
-                                                value={repayAmount}
-                                                onValueChange={changeRepayAmount}
-                                                hasPercentButton={{ custom: true, min: false, max: false }}
-                                                customButtonText='Repay'
-                                                customButtonOnClick={queryRepay}
+                                                value={0}
+                                                bgVariant='transparent'
+                                                inputClassName='w-full pr-[25%] text-end'
+                                            />
+                                        </BorderedContainer>
+                                        <InputLayout label="Borrow-Repay" hintTitle="AUSD" className='mt-2' value={borrowingAmount} onValueChange={changeBorrowingAmount} hasPercentButton={{ max: true, min: false }} />
+                                        <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
+                                            <StatisticCard
+                                                title='Borrowing Fee'
+                                                description='X.XX AUSD (X.XX%)'
+                                                tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
+                                            />
+                                            <StatisticCard
+                                                title='Total Debt'
+                                                description='X.XXX.XXX AUSD'
+                                                tooltip='The total amount of AUSD your Trove will hold.'
+                                            />
+                                            <StatisticCard
+                                                title='Liquidation price'
+                                                description='-'
+                                                tooltip='The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
+                                            />
+                                            <StatisticCard
+                                                title='Collateral ratio'
+                                                description='-'
+                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
                                             />
                                         </div>
-                                        <div className="flex pr-[10%]">
-                                            <GradientButton loading={processLoading} onClick={() => { queryBorrow(); }}className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                                        <div className="flex items-center justify-end pr-4 gap-4">
+                                            <OutlinedButton loading={processLoading} onClick={queryRepay} className="min-w-[201px] h-11">
+                                                <Text>Repay</Text>
+                                            </OutlinedButton>
+                                            <GradientButton loading={processLoading} onClick={queryBorrow} className="min-w-[201px] h-11" rounded="rounded-lg">
                                                 <Text>Borrow</Text>
                                             </GradientButton>
                                         </div>
@@ -319,8 +299,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                     :
                     <div>
                         <Info message={"Collateral ratio must be at least 110%."} status={"normal"} />
-                        <InputLayout label="Collateral" hintTitle="SEI" value={borrowAmount} onValueChange={changeBarrowAmount} hasPercentButton={{ max: true, min: false }} />
-                        <InputLayout label="Borrow" hintTitle="AUSD" value={repayAmount} onValueChange={changeRepayAmount} className="mt-4 mb-6" />
+                        <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: true, min: false }} />
+                        <InputLayout label="Borrow" hintTitle="AUSD" value={0} className="mt-4 mb-6" />
                         <motion.div
                             initial={{ y: 200, x: 200, opacity: 0.1 }}
                             animate={{ y: 0, x: 0, opacity: 1 }}
@@ -363,7 +343,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose }) => {
                             />
                         </motion.div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-                            <GradientButton className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                            <GradientButton loading={processLoading} onClick={openTrove} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
                                 <Text>Confirm</Text>
                             </GradientButton>
                         </div>

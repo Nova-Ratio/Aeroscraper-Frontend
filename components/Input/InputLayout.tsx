@@ -1,9 +1,8 @@
 import React, { FC, ReactElement } from 'react'
-import BorderedNumberInput from './BorderedNumberInput'
+import BorderedNumberInput, { BG_VARIANTS } from './BorderedNumberInput'
 import Text, { TextSizes } from "@/components/Texts/Text";
 import { OnValueChange } from 'react-number-format'
 import OutlinedButton from '../Buttons/OutlinedButton';
-
 
 interface Props {
   label?: string,
@@ -16,14 +15,17 @@ interface Props {
   value: string | number,
   totalAmount?: number,
   className?: string,
-  rightBottomSide?: ReactElement
+  rightBottomSide?: ReactElement,
+  bgVariant?: keyof typeof BG_VARIANTS;
+  inputClassName?: string;
 }
-const InputLayout: FC<Props> = ({ label, labelSize = 'lg', customButtonText, customButtonOnClick, totalAmount, hintTitle, value, onValueChange, className, hasPercentButton, rightBottomSide }) => {
+
+const InputLayout: FC<Props> = ({ label, labelSize = 'lg', inputClassName, bgVariant, customButtonText, customButtonOnClick, totalAmount, hintTitle, value, onValueChange, className, hasPercentButton, rightBottomSide }) => {
   return (
     <div className={`bg-dark-purple rounded-lg px-2 py-4 ${className}`}>
       <div className=' flex items-center'>
         <Text size={labelSize} textColor="text-white" weight="font-normal">{label}</Text>
-        <BorderedNumberInput value={value} onValueChange={onValueChange} hintContent={hintTitle} containerClassName="w-1/2 ml-auto" />
+        <BorderedNumberInput value={value} onValueChange={onValueChange} className={inputClassName} bgVariant={bgVariant} hintContent={hintTitle} containerClassName="w-1/2 ml-auto" />
         <div className="px-2">
           {hasPercentButton?.min && (
             <OutlinedButton containerClassName="h-7 min-w-16" rounded="lg">
