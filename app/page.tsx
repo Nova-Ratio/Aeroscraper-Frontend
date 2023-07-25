@@ -24,7 +24,7 @@ export default function Home() {
         <div className='flex flex-col gap-8 mt-16 mb-20'>
           <Text size='4xl'>What’s the main benefits of Aeroscraper?</Text>
           <div className='relative flex flex-wrap'>
-            <ShapeContainer width='w-full lg:w-[300px]'>
+            <ShapeContainer hasAnimation width='w-full lg:w-[300px]'>
               <div className='flex items-end h-1/2'>
                 <Text size='lg'>
                   0% interest rate
@@ -38,7 +38,7 @@ export default function Home() {
                 </Text>
               </div>
             </ShapeContainer>
-            <ShapeContainer width='w-full lg:w-[323px]' height='h-[303px]' className='lg:mt-40'>
+            <ShapeContainer hasAnimation width='w-full lg:w-[323px]' height='h-[303px]' className='lg:mt-40'>
               <div className='flex items-center h-full'>
                 <Text size='lg'>
                   Censorship resistant - protocol not controlled by anyone

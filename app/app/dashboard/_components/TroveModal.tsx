@@ -177,7 +177,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     }
 
     return (
-        <Modal layoutId="trove" title="Trove" showModal={open} onClose={onClose}>
+        <Modal processLoading={processLoading} layoutId="trove" title="Trove" showModal={open} onClose={onClose}>
             {
                 isTroveOpened ?
                     <>

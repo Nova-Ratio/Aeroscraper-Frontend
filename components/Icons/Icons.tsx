@@ -4,7 +4,7 @@ type IconProps = {
     className?: string;
     width?: string;
     height?: string;
-    animate?:boolean;
+    animate?: boolean;
 }
 
 export const Logo: React.FC<IconProps> = ({ className, width = "96", height = "96" }) => {
@@ -141,8 +141,9 @@ export const TwitterLogo: React.FC<IconProps> = ({ className, width = "32", heig
     )
 }
 
-export const ShapeIcon: React.FC<IconProps> = ({ className,animate }) => {
+export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
     return (
+       <>
         <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_f_321_72)">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint0_linear_321_72)" />
@@ -156,7 +157,7 @@ export const ShapeIcon: React.FC<IconProps> = ({ className,animate }) => {
                     <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_72" />
                 </filter>
 
-                <linearGradient className={animate?"shape-animation":""} id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#56235C" />
                     <stop offset="0.294825" stop-color="#D43752" />
                     <stop offset="0.402713" stop-color="#E4462D" />
@@ -164,7 +165,7 @@ export const ShapeIcon: React.FC<IconProps> = ({ className,animate }) => {
                     <stop offset="0.827343" stop-color="#29499C" />
                     <stop offset="1" stop-color="#2C3384" />
                 </linearGradient>
-                <linearGradient id="paint1_linear_321_72" x1="60.7876" className={animate?"shape-animation":""} y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                <linearGradient id="paint1_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#56235C" />
                     <stop offset="0.294825" stop-color="#D43752" />
                     <stop offset="0.402713" stop-color="#E4462D" />
@@ -174,6 +175,48 @@ export const ShapeIcon: React.FC<IconProps> = ({ className,animate }) => {
                 </linearGradient>
             </defs>
         </svg>
+
+        
+        </>
+    )
+}
+
+export const AnimatedShapeIcon: React.FC<IconProps> = ({ className }) => {
+    return (
+       <>
+        <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#filter0_f_321_73)">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint0_linear_321_73)" />
+            </g>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint1_linear_321_73)" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M69.5542 126.286C75.2851 104.92 61.4523 78.4111 75.7906 61.5655C89.9339 44.949 116.335 43.1473 137.982 45.8922C157.526 48.3704 169.709 67.4924 187.599 75.743C205.71 84.0959 231.601 78.1598 243.172 94.4051C254.664 110.54 241.581 132.831 242.358 152.625C243.193 173.878 256.165 195.295 247.905 214.894C239.336 235.225 220.244 253.456 198.441 256.828C176.854 260.165 159.407 240.373 139.37 231.675C125.015 225.444 111.25 220.153 97.3587 212.948C78.5911 203.214 49.9602 202.081 43.5013 181.949C37.1134 162.039 64.1373 146.482 69.5542 126.286Z" fill="#1A0B1C" />
+            <defs>
+                <filter id="filter0_f_321_73" x="0.887627" y="0.309898" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                    <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_73" />
+                </filter>
+                <linearGradient className={"shape-animation"} id="paint0_linear_321_73" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#56235C" />
+                    <stop offset="0.294825" stop-color="#D43752" />
+                    <stop offset="0.402713" stop-color="#E4462D" />
+                    <stop offset="0.638994" stop-color="#F8B810" />
+                    <stop offset="0.827343" stop-color="#29499C" />
+                    <stop offset="1" stop-color="#2C3384" />
+                </linearGradient>
+                <linearGradient className={"shape-animation"} id="paint1_linear_321_73" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#56235C" />
+                    <stop offset="0.294825" stop-color="#D43752" />
+                    <stop offset="0.402713" stop-color="#E4462D" />
+                    <stop offset="0.638994" stop-color="#F8B810" />
+                    <stop offset="0.827343" stop-color="#29499C" />
+                    <stop offset="1" stop-color="#2C3384" />
+                </linearGradient>
+            </defs>
+        </svg>
+
+        
+        </>
     )
 }
 
@@ -218,7 +261,7 @@ export const ShapeNotification: React.FC<IconProps> = () => {
     return (
         <svg width="297" height="156" viewBox="0 0 297 156" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M0.500968 78.4269C-2.1734 54.1456 27.5064 35.5734 52.4218 20.336C73.8649 7.22217 99.9872 0.670903 127.465 0.77978C154.346 0.886281 191.227 -0.361951 212.797 11.881C228 15.881 258 22.8808 278.5 56.3808C288.5 67.3807 300.499 88.8813 294.999 141.381C272.009 155.341 159.473 156.437 130.247 154.148C104.563 152.136 84.7618 139.723 64.2528 127.753C39.2635 113.169 3.13601 102.351 0.500968 78.4269Z" fill="url(#paint0_linear_745_2827)" />
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.420207 76.2348C-2.11234 51.2412 25.9936 33.6538 49.5877 19.2244C69.8937 6.80599 94.6309 0.602127 120.652 0.705214C146.107 0.806079 169.305 8.18597 189.731 19.7797C214.199 33.6678 243.21 48.4466 245.635 71.6448C248.13 95.5146 226.01 117.055 201.458 131.965C179.687 145.185 150.962 148.108 123.286 145.94C98.9642 144.035 80.2128 132.28 60.7914 120.946C37.1272 107.135 2.91551 96.8904 0.420207 74.2348Z" fill="#1A0B1C" className='translate-x-4 translate-y-1.5'/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.420207 76.2348C-2.11234 51.2412 25.9936 33.6538 49.5877 19.2244C69.8937 6.80599 94.6309 0.602127 120.652 0.705214C146.107 0.806079 169.305 8.18597 189.731 19.7797C214.199 33.6678 243.21 48.4466 245.635 71.6448C248.13 95.5146 226.01 117.055 201.458 131.965C179.687 145.185 150.962 148.108 123.286 145.94C98.9642 144.035 80.2128 132.28 60.7914 120.946C37.1272 107.135 2.91551 96.8904 0.420207 74.2348Z" fill="#1A0B1C" className='translate-x-4 translate-y-1.5' />
             <defs>
                 <linearGradient id="paint0_linear_745_2827" x1="-62.001" y1="23.8804" x2="276.164" y2="173.788" gradientUnits="userSpaceOnUse">
                     <stop stop-color="#B43255" />
