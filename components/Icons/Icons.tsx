@@ -141,81 +141,81 @@ export const TwitterLogo: React.FC<IconProps> = ({ className, width = "32", heig
     )
 }
 
-export const ShapeIcon: React.FC<IconProps> = ({ className }) => {
+export const ShapeIcon: React.FC<IconProps> = ({ className, animate }) => {
     return (
-       <>
-        <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g filter="url(#filter0_f_321_72)">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint0_linear_321_72)" />
-            </g>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint1_linear_321_72)" />
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M69.5542 126.286C75.2851 104.92 61.4523 78.4111 75.7906 61.5655C89.9339 44.949 116.335 43.1473 137.982 45.8922C157.526 48.3704 169.709 67.4924 187.599 75.743C205.71 84.0959 231.601 78.1598 243.172 94.4051C254.664 110.54 241.581 132.831 242.358 152.625C243.193 173.878 256.165 195.295 247.905 214.894C239.336 235.225 220.244 253.456 198.441 256.828C176.854 260.165 159.407 240.373 139.37 231.675C125.015 225.444 111.25 220.153 97.3587 212.948C78.5911 203.214 49.9602 202.081 43.5013 181.949C37.1134 162.039 64.1373 146.482 69.5542 126.286Z" fill="#1A0B1C" />
-            <defs>
-                <filter id="filter0_f_321_72" x="0.887627" y="0.309898" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                    <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_72" />
-                </filter>
+        <>
+            <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_f_321_72)">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint0_linear_321_72)" />
+                </g>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint1_linear_321_72)" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M69.5542 126.286C75.2851 104.92 61.4523 78.4111 75.7906 61.5655C89.9339 44.949 116.335 43.1473 137.982 45.8922C157.526 48.3704 169.709 67.4924 187.599 75.743C205.71 84.0959 231.601 78.1598 243.172 94.4051C254.664 110.54 241.581 132.831 242.358 152.625C243.193 173.878 256.165 195.295 247.905 214.894C239.336 235.225 220.244 253.456 198.441 256.828C176.854 260.165 159.407 240.373 139.37 231.675C125.015 225.444 111.25 220.153 97.3587 212.948C78.5911 203.214 49.9602 202.081 43.5013 181.949C37.1134 162.039 64.1373 146.482 69.5542 126.286Z" fill="#1A0B1C" />
+                <defs>
+                    <filter id="filter0_f_321_72" x="0.887627" y="0.309898" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                        <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_72" />
+                    </filter>
 
-                <linearGradient id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#56235C" />
-                    <stop offset="0.294825" stop-color="#D43752" />
-                    <stop offset="0.402713" stop-color="#E4462D" />
-                    <stop offset="0.638994" stop-color="#F8B810" />
-                    <stop offset="0.827343" stop-color="#29499C" />
-                    <stop offset="1" stop-color="#2C3384" />
-                </linearGradient>
-                <linearGradient id="paint1_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#56235C" />
-                    <stop offset="0.294825" stop-color="#D43752" />
-                    <stop offset="0.402713" stop-color="#E4462D" />
-                    <stop offset="0.638994" stop-color="#F8B810" />
-                    <stop offset="0.827343" stop-color="#29499C" />
-                    <stop offset="1" stop-color="#2C3384" />
-                </linearGradient>
-            </defs>
-        </svg>
+                    <linearGradient className={animate ? "shape-animation" : ""} id="paint0_linear_321_72" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#56235C" />
+                        <stop offset="0.294825" stop-color="#D43752" />
+                        <stop offset="0.402713" stop-color="#E4462D" />
+                        <stop offset="0.638994" stop-color="#F8B810" />
+                        <stop offset="0.827343" stop-color="#29499C" />
+                        <stop offset="1" stop-color="#2C3384" />
+                    </linearGradient>
+                    <linearGradient id="paint1_linear_321_72" x1="60.7876" className={animate ? "shape-animation" : ""} y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#56235C" />
+                        <stop offset="0.294825" stop-color="#D43752" />
+                        <stop offset="0.402713" stop-color="#E4462D" />
+                        <stop offset="0.638994" stop-color="#F8B810" />
+                        <stop offset="0.827343" stop-color="#29499C" />
+                        <stop offset="1" stop-color="#2C3384" />
+                    </linearGradient>
+                </defs>
+            </svg>
 
-        
+
         </>
     )
 }
 
 export const AnimatedShapeIcon: React.FC<IconProps> = ({ className }) => {
     return (
-       <>
-        <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g filter="url(#filter0_f_321_73)">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint0_linear_321_73)" />
-            </g>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint1_linear_321_73)" />
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M69.5542 126.286C75.2851 104.92 61.4523 78.4111 75.7906 61.5655C89.9339 44.949 116.335 43.1473 137.982 45.8922C157.526 48.3704 169.709 67.4924 187.599 75.743C205.71 84.0959 231.601 78.1598 243.172 94.4051C254.664 110.54 241.581 132.831 242.358 152.625C243.193 173.878 256.165 195.295 247.905 214.894C239.336 235.225 220.244 253.456 198.441 256.828C176.854 260.165 159.407 240.373 139.37 231.675C125.015 225.444 111.25 220.153 97.3587 212.948C78.5911 203.214 49.9602 202.081 43.5013 181.949C37.1134 162.039 64.1373 146.482 69.5542 126.286Z" fill="#1A0B1C" />
-            <defs>
-                <filter id="filter0_f_321_73" x="0.887627" y="0.309898" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                    <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_73" />
-                </filter>
-                <linearGradient className={"shape-animation"} id="paint0_linear_321_73" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#56235C" />
-                    <stop offset="0.294825" stop-color="#D43752" />
-                    <stop offset="0.402713" stop-color="#E4462D" />
-                    <stop offset="0.638994" stop-color="#F8B810" />
-                    <stop offset="0.827343" stop-color="#29499C" />
-                    <stop offset="1" stop-color="#2C3384" />
-                </linearGradient>
-                <linearGradient className={"shape-animation"} id="paint1_linear_321_73" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#56235C" />
-                    <stop offset="0.294825" stop-color="#D43752" />
-                    <stop offset="0.402713" stop-color="#E4462D" />
-                    <stop offset="0.638994" stop-color="#F8B810" />
-                    <stop offset="0.827343" stop-color="#29499C" />
-                    <stop offset="1" stop-color="#2C3384" />
-                </linearGradient>
-            </defs>
-        </svg>
+        <>
+            <svg className={className} viewBox="0 0 298 291" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_f_321_73)">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint0_linear_321_73)" />
+                </g>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2798 117.842C64.6131 94.2298 49.3261 64.9341 65.1718 46.3174C80.802 27.954 109.979 25.9629 133.902 28.9964C155.5 31.7352 168.965 52.8675 188.735 61.9854C208.75 71.2165 237.363 64.6564 250.15 82.6096C262.851 100.441 248.392 125.075 249.251 146.95C250.174 170.438 264.51 194.106 255.381 215.766C245.911 238.234 224.812 258.382 200.716 262.108C176.86 265.796 157.579 243.923 135.436 234.311C119.572 227.425 104.36 221.578 89.0074 213.615C68.2667 202.857 36.6258 201.605 29.4879 179.358C22.4284 157.354 52.2934 140.161 58.2798 117.842Z" fill="url(#paint1_linear_321_73)" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M69.5542 126.286C75.2851 104.92 61.4523 78.4111 75.7906 61.5655C89.9339 44.949 116.335 43.1473 137.982 45.8922C157.526 48.3704 169.709 67.4924 187.599 75.743C205.71 84.0959 231.601 78.1598 243.172 94.4051C254.664 110.54 241.581 132.831 242.358 152.625C243.193 173.878 256.165 195.295 247.905 214.894C239.336 235.225 220.244 253.456 198.441 256.828C176.854 260.165 159.407 240.373 139.37 231.675C125.015 225.444 111.25 220.153 97.3587 212.948C78.5911 203.214 49.9602 202.081 43.5013 181.949C37.1134 162.039 64.1373 146.482 69.5542 126.286Z" fill="#1A0B1C" />
+                <defs>
+                    <filter id="filter0_f_321_73" x="0.887627" y="0.309898" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                        <feGaussianBlur stdDeviation="13.7637" result="effect1_foregroundBlur_321_73" />
+                    </filter>
+                    <linearGradient className={"shape-animation"} id="paint0_linear_321_73" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#56235C" />
+                        <stop offset="0.294825" stop-color="#D43752" />
+                        <stop offset="0.402713" stop-color="#E4462D" />
+                        <stop offset="0.638994" stop-color="#F8B810" />
+                        <stop offset="0.827343" stop-color="#29499C" />
+                        <stop offset="1" stop-color="#2C3384" />
+                    </linearGradient>
+                    <linearGradient className={"shape-animation"} id="paint1_linear_321_73" x1="60.7876" y1="59.3647" x2="347.829" y2="305.873" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#56235C" />
+                        <stop offset="0.294825" stop-color="#D43752" />
+                        <stop offset="0.402713" stop-color="#E4462D" />
+                        <stop offset="0.638994" stop-color="#F8B810" />
+                        <stop offset="0.827343" stop-color="#29499C" />
+                        <stop offset="1" stop-color="#2C3384" />
+                    </linearGradient>
+                </defs>
+            </svg>
 
-        
+
         </>
     )
 }
@@ -269,6 +269,38 @@ export const ShapeNotification: React.FC<IconProps> = () => {
                     <stop offset="0.569842" stop-color="#DB3E43" />
                     <stop offset="0.835184" stop-color="#E5482D" />
                     <stop offset="1" stop-color="#EA6825" />
+                </linearGradient>
+            </defs>
+        </svg>
+    )
+}
+
+export const RedeemIcon: React.FC<IconProps> = ({ className, width = "63", height = "63" }) => {
+    return (
+        <svg className={className} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 63 63" fill="none">
+            <g filter="url(#filter0_b_992_2726)">
+                <rect width="63" height="63" rx="31.5" fill="#1A0B1C" fill-opacity="0.4" />
+                <path d="M30.9393 49.0607C31.5251 49.6464 32.4749 49.6464 33.0607 49.0607L42.6066 39.5147C43.1924 38.9289 43.1924 37.9792 42.6066 37.3934C42.0208 36.8076 41.0711 36.8076 40.4853 37.3934L32 45.8787L23.5147 37.3934C22.9289 36.8076 21.9792 36.8076 21.3934 37.3934C20.8076 37.9792 20.8076 38.9289 21.3934 39.5147L30.9393 49.0607ZM30.5 16L30.5 48H33.5V16H30.5Z" fill="url(#paint0_linear_992_2726)" />
+                <rect x="1.08088" y="1.08088" width="60.8382" height="60.8382" rx="30.4191" stroke="url(#paint1_linear_992_2726)" stroke-width="2.16176" />
+            </g>
+            <defs>
+                <filter id="filter0_b_992_2726" x="-131.25" y="-131.25" width="325.5" height="325.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feGaussianBlur in="BackgroundImageFix" stdDeviation="65.625" />
+                    <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_992_2726" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_992_2726" result="shape" />
+                </filter>
+                <linearGradient id="paint0_linear_992_2726" x1="63.5" y1="32" x2="-0.5" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#F8B611" />
+                    <stop offset="0.472821" stop-color="#DC3F41" />
+                    <stop offset="0.714556" stop-color="#BE3454" />
+                    <stop offset="1" stop-color="#58245C" />
+                </linearGradient>
+                <linearGradient id="paint1_linear_992_2726" x1="-2.97062e-08" y1="31.5963" x2="63" y2="31.5963" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#56235C" />
+                    <stop offset="0.328586" stop-color="#D43752" />
+                    <stop offset="0.693468" stop-color="#E4462D" />
+                    <stop offset="1" stop-color="#F8B810" />
                 </linearGradient>
             </defs>
         </svg>

@@ -20,9 +20,10 @@ type Props = {
   open: boolean;
   onClose?: () => void;
   pageData: PageData;
+  getPageData: () => void;
 }
 
-const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
+const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData }) => {
 
   const contract = useAppContract();
   const { addNotification } = useNotification();
@@ -31,21 +32,20 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
 
   const [processLoading, setProcessLoading] = useState(false);
 
-  const [amount, setAmount] = useState<number>(0);
-
-  const [balance, setBalance] = useState<number>(pageData.ausdBalance);
+  const [stakeAmount, setStakeAmount] = useState<number>(0);
+  const [unstakeAmount, setUnstakeAmount] = useState<number>(0);
 
   const stakePool = async () => {
     setProcessLoading(true);
 
     try {
-      const res = await contract.stake(amount);
-      setBalance(prev => prev - amount);
-      setAmount(0);
+      const res = await contract.stake(stakeAmount);
+      setStakeAmount(0);
       addNotification({
         status: 'success',
         directLink: res?.transactionHash
       })
+      getPageData();
     }
     catch (err) {
       console.log(err);
@@ -62,13 +62,14 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
     setProcessLoading(true);
 
     try {
-      const res = await contract.unstake(amount);
+      const res = await contract.unstake(unstakeAmount);
 
-      setAmount(0);
+      setUnstakeAmount(0);
       addNotification({
         status: 'success',
         directLink: res?.transactionHash
       })
+      getPageData();
     }
     catch (err) {
       console.log(err);
@@ -86,10 +87,10 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
       <div className="-ml-4">
         <Info message={"Enter the amount of AUSD you'd like to deposit."} status={"normal"} />
         <div className="flex flex-row w-2/3 ml-10 gap-6 mt-6 mb-10">
-          <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.DEPOSIT ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.DEPOSIT); setAmount(0); }}>
+          <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.DEPOSIT ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.DEPOSIT); setStakeAmount(0); }}>
             Deposit
           </OutlinedButton>
-          <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.WITHDRAW ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.WITHDRAW); setAmount(0); }}>
+          <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.WITHDRAW ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.WITHDRAW); setUnstakeAmount(0); }}>
             Withdraw
           </OutlinedButton>
         </div>
@@ -100,11 +101,11 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Deposit" hintTitle="AUSD" value={amount} onValueChange={(e) => { setAmount(Number(e.value)); }} hasPercentButton={{ max: true, min: false }} rightBottomSide={
+            <InputLayout label="Deposit" hintTitle="AUSD" value={stakeAmount} onValueChange={(e) => { setStakeAmount(Number(e.value)); }} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
                 <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
                 <NumericFormat
-                  value={balance}
+                  value={pageData.ausdBalance}
                   thousandsGroupStyle="thousand"
                   thousandSeparator=","
                   fixedDecimalScale
@@ -141,7 +142,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
                 <Text>Claim</Text>
               </GradientButton>
             </div>
-            <GradientButton loading={processLoading} onClick={() => { stakePool(); }} className="min-w-[221px] h-11 mt-6 ml-auto" rounded="rounded-lg">
+            <GradientButton loading={processLoading} onClick={stakePool} className="min-w-[221px] h-11 mt-6 ml-auto" rounded="rounded-lg">
               <Text>Confirm</Text>
             </GradientButton>
           </motion.div>
@@ -153,7 +154,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Withdraw" hintTitle="AUSD" value={0} hasPercentButton={{ max: true, min: false }} rightBottomSide={
+            <InputLayout label="Withdraw" hintTitle="AUSD" value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
                 <img alt="aero" className="w-6 h-6" src="/images/sei.png" />
                 <NumericFormat
@@ -172,7 +173,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData }) => {
               </div>
             } />
             <InputLayout label="Pool Share" hintTitle="%" value={0} className="mt-4 mb-6" />
-            <GradientButton loading={processLoading} onClick={() => { unStakePool(); }} className="min-w-[221px] h-11 mt-6 ml-auto" rounded="rounded-lg">
+            <GradientButton loading={processLoading} onClick={unStakePool} className="min-w-[221px] h-11 mt-6 ml-auto" rounded="rounded-lg">
               <Text>Confirm</Text>
             </GradientButton>
           </motion.div>

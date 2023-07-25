@@ -23,10 +23,10 @@ const useAppContract = () => {
         return await contract.getTrove(wallet.address);
     }, [wallet, contract])
 
-    const getStake = useCallback(async (user_addr: string) => {
+    const getStake = useCallback(async () => {
         if (isNil(contract)) return;
-        return await contract.getStake(user_addr);
-    }, [contract])
+        return await contract.getStake(wallet.address);
+    }, [wallet, contract])
 
     const getCollateralPrice = useCallback(async () => {
         if (isNil(contract)) return;
