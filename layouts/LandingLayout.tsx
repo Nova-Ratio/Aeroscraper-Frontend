@@ -32,15 +32,36 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
             <div className='container mx-auto px-8'>
                 {children}
             </div>
-            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-center flex-wrap px-24 py-16 bg-raisin-black mt-auto relative'>
-                <div className="flex-row flex gap-20 items-center">
+            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 py-16 bg-raisin-black mt-auto relative'>
+                <div className="flex-row flex gap-20 items-top">
                     <div className='flex flex-col items-center gap-6'>
                         <Logo />
                         <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
                     </div>
                     <div onClick={() => { setPrivacyModal(true); }} className='flex flex-col items-center gap-4'>
                         <Text size="2xl" textColor='text-white'>Product</Text>
+                        <Text textColor='text-ghost-white/75' className="cursor-pointer">Whitepaper</Text>
                         <Text textColor='text-ghost-white/75' className="cursor-pointer">Terms of service</Text>
+                    </div>
+                </div>
+                <div className='flex flex-col items-center gap-6'>
+                    <Text size="2xl">Definition of Aeroscraper</Text>
+                    <div className='flex flex-col items-center gap-4'>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-name'} className='hover:scale-105 transition-all flex gap-2'>
+                            <Text textColor='text-white'>Definition of name</Text>
+                        </Link>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-icon'} className='hover:scale-105 transition-all flex gap-2'>
+                            <Text textColor='text-white'>Definition of icon</Text>
+                        </Link>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-colors'} className='hover:scale-105 transition-all flex gap-2'>
+                            <Text textColor='text-white'>Definition of colors</Text>
+                        </Link>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-typography'} className='hover:scale-105 transition-all flex gap-2'>
+                            <Text textColor='text-white'>Definition of typography</Text>
+                        </Link>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/'} className='hover:scale-105 transition-all flex gap-2'>
+                            <Text textColor='text-white'>Definition of concept</Text>
+                        </Link>
                     </div>
                 </div>
                 <div className='flex flex-col items-center gap-6'>
@@ -50,7 +71,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                             <TwitterLogo />
                             <Text textColor='text-white'>Twitter</Text>
                         </Link>
-                        <Link href={'#'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://discord.gg/zVYHsqM9rq'} className='hover:scale-105 transition-all flex gap-2'>
                             <DiscordLogo />
                             <Text textColor='text-white'>Discord</Text>
                         </Link>
