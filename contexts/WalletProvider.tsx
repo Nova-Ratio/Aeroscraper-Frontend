@@ -181,7 +181,6 @@ export function WalletProvider({
         setWalletType(undefined);
         localStorage.setItem("selectedWalletType", WalletType.NOT_SELECTED);
     }, []);
-
     // Get balance for each coin specified in config.coinMap
     async function refreshBalance(
         address: string,
@@ -208,15 +207,13 @@ export function WalletProvider({
 
     useEffect(() => {
         const getProfileDetail = async () => {
-            const walletAddress = localStorage.getItem("wallet_address");
-
-            if (walletAddress) {
+            if (value.address) {
                 try {
                     const response = await fetch(`${process.env.NEXT_PUBLIC_PROFILE_API}/api/users/profile-detail`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            walletAddress,
+                            walletAddress: value.address,
                             appType: 999
                         })
                     });
@@ -236,7 +233,8 @@ export function WalletProvider({
         }
 
         getProfileDetail();
-    }, [signer, client, walletType]);
+
+    }, [value.address]);
 
     useEffect(() => {
         if (!signer) return;
@@ -307,8 +305,6 @@ export function WalletProvider({
                     walletType,
                     profileDetail,
                     setProfileDetail(profile) {
-                        console.log(profile);
-
                         setProfileDetail(profile)
                     },
                     processLoader,

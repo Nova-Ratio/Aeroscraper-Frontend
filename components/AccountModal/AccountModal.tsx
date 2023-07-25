@@ -74,7 +74,6 @@ const AccountModal: FC<Props> = (props: Props) => {
         localStorage.removeItem("profile-detail");
         closeModal();
     }
-console.log(process.env.PROFILE_API);
 
     const updateProfilePhoto = async (photoUrl: string, idx?: number) => {
 
@@ -89,7 +88,8 @@ console.log(process.env.PROFILE_API);
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         walletAddress,
-                        photoUrl: photoUrl
+                        photoUrl: photoUrl,
+                        appType:999
                     })
                 });
                 if (response.status === 200) {
