@@ -1,18 +1,18 @@
 import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
-import { CW20BalanceResponse, GetTroveResponse } from "./types";
+import { CW20BalanceResponse, GetStakeResponse, GetTroveResponse } from "./types";
 
 export const getAppContract = (client: SigningCosmWasmClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
     const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;
 
     //GET QUERIES
-    const getTotalCollateralAmount = async () => {
+    const getTotalCollateralAmount = async (): Promise<string> => {
         return await client.queryContractSmart(contractAddress, { total_collateral_amount: {} });
     }
 
-    const getTotalDebtAmount = async () => {
+    const getTotalDebtAmount = async (): Promise<string> => {
         return await client.queryContractSmart(contractAddress, { total_debt_amount: {} });
     }
 
@@ -20,7 +20,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.queryContractSmart(contractAddress, { trove: { user_addr } });
     }
 
-    const getStake = async (user_addr: string) => {
+    const getStake = async (user_addr: string): Promise<GetStakeResponse> => {
         return await client.queryContractSmart(contractAddress, { stake: { user_addr } });
     }
 
@@ -101,7 +101,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
                 msg: jsonToBinary({ stake: {} })
             }
         }
-        
+
         return client.execute(
             senderAddress,
             ausdContractAddress,
@@ -124,7 +124,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     const redeem = async (senderAddress: string, amount: number) => {
         const msg = {
             send: {
-                contract: "CW20_ADDRESS_HERE",
+                contract: contractAddress,
                 amount: getRequestAmount(amount),
                 msg: jsonToBinary({ redeem: {} })
             }
@@ -132,7 +132,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
 
         return client.execute(
             senderAddress,
-            contractAddress,
+            ausdContractAddress,
             msg,
             "auto",
             "Redeem"

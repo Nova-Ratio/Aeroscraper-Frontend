@@ -3,6 +3,11 @@ export type GetTroveResponse = {
     debt_amount: string;
 }
 
+export type GetStakeResponse = {
+    amount: string;
+    percentage: number;
+}
+
 export type CW20BalanceResponse = {
     balance: string;
 }

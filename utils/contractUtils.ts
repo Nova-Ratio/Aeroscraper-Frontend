@@ -60,3 +60,7 @@ export const getRequestAmount = (value: string | number, decimal: number = DEFAU
 export const convertAmount = (value: string | number, decimal: number = DEFAULT_DECIMAL) => {
     return Number((Number(value) / Math.pow(10, decimal)).toFixed(6));
 }
+
+export const getValueByRatio = (value: string | number, ratio: string | number) => {
+    return Number((Number(value) * Number(ratio)).toFixed(6));
+}
