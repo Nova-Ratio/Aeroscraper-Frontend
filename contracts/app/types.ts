@@ -11,3 +11,10 @@ export type GetStakeResponse = {
 export type CW20BalanceResponse = {
     balance: string;
 }
+
+export type CW20TokenInfoResponse = {
+    name: string;
+    symbol: string;
+    decimals: number;
+    total_supply: string;
+}

@@ -5,5 +5,5 @@ export type PageData = {
     totalDebtAmount: number;
     ausdBalance: number;
     stakedAmount: number;
-
+    totalAusdSupply: number;
 }

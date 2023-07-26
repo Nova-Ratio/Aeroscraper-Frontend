@@ -21,6 +21,7 @@ import { convertAmount, getValueByRatio } from "@/utils/contractUtils";
 import StabilityPoolModal from "./_components/StabilityPoolModal";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
+import RiskyTrovesModal from "./_components/RiskyTrovesModal";
 
 export default function Dashboard() {
     const [troveModal, setTroveModal] = useState(false);
@@ -33,7 +34,8 @@ export default function Dashboard() {
         ausdBalance: 0,
         stakedAmount: 0,
         totalCollateralAmount: 0,
-        totalDebtAmount: 0
+        totalDebtAmount: 0,
+        totalAusdSupply: 0
     })
 
     const [processLoading, setProcessLoading] = useState<boolean>(false);
@@ -44,12 +46,20 @@ export default function Dashboard() {
 
     const getPageData = useCallback(async () => {
         try {
-            const [troveRes, ausdBalanceRes, stakeRes, totalCollateralRes, totalDebtRes] = await Promise.all([
+            const [
+                troveRes,
+                ausdBalanceRes,
+                stakeRes,
+                totalCollateralRes,
+                totalDebtRes,
+                ausdInfoRes
+            ] = await Promise.all([
                 contract.getTrove(),
                 contract.getAusdBalance(),
                 contract.getStake(),
                 contract.getTotalCollateralAmount(),
-                contract.getTotalDebtAmount()
+                contract.getTotalDebtAmount(),
+                contract.getAusdInfo()
             ])
 
             setPageData({
@@ -58,7 +68,8 @@ export default function Dashboard() {
                 ausdBalance: convertAmount(ausdBalanceRes?.balance ?? 0),
                 stakedAmount: convertAmount(stakeRes?.amount ?? 0),
                 totalCollateralAmount: convertAmount(totalCollateralRes ?? 0),
-                totalDebtAmount: convertAmount(totalDebtRes ?? 0)
+                totalDebtAmount: convertAmount(totalDebtRes ?? 0),
+                totalAusdSupply: convertAmount(ausdInfoRes?.total_supply ?? 0)
             })
         }
         catch (err) {
@@ -70,7 +81,8 @@ export default function Dashboard() {
                 ausdBalance: 0,
                 stakedAmount: 0,
                 totalCollateralAmount: 0,
-                totalDebtAmount: 0
+                totalDebtAmount: 0,
+                totalAusdSupply: 0
             })
         }
     }, [contract])
@@ -198,13 +210,13 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="AUSD supply"
-                                description="XXXM"
+                                description={pageData.totalAusdSupply.toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Liquity Protocol."
                             />
                             <StatisticCard
                                 title="Kickback Rate"
-                                description="XXX%"
+                                description="110%"
                                 className="w-[191px] h-14"
                                 tooltip="A rate between 0 and 100% set by the Frontend Operator that determines the fraction of SEI that will be paid out as a kickback to the Stability Providers using the frontend."
                             />
@@ -312,64 +324,15 @@ export default function Dashboard() {
                 />
             }
 
-            <Modal layoutId="risky-troves" title="Risky Troves" showModal={riskyModal} onClose={() => { setRiskyModal(false); }}>
-                <div className="-ml-10">
-                    <Table
-                        listData={new Array(7).fill('')}
-                        header={<div className="grid-cols-5 grid gap-5 lg:gap-0 mt-4">
-                            <TableHeaderCol col={1} text="Owner" />
-                            <TableHeaderCol col={1} text="Collateral" />
-                            <TableHeaderCol col={1} text="Debt" textCenter />
-                            <TableHeaderCol col={1} text="Coll. Ratio" textCenter />
-                            <TableHeaderCol col={1} text="" />
-                        </div>}
-                        renderItem={(item: any, index: number) => {
-                            return <div className="grid grid-cols-5">
-                                <TableBodyCol col={1} text="XXXXXX" value={
-                                    <Text size='base' className='whitespace-nowrap'>arch1zrm...6tzx </Text>
-                                } />
-                                <TableBodyCol col={1} text="XXXXXX" value={
-                                    <NumericFormat
-                                        thousandsGroupStyle="thousand"
-                                        thousandSeparator=","
-                                        fixedDecimalScale
-                                        decimalScale={2}
-                                        displayType="text"
-                                        renderText={(value) =>
-                                            <Text size='base' responsive={false} className='whitespace-nowrap'>XX.XXXX</Text>
-                                        }
-                                    />} />
-                                <TableBodyCol col={1} text="XXXXXX" value={
-                                    <NumericFormat
-                                        thousandsGroupStyle="thousand"
-                                        thousandSeparator=","
-                                        fixedDecimalScale
-                                        decimalScale={2}
-                                        displayType="text"
-                                        renderText={(value) =>
-                                            <Text size='base' responsive={false} className='whitespace-nowrap'>XX.XXXX</Text>
-                                        }
-                                    />} />
-                                <TableBodyCol col={1} text="XXXXXX" value={
-                                    <NumericFormat
-                                        thousandsGroupStyle="thousand"
-                                        thousandSeparator=","
-                                        fixedDecimalScale
-                                        decimalScale={2}
-                                        displayType="text"
-                                        renderText={(value) =>
-                                            <Text size='base' responsive={false} className='whitespace-nowrap text-green-500'>XX.XXXX%</Text>
-                                        }
-                                    />} />
-                                <TableBodyCol col={1} text="XXXXX" value={
-                                    <GradientButton className="w-[120px] h-8 py-0" rounded="rounded-2xl">
-                                        <Text>Liquidate</Text>
-                                    </GradientButton>
-                                } />
-                            </div>
-                        }} />
-                </div>
-            </Modal>
+            {
+                riskyModal &&
+                <RiskyTrovesModal
+                    open={riskyModal}
+                    onClose={() => { setRiskyModal(false); }}
+                    pageData={pageData}
+                    getPageData={getPageData}
+                />
+            }
         </div>
     )
 }
