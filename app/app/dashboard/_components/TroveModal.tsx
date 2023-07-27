@@ -329,7 +329,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             />
                             <StatisticCard
                                 title="Total debt"
-                                description="X.XXX,XX AUSD"
+                                description={`${pageData.debtAmount} AUSD`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The total amount of AUSD your Trove will hold."
                             />
