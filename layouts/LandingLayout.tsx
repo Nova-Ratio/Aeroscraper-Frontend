@@ -82,7 +82,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                         </Link>
                     </div>
                 </div>
-                <div className="absolute left-1/2 right-1/2 -translate-x-20 bottom-4 whitespace-nowrap flex items-end">
+                <div className="absolute right-6 bottom-4 whitespace-nowrap flex items-end">
                     <Text size="base" textColor='text-white'>Product by</Text>
                     <Link className="ml-2 mb-0.5" href={"https://www.novaratio.tech/"}>
                         <NovaRatioIcon />
