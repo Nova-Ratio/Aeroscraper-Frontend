@@ -17,7 +17,7 @@ interface ModalProps {
   modalSize?: "sm" | "md" | "lg",
   childrenClassName?: string,
   layoutId?: string,
-  processLoading?:boolean
+  processLoading?: boolean
 }
 
 const SIZE_VARIANT = {
@@ -104,7 +104,9 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
               <CloseIcon className="w-6 h-6" />
             </button>
           </div>
-          {props.children}
+          <div className={props.childrenClassName}>
+            {props.children}
+          </div>
           <div className='absolute -right-10 top-0 overflow-hidden'>
             <ModalNotification />
           </div>

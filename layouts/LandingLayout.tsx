@@ -9,6 +9,7 @@ import { useState } from "react"
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
     const [privacyModal, setPrivacyModal] = useState(false);
+    const [whiteSpaceModal, setWhiteSpaceModal] = useState(false);
 
     return (
         <>
@@ -32,21 +33,25 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
             <div className='container mx-auto px-8'>
                 {children}
             </div>
-            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 py-16 bg-raisin-black mt-auto relative'>
+            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 pt-6 pb-24 bg-raisin-black mt-auto relative'>
                 <div className="flex-row flex gap-20 items-top">
-                    <div className='flex flex-col items-center gap-6'>
+                    <div className='flex flex-col items-center gap-6 lg:mt-20'>
                         <Logo />
                         <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
                     </div>
-                    <div onClick={() => { setPrivacyModal(true); }} className='flex flex-col items-center gap-4'>
+                    <div className='flex flex-col items-center lg:justify-normal justify-center gap-4'>
                         <Text size="2xl" textColor='text-white'>Product</Text>
-                        <Text textColor='text-ghost-white/75' className="cursor-pointer">Whitepaper</Text>
-                        <Text textColor='text-ghost-white/75' className="cursor-pointer">Terms of service</Text>
+                        <button onClick={() => { setWhiteSpaceModal(true); }}>
+                            <Text textColor='text-ghost-white/75' className="cursor-pointer">Whitepaper</Text>
+                        </button>
+                        <button onClick={() => { setPrivacyModal(true); }}>
+                            <Text textColor='text-ghost-white/75' className="cursor-pointer">Terms of service</Text>
+                        </button>
                     </div>
                 </div>
                 <div className='flex flex-col items-center gap-6'>
                     <Text size="2xl">Definition of Aeroscraper</Text>
-                    <div className='flex flex-col items-center gap-4'>
+                    <div className='flex flex-col items-center gap-3'>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-name'} className='hover:scale-105 transition-all flex gap-2'>
                             <Text textColor='text-white'>Definition of name</Text>
                         </Link>
@@ -85,10 +90,79 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </footer>
 
-            <Modal title="Terms of service" showModal={privacyModal} onClose={() => { setPrivacyModal(false); }} childrenClassName="h-2/3 overflow-y-scroll mt-12">
+            <Modal title="Terms of service" showModal={privacyModal} onClose={() => { setPrivacyModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
                 <Text size="sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ab optio rem, perspiciatis eum quam alias magnam consequatur est ad pariatur corrupti, quidem soluta ipsam corporis tempore! Asperiores qui totam praesentium, animi perspiciatis ipsum illum velit at magnam fugit amet beatae dignissimos nemo magni accusantium. Minus corrupti rem ex maiores, amet magni saepe, eligendi vitae veritatis cupiditate officiis fugit expedita recusandae illo provident perspiciatis harum temporibus ut assumenda error! Perspiciatis soluta nemo id quaerat a eligendi commodi itaque corrupti, earum, dolorum velit ratione perferendis sapiente eum iure? Ipsa harum in aliquid provident repellendus est quaerat eaque. Possimus perferendis veniam quidem.               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia facere dicta quis quos doloribus quas, iusto repudiandae? Beatae deleniti repellat, voluptatum rem enim eligendi inventore porro, animi vel aliquid totam ipsum quibusdam modi sed labore ipsa qui dicta tempora dolorum! Id nostrum voluptatibus velit, corporis doloremque qui repellat neque magni, adipisci laudantium sint minima sit soluta error excepturi amet alias placeat esse earum optio fugit. Aut repellat id dignissimos cumque ab quod quam voluptatem blanditiis, rem officia, odit sed tempora explicabo iusto aperiam, obcaecati quaerat fuga perferendis ex est quis placeat. Provident illo ab quidem ipsam perferendis facere consequatur eaque?
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia facere dicta quis quos doloribus quas, iusto repudiandae? Beatae deleniti repellat, voluptatum rem enim eligendi inventore porro, animi vel aliquid totam ipsum quibusdam modi sed labore ipsa qui dicta tempora dolorum! Id nostrum voluptatibus velit, corporis doloremque qui repellat neque magni, adipisci laudantium sint minima sit soluta error excepturi amet alias placeat esse earum optio fugit. Aut repellat id dignissimos cumque ab quod quam voluptatem blanditiis, rem officia, odit sed tempora explicabo iusto aperiam, obcaecati quaerat fuga perferendis ex est quis placeat. Provident illo ab quidem ipsam perferendis facere consequatur eaque? ipsum dolor sit amet consectetur adipisicing elit. Eveniet ab optio rem, perspiciatis eum quam alias magnam consequatur est ad pariatur corrupti, quidem soluta ipsam corporis tempore! Asperiores qui totam praesentium, animi perspiciatis ipsum illum velit at magnam fugit amet beatae dignissimos nemo magni accusantium. Minus corrupti rem ex maiores, amet magni saepe, eligendi vitae veritatis cupiditate officiis fugit expedita recusandae illo provident perspiciatis harum temporibus ut assumenda error! Perspiciatis soluta nemo id quaerat a eligendi commodi itaque corrupti, earum, dolorum velit ratione perferendis sapiente eum iure? Ipsa harum in aliquid provident repellendus est quaerat eaque. Possimus perferendis veniam quidem.               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia facere dicta quis quos doloribus quas, iusto repudiandae? Beatae deleniti repellat, voluptatum rem enim eligendi inventore porro, animi vel aliquid totam ipsum quibusdam modi sed labore ipsa qui dicta tempora dolorum! Id nostrum voluptatibus velit, corporis doloremque qui repellat neque magni, adipisci laudantium sint minima sit soluta error excepturi amet alias placeat
                 </Text>
+            </Modal>
+
+            <Modal title="Whitepaper" showModal={whiteSpaceModal} onClose={() => { setWhiteSpaceModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
+                <>
+                    <Text size="2xl">Aeroscraper</Text>
+                    <Text size="base" className="mt-2">Governance-free, interest-free, decentralized lending-borrowing protocol.</Text>
+                    <Text size="lg" className="mt-4">Our Vision</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">“The core objective of the Aeroscraper revolves around bolstering the establishment, expansion, and widespread acceptance of a highly secure, trustless, and decentralized financial framework. By being community-owned, it aims to instill enhanced stability and transparency into DeFi.”</Text>
+                    <Text size="lg" className="mt-4">Intro</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is the first truly decentralized lending protocol built for Sei Network. Its operations are immutable, non-custodial, and governance-free. It is a finished product with no admin keys.</Text>
+                        <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        The protocol was developed to allow owners of Sei Network coin (SEI) a method of extracting value from their holdings, without the need to ever sell. By locking up SEI coins and minting aUSD (a USD pegged stablecoin), a SEI holder can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
+                    <Text size="lg" className="mt-4">What is Aeroscraper?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is a decentralized lending protocol that allows you to draw interest-free loans against SEI (Sei Network coin) used as collateral.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        Users deposit SEI and mint aUSD (stablecoin). These individual collateralized debt positions are called troves.
+                        The minted stablecoins are economically geared towards maintaining a value of 1 aUSD = $1 USD of SEI value, due to the following properties;
+                    </Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        1. The system is designed to always be over-collateralized.
+                        The dollar value of the locked SEI exceeds the dollar value of the issued stablecoins.
+                    </Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        2. The stablecoins are fully redeemable.
+                        Users can always swap aUSD for SEI (minus fees), directly within the system.
+                    </Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        3. The system controls the generation of aUSD.
+                        The operations are done algorithmically, through a variable issuance fee.
+                    </Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        After opening a Vault, users mint their own stablecoin to a collateral ratio of at least 115%.
+                        As an example, a user with $11,500 worth of SEI can mint up to 10,000 aUSD.
+                    </Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">The tokens are freely exchangeable – anyone can send or receive aUSD tokens. aUSD tokens are burned upon repayment of a Trove’s debt or via a directly redemption process.
+                    </Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        The Aeroscraper system regularly updates the SEI:USD price via a decentralized data feed.
+                        When a Vault falls below a minimum collateralization ratio (MCR) of 115%, it is considered under-collateralized, and is vulnerable to liquidation. This is to ensure the protocol remains solvent at all times, and 1 aUSD can always be redeemed for $1 USD worth of SEI.
+                    </Text>
+                    <Text size="lg" className="mt-4">What’s the motivation behind Aeroscraper?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        The protocol was developed to allow owners of SEI a method of extracting value from their holdings, without the need to ever sell their tokens.
+                        By locking up SEI and minting aUSD, SEI holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Stablecoins are an essential building block on any blockchain. However, the vast majority of this value is made up of centralized stablecoins. Decentralized stablecoins make up only a small portion of the total stablecoin supply.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper addresses this by creating a more capital-efficient and user-friendly way to borrow a decentralized stablecoin.
+                        Furthermore, Aeroscraper is completely immutable, governance-free, and non-custodial.</Text>
+                    <Text size="lg" className="mt-4">What are the key benefits of Aeroscraper?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">0% interest rate – as a borrower, there’s no need to worry about constantly accruing debt.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">115% MCR – a low minimum collateralization ratio means more efficient usage of your deposited SEI.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Governance free – all operations are algorithmic and fully automated, and protocol parameters are set at time of deployment.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Directly redeemable – the protocol allows you to exchange 1 aUSD stablecoin for $1 USD worth of SEI at any time.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Fully decentralized – the contracts have no admin keys and can be accessible via other front ends, making it censorship resistant.</Text>
+                    <Text size="lg" className="mt-4">Does anyone “own” or operate the protocol?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">No. The contract is immutable and therefore has no owner or operator.</Text>
+                    <Text size="lg" className="mt-4">Can Aeroscraper be upgraded or changed?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">
+                        No. The protocol has no admin key, and nobody can alter the rules of the system in any way. The smart contract code is completely immutable once deployed.
+                    </Text>
+                    <Text size="lg" className="mt-4">Has the protocol been third-party verified, certified, and/or audited?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">The protocol will be audited and the full report will be made publicly available.</Text>
+                    <Text size="lg" className="mt-4">What are the main use cases of Aeroscraper?</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Borrow aUSD against SEI by opening a ‘​Trove’.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Deposit USDL to the Stability Pool and earn liquidation gains in SEI as rewards.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300"> Redeem 1 aUSD for $1 USD worth of SEI at any time.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300"> Arbitrage potential gains if the 1 aUSD peg falls below $1 USD.</Text>
+
+
+                </>
             </Modal>
         </>
     )
