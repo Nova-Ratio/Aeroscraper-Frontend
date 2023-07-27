@@ -28,6 +28,11 @@ const useAppContract = () => {
         return await contract.getStake(wallet.address);
     }, [wallet, contract])
 
+    const getTotalStake = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.getTotalStake();
+    }, [contract])
+
     const getCollateralPrice = useCallback(async () => {
         if (isNil(contract)) return;
         return await contract.getCollateralPrice();
@@ -43,9 +48,9 @@ const useAppContract = () => {
         return await contract.getAusdInfo();
     }, [contract])
 
-    const openTrove = useCallback(async (amount: number) => {
+    const openTrove = useCallback(async (amount: number, loan_amount: number) => {
         if (isNil(contract)) return;
-        return await contract.openTrove(wallet.address, amount);
+        return await contract.openTrove(wallet.address, amount, loan_amount);
     }, [wallet, contract])
 
     const addCollateral = useCallback(async (amount: number) => {
@@ -98,6 +103,7 @@ const useAppContract = () => {
         getTotalDebtAmount,
         getTrove,
         getStake,
+        getTotalStake,
         getCollateralPrice,
         getAusdBalance,
         getAusdInfo,
@@ -116,6 +122,7 @@ const useAppContract = () => {
         getTotalDebtAmount,
         getTrove,
         getStake,
+        getTotalStake,
         getCollateralPrice,
         getAusdBalance,
         getAusdInfo,

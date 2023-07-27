@@ -6,10 +6,6 @@ import StatisticCard from "@/components/Cards/StatisticCard";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import ShapeContainer from "@/components/Containers/ShapeContainer";
 import { Logo, RedeemIcon, RightArrow } from "@/components/Icons/Icons";
-import { Modal } from "@/components/Modal/Modal";
-import { Table } from "@/components/Table/Table";
-import { TableBodyCol } from "@/components/Table/TableBodyCol";
-import { TableHeaderCol } from "@/components/Table/TableHeaderCol";
 import Text from "@/components/Texts/Text"
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { NumericFormat } from 'react-number-format'
@@ -22,8 +18,10 @@ import StabilityPoolModal from "./_components/StabilityPoolModal";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import RiskyTrovesModal from "./_components/RiskyTrovesModal";
+import { useWallet } from "@/contexts/WalletProvider";
 
 export default function Dashboard() {
+    const { balanceByDenom } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -35,7 +33,9 @@ export default function Dashboard() {
         stakedAmount: 0,
         totalCollateralAmount: 0,
         totalDebtAmount: 0,
-        totalAusdSupply: 0
+        totalAusdSupply: 0,
+        totalStakedAmount: 0,
+        poolShare: 0
     })
 
     const [processLoading, setProcessLoading] = useState<boolean>(false);
@@ -50,6 +50,7 @@ export default function Dashboard() {
                 troveRes,
                 ausdBalanceRes,
                 stakeRes,
+                totalStakeRes,
                 totalCollateralRes,
                 totalDebtRes,
                 ausdInfoRes
@@ -57,6 +58,7 @@ export default function Dashboard() {
                 contract.getTrove(),
                 contract.getAusdBalance(),
                 contract.getStake(),
+                contract.getTotalStake(),
                 contract.getTotalCollateralAmount(),
                 contract.getTotalDebtAmount(),
                 contract.getAusdInfo()
@@ -69,7 +71,9 @@ export default function Dashboard() {
                 stakedAmount: convertAmount(stakeRes?.amount ?? 0),
                 totalCollateralAmount: convertAmount(totalCollateralRes ?? 0),
                 totalDebtAmount: convertAmount(totalDebtRes ?? 0),
-                totalAusdSupply: convertAmount(ausdInfoRes?.total_supply ?? 0)
+                totalAusdSupply: convertAmount(ausdInfoRes?.total_supply ?? 0),
+                totalStakedAmount: convertAmount(totalStakeRes ?? 0),
+                poolShare: Number(Number(stakeRes?.percentage).toFixed(2))
             })
         }
         catch (err) {
@@ -82,7 +86,9 @@ export default function Dashboard() {
                 stakedAmount: 0,
                 totalCollateralAmount: 0,
                 totalDebtAmount: 0,
-                totalAusdSupply: 0
+                totalAusdSupply: 0,
+                totalStakedAmount: 0,
+                poolShare: 0
             })
         }
     }, [contract])
@@ -124,7 +130,7 @@ export default function Dashboard() {
                             <Text>$0.976923</Text>
                         </div>
                     </div>
-                    <WalletButton />
+                    <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
                 </BorderedContainer>
                 <BorderedContainer containerClassName="w-full h-full row-span-2" className="px-4 py-6 flex flex-col justify-center items-center">
                     <div className="relative w-full bg-dark-purple rounded-lg p-2 flex flex-col gap-4">
@@ -198,7 +204,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="TVL"
-                                description="XXXK SEI ($XXXM)"
+                                description={`${pageData.totalCollateralAmount + pageData.totalStakedAmount} SEI ($XXXM)`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system, given in AUSD and SEI."
                             />

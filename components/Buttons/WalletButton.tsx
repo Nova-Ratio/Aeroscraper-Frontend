@@ -19,10 +19,12 @@ import { NumericFormat } from 'react-number-format'
 import { CounterUp } from '../CounterUp'
 
 type Props = {
+    ausdBalance?: number;
+    seiBalance?: number;
     className?: string;
 }
 
-const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
+const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = "w-[268px] h-[69px]" }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
 
@@ -89,7 +91,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                             src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
                             className='w-full h-full rounded-sm bg-raisin-black'
                         />
-                        <motion.div layoutId="profile"/>
+                        <motion.div layoutId="profile" />
                     </div>
                     <div className='max-w-[300px]'>
                         <div className='flex gap-4  items-center'>
@@ -102,7 +104,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                         <div className='flex items-center mt-2'>
                             <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
                             <NumericFormat
-                                value={99322.23}
+                                value={ausdBalance}
                                 thousandsGroupStyle="thousand"
                                 thousandSeparator=","
                                 fixedDecimalScale
@@ -116,7 +118,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                             />
                             <img alt="sei" className="w-6 h-6 ml-4" src="/images/sei.png" />
                             <NumericFormat
-                                value={2104}
+                                value={seiBalance}
                                 thousandsGroupStyle="thousand"
                                 thousandSeparator=","
                                 fixedDecimalScale

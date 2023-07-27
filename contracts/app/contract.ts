@@ -24,6 +24,10 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.queryContractSmart(contractAddress, { stake: { user_addr } });
     }
 
+    const getTotalStake = async (): Promise<string> => {
+        return await client.queryContractSmart(contractAddress, { total_stake_amount: {} });
+    }
+
     const getCollateralPrice = async () => {
         return await client.queryContractSmart(contractAddress, { collateral_price: {} });
     }
@@ -37,11 +41,11 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     }
 
     //EXECUTE QUERIES
-    const openTrove = async (senderAddress: string, amount: number) => {
+    const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
         return await client.execute(
             senderAddress,
             contractAddress,
-            { open_trove: { loan_amount: getRequestAmount(amount) } },
+            { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
             "auto",
             "Open Trove",
             [coin(getRequestAmount(amount), "usei")]
@@ -168,6 +172,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         getTotalDebtAmount,
         getTrove,
         getStake,
+        getTotalStake,
         getCollateralPrice,
         getAusdBalance,
         getAusdInfo,

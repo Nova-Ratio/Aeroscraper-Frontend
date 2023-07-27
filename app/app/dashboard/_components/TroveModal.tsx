@@ -11,7 +11,6 @@ import { NumberFormatValues } from 'react-number-format/types/types';
 import { PageData } from '../_types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
-import Accordion from '@/components/Accordion/Accordion';
 import { useNotification } from '@/contexts/NotificationProvider';
 
 enum TABS {
@@ -30,6 +29,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const contract = useAppContract();
 
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
+    const [borrowAmount, setBorrowAmount] = useState<number>(0);
     const [collateralAmount, setCollateralAmount] = useState<number>(0);
     const [borrowingAmount, setBorrowingAmount] = useState<number>(0);
 
@@ -42,6 +42,10 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
     const changeOpenTroveAmount = (values: NumberFormatValues) => {
         setOpenTroveAmount(Number(values.value));
+    }
+
+    const changeBorrowAmount = (values: NumberFormatValues) => {
+        setBorrowAmount(Number(values.value));
     }
 
     const changeCollateralAmount = (values: NumberFormatValues) => {
@@ -156,7 +160,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
         try {
             setProcessLoading(true);
 
-            const res = await contract.openTrove(openTroveAmount);
+            const res = await contract.openTrove(openTroveAmount, borrowAmount);
 
             addNotification({
                 status: 'success',
@@ -218,7 +222,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Total Debt'
-                                                description='X.XXX.XXX AUSD'
+                                                description={`${pageData.debtAmount} AUSD`}
                                                 tooltip='The total amount of AUSD your Trove will hold.'
                                             />
                                             <StatisticCard
@@ -270,7 +274,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Total Debt'
-                                                description='X.XXX.XXX AUSD'
+                                                description={`${pageData.debtAmount} AUSD`}
                                                 tooltip='The total amount of AUSD your Trove will hold.'
                                             />
                                             <StatisticCard
@@ -300,7 +304,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                     <div>
                         <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
                         <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: true, min: false }} />
-                        <InputLayout label="Borrow" hintTitle="AUSD" value={0} className="mt-4 mb-6" />
+                        <InputLayout label="Borrow" hintTitle="AUSD" value={borrowAmount} onValueChange={changeBorrowAmount} className="mt-4 mb-6" />
                         <motion.div
                             initial={{ y: 200, x: 200, opacity: 0.1 }}
                             animate={{ y: 0, x: 0, opacity: 1 }}

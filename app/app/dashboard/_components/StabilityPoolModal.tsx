@@ -101,7 +101,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Deposit" hintTitle="AUSD" value={stakeAmount} onValueChange={(e) => { setStakeAmount(Number(e.value)); }} hasPercentButton={{ max: true, min: false }} rightBottomSide={
+            <InputLayout label="Deposit" hintTitle="AUSD" value={stakeAmount} onValueChange={(e) => { setStakeAmount(Number(e.value)); }} maxButtonClick={() => setStakeAmount(pageData.ausdBalance)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
                 <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
                 <NumericFormat
@@ -119,7 +119,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                 />
               </div>
             } />
-            <InputLayout label="Pool Share" hintTitle="%" value={0} className="mt-4 mb-6" />
+            <InputLayout disabled label="Pool Share" hintTitle="%" value={pageData.poolShare} className="mt-4 mb-6" />
             <div className='bg-dark-purple rounded-lg px-2 py-4 flex items-center'>
               <Text textColor="text-white" weight="font-normal">Reward</Text>
               <div className='bg-english-violet rounded-lg flex px-2 py-2 mx-10 flex-1'>
@@ -154,11 +154,11 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Withdraw" hintTitle="AUSD" value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} hasPercentButton={{ max: true, min: false }} rightBottomSide={
+            <InputLayout label="Withdraw" hintTitle="AUSD" value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} maxButtonClick={() => setUnstakeAmount(pageData.stakedAmount)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
-                <img alt="aero" className="w-6 h-6" src="/images/sei.png" />
+                <img alt="ausd" className="w-6 h-6" src="/images/ausd.svg" />
                 <NumericFormat
-                  value={99.00}
+                  value={pageData.stakedAmount}
                   thousandsGroupStyle="thousand"
                   thousandSeparator=","
                   fixedDecimalScale
@@ -172,7 +172,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                 />
               </div>
             } />
-            <InputLayout label="Pool Share" hintTitle="%" value={0} className="mt-4 mb-6" />
+            <InputLayout disabled label="Pool Share" hintTitle="%" value={pageData.poolShare} className="mt-4 mb-6" />
             <GradientButton loading={processLoading} onClick={unStakePool} className="min-w-[221px] h-11 mt-6 ml-auto" rounded="rounded-lg">
               <Text>Confirm</Text>
             </GradientButton>
