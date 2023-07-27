@@ -215,8 +215,8 @@ export default function Dashboard() {
                                 tooltip="The total AUSD minted by the Liquity Protocol."
                             />
                             <StatisticCard
-                                title="Kickback Rate"
-                                description="110%"
+                                title="Liquidation Threshold"
+                                description="115%"
                                 className="w-[191px] h-14"
                                 tooltip="A rate between 0 and 100% set by the Frontend Operator that determines the fraction of SEI that will be paid out as a kickback to the Stability Providers using the frontend."
                             />

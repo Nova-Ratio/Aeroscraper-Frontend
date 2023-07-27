@@ -224,12 +224,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <StatisticCard
                                                 title='Liquidation price'
                                                 description='-'
-                                                tooltip='The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
+                                                tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
                                                 description='-'
-                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
+                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
                                             />
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
@@ -276,12 +276,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <StatisticCard
                                                 title='Liquidation price'
                                                 description='-'
-                                                tooltip='The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
+                                                tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
                                                 description='-'
-                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
+                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
                                             />
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
@@ -298,7 +298,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                     </>
                     :
                     <div>
-                        <Info message={"Collateral ratio must be at least 110%."} status={"normal"} />
+                        <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
                         <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: true, min: false }} />
                         <InputLayout label="Borrow" hintTitle="AUSD" value={0} className="mt-4 mb-6" />
                         <motion.div
@@ -333,13 +333,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                 title="Liquidation price"
                                 description="$XXXXXXX.XX"
                                 className="w-full h-14 col-span-6"
-                                tooltip="The dollar value per unit of collateral at which your Trove will drop below a 110% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
+                                tooltip="The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
                             />
                             <StatisticCard
                                 title="Collateral ratio"
                                 description="X.XX%"
                                 className="w-full h-14 col-span-6 col-start-4"
-                                tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 110% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety."
+                                tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety."
                             />
                         </motion.div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">

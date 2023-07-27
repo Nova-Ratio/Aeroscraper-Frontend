@@ -52,16 +52,16 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className='flex flex-col items-center gap-6'>
                     <Text size="2xl">Definition of Aeroscraper</Text>
                     <div className='flex flex-col items-center gap-3'>
-                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-name'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-name'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <Text textColor='text-white'>Definition of name</Text>
                         </Link>
-                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-icon'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-icon'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <Text textColor='text-white'>Definition of icon</Text>
                         </Link>
-                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-colors'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-colors'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <Text textColor='text-white'>Definition of colors</Text>
                         </Link>
-                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definations-of-aeroscraper/definition-of-typography'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-typography'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <Text textColor='text-white'>Definition of typography</Text>
                         </Link>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/'} className='hover:scale-105 transition-all flex gap-2'>
@@ -72,11 +72,11 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className='flex flex-col items-center gap-6'>
                     <Text size="2xl">Community</Text>
                     <div className='flex flex-col items-center gap-4'>
-                        <Link href={'#'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://twitter.com/aeroscraper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <TwitterLogo />
                             <Text textColor='text-white'>Twitter</Text>
                         </Link>
-                        <Link href={'https://discord.gg/zVYHsqM9rq'} className='hover:scale-105 transition-all flex gap-2'>
+                        <Link href={'https://discord.gg/3R6yTqB8hC'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <DiscordLogo />
                             <Text textColor='text-white'>Discord</Text>
                         </Link>
@@ -84,7 +84,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
                 <div className="absolute right-6 bottom-4 whitespace-nowrap flex items-end">
                     <Text size="base" textColor='text-white'>Product by</Text>
-                    <Link className="ml-2 mb-0.5" href={"https://www.novaratio.tech/"}>
+                    <Link className="ml-2 mb-0.5" href={"https://www.novaratio.tech/"} target="_blank" rel="noopener noreferrer">
                         <NovaRatioIcon />
                     </Link>
                 </div>
