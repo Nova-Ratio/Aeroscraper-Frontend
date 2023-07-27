@@ -40,7 +40,7 @@ export default function Dashboard() {
 
     const [processLoading, setProcessLoading] = useState<boolean>(false);
 
-    const isTroveOpened = useMemo(() => pageData.ausdBalance > 0, [pageData]);
+    const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
     const contract = useAppContract();
 
@@ -241,7 +241,7 @@ export default function Dashboard() {
                     <div className='flex flex-col w-full h-full'>
                         <Text size="3xl" weight="font-normal">Trove</Text>
                         <NumericFormat
-                            value={pageData.ausdBalance}
+                            value={pageData.collateralAmount}
                             thousandsGroupStyle="thousand"
                             thousandSeparator=","
                             fixedDecimalScale

@@ -38,7 +38,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const [processLoading, setProcessLoading] = useState<boolean>(false);
     const { addNotification } = useNotification();
 
-    const isTroveOpened = useMemo(() => pageData.ausdBalance > 0, [pageData]);
+    const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
     const changeOpenTroveAmount = (values: NumberFormatValues) => {
         setOpenTroveAmount(Number(values.value));
