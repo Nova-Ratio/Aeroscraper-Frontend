@@ -109,7 +109,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                   thousandsGroupStyle="thousand"
                   thousandSeparator=","
                   fixedDecimalScale
-                  decimalScale={4}
+                  decimalScale={2}
                   displayType="text"
                   renderText={(value) =>
                     <Text size='base' className='flex ml-2 gap-2'>
@@ -125,7 +125,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
               <div className='bg-english-violet rounded-lg flex px-2 py-2 mx-10 flex-1'>
                 <img alt="aero" className="w-6 h-6" src="/images/sei.png" />
                 <NumericFormat
-                  value={210.00}
+                  value={0}
                   thousandsGroupStyle="thousand"
                   thousandSeparator=","
                   fixedDecimalScale
@@ -154,11 +154,11 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Withdraw" hintTitle="AUSD" value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} maxButtonClick={() => setUnstakeAmount(pageData.stakedAmount)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
+            <InputLayout label="Withdraw" hintTitle="AUSD" value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} maxButtonClick={() => setUnstakeAmount(pageData.ausdBalance)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
                 <img alt="ausd" className="w-6 h-6" src="/images/ausd.svg" />
                 <NumericFormat
-                  value={pageData.stakedAmount}
+                  value={pageData.ausdBalance}
                   thousandsGroupStyle="thousand"
                   thousandSeparator=","
                   fixedDecimalScale
@@ -166,7 +166,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                   displayType="text"
                   renderText={(value) =>
                     <Text size='base' className='flex ml-2 gap-2'>
-                      Balance: {value} SEI
+                      Balance: {value} AUSD
                     </Text>
                   }
                 />

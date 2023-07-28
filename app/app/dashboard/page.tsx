@@ -204,7 +204,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${pageData.totalCollateralAmount + pageData.totalStakedAmount} SEI`}
+                                description={`${Number(pageData.totalCollateralAmount + pageData.totalStakedAmount).toFixed(2)} SEI`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system, given in AUSD and SEI."
                             />
@@ -216,7 +216,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="AUSD supply"
-                                description={pageData.totalAusdSupply.toString()}
+                                description={Number(pageData.totalAusdSupply).toFixed(2).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Liquity Protocol."
                             />
@@ -228,13 +228,13 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="AUSD in Stability Pool"
-                                description={pageData.totalStakedAmount.toString()}
+                                description={Number(pageData.totalStakedAmount).toFixed(2).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD currently held in the Stability Pool, expressed as an amount and a fraction of the AUSD supply."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
-                                description={`${(pageData.totalCollateralAmount * 2 ) / pageData.totalAusdSupply * 100} %`}
+                                description={`${Number((pageData.totalCollateralAmount * 2 ) / pageData.totalAusdSupply * 100).toFixed(2)} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />
