@@ -43,10 +43,10 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                         <Text size="2xl" textColor='text-white'>Product</Text>
                         <button onClick={() => { setWhiteSpaceModal(true); }}>
                             <Text textColor='text-ghost-white/75' className="cursor-pointer">Whitepaper</Text>
-                        </button>
+                        </button>{/* 
                         <button onClick={() => { setPrivacyModal(true); }}>
                             <Text textColor='text-ghost-white/75' className="cursor-pointer">Terms of service</Text>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
                 <div className='flex flex-col items-center gap-6'>
@@ -84,17 +84,17 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
                 <div className="absolute right-6 bottom-4 whitespace-nowrap flex items-end">
                     <Text size="base" textColor='text-white'>Product by</Text>
-                    <Link className="ml-2 mb-0.5" href={"https://www.novaratio.tech/"} target="_blank" rel="noopener noreferrer">
+                    <Link className="ml-2 mb-0.5" href={"https://twitter.com/novaratiotech"} target="_blank" rel="noopener noreferrer">
                         <NovaRatioIcon />
                     </Link>
                 </div>
             </footer>
 
-            <Modal title="Terms of service" showModal={privacyModal} onClose={() => { setPrivacyModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
+{/*             <Modal title="Terms of service" showModal={privacyModal} onClose={() => { setPrivacyModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
                 <Text size="sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ab optio rem, perspiciatis eum quam alias magnam consequatur est ad pariatur corrupti, quidem soluta ipsam corporis tempore! Asperiores qui totam praesentium, animi perspiciatis ipsum illum velit at magnam fugit amet beatae dignissimos nemo magni accusantium. Minus corrupti rem ex maiores, amet magni saepe, eligendi vitae veritatis cupiditate officiis fugit expedita recusandae illo provident perspiciatis harum temporibus ut assumenda error! Perspiciatis soluta nemo id quaerat a eligendi commodi itaque corrupti, earum, dolorum velit ratione perferendis sapiente eum iure? Ipsa harum in aliquid provident repellendus est quaerat eaque. Possimus perferendis veniam quidem.               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia facere dicta quis quos doloribus quas, iusto repudiandae? Beatae deleniti repellat, voluptatum rem enim eligendi inventore porro, animi vel aliquid totam ipsum quibusdam modi sed labore ipsa qui dicta tempora dolorum! Id nostrum voluptatibus velit, corporis doloremque qui repellat neque magni, adipisci laudantium sint minima sit soluta error excepturi amet alias placeat esse earum optio fugit. Aut repellat id dignissimos cumque ab quod quam voluptatem blanditiis, rem officia, odit sed tempora explicabo iusto aperiam, obcaecati quaerat fuga perferendis ex est quis placeat. Provident illo ab quidem ipsam perferendis facere consequatur eaque?
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia facere dicta quis quos doloribus quas, iusto repudiandae? Beatae deleniti repellat, voluptatum rem enim eligendi inventore porro, animi vel aliquid totam ipsum quibusdam modi sed labore ipsa qui dicta tempora dolorum! Id nostrum voluptatibus velit, corporis doloremque qui repellat neque magni, adipisci laudantium sint minima sit soluta error excepturi amet alias placeat esse earum optio fugit. Aut repellat id dignissimos cumque ab quod quam voluptatem blanditiis, rem officia, odit sed tempora explicabo iusto aperiam, obcaecati quaerat fuga perferendis ex est quis placeat. Provident illo ab quidem ipsam perferendis facere consequatur eaque? ipsum dolor sit amet consectetur adipisicing elit. Eveniet ab optio rem, perspiciatis eum quam alias magnam consequatur est ad pariatur corrupti, quidem soluta ipsam corporis tempore! Asperiores qui totam praesentium, animi perspiciatis ipsum illum velit at magnam fugit amet beatae dignissimos nemo magni accusantium. Minus corrupti rem ex maiores, amet magni saepe, eligendi vitae veritatis cupiditate officiis fugit expedita recusandae illo provident perspiciatis harum temporibus ut assumenda error! Perspiciatis soluta nemo id quaerat a eligendi commodi itaque corrupti, earum, dolorum velit ratione perferendis sapiente eum iure? Ipsa harum in aliquid provident repellendus est quaerat eaque. Possimus perferendis veniam quidem.               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia facere dicta quis quos doloribus quas, iusto repudiandae? Beatae deleniti repellat, voluptatum rem enim eligendi inventore porro, animi vel aliquid totam ipsum quibusdam modi sed labore ipsa qui dicta tempora dolorum! Id nostrum voluptatibus velit, corporis doloremque qui repellat neque magni, adipisci laudantium sint minima sit soluta error excepturi amet alias placeat
                 </Text>
-            </Modal>
+            </Modal> */}
 
             <Modal title="Whitepaper" showModal={whiteSpaceModal} onClose={() => { setWhiteSpaceModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
                 <>

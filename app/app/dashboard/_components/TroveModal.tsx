@@ -227,7 +227,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <StatisticCard
                                                 title='Total Debt'
                                                 description={`${pageData.debtAmount} AUSD`}
-                                                tooltip='The total amount of AUSD your Trove will hold.'
+                                                tooltip='The total amount of AUSD you have borrowed'
                                             />
                                             <StatisticCard
                                                 title='Liquidation price'
@@ -237,7 +237,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <StatisticCard
                                                 title='Collateral ratio'
                                                 description={`${Number((pageData.collateralAmount * 2 ) / pageData.debtAmount * 100).toFixed(2)} %`}
-                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
+                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
@@ -286,7 +286,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <StatisticCard
                                                 title='Collateral ratio'
                                                 description={`${Number((pageData.collateralAmount * 2 ) / pageData.debtAmount * 100).toFixed(2)} %`}
-                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
+                                                tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
@@ -332,7 +332,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                 title="Total debt"
                                 description={`${pageData.debtAmount} AUSD`}
                                 className="w-full h-14 col-span-6"
-                                tooltip="The total amount of AUSD your Trove will hold."
+                                tooltip="The total amount of AUSD you have borrowed"
                             />
                             <StatisticCard
                                 title="Liquidation price"
@@ -344,7 +344,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                 title="Collateral ratio"
                                 description={`${Number((pageData.collateralAmount * 2 ) / pageData.debtAmount * 100).toFixed(2)} %`}
                                 className="w-full h-14 col-span-6 col-start-4"
-                                tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety."
+                                tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />
                         </motion.div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">

@@ -85,7 +85,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
   return (
     <Modal processLoading={processLoading} key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={open} onClose={() => { onClose?.(); }}>
       <div className="-ml-4">
-        <Info message={"Enter the amount of AUSD you'd like to deposit."} status={"normal"} />
+        <Info message={"Enter the amount of AUSD you'd like to deposit/withdraw."} status={"normal"} />
         <div className="flex flex-row w-2/3 ml-10 gap-6 mt-6 mb-10">
           <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.DEPOSIT ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.DEPOSIT); setStakeAmount(0); }}>
             Deposit

@@ -200,13 +200,13 @@ export default function Dashboard() {
                                 title="Borrowing Fee"
                                 description="0%"
                                 className="w-[191px] h-14"
-                                tooltip="The Borrowing Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt. The fee varies between 0.5% and 5% depending on AUSD redemption volumes."
+                                tooltip="The Borrowing Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt."
                             />
                             <StatisticCard
                                 title="TVL"
                                 description={`${Number(pageData.totalCollateralAmount + pageData.totalStakedAmount).toFixed(2)} SEI`}
                                 className="w-[191px] h-14"
-                                tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system, given in AUSD and SEI."
+                                tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
                             />
                             <StatisticCard
                                 title="Troves"
@@ -224,13 +224,13 @@ export default function Dashboard() {
                                 title="Liquidation Threshold"
                                 description="115%"
                                 className="w-[191px] h-14"
-                                tooltip="A rate between 0 and 100% set by the Frontend Operator that determines the fraction of SEI that will be paid out as a kickback to the Stability Providers using the frontend."
+                                tooltip="Liquidation Threshold Ratio"
                             />
                             <StatisticCard
                                 title="AUSD in Stability Pool"
                                 description={Number(pageData.totalStakedAmount).toFixed(2).toString()}
                                 className="w-[191px] h-14"
-                                tooltip="The total AUSD currently held in the Stability Pool, expressed as an amount and a fraction of the AUSD supply."
+                                tooltip="The total AUSD currently held in the Stability Pool."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
