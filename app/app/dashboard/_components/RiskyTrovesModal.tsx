@@ -66,7 +66,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                         renderItem={(item: any, index: number) => {
                             return <div className="grid grid-cols-4">
                                 <TableBodyCol col={1} text="XXXXXX" value={
-                                    <Text size='base' className='whitespace-nowrap'>arch1zrm...6tzx </Text>
+                                    <Text size='base' className='whitespace-nowrap'>sei1zrm...6tzx </Text>
                                 } />
                                 <TableBodyCol col={1} text="XXXXXX" value={
                                     <NumericFormat

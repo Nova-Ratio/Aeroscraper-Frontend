@@ -217,7 +217,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Borrowing Fee'
-                                                description='X.XX AUSD (X.XX%)'
+                                                description='0 AUSD (0%)'
                                                 tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
@@ -227,12 +227,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Liquidation price'
-                                                description='-'
+                                                description={[(pageData.debtAmount * 115) / (pageData.collateralAmount * 100)].toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description='-'
+                                                description={`${(pageData.collateralAmount * 2 ) / pageData.debtAmount * 100} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
                                             />
                                         </div>
@@ -269,7 +269,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Borrowing Fee'
-                                                description='X.XX AUSD (X.XX%)'
+                                                description='0 AUSD (0%)'
                                                 tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
@@ -279,12 +279,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Liquidation price'
-                                                description='-'
+                                                description={[(pageData.debtAmount * 115) / (pageData.collateralAmount * 100)].toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description='-'
+                                                description={`${(pageData.collateralAmount * 2 ) / pageData.debtAmount * 100} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing. While the Minimum Collateral Ratio is 115% during normal operation, it is recommended to keep the Collateral Ratio always above 150% to avoid liquidation under Recovery Mode. A Collateral Ratio above 200% or 250% is recommended for additional safety.'
                                             />
                                         </div>
@@ -323,7 +323,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             />
                             <StatisticCard
                                 title="Borrowing Fee"
-                                description="X.XX AUSD (X.XX%)"
+                                description="0 AUSD (0%)"
                                 className="w-full h-14 col-span-6"
                                 tooltip="This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free."
                             />

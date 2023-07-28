@@ -120,14 +120,14 @@ export default function Dashboard() {
                                 <img alt="ausd" className="w-10 h-10" src="/images/ausd.svg" />
                                 <Text size="2xl">AUSD</Text>
                             </div>
-                            <Text>$0.976923</Text>
+                            <Text>$1</Text>
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <div className="flex items-center gap-2">
                                 <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
                                 <Text size="2xl">SEI</Text>
                             </div>
-                            <Text>$0.976923</Text>
+                            <Text>$2</Text>
                         </div>
                     </div>
                     <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
@@ -198,19 +198,19 @@ export default function Dashboard() {
                         <div className="flex flex-wrap justify-center gap-6 mt-2 px-4">
                             <StatisticCard
                                 title="Borrowing Fee"
-                                description="X.XX%"
+                                description="0%"
                                 className="w-[191px] h-14"
                                 tooltip="The Borrowing Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt. The fee varies between 0.5% and 5% depending on AUSD redemption volumes."
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${pageData.totalCollateralAmount + pageData.totalStakedAmount} SEI ($XXXM)`}
+                                description={`${pageData.totalCollateralAmount + pageData.totalStakedAmount} SEI`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system, given in AUSD and SEI."
                             />
                             <StatisticCard
                                 title="Troves"
-                                description="X.XXX"
+                                description="-"
                                 className="w-[191px] h-14"
                                 tooltip="The total number of active Troves in the system."
                             />
@@ -228,13 +228,13 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="AUSD in Stability Pool"
-                                description="XXXM (XX.X%)"
+                                description={pageData.totalStakedAmount.toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD currently held in the Stability Pool, expressed as an amount and a fraction of the AUSD supply."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
-                                description="XXX.X%"
+                                description={`${(pageData.totalCollateralAmount * 2 ) / pageData.totalAusdSupply * 100} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />
@@ -247,7 +247,7 @@ export default function Dashboard() {
                     <div className='flex flex-col w-full h-full'>
                         <Text size="3xl" weight="font-normal">Trove</Text>
                         <NumericFormat
-                            value={pageData.collateralAmount}
+                            value={pageData.debtAmount}
                             thousandsGroupStyle="thousand"
                             thousandSeparator=","
                             fixedDecimalScale
