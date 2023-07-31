@@ -3,6 +3,7 @@ import { Coin, EncodeObject } from "@cosmjs/proto-signing";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 
 const DEFAULT_DECIMAL = 6;
+export const SEI_TO_AUSD_RATIO = 1.15;
 
 export const jsonToBinary = (json: any) => {
     return toBase64(toUtf8(JSON.stringify(json)));

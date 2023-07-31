@@ -8,17 +8,18 @@ import ShapeContainer from "@/components/Containers/ShapeContainer";
 import { Logo, RedeemIcon, RightArrow } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text"
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { NumericFormat } from 'react-number-format'
+import { NumberFormatValues, NumericFormat, numericFormatter } from 'react-number-format'
 import TroveModal from "./_components/TroveModal";
 import useAppContract from "@/contracts/app/useAppContract";
 import { PageData } from "./_types/types";
-import { convertAmount, getValueByRatio } from "@/utils/contractUtils";
+import { SEI_TO_AUSD_RATIO, convertAmount, getValueByRatio } from "@/utils/contractUtils";
 
 import StabilityPoolModal from "./_components/StabilityPoolModal";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import RiskyTrovesModal from "./_components/RiskyTrovesModal";
 import { useWallet } from "@/contexts/WalletProvider";
+import { getSettledValue } from "@/utils/promiseUtils";
 
 export default function Dashboard() {
     const { balanceByDenom } = useWallet();
@@ -26,6 +27,7 @@ export default function Dashboard() {
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
     const [redeemAmount, setRedeemAmount] = useState(0);
+    const [seiAmount, setSeiAmount] = useState(0);
     const [pageData, setPageData] = useState<PageData>({
         collateralAmount: 0,
         debtAmount: 0,
@@ -44,6 +46,11 @@ export default function Dashboard() {
 
     const contract = useAppContract();
 
+    const changeRedeemAmount = useCallback((values: NumberFormatValues) => {
+        setRedeemAmount(Number(values.value))
+        setSeiAmount(getValueByRatio(values.value, (1 - (SEI_TO_AUSD_RATIO - 1))))
+    }, [])
+
     const getPageData = useCallback(async () => {
         try {
             const [
@@ -54,7 +61,7 @@ export default function Dashboard() {
                 totalCollateralRes,
                 totalDebtRes,
                 ausdInfoRes
-            ] = await Promise.all([
+            ] = await Promise.allSettled([
                 contract.getTrove(),
                 contract.getAusdBalance(),
                 contract.getStake(),
@@ -62,18 +69,18 @@ export default function Dashboard() {
                 contract.getTotalCollateralAmount(),
                 contract.getTotalDebtAmount(),
                 contract.getAusdInfo()
-            ])
+            ]);
 
             setPageData({
-                collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0),
-                debtAmount: convertAmount(troveRes?.debt_amount ?? 0),
-                ausdBalance: convertAmount(ausdBalanceRes?.balance ?? 0),
-                stakedAmount: convertAmount(stakeRes?.amount ?? 0),
-                totalCollateralAmount: convertAmount(totalCollateralRes ?? 0),
-                totalDebtAmount: convertAmount(totalDebtRes ?? 0),
-                totalAusdSupply: convertAmount(ausdInfoRes?.total_supply ?? 0),
-                totalStakedAmount: convertAmount(totalStakeRes ?? 0),
-                poolShare: Number(Number(stakeRes?.percentage).toFixed(2))
+                collateralAmount: convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0),
+                debtAmount: convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0),
+                ausdBalance: convertAmount(getSettledValue(ausdBalanceRes)?.balance ?? 0),
+                stakedAmount: convertAmount(getSettledValue(stakeRes)?.amount ?? 0),
+                totalCollateralAmount: convertAmount(getSettledValue(totalCollateralRes) ?? 0),
+                totalDebtAmount: convertAmount(getSettledValue(totalDebtRes) ?? 0),
+                totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0),
+                totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
+                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2))
             })
         }
         catch (err) {
@@ -149,10 +156,22 @@ export default function Dashboard() {
                                 }
                             />
                             <div className="flex items-center gap-2">
-                                <OutlinedButton containerClassName="w-[61px] h-6" onClick={() => { setRedeemAmount(pageData.ausdBalance) }}>
+                                <OutlinedButton
+                                    containerClassName="w-[61px] h-6"
+                                    onClick={() => {
+                                        setRedeemAmount(pageData.ausdBalance)
+                                        setSeiAmount(getValueByRatio(pageData.ausdBalance, SEI_TO_AUSD_RATIO))
+                                    }}
+                                >
                                     Max
                                 </OutlinedButton>
-                                <OutlinedButton containerClassName="w-[61px] h-6" onClick={() => { setRedeemAmount(getValueByRatio(pageData.ausdBalance, 0.5)) }}>
+                                <OutlinedButton
+                                    containerClassName="w-[61px] h-6"
+                                    onClick={() => {
+                                        setRedeemAmount(getValueByRatio(pageData.ausdBalance, 0.5))
+                                        setSeiAmount(getValueByRatio(getValueByRatio(pageData.ausdBalance, 0.5), SEI_TO_AUSD_RATIO))
+                                    }}
+                                >
                                     Half
                                 </OutlinedButton>
                             </div>
@@ -164,7 +183,7 @@ export default function Dashboard() {
                             </div>
                             <BorderedNumberInput
                                 value={redeemAmount}
-                                onValueChange={e => setRedeemAmount(Number(e.value))}
+                                onValueChange={changeRedeemAmount}
                                 containerClassName="h-10"
                                 className="w-[262px] text-end"
                             />
@@ -177,7 +196,7 @@ export default function Dashboard() {
                             <Text size="2xl" weight="font-medium">SEI</Text>
                         </div>
                         <BorderedNumberInput
-                            value={0}
+                            value={seiAmount}
                             containerClassName="h-10"
                             className="w-[262px] text-end"
                             disabled
@@ -234,7 +253,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
-                                description={`${Number(((pageData.totalCollateralAmount * 2 ) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
+                                description={`${Number(((pageData.totalCollateralAmount * 2) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />
