@@ -169,7 +169,7 @@ export default function Dashboard() {
                                 className="w-[262px] text-end"
                             />
                         </div>
-                        <RedeemIcon className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[58px]" />
+                        <RedeemIcon height="48" width="48" className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[40px]" />
                     </div>
                     <div className="w-full bg-dark-purple rounded-lg px-2 py-7 flex items-center justify-between mt-8">
                         <div className="flex items-center gap-2">
