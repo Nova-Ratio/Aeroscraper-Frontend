@@ -120,14 +120,14 @@ export default function Dashboard() {
                                 <img alt="ausd" className="w-10 h-10" src="/images/ausd.svg" />
                                 <Text size="2xl">AUSD</Text>
                             </div>
-                            <Text>$1</Text>
+                            <Text>$1.00</Text>
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <div className="flex items-center gap-2">
                                 <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
                                 <Text size="2xl">SEI</Text>
                             </div>
-                            <Text>$2</Text>
+                            <Text>$2.00</Text>
                         </div>
                     </div>
                     <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
@@ -204,7 +204,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${Number(pageData.totalCollateralAmount + pageData.totalStakedAmount).toFixed(2)} SEI`}
+                                description={`${Number(pageData.totalCollateralAmount).toFixed(2)} SEI`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
                             />
@@ -218,7 +218,7 @@ export default function Dashboard() {
                                 title="AUSD supply"
                                 description={Number(pageData.totalAusdSupply).toFixed(2).toString()}
                                 className="w-[191px] h-14"
-                                tooltip="The total AUSD minted by the Liquity Protocol."
+                                tooltip="The total AUSD minted by the Aeroscraper Protocol."
                             />
                             <StatisticCard
                                 title="Liquidation Threshold"
@@ -234,7 +234,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
-                                description={`${Number((pageData.totalCollateralAmount * 2 ) / pageData.totalAusdSupply * 100).toFixed(2)} %`}
+                                description={`${Number(((pageData.totalCollateralAmount * 2 ) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />

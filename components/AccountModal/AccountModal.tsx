@@ -155,8 +155,8 @@ const AccountModal: FC<Props> = (props: Props) => {
                         <div className='flex items-center justify-between'>
                             <Text size='2xl' textColor='text-dark-silver'>Wallet</Text>
                             <div className='flex items-center gap-6'>
-                                <TooltipWrapper title='Mintscan'>
-                                    <a href={`${address}`} target='_blank' rel="noreferrer" className='w-6 h-6'>
+                                <TooltipWrapper title='SeiScan'>
+                                    <a href={`https://sei.explorers.guru/account/${address}`} target='_blank' rel="noreferrer" className='w-6 h-6'>
                                         <img alt='link' src="/images/external-link.svg" className='w-full h-full object-contain' />
                                     </a>
                                 </TooltipWrapper>

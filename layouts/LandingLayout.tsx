@@ -53,19 +53,19 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     <Text size="2xl">Definition of Aeroscraper</Text>
                     <div className='flex flex-col items-center gap-3'>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-name'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-                            <Text textColor='text-white'>Definition of name</Text>
+                            <Text textColor='text-white'>Definition of Name</Text>
                         </Link>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-icon'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-                            <Text textColor='text-white'>Definition of icon</Text>
+                            <Text textColor='text-white'>Definition of Icon</Text>
                         </Link>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-colors'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-                            <Text textColor='text-white'>Definition of colors</Text>
+                            <Text textColor='text-white'>Definition of Colors</Text>
                         </Link>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/definitions-of-aeroscraper/definition-of-typography'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-                            <Text textColor='text-white'>Definition of typography</Text>
+                            <Text textColor='text-white'>Definition of Typography</Text>
                         </Link>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/'} className='hover:scale-105 transition-all flex gap-2'>
-                            <Text textColor='text-white'>Definition of concept</Text>
+                            <Text textColor='text-white'>Definition of Concept</Text>
                         </Link>
                     </div>
                 </div>

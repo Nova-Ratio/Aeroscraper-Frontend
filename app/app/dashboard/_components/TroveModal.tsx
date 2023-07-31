@@ -317,12 +317,6 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             }}
                             className="grid grid-cols-12 content-center gap-6 mt-2">
                             <StatisticCard
-                                title="Liquidation Reserve"
-                                description="0 AUSD"
-                                className="w-full h-14 col-span-6"
-                                tooltip="An amount set aside to cover the liquidator’s gas costs if your Trove needs to be liquidated. The amount increases your debt and is refunded if you close your Trove by fully paying off its net debt."
-                            />
-                            <StatisticCard
                                 title="Borrowing Fee"
                                 description="0 AUSD (0%)"
                                 className="w-full h-14 col-span-6"
@@ -343,7 +337,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             <StatisticCard
                                 title="Collateral ratio"
                                 description={`${Number((pageData.collateralAmount * 2 ) / pageData.debtAmount * 100).toFixed(2)} %`}
-                                className="w-full h-14 col-span-6 col-start-4"
+                                className="w-full h-14 col-span-6"
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />
                         </motion.div>
