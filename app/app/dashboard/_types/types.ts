@@ -8,4 +8,5 @@ export type PageData = {
     totalStakedAmount: number;
     totalAusdSupply: number;
     poolShare: number;
+    rewardAmount: number;
 }

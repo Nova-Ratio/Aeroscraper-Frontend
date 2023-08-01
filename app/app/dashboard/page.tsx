@@ -22,7 +22,7 @@ import { useWallet } from "@/contexts/WalletProvider";
 import { getSettledValue } from "@/utils/promiseUtils";
 
 export default function Dashboard() {
-    const { balanceByDenom } = useWallet();
+    const { balanceByDenom, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -37,7 +37,8 @@ export default function Dashboard() {
         totalDebtAmount: 0,
         totalAusdSupply: 0,
         totalStakedAmount: 0,
-        poolShare: 0
+        poolShare: 0,
+        rewardAmount: 0
     })
 
     const [processLoading, setProcessLoading] = useState<boolean>(false);
@@ -60,7 +61,8 @@ export default function Dashboard() {
                 totalStakeRes,
                 totalCollateralRes,
                 totalDebtRes,
-                ausdInfoRes
+                ausdInfoRes,
+                rewardRes
             ] = await Promise.allSettled([
                 contract.getTrove(),
                 contract.getAusdBalance(),
@@ -68,7 +70,8 @@ export default function Dashboard() {
                 contract.getTotalStake(),
                 contract.getTotalCollateralAmount(),
                 contract.getTotalDebtAmount(),
-                contract.getAusdInfo()
+                contract.getAusdInfo(),
+                contract.getReward()
             ]);
 
             setPageData({
@@ -80,7 +83,8 @@ export default function Dashboard() {
                 totalDebtAmount: convertAmount(getSettledValue(totalDebtRes) ?? 0),
                 totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0),
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
-                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2))
+                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2)),
+                rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0)
             })
         }
         catch (err) {
@@ -95,7 +99,8 @@ export default function Dashboard() {
                 totalDebtAmount: 0,
                 totalAusdSupply: 0,
                 totalStakedAmount: 0,
-                poolShare: 0
+                poolShare: 0,
+                rewardAmount: 0
             })
         }
     }, [contract])
@@ -105,6 +110,7 @@ export default function Dashboard() {
             setProcessLoading(true);
             await contract.redeem(redeemAmount);
             getPageData();
+            refreshBalance();
         }
         catch (err) {
             console.error(err);
@@ -303,7 +309,7 @@ export default function Dashboard() {
                         </GradientButton>
                     </div>
                 </ShapeContainer>
-                <ShapeContainer layoutId="stability-pool" className="flex-[3]" width="" height="">
+                <ShapeContainer hasAnimation={pageData.rewardAmount > 0} layoutId="stability-pool" className="flex-[3]" width="" height="">
                     <div className='flex flex-col w-full h-full'>
                         <Text size="3xl" weight="font-normal">Stability Pool</Text>
                         <NumericFormat

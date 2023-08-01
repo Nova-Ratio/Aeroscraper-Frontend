@@ -29,7 +29,7 @@ type Props = {
 
 const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const contract = useAppContract();
-    const { balanceByDenom } = useWallet();
+    const { balanceByDenom, refreshBalance } = useWallet();
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
     const [borrowAmount, setBorrowAmount] = useState<number>(0);
     const [collateralAmount, setCollateralAmount] = useState<number>(0);
@@ -41,6 +41,14 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const { addNotification } = useNotification();
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
+
+    const confirmDisabled = useMemo(() =>
+        borrowAmount <= 0 ||
+        openTroveAmount <= 0 ||
+        ((borrowAmount / openTroveAmount) < SEI_TO_AUSD_RATIO),
+        [openTroveAmount, borrowAmount])
+    const withdrawDepositDisabled = useMemo(() => collateralAmount <= 0, [collateralAmount])
+    const repayBorrowDisabled = useMemo(() => borrowingAmount <= 0, [borrowingAmount])
 
     const changeOpenTroveAmount = (values: NumberFormatValues) => {
         setOpenTroveAmount(Number(values.value));
@@ -70,6 +78,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                 directLink: res?.transactionHash
             });
             getPageData();
+            refreshBalance();
         }
         catch (err) {
             console.error(err);
@@ -95,6 +104,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                 directLink: res?.transactionHash
             });
             getPageData();
+            refreshBalance();
         }
         catch (err) {
             console.error(err);
@@ -120,6 +130,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                 directLink: res?.transactionHash
             });
             getPageData();
+            refreshBalance();
         }
         catch (err) {
             console.error(err);
@@ -145,6 +156,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                 directLink: res?.transactionHash
             });
             getPageData();
+            refreshBalance();
         }
         catch (err) {
             console.error(err);
@@ -170,6 +182,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                 directLink: res?.transactionHash
             });
             getPageData();
+            refreshBalance();
         }
         catch (err) {
             addNotification({
@@ -242,10 +255,21 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
-                                            <OutlinedButton loading={processLoading} onClick={queryWithdraw} className="min-w-[201px] h-11">
+                                            <OutlinedButton
+                                                disabled={withdrawDepositDisabled}
+                                                loading={processLoading}
+                                                onClick={queryWithdraw}
+                                                className="min-w-[201px] h-11"
+                                            >
                                                 <Text>Withdraw</Text>
                                             </OutlinedButton>
-                                            <GradientButton loading={processLoading} onClick={queryAddColletral} className="min-w-[201px] h-11" rounded="rounded-lg">
+                                            <GradientButton
+                                                disabled={withdrawDepositDisabled}
+                                                loading={processLoading}
+                                                onClick={queryAddColletral}
+                                                className="min-w-[201px] h-11"
+                                                rounded="rounded-lg"
+                                            >
                                                 <Text>Deposit</Text>
                                             </GradientButton>
                                         </div>
@@ -286,15 +310,26 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description={`${Number((pageData.collateralAmount * 2) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
+                                                description={`${Number((pageData.collateralAmount * 2) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
-                                            <OutlinedButton loading={processLoading} onClick={queryRepay} className="min-w-[201px] h-11">
+                                            <OutlinedButton
+                                                disabled={repayBorrowDisabled}
+                                                loading={processLoading}
+                                                onClick={queryRepay}
+                                                className="min-w-[201px] h-11"
+                                            >
                                                 <Text>Repay</Text>
                                             </OutlinedButton>
-                                            <GradientButton loading={processLoading} onClick={queryBorrow} className="min-w-[201px] h-11" rounded="rounded-lg">
+                                            <GradientButton
+                                                disabled={repayBorrowDisabled}
+                                                loading={processLoading}
+                                                onClick={queryBorrow}
+                                                className="min-w-[201px] h-11"
+                                                rounded="rounded-lg"
+                                            >
                                                 <Text>Borrow</Text>
                                             </GradientButton>
                                         </div>
@@ -343,7 +378,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             />
                         </motion.div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-                            <GradientButton loading={processLoading} onClick={openTrove} className="min-w-[221px] h-11 mt-4 ml-auto" rounded="rounded-lg">
+                            <GradientButton
+                                loading={processLoading}
+                                onClick={openTrove}
+                                className="min-w-[221px] h-11 mt-4 ml-auto"
+                                rounded="rounded-lg"
+                                disabled={confirmDisabled}
+                            >
                                 <Text>Confirm</Text>
                             </GradientButton>
                         </div>

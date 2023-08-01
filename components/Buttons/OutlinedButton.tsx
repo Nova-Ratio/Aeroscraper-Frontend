@@ -36,7 +36,7 @@ const OutlinedButton: FC<PropsWithChildren<Props>> = ({
 }) => {
 
     return (
-        <button {...rest} className={`flex items-center justify-center ${containerClassName} group active:scale-95 transition-all`}>
+        <button {...rest} className={`flex items-center justify-center ${containerClassName} group active:scale-95 transition-all disabled:opacity-60 disabled:active:scale-100 disabled:cursor-not-allowed`}>
             <div className={`${className} w-full border-0 main-gradient ${ROUNDED_VARIANTS[rounded].container} text-base font-normal text-white p-[2.5px]`}>
                 <div className={`${innerClassName} flex h-full w-full items-center justify-center bg-${bgColor} ${ROUNDED_VARIANTS[rounded].inner} group-hover:opacity-80 transition-all`}>
                     <div className='flex-1 text-ghost-white'>

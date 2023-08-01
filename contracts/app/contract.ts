@@ -40,6 +40,10 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.queryContractSmart(ausdContractAddress, { token_info: {} })
     }
 
+    const getReward = async (user_addr: string): Promise<string> => {
+        return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
+    }
+
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
         return await client.execute(
@@ -176,6 +180,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         getCollateralPrice,
         getAusdBalance,
         getAusdInfo,
+        getReward,
         openTrove,
         addCollateral,
         removeCollateral,
