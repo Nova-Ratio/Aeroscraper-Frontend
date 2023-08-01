@@ -279,7 +279,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                                     <Text size='base' className="mr-auto">Upload with URL:</Text>
                                     <input value={photoUrlInput} onChange={(e) => { setPhotoUrlInput(e.target.value); }} placeholder="https://" className="focus:outline-none text-white bg-transparent flex-1 ml-3" />
                                     {photoUrlInput.includes("http") &&
-                                        <GradientButton onClick={() => { updateProfilePhoto(photoUrlInput); }} className="w-[121px] h-0 absolute right-0" rounded="rounded-lg">
+                                        <GradientButton onClick={() => { updateProfilePhoto(photoUrlInput); }} className="w-[64px] h-0 absolute right-1" rounded="rounded-lg">
                                             {processLoading.status ?
                                                 <Loading width={20} height={20} />
                                                 :
