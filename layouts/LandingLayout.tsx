@@ -33,7 +33,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
             <div className='container mx-auto px-8'>
                 {children}
             </div>
-            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 pt-6 pb-24 bg-raisin-black mt-auto relative'>
+            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 pt-6 pr-16 pb-24 bg-raisin-black mt-auto relative'>
                 <div className="flex-row flex gap-20 items-top">
                     <div className='flex flex-col items-center gap-6 lg:mt-20'>
                         <Logo />
@@ -43,7 +43,11 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                         <Text size="2xl" textColor='text-white'>Product</Text>
                         <button onClick={() => { setWhiteSpaceModal(true); }}>
                             <Text textColor='text-ghost-white/75' className="cursor-pointer">Whitepaper</Text>
-                        </button>{/* 
+                        </button>
+                        <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+                            <Text textColor='text-white'>Brand Identity</Text>
+                        </Link>
+                        {/* 
                         <button onClick={() => { setPrivacyModal(true); }}>
                             <Text textColor='text-ghost-white/75' className="cursor-pointer">Terms of service</Text>
                         </button> */}

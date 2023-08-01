@@ -237,7 +237,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description={`${Number((pageData.collateralAmount * 2) / ((pageData.debtAmount || 1) * 100)).toFixed(2)} %`}
+                                                description={`${Number((pageData.collateralAmount * 2) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
