@@ -9,7 +9,7 @@ interface SvgProps {
 export const TowerAnimation: FC = () => {
 
   const [hours, setHours] = useState(new Date().getHours())
-  const everyTwoHours = (hours / 2);
+  const everyTwoHours = Math.round((hours / 2));
 
   const checkThatTime = (index: number): boolean => {
     return everyTwoHours === index;

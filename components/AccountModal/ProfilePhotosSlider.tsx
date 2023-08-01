@@ -43,7 +43,7 @@ const ProfilePhotoSlider: React.FC<Props> = (props) => {
         {Array.from(slider).map((photo, idx) => (
           <motion.div
             key={idx}
-            className="min-w-[80px] w-24 min-h-[80px] h-24"
+            className="min-w-[80px] min-h-[80px] w-24h-24"
             initial="enter"
             animate="center"
             exit="exit"
@@ -54,7 +54,7 @@ const ProfilePhotoSlider: React.FC<Props> = (props) => {
               className={`relative cursor-pointer hover:opacity-80 transition secondary-gradient flex items-center rounded-md justify-center p-0.5 ${profileDetail?.photoUrl === photo ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() => { props.updateProfilePhoto(photo, idx); }}
             >
-              <img alt={`profile_photo`} className='rounded bg-[#6F6F73] w-20 h-20 object-cover' src={photo} />
+              <img alt={`profile_photo`} className='rounded bg-[#6F6F73] min-w-[80px] min-h-[80px] object-cover' src={photo} />
               {(props.processLoading.status && props.processLoading.idx == idx) && <Loading height={48} width={48} className="absolute" />}
             </div>
           </motion.div>
