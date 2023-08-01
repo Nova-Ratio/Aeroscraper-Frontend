@@ -31,13 +31,13 @@ const ProfilePhotoSlider: React.FC<Props> = (props) => {
 
   return (
     <motion.div
-    className="w-full overflow-hidden"
-    ref={sliderRef}
-    whileTap={{ cursor: "grabbing" }}
+      className="w-full overflow-hidden"
+      ref={sliderRef}
+      whileTap={{ cursor: "grabbing" }}
     >
       <motion.div
         drag="x"
-        dragConstraints={{ left: -width, right: 0 }}
+        dragConstraints={{ left: -(width + 96), right: 0 }}
         className="flex gap-4 w-full"
       >
         {Array.from(slider).map((photo, idx) => (
