@@ -112,7 +112,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
                                 displayType="text"
                                 renderText={(value) =>
                                     <Text size='base' className='flex ml-2 gap-2'>
-                                        AUSD:<CounterUp from={"0"} to={value} duration={0.5} />
+                                        AUSD: {value}
                                     </Text>
                                 }
                             />
@@ -133,7 +133,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
                         </div>
                     </div>
                 </div>
-                <AccountModal showModal={accountModal} onClose={() => { setAccountModal(false); }} />
+                <AccountModal balance={{ ausd: ausdBalance, sei: seiBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
             </>
         )
     }

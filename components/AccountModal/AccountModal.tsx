@@ -17,10 +17,12 @@ import Text from '../Texts/Text';
 import ImageUpload from "./ImageUpload";
 import Loading from "../Loading/Loading";
 import GradientButton from "../Buttons/GradientButton";
+import ProfilePhotoSlider from "./ProfilePhotosSlider";
 
 interface Props {
     showModal: boolean,
-    onClose: () => void
+    onClose: () => void,
+    balance: { ausd: number, sei: number }
 }
 
 const AccountModal: FC<Props> = (props: Props) => {
@@ -34,7 +36,7 @@ const AccountModal: FC<Props> = (props: Props) => {
     const fin = useFin();
     const compass = useCompass();
 
-    const { walletType, name, balanceByDenom, address, profileDetail, setProfileDetail } = useWallet();
+    const { walletType, name, address, profileDetail, setProfileDetail } = useWallet();
 
     const [avatarSelectionOpen, setAvatarSelectionOpen] = useState(false);
     const [qrCodeViewOpen, setQrCodeViewOpen] = useState(false);
@@ -79,6 +81,8 @@ const AccountModal: FC<Props> = (props: Props) => {
 
         const walletAddress = localStorage.getItem("wallet_address");
 
+        const previousPhotos = JSON.parse(localStorage.getItem("previous-photos")!) ?? []
+
         if (walletAddress) {
             setProcessLoading({ status: true, idx });
 
@@ -89,11 +93,16 @@ const AccountModal: FC<Props> = (props: Props) => {
                     body: JSON.stringify({
                         walletAddress,
                         photoUrl: photoUrl,
-                        appType:999
+                        appType: 999
                     })
                 });
                 if (response.status === 200) {
                     const data = await response.json();
+
+                    localStorage.setItem(
+                        "previous-photos",
+                        JSON.stringify([photoUrl,...previousPhotos])
+                    );
 
                     localStorage.setItem("profile-detail", JSON.stringify(data.user));
 
@@ -132,23 +141,42 @@ const AccountModal: FC<Props> = (props: Props) => {
                     <Text size='3xl' textColor='text-white'>{name}</Text>
                 </div>
                 <div className='col-span-6 lg:col-span-4 row-span-s flex flex-col gap-3 w-full '>
-                    <div className="bg-raisin-black px-6 py-4 rounded-lg">
-                        <Text size='2xl' textColor='text-dark-silver'>Balance</Text>
-                        <Text size='2xl' className='mt-4'>$0</Text>
-                        <div className='flex items-center justify-between'>
-                            <NumericFormat
-                                value={balanceByDenom["ausd"]?.amount ?? 0}
-                                thousandsGroupStyle="thousand"
-                                thousandSeparator=","
-                                fixedDecimalScale
-                                decimalScale={2}
-                                displayType="text"
-                                renderText={(value) =>
-                                    <Text size='3xl' className='mt-2 flex gap-2'>
-                                        <CounterUp from={"0"} to={value} duration={0.5} /> AUSD
-                                    </Text>
-                                }
-                            />
+                    <div className="bg-raisin-black px-6 py-4 rounded-lg flex gap-16">
+                        <div>
+                            <Text size='2xl' textColor='text-dark-silver'>Balance</Text>
+                            <Text size='2xl' className='mt-4'>$0</Text>
+                            <div className='flex items-center justify-around'>
+                                <NumericFormat
+                                    value={props.balance.ausd}
+                                    thousandsGroupStyle="thousand"
+                                    thousandSeparator=","
+                                    fixedDecimalScale
+                                    decimalScale={2}
+                                    displayType="text"
+                                    renderText={(value) =>
+                                        <Text size='3xl' className='mt-2 flex gap-2'>
+                                            <CounterUp from={"0"} to={value} duration={0.5} /> AUSD
+                                        </Text>
+                                    }
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <div className='flex items-end justify-between h-full'>
+                                <NumericFormat
+                                    value={props.balance.sei}
+                                    thousandsGroupStyle="thousand"
+                                    thousandSeparator=","
+                                    fixedDecimalScale
+                                    decimalScale={2}
+                                    displayType="text"
+                                    renderText={(value) =>
+                                        <Text size='3xl' className='mt-2 flex gap-2'>
+                                            <CounterUp from={"0"} to={value} duration={0.5} /> SEI
+                                        </Text>
+                                    }
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="bg-raisin-black px-6 py-4 rounded-lg">
@@ -245,20 +273,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                         >
                             <div className='relative w-full h-full flex flex-col gap-6 items-center bg-english-violet rounded-lg p-6'>
                                 <Text size='xl' className="mr-auto">Select Avatar</Text>
-                                <div className='grid grid-cols-6 gap-4'>
-                                    {
-                                        profilePhotos.map((photoURL, idx) => (
-                                            <div
-                                                key={photoURL}
-                                                className={`relative cursor-pointer hover:opacity-80 transition secondary-gradient flex items-center rounded-md justify-center p-0.5 ${profileDetail?.photoUrl === photoURL ? "opacity-50 cursor-not-allowed" : ""}`}
-                                                onClick={() => { updateProfilePhoto(photoURL, idx); }}
-                                            >
-                                                <img alt={`profile_photo`} className='w-20 h-20 rounded bg-[#6F6F73]' src={photoURL} />
-                                                {(processLoading.status && processLoading.idx == idx) && <Loading height={48} width={48} className="absolute" />}
-                                            </div>
-                                        ))
-                                    }
-                                </div>
+                                <ProfilePhotoSlider processLoading={processLoading} updateProfilePhoto={updateProfilePhoto} slider={profilePhotos} />
                                 <Text size='xl' className="mr-auto">Uplod an Avatar</Text>
                                 <div className="relative bg-[#74517A] w-full px-2 py-2.5 rounded flex items-center">
                                     <Text size='base' className="mr-auto">Upload with URL:</Text>
@@ -302,6 +317,5 @@ const profilePhotos = [
     "/images/profile-images/profile-i-2.jpg",
     "/images/profile-images/profile-i-3.jpg",
     "/images/profile-images/profile-i-4.jpg",
-    "/images/profile-images/profile-i-5.jpg",
-    "/images/profile-images/profile-i-6.jpg",
+    "/images/profile-images/profile-i-5.jpg"
 ]
