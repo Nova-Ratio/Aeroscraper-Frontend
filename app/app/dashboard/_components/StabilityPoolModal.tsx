@@ -63,6 +63,29 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
     setProcessLoading(false);
   }
 
+  const rewardClaim = async () => {
+    setProcessLoading(true);
+
+    try {
+      const res = await contract.withdrawLiquidationGains();
+      addNotification({
+        status: 'success',
+        directLink: res?.transactionHash
+      })
+      getPageData();
+      refreshBalance();
+    }
+    catch (err) {
+      console.log(err);
+      addNotification({
+        message: "",
+        status: 'error',
+        directLink: ""
+      })
+    }
+    setProcessLoading(false);
+  }
+
   const unStakePool = async () => {
     setProcessLoading(true);
 
@@ -142,7 +165,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                 <div className='bg-english-violet rounded-lg flex px-2 py-2 mx-10 flex-1'>
                   <img alt="aero" className="w-6 h-6" src="/images/sei.png" />
                   <NumericFormat
-                    value={0}
+                    value={pageData.rewardAmount}
                     thousandsGroupStyle="thousand"
                     thousandSeparator=","
                     fixedDecimalScale
@@ -155,7 +178,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                     }
                   />
                 </div>
-                <GradientButton className="min-w-[140px] h-0 ml-auto" rounded="rounded-lg">
+                <GradientButton className="min-w-[140px] h-0 ml-auto" rounded="rounded-lg" onClick={rewardClaim} loading={processLoading}>
                   <Text>Claim</Text>
                 </GradientButton>
               </div>
