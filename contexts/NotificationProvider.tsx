@@ -2,7 +2,7 @@
 
 import React, { createContext, FC, PropsWithChildren, useContext, useRef, useState } from 'react';
 
-interface INotification {
+export interface INotification {
   message?: string;
   status: 'success' | 'error';
   directLink?: string;

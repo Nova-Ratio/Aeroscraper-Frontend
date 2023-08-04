@@ -5,29 +5,26 @@ import WalletButton from "@/components/Buttons/WalletButton";
 import StatisticCard from "@/components/Cards/StatisticCard";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import ShapeContainer from "@/components/Containers/ShapeContainer";
-import { Logo, RedeemIcon, RightArrow } from "@/components/Icons/Icons";
+import { RightArrow } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text"
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { NumberFormatValues, NumericFormat, numericFormatter } from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import TroveModal from "./_components/TroveModal";
 import useAppContract from "@/contracts/app/useAppContract";
 import { PageData } from "./_types/types";
-import { SEI_TO_AUSD_RATIO, convertAmount, getValueByRatio } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 
 import StabilityPoolModal from "./_components/StabilityPoolModal";
-import OutlinedButton from "@/components/Buttons/OutlinedButton";
-import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import RiskyTrovesModal from "./_components/RiskyTrovesModal";
 import { useWallet } from "@/contexts/WalletProvider";
 import { getSettledValue } from "@/utils/promiseUtils";
+import RedeemSide from "./_components/RedeemSide";
 
 export default function Dashboard() {
     const { balanceByDenom, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
-    const [redeemAmount, setRedeemAmount] = useState(0);
-    const [seiAmount, setSeiAmount] = useState(0);
     const [pageData, setPageData] = useState<PageData>({
         collateralAmount: 0,
         debtAmount: 0,
@@ -41,16 +38,9 @@ export default function Dashboard() {
         rewardAmount: 0
     })
 
-    const [processLoading, setProcessLoading] = useState<boolean>(false);
-
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
     const contract = useAppContract();
-
-    const changeRedeemAmount = useCallback((values: NumberFormatValues) => {
-        setRedeemAmount(Number(values.value))
-        setSeiAmount(getValueByRatio(values.value, (1 - (SEI_TO_AUSD_RATIO - 1))))
-    }, [])
 
     const getPageData = useCallback(async () => {
         try {
@@ -105,27 +95,13 @@ export default function Dashboard() {
         }
     }, [contract])
 
-    const redeem = async () => {
-        try {
-            setProcessLoading(true);
-            await contract.redeem(redeemAmount);
-            getPageData();
-            refreshBalance();
-        }
-        catch (err) {
-            console.error(err);
-        }
-
-        setProcessLoading(false);
-    }
-
     useEffect(() => {
         getPageData();
     }, [getPageData])
 
     return (
         <div>
-            <div className="grid grid-cols-[1fr_439px] gap-6">
+            <div className="grid grid-cols-[1fr_439px] gap-6 overflow-hidden">
                 <BorderedContainer containerClassName="w-full h-[122px]" className="px-8 py-6 flex justify-between items-center gap-2">
                     <div className="flex items-center gap-11">
                         <div className="flex flex-col items-center gap-2">
@@ -145,78 +121,7 @@ export default function Dashboard() {
                     </div>
                     <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
                 </BorderedContainer>
-                <BorderedContainer containerClassName="w-full h-full row-span-2" className="px-4 py-6 flex flex-col justify-center items-center">
-                    <div className="relative w-full bg-dark-purple rounded-lg p-2 flex flex-col gap-4">
-                        <div className="flex items-center justify-between">
-                            <NumericFormat
-                                value={pageData.ausdBalance}
-                                thousandsGroupStyle="thousand"
-                                thousandSeparator=","
-                                fixedDecimalScale
-                                decimalScale={2}
-                                displayType="text"
-                                renderText={(value) =>
-                                    <Text size="base">
-                                        Available <span className="font-medium">${value} AUSD</span>
-                                    </Text>
-                                }
-                            />
-                            <div className="flex items-center gap-2">
-                                <OutlinedButton
-                                    containerClassName="w-[61px] h-6"
-                                    onClick={() => {
-                                        setRedeemAmount(pageData.ausdBalance)
-                                        setSeiAmount(getValueByRatio(pageData.ausdBalance, SEI_TO_AUSD_RATIO))
-                                    }}
-                                >
-                                    Max
-                                </OutlinedButton>
-                                <OutlinedButton
-                                    containerClassName="w-[61px] h-6"
-                                    onClick={() => {
-                                        setRedeemAmount(getValueByRatio(pageData.ausdBalance, 0.5))
-                                        setSeiAmount(getValueByRatio(getValueByRatio(pageData.ausdBalance, 0.5), SEI_TO_AUSD_RATIO))
-                                    }}
-                                >
-                                    Half
-                                </OutlinedButton>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <Logo width="40" height="40" />
-                                <Text size="2xl" weight="font-medium">AUSD</Text>
-                            </div>
-                            <BorderedNumberInput
-                                value={redeemAmount}
-                                onValueChange={changeRedeemAmount}
-                                containerClassName="h-10"
-                                className="w-[262px] text-end"
-                            />
-                        </div>
-                        <RedeemIcon height="48" width="48" className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[40px]" />
-                    </div>
-                    <div className="w-full bg-dark-purple rounded-lg px-2 py-7 flex items-center justify-between mt-8">
-                        <div className="flex items-center gap-2">
-                            <img alt="sei" src="/images/sei.png" className="w-10 h-10" />
-                            <Text size="2xl" weight="font-medium">SEI</Text>
-                        </div>
-                        <BorderedNumberInput
-                            value={seiAmount}
-                            containerClassName="h-10"
-                            className="w-[262px] text-end"
-                            disabled
-                        />
-                    </div>
-                    <GradientButton
-                        loading={processLoading}
-                        className="w-[221px] h-11 mt-7"
-                        rounded="rounded-lg"
-                        onClick={redeem}
-                    >
-                        Redeem
-                    </GradientButton>
-                </BorderedContainer>
+                <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} />
                 <BorderedContainer containerClassName="w-full mt-4" className="p-3">
                     <div className="w-full rounded-lg px-4 py-2">
                         <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>
