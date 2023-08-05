@@ -88,7 +88,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                 }
             })
             const data = await Promise.all(getTrovesPromises);
-            setRiskyTroves([...data, ...data, ...data, ...data, ...data]);
+            setRiskyTroves(data);
         }
         catch (err) {
             console.error(err);
