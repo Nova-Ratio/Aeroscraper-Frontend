@@ -23,6 +23,11 @@ const useAppContract = () => {
         return await contract.getTrove(wallet.address);
     }, [wallet, contract])
 
+    const getTroveByAddress = useCallback(async (address: string) => {
+        if (isNil(contract)) return;
+        return await contract.getTrove(address);
+    }, [contract])
+
     const getStake = useCallback(async () => {
         if (isNil(contract)) return;
         return await contract.getStake(wallet.address);
@@ -107,6 +112,7 @@ const useAppContract = () => {
         getTotalCollateralAmount,
         getTotalDebtAmount,
         getTrove,
+        getTroveByAddress,
         getStake,
         getTotalStake,
         getCollateralPrice,
@@ -127,6 +133,7 @@ const useAppContract = () => {
         getTotalCollateralAmount,
         getTotalDebtAmount,
         getTrove,
+        getTroveByAddress,
         getStake,
         getTotalStake,
         getCollateralPrice,
