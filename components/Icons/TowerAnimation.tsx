@@ -35,7 +35,7 @@ export const TowerAnimation: FC = () => {
         <TowerSixthIcon isGradient={checkThatTime(6)} />
         <TowerSeventhIcon isGradient={checkThatTime(7)} />
       </div>
-      <div className="space-y-2.5 -mt-2">
+      <div className="space-y-3 -mt-2">
         <TowerEighthIcon isGradient={checkThatTime(8)} />
         <TowerNinthIcon isGradient={checkThatTime(9)} />
         <TowerTenthIcon isGradient={checkThatTime(10)} />

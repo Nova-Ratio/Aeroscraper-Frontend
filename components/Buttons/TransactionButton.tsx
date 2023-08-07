@@ -1,4 +1,5 @@
 import { INotification } from '@/contexts/NotificationProvider';
+import { motion } from 'framer-motion';
 import React, { PropsWithChildren, useState } from 'react'
 import Loading from '../Loading/Loading';
 
@@ -25,7 +26,7 @@ const Transaction: React.FC<PropsWithChildren<Props>> = ({
 ) => {
 
   console.log(status);
-  
+
 
   const returnText = status?.status ?? text;
 
@@ -44,16 +45,20 @@ const Transaction: React.FC<PropsWithChildren<Props>> = ({
     <button
       disabled={loading}
       onClick={status?.directLink ? openTransactionDetail : onClick}
-      className={`py-5 ${className} ${bgColor[returnColor]} flex justify-center gap-2 items-center rounded-lg active:scale-95 transition-all disabled:opacity-60 disabled:active:scale-100 disabled:cursor-not-allowed`}
+      className={`py-5 ${className} ${bgColor[returnColor]} flex justify-center gap-2 items-center rounded-lg active:scale-95 transition-all disabled:opacity-60 disabled:active:scale-100 duration-150 disabled:cursor-not-allowed`}
       {...rest}
     >
-      <div className='text-ghost-white'>
+      <motion.div className='text-ghost-white'>
         {loading ?
           <Loading width={28} height={28} />
           : capitalizeFirstLetter(returnText)
         }
-      </div>
-      {status?.directLink && <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4 ml-1' />}
+      </motion.div>
+      {status?.directLink && <motion.img
+        initial={{ marginLeft: -16 }}
+        animate={{ marginLeft: 0 }}
+        transition={{ stiffness: 50 }}
+        layout alt='external-link' src='/images/external-link.svg' className='w-4 h-4 ml-1' />}
     </button>
   )
 }
