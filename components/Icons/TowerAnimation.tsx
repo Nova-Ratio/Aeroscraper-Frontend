@@ -11,9 +11,9 @@ export const TowerAnimation: FC = () => {
   const currentTime = new Date();
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
-  
+
   const currentIndex = (hours * 2) + Math.floor(minutes / 30);
-  
+
   const finalIndex = (currentIndex % 16) || 1;
 
   const checkThatTime = (index: number): boolean => {
@@ -25,7 +25,7 @@ export const TowerAnimation: FC = () => {
       initial={{ opacity: 0, translateX: -400 }}
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ delay: 0.2, duration: 0.65, type: 'spring', damping: 50 }}
-      className="absolute left-0 bottom-0 top-20 flex flex-col items-start gap-8">
+      className="absolute left-0 bottom-0 top-16 flex flex-col items-start gap-8">
       <div className="flex flex-col items-center ml-8 gap-2">
         <TowerFirstIcon isGradient={checkThatTime(1)} />
         <TowerSecondIcon isGradient={checkThatTime(2)} />
@@ -35,15 +35,17 @@ export const TowerAnimation: FC = () => {
         <TowerSixthIcon isGradient={checkThatTime(6)} />
         <TowerSeventhIcon isGradient={checkThatTime(7)} />
       </div>
-      <TowerEighthIcon isGradient={checkThatTime(8)} />
-      <TowerNinthIcon isGradient={checkThatTime(9)} />
-      <TowerTenthIcon isGradient={checkThatTime(10)} />
-      <TowerEleventhIcon isGradient={checkThatTime(11)} />
-      <TowerTwelfthIcon isGradient={checkThatTime(12)} />
-      <TowerThirteenthIcon isGradient={checkThatTime(13)} />
-      <TowerFourteenthIcon isGradient={checkThatTime(14)} />
-      <TowerFifteenthIcon isGradient={checkThatTime(15)} />
-      <TowerSixteenthIcon isGradient={checkThatTime(16)} />
+      <div className="space-y-2.5 -mt-2">
+        <TowerEighthIcon isGradient={checkThatTime(8)} />
+        <TowerNinthIcon isGradient={checkThatTime(9)} />
+        <TowerTenthIcon isGradient={checkThatTime(10)} />
+        <TowerEleventhIcon isGradient={checkThatTime(11)} />
+        <TowerTwelfthIcon isGradient={checkThatTime(12)} />
+        <TowerThirteenthIcon isGradient={checkThatTime(13)} />
+        <TowerFourteenthIcon isGradient={checkThatTime(14)} />
+        <TowerFifteenthIcon isGradient={checkThatTime(15)} />
+        <TowerSixteenthIcon isGradient={checkThatTime(16)} />
+      </div>
     </motion.div>
   )
 }
@@ -176,7 +178,7 @@ const TowerSeventhIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerEighthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.4, delay: 1 }} width="299" height="54" viewBox="0 0 299 54" fill="none">
+    <motion.svg initial={{ scale: 0.8 }} animate={{ scale: 1.05 }} transition={{ duration: 0.4, delay: 1 }} width="299" height="54" viewBox="0 0 299 54" fill="none">
       <path d="M-51.7051 53.7585C-40.614 53.7585 -25.42 44.7763 -22.5513 39.1371C-10.6196 34.5591 32.92 27.1009 113.482 27.1009C194.062 27.1009 237.601 34.5591 249.551 39.1371C252.42 44.7763 267.614 53.7585 278.705 53.7585C292.08 53.7585 298.141 46.5348 298.141 39.1371C298.141 19.5315 252.551 9.24353 235.978 7.06063C202.96 2.70493 159.454 0.309814 113.482 0.309814C67.5091 0.309814 24.0215 2.70493 -8.9962 7.06063C-25.569 9.25364 -76 19.5315 -76 39.1371C-76 46.5348 -65.0803 53.7585 -51.7051 53.7585Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_2810" x1="206.132" y1="0.765559" x2="200.932" y2="94.7561" gradientUnits="userSpaceOnUse">
@@ -194,7 +196,7 @@ const TowerEighthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerNinthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.1 }} transition={{ duration: 0.4, delay: 1.1 }} width="299" height="54" viewBox="0 0 299 54" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.15 }} transition={{ duration: 0.4, delay: 1.1 }} width="299" height="54" viewBox="0 0 299 54" fill="none">
       <path d="M-51.7067 53.4958C-40.6155 53.4958 -25.4216 44.5136 -22.5528 38.8745C-10.6212 34.2964 32.9184 26.8382 113.48 26.8382C194.06 26.8382 237.6 34.2964 249.55 38.8745C252.418 44.5136 262.753 53.4958 273.845 53.4958C287.22 53.4958 298.139 46.2721 298.139 38.8745C298.139 19.2688 252.549 8.98083 235.976 6.79793C202.959 2.44224 159.453 0.0471191 113.48 0.0471191C67.5075 0.0471191 24.0199 2.44224 -8.99775 6.79793C-25.5705 8.99094 -71.1426 14.4543 -71.1426 34.0599C-71.1426 41.4575 -65.0819 53.4958 -51.7067 53.4958Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_2997" x1="207.326" y1="0.502863" x2="202.057" y2="94.4858" gradientUnits="userSpaceOnUse">
@@ -212,7 +214,7 @@ const TowerNinthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerTenthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.1 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="50" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.2 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="50" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.3876C-40.6983 49.3876 -31.343 45.2643 -28.4743 39.6252C-16.5426 35.0472 32.92 27.5889 113.482 27.5889C194.062 27.5889 243.506 35.0472 255.456 39.6252C258.325 45.2643 267.68 49.3876 278.771 49.3876C292.146 49.3876 303 43.3947 303 35.9971C303 16.3914 252.551 9.73157 235.978 7.54867C202.96 3.19297 159.454 0.797852 113.482 0.797852C67.5091 0.797852 24.0215 3.19297 -8.9962 7.54867C-25.569 9.74168 -76 16.3914 -76 35.9971C-76 43.3947 -65.1646 49.3876 -51.7894 49.3876Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3184" x1="209.796" y1="1.21216" x2="205.551" y2="86.7089" gradientUnits="userSpaceOnUse">
@@ -230,7 +232,7 @@ const TowerTenthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerEleventhIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.3 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="50" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.2 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="50" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.411C-40.6983 49.411 -31.343 45.2878 -28.4743 39.6486C-16.5426 35.0706 32.92 27.6123 113.482 27.6123C194.062 27.6123 243.506 35.0706 255.456 39.6486C258.325 45.2878 267.68 49.411 278.771 49.411C292.146 49.411 303 43.4182 303 36.0205C303 16.4149 252.551 9.75501 235.978 7.57211C202.96 3.21641 159.454 0.821289 113.482 0.821289C67.5091 0.821289 24.0215 3.21641 -8.9962 7.57211C-25.569 9.76511 -76 16.4149 -76 36.0205C-76 43.4182 -65.1646 49.411 -51.7894 49.411Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3371" x1="209.796" y1="1.2356" x2="205.551" y2="86.7324" gradientUnits="userSpaceOnUse">
@@ -248,7 +250,7 @@ const TowerEleventhIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerTwelfthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.3 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="50" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.2 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="50" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.4347C-40.6983 49.4347 -31.343 45.3115 -28.4743 39.6723C-16.5426 35.0943 32.92 27.636 113.482 27.636C194.062 27.636 243.506 35.0943 255.456 39.6723C258.325 45.3115 267.68 49.4347 278.771 49.4347C292.146 49.4347 303 43.4418 303 36.0442C303 16.4385 252.551 9.77869 235.978 7.59579C202.96 3.24009 159.454 0.844971 113.482 0.844971C67.5091 0.844971 24.0215 3.24009 -8.9962 7.59579C-25.569 9.78879 -76 16.4385 -76 36.0442C-76 43.4418 -65.1646 49.4347 -51.7894 49.4347Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3558" x1="209.796" y1="1.25928" x2="205.551" y2="86.7561" gradientUnits="userSpaceOnUse">
@@ -266,7 +268,7 @@ const TowerTwelfthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerThirteenthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.3 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.2 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.4347C-40.6983 49.4347 -31.343 45.3115 -28.4743 39.6723C-16.5426 35.0943 32.92 27.636 113.482 27.636C194.062 27.636 243.506 35.0943 255.456 39.6723C258.325 45.3115 267.68 49.4347 278.771 49.4347C292.146 49.4347 303 43.4418 303 36.0442C303 16.4385 252.551 9.77869 235.978 7.59579C202.96 3.24009 159.454 0.844971 113.482 0.844971C67.5091 0.844971 24.0215 3.24009 -8.9962 7.59579C-25.569 9.78879 -76 16.4385 -76 36.0442C-76 43.4418 -65.1646 49.4347 -51.7894 49.4347Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3558" x1="209.796" y1="1.25928" x2="205.551" y2="86.7561" gradientUnits="userSpaceOnUse">
@@ -284,7 +286,7 @@ const TowerThirteenthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerFourteenthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.35 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.25 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.4347C-40.6983 49.4347 -31.343 45.3115 -28.4743 39.6723C-16.5426 35.0943 32.92 27.636 113.482 27.636C194.062 27.636 243.506 35.0943 255.456 39.6723C258.325 45.3115 267.68 49.4347 278.771 49.4347C292.146 49.4347 303 43.4418 303 36.0442C303 16.4385 252.551 9.77869 235.978 7.59579C202.96 3.24009 159.454 0.844971 113.482 0.844971C67.5091 0.844971 24.0215 3.24009 -8.9962 7.59579C-25.569 9.78879 -76 16.4385 -76 36.0442C-76 43.4418 -65.1646 49.4347 -51.7894 49.4347Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3558" x1="209.796" y1="1.25928" x2="205.551" y2="86.7561" gradientUnits="userSpaceOnUse">
@@ -302,7 +304,7 @@ const TowerFourteenthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerFifteenthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.4 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.3 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.4347C-40.6983 49.4347 -31.343 45.3115 -28.4743 39.6723C-16.5426 35.0943 32.92 27.636 113.482 27.636C194.062 27.636 243.506 35.0943 255.456 39.6723C258.325 45.3115 267.68 49.4347 278.771 49.4347C292.146 49.4347 303 43.4418 303 36.0442C303 16.4385 252.551 9.77869 235.978 7.59579C202.96 3.24009 159.454 0.844971 113.482 0.844971C67.5091 0.844971 24.0215 3.24009 -8.9962 7.59579C-25.569 9.78879 -76 16.4385 -76 36.0442C-76 43.4418 -65.1646 49.4347 -51.7894 49.4347Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3558" x1="209.796" y1="1.25928" x2="205.551" y2="86.7561" gradientUnits="userSpaceOnUse">
@@ -320,7 +322,7 @@ const TowerFifteenthIcon: FC<SvgProps> = ({ isGradient }) => {
 
 const TowerSixteenthIcon: FC<SvgProps> = ({ isGradient }) => {
   return (
-    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.5 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
+    <motion.svg initial={{ scale: 1 }} animate={{ scale: 1.4 }} transition={{ duration: 0.4, delay: 1.1 }} width="303" height="60" viewBox="0 0 303 50" fill="none">
       <path d="M-51.7894 49.4347C-40.6983 49.4347 -31.343 45.3115 -28.4743 39.6723C-16.5426 35.0943 32.92 27.636 113.482 27.636C194.062 27.636 243.506 35.0943 255.456 39.6723C258.325 45.3115 267.68 49.4347 278.771 49.4347C292.146 49.4347 303 43.4418 303 36.0442C303 16.4385 252.551 9.77869 235.978 7.59579C202.96 3.24009 159.454 0.844971 113.482 0.844971C67.5091 0.844971 24.0215 3.24009 -8.9962 7.59579C-25.569 9.78879 -76 16.4385 -76 36.0442C-76 43.4418 -65.1646 49.4347 -51.7894 49.4347Z" fill={isGradient ? "url(#paint0_linear_859_1687)" : "rgb(247,247,255,0.4)"} />
       <defs>
         <linearGradient id="paint0_linear_859_3558" x1="209.796" y1="1.25928" x2="205.551" y2="86.7561" gradientUnits="userSpaceOnUse">
