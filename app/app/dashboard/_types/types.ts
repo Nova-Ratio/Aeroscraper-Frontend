@@ -9,4 +9,7 @@ export type PageData = {
     totalAusdSupply: number;
     poolShare: number;
     rewardAmount: number;
+    minCollateralRatio: number;
+    minRedeemAmount: number;
+    totalTrovesAmount: number;
 }

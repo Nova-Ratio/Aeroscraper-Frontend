@@ -12,13 +12,14 @@ import { NumericFormat } from 'react-number-format'
 import TroveModal from "./_components/TroveModal";
 import useAppContract from "@/contracts/app/useAppContract";
 import { PageData } from "./_types/types";
-import { convertAmount } from "@/utils/contractUtils";
+import { MOCK_AUSD_PRICE, MOCK_SEI_PRICE, SEI_TO_AUSD_RATIO, convertAmount } from "@/utils/contractUtils";
 
 import StabilityPoolModal from "./_components/StabilityPoolModal";
 import RiskyTrovesModal from "./_components/RiskyTrovesModal";
 import { useWallet } from "@/contexts/WalletProvider";
 import { getSettledValue } from "@/utils/promiseUtils";
 import RedeemSide from "./_components/RedeemSide";
+import { requestTotalTroves } from "@/services/graphql";
 
 export default function Dashboard() {
     const { balanceByDenom, refreshBalance } = useWallet();
@@ -34,8 +35,11 @@ export default function Dashboard() {
         totalDebtAmount: 0,
         totalAusdSupply: 0,
         totalStakedAmount: 0,
+        totalTrovesAmount: 0,
         poolShare: 0,
-        rewardAmount: 0
+        rewardAmount: 0,
+        minCollateralRatio: 0,
+        minRedeemAmount: 0
     })
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
@@ -52,7 +56,8 @@ export default function Dashboard() {
                 totalCollateralRes,
                 totalDebtRes,
                 ausdInfoRes,
-                rewardRes
+                rewardRes,
+                totalTrovesRes
             ] = await Promise.allSettled([
                 contract.getTrove(),
                 contract.getAusdBalance(),
@@ -61,7 +66,8 @@ export default function Dashboard() {
                 contract.getTotalCollateralAmount(),
                 contract.getTotalDebtAmount(),
                 contract.getAusdInfo(),
-                contract.getReward()
+                contract.getReward(),
+                requestTotalTroves()
             ]);
 
             setPageData({
@@ -74,7 +80,10 @@ export default function Dashboard() {
                 totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0),
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
                 poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2)),
-                rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0)
+                rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
+                minCollateralRatio: MOCK_SEI_PRICE / (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE),
+                minRedeemAmount: (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE) / MOCK_SEI_PRICE,
+                totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
             })
         }
         catch (err) {
@@ -90,7 +99,10 @@ export default function Dashboard() {
                 totalAusdSupply: 0,
                 totalStakedAmount: 0,
                 poolShare: 0,
-                rewardAmount: 0
+                rewardAmount: 0,
+                minCollateralRatio: 0,
+                minRedeemAmount: 0,
+                totalTrovesAmount: 0
             })
         }
     }, [contract])
@@ -140,7 +152,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="Troves"
-                                description="-"
+                                description={pageData.totalTrovesAmount.toFixed(2)}
                                 className="w-[191px] h-14"
                                 tooltip="The total number of active Troves in the system."
                             />

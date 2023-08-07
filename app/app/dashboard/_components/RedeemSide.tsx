@@ -3,7 +3,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton'
 import BorderedContainer from '@/components/Containers/BorderedContainer'
 import { Logo, RedeemIcon } from '@/components/Icons/Icons'
 import BorderedNumberInput from '@/components/Input/BorderedNumberInput'
-import { getValueByRatio, SEI_TO_AUSD_RATIO } from '@/utils/contractUtils'
+import { getValueByRatio } from '@/utils/contractUtils'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { NumberFormatValues, NumericFormat } from 'react-number-format'
@@ -29,8 +29,8 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
 
   const changeRedeemAmount = useCallback((values: NumberFormatValues) => {
     setRedeemAmount(Number(values.value))
-    setSeiAmount(getValueByRatio(values.value, (1 - (SEI_TO_AUSD_RATIO - 1))))
-  }, []);
+    setSeiAmount(getValueByRatio(values.value, pageData.minRedeemAmount))
+  }, [pageData]);
 
   useEffect(() => {
     if (notification) {
@@ -90,7 +90,7 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
               containerClassName="w-[61px] h-6"
               onClick={() => {
                 setRedeemAmount(pageData.ausdBalance)
-                setSeiAmount(getValueByRatio(pageData.ausdBalance, SEI_TO_AUSD_RATIO))
+                setSeiAmount(getValueByRatio(pageData.ausdBalance, pageData.minRedeemAmount))
               }}
             >
               Max
@@ -99,7 +99,7 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
               containerClassName="w-[61px] h-6"
               onClick={() => {
                 setRedeemAmount(getValueByRatio(pageData.ausdBalance, 0.5))
-                setSeiAmount(getValueByRatio(getValueByRatio(pageData.ausdBalance, 0.5), SEI_TO_AUSD_RATIO))
+                setSeiAmount(getValueByRatio(getValueByRatio(pageData.ausdBalance, 0.5), pageData.minRedeemAmount))
               }}
             >
               Half

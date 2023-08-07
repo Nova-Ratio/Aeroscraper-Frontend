@@ -13,7 +13,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { SEI_TO_AUSD_RATIO, convertAmount, getValueByRatio } from '@/utils/contractUtils';
+import { MOCK_AUSD_PRICE, MOCK_SEI_PRICE, SEI_TO_AUSD_RATIO, convertAmount, getValueByRatio } from '@/utils/contractUtils';
 
 enum TABS {
     COLLATERAL = 0,
@@ -42,17 +42,22 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
+    const collacteralRatio = useMemo(() =>
+        Number((openTroveAmount || 0) * MOCK_SEI_PRICE) / ((borrowAmount || 1) * MOCK_AUSD_PRICE),
+        [openTroveAmount, borrowAmount])
+
     const confirmDisabled = useMemo(() =>
         borrowAmount <= 0 ||
         openTroveAmount <= 0 ||
-        ((borrowAmount / openTroveAmount) < SEI_TO_AUSD_RATIO),
-        [openTroveAmount, borrowAmount])
+        collacteralRatio < (SEI_TO_AUSD_RATIO - 0.00001),
+        [openTroveAmount, borrowAmount, collacteralRatio])
+
     const withdrawDepositDisabled = useMemo(() => collateralAmount <= 0, [collateralAmount])
     const repayBorrowDisabled = useMemo(() => borrowingAmount <= 0, [borrowingAmount])
 
     const changeOpenTroveAmount = (values: NumberFormatValues) => {
         setOpenTroveAmount(Number(values.value));
-        setBorrowAmount(getValueByRatio(Number(values.value), SEI_TO_AUSD_RATIO))
+        setBorrowAmount(getValueByRatio(Number(values.value), pageData.minCollateralRatio));
     }
 
     const changeBorrowAmount = (values: NumberFormatValues) => {
@@ -372,7 +377,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             />
                             <StatisticCard
                                 title="Collateral ratio"
-                                description={`${Number(((openTroveAmount || 0) * 2) / (borrowAmount || 1) * 100).toFixed(2)} %`}
+                                description={`${(collacteralRatio * 100).toFixed(2)} %`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />

@@ -13,3 +13,9 @@ export type RiskyTroves = {
     collateralAmount: number;
     debtAmount: number;
 }
+
+export type TotalTrovesResponse = {
+    troves: {
+        totalCount: number
+    }
+}
