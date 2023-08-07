@@ -81,6 +81,14 @@ body::-webkit-scrollbar {
   background: linear-gradient(90deg, #56235C 0%, #D43752 25.18%, #E4462D 75.44%, #F8B810 100%);
 }
 
+.success-gradient {
+  background: linear-gradient(90deg, #29499C 0%, #56235C 99.62%);
+}
+
+.error-gradient {
+  background: linear-gradient(90deg, #29499C 0%, #56235C 0%, #D43752 0%, #E4462D 100%);
+}
+
 .secondary-gradient {
   background: linear-gradient(90deg, #E85A29 0%, #F8B810 100%);
 }
