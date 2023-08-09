@@ -287,7 +287,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='Borrowing Capacity'
                                                 hintTitle="AUSD"
-                                                value={((pageData.collateralAmount * 2 * 100) / 115).toFixed(2)}
+                                                value={(((pageData.collateralAmount * 2 * 100) / 115) - (pageData.debtAmount)).toFixed(2)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[25%] text-end'
                                                 disabled
@@ -345,7 +345,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                     :
                     <div>
                         <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
-                        <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: true, min: false }} />
+                        <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false }} />
                         <InputLayout label="Borrow" hintTitle="AUSD" value={borrowAmount} onValueChange={changeBorrowAmount} className="mt-4 mb-6" />
                         <motion.div
                             initial={{ y: 200, x: 200, opacity: 0.1 }}

@@ -5,7 +5,7 @@ import WalletButton from "@/components/Buttons/WalletButton";
 import StatisticCard from "@/components/Cards/StatisticCard";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import ShapeContainer from "@/components/Containers/ShapeContainer";
-import { RightArrow } from "@/components/Icons/Icons";
+import { InfoIcon, RightArrow } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text"
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { NumericFormat } from 'react-number-format'
@@ -20,6 +20,7 @@ import { useWallet } from "@/contexts/WalletProvider";
 import { getSettledValue } from "@/utils/promiseUtils";
 import RedeemSide from "./_components/RedeemSide";
 import { requestTotalTroves } from "@/services/graphql";
+import Tooltip from "@/components/Tooltip/Tooltip";
 
 export default function Dashboard() {
     const { balanceByDenom, refreshBalance } = useWallet();
@@ -152,7 +153,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="Troves"
-                                description={pageData.totalTrovesAmount.toFixed(2)}
+                                description={`${pageData.totalTrovesAmount}`}
                                 className="w-[191px] h-14"
                                 tooltip="The total number of active Troves in the system."
                             />
@@ -228,7 +229,12 @@ export default function Dashboard() {
                 </ShapeContainer>
                 <ShapeContainer hasAnimation={pageData.rewardAmount > 0} layoutId="stability-pool" className="flex-[3]" width="" height="">
                     <div className='flex flex-col w-full h-full'>
+                        <div className="flex flex-row">
                         <Text size="3xl" weight="font-normal">Stability Pool</Text>
+                        <Tooltip title={<Text size='base'>If the frame is glowing, you have a claimable reward.</Text>} width='w-[191px]'>
+                            <InfoIcon className='text-white w-4 h-4' />
+                        </Tooltip>
+                        </div>                    
                         <NumericFormat
                             value={pageData.stakedAmount}
                             thousandsGroupStyle="thousand"

@@ -167,7 +167,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getLiquidityThresholdColor(item.liquidityThreshold)}>{value}%</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getLiquidityThresholdColor(item.liquidityThreshold)}>{Number(value)*2}%</Text>//bu 2 sei price ı aslında oracle ile çekilince price bilgisi değiştirilecek
                                             }
                                         />} />
                                 </div>
