@@ -168,15 +168,18 @@ export default function Dashboard() {
                                 description="115%"
                                 className="w-[191px] h-14"
                                 tooltip="Liquidation Threshold Ratio"
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="AUSD in Stability Pool"
+                                tooltipPlacement="top"
                                 description={Number(pageData.totalStakedAmount).toFixed(2).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD currently held in the Stability Pool."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
+                                tooltipPlacement="top"
                                 description={`${Number(((pageData.totalCollateralAmount * 2) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
