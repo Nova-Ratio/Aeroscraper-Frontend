@@ -26,10 +26,12 @@ const SideEffects = () => {
         const listenLeapKeystoreChange = () => leap.connect(true);
         const listenFinKeystoreChange = () => fin.connect(true);
         const listenCompassKeystoreChange = () => compass.connect(true);
+
         window.addEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
         window.addEventListener("leap_keystorechange", listenLeapKeystoreChange);
         window.addEventListener("fin_keystorechange", listenFinKeystoreChange);
         window.addEventListener("compass_keystorechange", listenCompassKeystoreChange);
+
         return () => {
             window.removeEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
             window.removeEventListener("leap_keystorechange", listenLeapKeystoreChange);
