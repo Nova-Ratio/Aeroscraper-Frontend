@@ -3,4 +3,5 @@ export * from "./keplr";
 export * from "./leap";
 export * from "./fin";
 export * from "./compass";
+export * from "../services/metamask";
 export * from "./network";

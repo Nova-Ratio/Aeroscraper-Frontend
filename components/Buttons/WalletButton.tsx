@@ -12,8 +12,11 @@ import useOutsideHandler from '@/hooks/useOutsideHandler'
 import { useCompass } from '@/services/compass'
 import { useFin } from '@/services/fin'
 import { useLeap } from '@/services/leap'
+import useMetamask from '@/services/metamask'
 import Loading from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
+import { TransactionsProvider } from '@/contexts/TransactionContext'
+import useAppContract from '@/contracts/app/useAppContract'
 
 type Props = {
     className?: string;
@@ -23,10 +26,13 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
 
+    const contract = useAppContract();
+
     const leap = useLeap();
     const keplr = useKeplr();
     const fin = useFin();
     const compass = useCompass();
+    const metamask = useMetamask();
     const wallet = useWallet();
 
     const connectWallet = (walletType: WalletType) => {
@@ -51,6 +57,9 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
 
             compass.connect();
         }
+        else if (walletType === WalletType.METAMASK) {
+            metamask.connect();
+        }
 
         setWalletSelectionOpen(false);
     }
@@ -60,6 +69,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
         leap.disconnect()
         fin.disconnect()
         compass.disconnect()
+        metamask.disconnect()
     }
 
     const toggleWallet = () => {
@@ -117,6 +127,11 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                     <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(WalletType.KEPLR); }}>
                         <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
                             <img alt="keplr" src='/images/keplr-dark.svg' />
+                        </div>
+                    </GradientButton>
+                    <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(WalletType.METAMASK); }}>
+                        <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                            <img alt="metamask" src='/images/metamask.svg' />
                         </div>
                     </GradientButton>
                 </div>
