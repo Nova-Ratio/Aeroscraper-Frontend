@@ -3,6 +3,7 @@ export enum WalletType {
     KEPLR = "keplr",
     FIN = "fin",
     COMPASS = "compass",
+    METAMASK = "metamask",
     NOT_SELECTED = "not_selected"
 }
 
@@ -26,6 +27,11 @@ export const WalletInfoMap: Record<WalletType, { name: string, imageURL: string,
         name: 'Compass',
         imageURL: '/images/compass.png',
         thumbnailURL: '/images/compass-icon.png'
+    },
+    [WalletType.METAMASK]: {
+        name: 'Metamask',
+        imageURL: '/images/metamask.svg',
+        thumbnailURL: '/images/metamask-icon.svg'
     },
     [WalletType.NOT_SELECTED]: {
         name: '',
