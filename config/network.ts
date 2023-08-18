@@ -20,10 +20,10 @@ export const mainnetConfig: AppConfig = {
 }
 
 export const uniTestnetConfig: AppConfig = {
-    chainId: 'atlantic-2',
-    chainName: 'Sei Testnet',
+    chainId: 'pacific-1',
+    chainName: 'Sei Mainnet',
     addressPrefix: 'sei',
-    rpcUrl: 'https://test-sei.kingnodes.com/',
+    rpcUrl: 'https://rpc.seaswap.io/',
     httpUrl: 'https://test-sei-grpc@kingnodes.com/',
     feeToken: 'usei',
     stakingToken: 'usei',

@@ -21,12 +21,14 @@ import { getSettledValue } from "@/utils/promiseUtils";
 import RedeemSide from "./_components/RedeemSide";
 import { requestTotalTroves } from "@/services/graphql";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 
 export default function Dashboard() {
     const { balanceByDenom, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
+    const [seiPrice, setSeiPrice] = useState(0);
     const [pageData, setPageData] = useState<PageData>({
         collateralAmount: 0,
         debtAmount: 0,
@@ -42,6 +44,29 @@ export default function Dashboard() {
         minCollateralRatio: 0,
         minRedeemAmount: 0
     })
+
+    useEffect(() => {
+        const getPrice = async () => {
+          const connection = new PriceServiceConnection(
+            "https://xc-mainnet.pyth.network/",
+            {
+              priceFeedRequestConfig: {
+                binary: true,
+              },
+            }
+          )
+      
+          const priceIds = [
+            "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+          ];
+          
+          const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+    
+          if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+        }
+    
+        getPrice()
+      }, [])
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
@@ -82,8 +107,8 @@ export default function Dashboard() {
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
                 poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2)),
                 rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
-                minCollateralRatio: MOCK_SEI_PRICE / (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE),
-                minRedeemAmount: (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE) / MOCK_SEI_PRICE,
+                minCollateralRatio: seiPrice / (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE),
+                minRedeemAmount: (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE) / seiPrice,
                 totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
             })
         }
@@ -129,7 +154,7 @@ export default function Dashboard() {
                                 <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
                                 <Text size="2xl">SEI</Text>
                             </div>
-                            <Text>$2.00</Text>
+                            <Text>$ {seiPrice.toFixed(2)}</Text>
                         </div>
                     </div>
                     <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
@@ -140,28 +165,32 @@ export default function Dashboard() {
                         <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>
                         <div className="flex flex-wrap justify-center gap-6 mt-2 px-4">
                             <StatisticCard
-                                title="Borrowing Fee"
-                                description="0%"
+                                title="Troving Fee"
+                                description="0.5%"
                                 className="w-[191px] h-14"
-                                tooltip="The Borrowing Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt."
+                                tooltip="The Troving Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="TVL"
                                 description={`${Number(pageData.totalCollateralAmount).toFixed(2)} SEI`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="Troves"
                                 description={`${pageData.totalTrovesAmount}`}
                                 className="w-[191px] h-14"
                                 tooltip="The total number of active Troves in the system."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="AUSD supply"
                                 description={Number(pageData.totalAusdSupply).toFixed(2).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Aeroscraper Protocol."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="Liquidation Threshold"
@@ -180,7 +209,7 @@ export default function Dashboard() {
                             <StatisticCard
                                 title="Total Collateral Ratio"
                                 tooltipPlacement="top"
-                                description={`${Number(((pageData.totalCollateralAmount * 2) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
+                                description={`${Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />

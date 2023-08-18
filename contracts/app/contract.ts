@@ -6,11 +6,12 @@ import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 
 export const getAppContract = (client: SigningCosmWasmClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+    const oraclecontractAddress = process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string;
     const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;
 
     //GET QUERIES
-
-    const getLivePrice = async (): Promise<any> => {
+    
+    const getVAA = async (): Promise<any> => {
         const connection = new PriceServiceConnection("https://xc-mainnet.pyth.network/",
             {
                 priceFeedRequestConfig: {
@@ -21,12 +22,10 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
 
         const priceIds = ["53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb"];
 
-        const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+        const res = await connection.getLatestPriceFeeds(priceIds);
 
-        if (currentPrices) {
-            console.log(Number(currentPrices[0].getPriceUnchecked().price) / 100000000);
-            
-            return Number(currentPrices[0].getPriceUnchecked().price) / 100000000;
+        if (res) {
+            return res[0].getVAA()
         } else {
             throw new Error("Error getting price feed")
         }
@@ -67,20 +66,20 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     const getReward = async (user_addr: string): Promise<string> => {
         return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
     }
+    
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
-        const price = await getLivePrice();
-
+        const vaa = await getVAA();
         return await client.executeMultiple(
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
@@ -94,21 +93,21 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             ],
             "auto",
             "Open Trove",
-        )
+        ).catch(err => console.log(err))
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
-        const price = await getLivePrice();
+        const vaa = await getVAA();
 
         return await client.executeMultiple(
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
@@ -126,17 +125,17 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     }
 
     const removeCollateral = async (senderAddress: string, amount: number) => {
-        const price = await getLivePrice();
+        const vaa = await getVAA();
 
         return await client.executeMultiple(
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
@@ -153,17 +152,17 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     }
 
     const borrowLoan = async (senderAddress: string, amount: number) => {
-        const price = await getLivePrice();
+        const vaa = await getVAA();
 
         return await client.executeMultiple(
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
@@ -181,7 +180,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
 
     const repayLoan = async (senderAddress: string, amount: number) => {
 
-        const price = await getLivePrice();
+        const vaa = await getVAA();
 
         const msg = {
             send: {
@@ -195,11 +194,11 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
@@ -244,7 +243,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     }
 
     const redeem = async (senderAddress: string, amount: number) => {
-        const price = await getLivePrice();
+        const vaa = await getVAA();
 
         const msg = {
             send: {
@@ -258,11 +257,11 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
@@ -275,21 +274,21 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             ],
             "auto",
             "Redeem"
-        )
+        ).catch(err => console.log(err))
     }
 
     const liquidateTroves = async (senderAddress: string) => {
-        const price = await getLivePrice();
+        const vaa = await getVAA();
 
         return await client.executeMultiple(
             senderAddress,
             [
                 {
-                    contractAddress: "PYTH_CONTRACT",
+                    contractAddress: oraclecontractAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
-                                price
+                                vaa
                             ]
                         }
                     },
