@@ -2,12 +2,36 @@ import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponse } from "./types";
+import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 
 export const getAppContract = (client: SigningCosmWasmClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
     const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;
 
     //GET QUERIES
+
+    const getLivePrice = async (): Promise<any> => {
+        const connection = new PriceServiceConnection("https://xc-mainnet.pyth.network/",
+            {
+                priceFeedRequestConfig: {
+                    binary: true,
+                },
+            }
+        )
+
+        const priceIds = ["53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb"];
+
+        const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+        if (currentPrices) {
+            console.log(Number(currentPrices[0].getPriceUnchecked().price) / 100000000);
+            
+            return Number(currentPrices[0].getPriceUnchecked().price) / 100000000;
+        } else {
+            throw new Error("Error getting price feed")
+        }
+    }
+
     const getTotalCollateralAmount = async (): Promise<string> => {
         return await client.queryContractSmart(contractAddress, { total_collateral_amount: {} });
     }
@@ -46,48 +70,119 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
-        return await client.execute(
+        const price = await getLivePrice();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+                    funds: [coin(getRequestAmount(amount), "usei")]
+                }
+            ],
             "auto",
             "Open Trove",
-            [coin(getRequestAmount(amount), "usei")]
         )
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
-        return await client.execute(
+        const price = await getLivePrice();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { add_collateral: {} },
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { add_collateral: {} },
+                    funds: [coin(getRequestAmount(amount), "usei")]
+                }
+            ],
             "auto",
             "Add Collateral",
-            [coin(getRequestAmount(amount), "usei")]
         )
     }
 
     const removeCollateral = async (senderAddress: string, amount: number) => {
-        return await client.execute(
+        const price = await getLivePrice();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { remove_collateral: { collateral_amount: getRequestAmount(amount) } }
+                }
+            ],
             "auto",
-            "Remove Collateral"
+            "Remove Collateral",
         )
     }
 
     const borrowLoan = async (senderAddress: string, amount: number) => {
-        return await client.execute(
+        const price = await getLivePrice();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { borrow_loan: { loan_amount: getRequestAmount(amount) } },
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { borrow_loan: { loan_amount: getRequestAmount(amount) } }
+                }
+            ],
             "auto",
-            "Borrow Loan"
+            "Borrow Loan",
         )
     }
 
     const repayLoan = async (senderAddress: string, amount: number) => {
+
+        const price = await getLivePrice();
+
         const msg = {
             send: {
                 contract: contractAddress,
@@ -96,12 +191,27 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             }
         }
 
-        return client.execute(
+        return await client.executeMultiple(
             senderAddress,
-            ausdContractAddress,
-            msg,
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    msg,
+                    contractAddress:ausdContractAddress,
+                }
+            ],
             "auto",
-            "Repay Loan"
+            "Repay Loan",
         )
     }
 
@@ -134,6 +244,8 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     }
 
     const redeem = async (senderAddress: string, amount: number) => {
+        const price = await getLivePrice();
+
         const msg = {
             send: {
                 contract: contractAddress,
@@ -142,22 +254,54 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             }
         }
 
-        return client.execute(
+        return client.executeMultiple(
             senderAddress,
-            ausdContractAddress,
-            msg,
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    msg,
+                    contractAddress: ausdContractAddress
+                }
+            ],
             "auto",
             "Redeem"
         )
     }
 
     const liquidateTroves = async (senderAddress: string) => {
-        return await client.execute(
+        const price = await getLivePrice();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { liquidate_troves: {} },
+            [
+                {
+                    contractAddress: "PYTH_CONTRACT",
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                price
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { liquidate_troves: {} }
+                }
+            ],
             "auto",
-            "Liquidate Troves"
+            "Liquidate Troves",
         )
     }
 

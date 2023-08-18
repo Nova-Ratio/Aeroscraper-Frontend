@@ -5,32 +5,7 @@ import Text from '@/components/Texts/Text'
 import LandingLayout from '@/layouts/LandingLayout'
 import { useEffect } from 'react'
 
-import { PriceServiceConnection } from '@pythnetwork/price-service-client'
-
 export default function Home() {
-
-  useEffect(() => {
-    const getPrice = async () => {
-      const connection = new PriceServiceConnection(
-        "https://xc-testnet.pyth.network",
-        {
-          priceFeedRequestConfig: {
-            binary: true,
-          },
-        }
-      )
-  
-      const priceIds = [
-        "0xca80ba6dc32e08d06f1aa886011eed1d77c77be9eb761cc10d72b7d0a2fd57a6", // ETH/USD price id in testnet
-      ];
-      
-      const currentPrices = await connection.getLatestPriceFeeds(priceIds);
-
-      if (currentPrices) console.log(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
-    }
-
-    getPrice()
-  }, [])
 
   return (
     <LandingLayout>
