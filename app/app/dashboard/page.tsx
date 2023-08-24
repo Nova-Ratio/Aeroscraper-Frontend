@@ -12,7 +12,7 @@ import { NumericFormat } from 'react-number-format'
 import TroveModal from "./_components/TroveModal";
 import useAppContract from "@/contracts/app/useAppContract";
 import { PageData } from "./_types/types";
-import { MOCK_AUSD_PRICE, MOCK_SEI_PRICE, SEI_TO_AUSD_RATIO, convertAmount } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 
 import StabilityPoolModal from "./_components/StabilityPoolModal";
 import RiskyTrovesModal from "./_components/RiskyTrovesModal";
@@ -47,26 +47,26 @@ export default function Dashboard() {
 
     useEffect(() => {
         const getPrice = async () => {
-          const connection = new PriceServiceConnection(
-            "https://xc-mainnet.pyth.network/",
-            {
-              priceFeedRequestConfig: {
-                binary: true,
-              },
-            }
-          )
-      
-          const priceIds = [
-            "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
-          ];
-          
-          const currentPrices = await connection.getLatestPriceFeeds(priceIds);
-    
-          if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
         }
-    
+
         getPrice()
-      }, [])
+    }, [])
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
@@ -96,9 +96,12 @@ export default function Dashboard() {
                 requestTotalTroves()
             ]);
 
+            const collateralAmount = convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0)
+            const debtAmount = convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0)
+
             setPageData({
-                collateralAmount: convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0),
-                debtAmount: convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0),
+                collateralAmount,
+                debtAmount,
                 ausdBalance: convertAmount(getSettledValue(ausdBalanceRes)?.balance ?? 0),
                 stakedAmount: convertAmount(getSettledValue(stakeRes)?.amount ?? 0),
                 totalCollateralAmount: convertAmount(getSettledValue(totalCollateralRes) ?? 0),
@@ -107,8 +110,8 @@ export default function Dashboard() {
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
                 poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2)),
                 rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
-                minCollateralRatio: seiPrice / (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE),
-                minRedeemAmount: (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE) / seiPrice,
+                minCollateralRatio: (collateralAmount * seiPrice) / (debtAmount || 1),
+                minRedeemAmount: seiPrice,
                 totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
             })
         }
@@ -131,7 +134,7 @@ export default function Dashboard() {
                 totalTrovesAmount: 0
             })
         }
-    }, [contract])
+    }, [contract, seiPrice])
 
     useEffect(() => {
         getPageData();
@@ -262,11 +265,11 @@ export default function Dashboard() {
                 <ShapeContainer hasAnimation={pageData.rewardAmount > 0} layoutId="stability-pool" className="flex-[3]" width="" height="">
                     <div className='flex flex-col w-full h-full'>
                         <div className="flex flex-row">
-                        <Text size="3xl" weight="font-normal">Stability Pool</Text>
-                        <Tooltip title={<Text size='base'>If the frame is glowing, you have a claimable reward.</Text>} width='w-[191px]'>
-                            <InfoIcon className='text-white w-4 h-4' />
-                        </Tooltip>
-                        </div>                    
+                            <Text size="3xl" weight="font-normal">Stability Pool</Text>
+                            <Tooltip title={<Text size='base'>If the frame is glowing, you have a claimable reward.</Text>} width='w-[191px]'>
+                                <InfoIcon className='text-white w-4 h-4' />
+                            </Tooltip>
+                        </div>
                         <NumericFormat
                             value={pageData.stakedAmount}
                             thousandsGroupStyle="thousand"

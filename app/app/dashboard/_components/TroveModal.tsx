@@ -13,7 +13,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { MOCK_AUSD_PRICE, MOCK_SEI_PRICE, SEI_TO_AUSD_RATIO, convertAmount, getValueByRatio } from '@/utils/contractUtils';
+import { AUSD_PRICE, convertAmount, getValueByRatio } from '@/utils/contractUtils';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 
 enum TABS {
@@ -45,14 +45,14 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
     const collacteralRatio = useMemo(() =>
-        Number((openTroveAmount || 0) * seiPrice) / ((borrowAmount || 1) * MOCK_AUSD_PRICE),
+        Number((openTroveAmount || 0) * seiPrice) / ((borrowAmount || 1) * AUSD_PRICE),
         [openTroveAmount, borrowAmount])
 
     const confirmDisabled = useMemo(() =>
         borrowAmount <= 0 ||
         openTroveAmount <= 0 ||
-        collacteralRatio < (SEI_TO_AUSD_RATIO - 0.00001),
-        [openTroveAmount, borrowAmount, collacteralRatio])
+        collacteralRatio < (pageData.minCollateralRatio - 0.00001),
+        [openTroveAmount, borrowAmount, collacteralRatio, pageData])
 
     const withdrawDepositDisabled = useMemo(() => collateralAmount <= 0, [collateralAmount])
     const repayBorrowDisabled = useMemo(() => borrowingAmount <= 0, [borrowingAmount])
@@ -76,26 +76,26 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
     useEffect(() => {
         const getPrice = async () => {
-          const connection = new PriceServiceConnection(
-            "https://xc-mainnet.pyth.network/",
-            {
-              priceFeedRequestConfig: {
-                binary: true,
-              },
-            }
-          )
-      
-          const priceIds = [
-            "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
-          ];
-          
-          const currentPrices = await connection.getLatestPriceFeeds(priceIds);
-    
-          if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
         }
-    
+
         getPrice()
-      }, [])
+    }, [])
 
     const queryAddColletral = async () => {
         setProcessLoading(true);
@@ -280,7 +280,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description={`${Number((pageData.collateralAmount * seiPrice) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
+                                                description={`${(pageData.minCollateralRatio * 100).toFixed(2)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
@@ -330,7 +330,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Troving Fee'
-                                                description = '0.5%'
+                                                description='0.5%'
                                                 tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
@@ -340,7 +340,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description={`${Number((pageData.collateralAmount * seiPrice) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
+                                                description={`${(pageData.minCollateralRatio * 100).toFixed(2)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>

@@ -10,7 +10,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;
 
     //GET QUERIES
-    
+
     const getVAA = async (): Promise<any> => {
         const connection = new PriceServiceConnection("https://xc-mainnet.pyth.network/",
             {
@@ -66,7 +66,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     const getReward = async (user_addr: string): Promise<string> => {
         return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
     }
-    
+
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
@@ -206,7 +206,7 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
                 },
                 {
                     msg,
-                    contractAddress:ausdContractAddress,
+                    contractAddress: ausdContractAddress,
                 }
             ],
             "auto",
