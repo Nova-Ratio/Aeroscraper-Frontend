@@ -108,7 +108,7 @@ export default function Dashboard() {
                 totalDebtAmount: convertAmount(getSettledValue(totalDebtRes) ?? 0),
                 totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0),
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
-                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2)),
+                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(3)),
                 rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
                 minCollateralRatio: (collateralAmount * seiPrice) / (debtAmount || 1),
                 minRedeemAmount: seiPrice,
@@ -157,7 +157,7 @@ export default function Dashboard() {
                                 <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
                                 <Text size="2xl">SEI</Text>
                             </div>
-                            <Text>$ {seiPrice.toFixed(2)}</Text>
+                            <Text>$ {seiPrice.toFixed(3)}</Text>
                         </div>
                     </div>
                     <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
@@ -168,15 +168,15 @@ export default function Dashboard() {
                         <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>
                         <div className="flex flex-wrap justify-center gap-6 mt-2 px-4">
                             <StatisticCard
-                                title="Troving Fee"
+                                title="Management Fee"
                                 description="0.5%"
                                 className="w-[191px] h-14"
-                                tooltip="The Troving Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt."
+                                tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                                 tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${Number(pageData.totalCollateralAmount).toFixed(2)} SEI`}
+                                description={`${Number(pageData.totalCollateralAmount).toFixed(3)} SEI`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
                                 tooltipPlacement="top"
@@ -190,7 +190,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="AUSD supply"
-                                description={Number(pageData.totalAusdSupply).toFixed(2).toString()}
+                                description={Number(pageData.totalAusdSupply).toFixed(3).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Aeroscraper Protocol."
                                 tooltipPlacement="top"
@@ -205,14 +205,14 @@ export default function Dashboard() {
                             <StatisticCard
                                 title="AUSD in Stability Pool"
                                 tooltipPlacement="top"
-                                description={Number(pageData.totalStakedAmount).toFixed(2).toString()}
+                                description={Number(pageData.totalStakedAmount).toFixed(3).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD currently held in the Stability Pool."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
                                 tooltipPlacement="top"
-                                description={`${Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
+                                description={`${Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(3)} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />

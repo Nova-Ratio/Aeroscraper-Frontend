@@ -23,8 +23,8 @@ export const uniTestnetConfig: AppConfig = {
     chainId: 'pacific-1',
     chainName: 'Sei Mainnet',
     addressPrefix: 'sei',
-    rpcUrl: 'https://rpc.seaswap.io/',
-    httpUrl: 'https://test-sei-grpc@kingnodes.com/',
+    rpcUrl: 'https://sei-rpc.brocha.in/',
+    httpUrl: 'https://sei-rest.brocha.in/',
     feeToken: 'usei',
     stakingToken: 'usei',
     coinMap: {

@@ -247,7 +247,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='In Wallet'
                                                 hintTitle="SEI"
-                                                value={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)).toFixed(2)}
+                                                value={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)).toFixed(3)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[20%] text-end'
                                                 disabled
@@ -264,9 +264,9 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <InputLayout label="Collateral" hintTitle="SEI" className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)))} hasPercentButton={{ max: false, min: false }} />
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
-                                                title='Troving Fee'
+                                                title='Management Fee'
                                                 description={`${collateralAmount * 0.005} SEI (0.5%)`}
-                                                tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
+                                                tooltip='This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
                                                 title='Total Debt'
@@ -275,12 +275,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                             <StatisticCard
                                                 title='Liquidation price'
-                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(2).toString()}
+                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description={`${(pageData.minCollateralRatio * 100).toFixed(2)} %`}
+                                                description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
@@ -312,7 +312,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='Borrowing Capacity'
                                                 hintTitle="AUSD"
-                                                value={(((pageData.collateralAmount * seiPrice * 100) / 115) - (pageData.debtAmount)).toFixed(2)}
+                                                value={(((pageData.collateralAmount * seiPrice * 100) / 115) - (pageData.debtAmount)).toFixed(3)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[25%] text-end'
                                                 disabled
@@ -320,27 +320,22 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='Debt'
                                                 hintTitle="AUSD"
-                                                value={`${pageData.debtAmount} AUSD`}
+                                                value={`${pageData.debtAmount.toFixed(3)} AUSD`}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[25%] text-end'
                                                 disabled
                                             />
                                         </BorderedContainer>
                                         <InputLayout label="Borrow-Repay" hintTitle="AUSD" className='mt-2' value={borrowingAmount} onValueChange={changeBorrowingAmount} hasPercentButton={{ max: false, min: false }} />
-                                        <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
-                                            <StatisticCard
-                                                title='Troving Fee'
-                                                description='0.5%'
-                                                tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
-                                            />
+                                        <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>                                            
                                             <StatisticCard
                                                 title='Liquidation price'
-                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(2).toString()}
+                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
                                                 title='Collateral ratio'
-                                                description={`${(pageData.minCollateralRatio * 100).toFixed(2)} %`}
+                                                description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
@@ -383,10 +378,10 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             }}
                             className="grid grid-cols-12 content-center gap-6 mt-2">
                             <StatisticCard
-                                title="Troving Fee"
+                                title="Management Fee"
                                 description={`${openTroveAmount * 0.005} SEI (0.5%)`}
                                 className="w-full h-14 col-span-6"
-                                tooltip="This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free."
+                                tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                             />
                             <StatisticCard
                                 title="Total debt"
@@ -396,13 +391,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             />
                             <StatisticCard
                                 title="Liquidation price"
-                                description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(2).toString()}
+                                description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(3).toString()}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
                             />
                             <StatisticCard
                                 title="Collateral ratio"
-                                description={`${(collacteralRatio * 100).toFixed(2)} %`}
+                                description={`${(collacteralRatio * 100).toFixed(3)} %`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />
