@@ -212,7 +212,7 @@ export default function Dashboard() {
                             <StatisticCard
                                 title="Total Collateral Ratio"
                                 tooltipPlacement="top"
-                                description={`${Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(3)} %`}
+                                description={`${isFinite(Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
                                 className="w-[191px] h-14"
                                 tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
                             />

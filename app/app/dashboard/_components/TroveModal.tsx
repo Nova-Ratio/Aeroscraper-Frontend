@@ -44,9 +44,11 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
-    const collacteralRatio = useMemo(() =>
-        Number((openTroveAmount || 0) * seiPrice) / ((borrowAmount || 1) * AUSD_PRICE),
+    const collacteralRatioCalculate = useMemo(() =>
+        Number((openTroveAmount || 0) * seiPrice) / ((borrowAmount || 0)),
         [openTroveAmount, borrowAmount])
+
+    const collacteralRatio = isFinite(collacteralRatioCalculate) ? collacteralRatioCalculate : 0;
 
     const confirmDisabled = useMemo(() =>
         borrowAmount <= 0 ||
