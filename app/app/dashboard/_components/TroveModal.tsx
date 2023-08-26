@@ -13,7 +13,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { AUSD_PRICE, convertAmount, getValueByRatio } from '@/utils/contractUtils';
+import { AUSD_PRICE, convertAmount, getRatioColor, getValueByRatio } from '@/utils/contractUtils';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 
 enum TABS {
@@ -59,7 +59,6 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
     const changeOpenTroveAmount = (values: NumberFormatValues) => {
         setOpenTroveAmount(Number(values.value));
-        setBorrowAmount(getValueByRatio(Number(values.value), pageData.minCollateralRatio));
     }
 
     const changeBorrowAmount = (values: NumberFormatValues) => {
@@ -327,7 +326,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             />
                                         </BorderedContainer>
                                         <InputLayout label="Borrow-Repay" hintTitle="AUSD" className='mt-2' value={borrowingAmount} onValueChange={changeBorrowingAmount} hasPercentButton={{ max: false, min: false }} />
-                                        <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>                                            
+                                        <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Liquidation price'
                                                 description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
@@ -398,6 +397,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             <StatisticCard
                                 title="Collateral ratio"
                                 description={`${(collacteralRatio * 100).toFixed(3)} %`}
+                                descriptionColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />

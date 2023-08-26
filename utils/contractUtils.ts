@@ -65,3 +65,14 @@ export const convertAmount = (value: string | number, decimal: number = DEFAULT_
 export const getValueByRatio = (value: string | number, ratio: string | number) => {
     return Number((Number(value) * Number(ratio)).toFixed(6));
 }
+
+export const getRatioColor = (value: number) => {
+    if (value < 115) {
+        return 'text-dark-red';
+    }
+    else if (value > 115 && value < 130) {
+        return 'text-chinese-bronze'
+    }
+
+    return 'text-ufo-green'
+}
