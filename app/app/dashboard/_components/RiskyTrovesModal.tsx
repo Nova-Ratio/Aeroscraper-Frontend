@@ -11,20 +11,9 @@ import useAppContract from '@/contracts/app/useAppContract';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { requestRiskyTroves } from '@/services/graphql';
 import { RiskyTroves } from '@/types/types';
-import { convertAmount } from '@/utils/contractUtils';
+import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
-
-const getLiquidityThresholdColor = (value: number) => {
-    if (value < 115) {
-        return 'text-dark-red';
-    }
-    else if (value > 115 && value < 130) {
-        return 'text-chinese-bronze'
-    }
-
-    return 'text-ufo-green'
-}
 
 type Props = {
     open: boolean;
@@ -167,7 +156,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getLiquidityThresholdColor(item.liquidityThreshold)}>{Number(value)*2}%</Text>//bu 2 sei price ı aslında oracle ile çekilince price bilgisi değiştirilecek
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getRatioColor(item.liquidityThreshold)}>{Number(value) * 2}%</Text>//bu 2 sei price ı aslında oracle ile çekilince price bilgisi değiştirilecek
                                             }
                                         />} />
                                 </div>
