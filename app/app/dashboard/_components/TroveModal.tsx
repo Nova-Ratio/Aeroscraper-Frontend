@@ -51,6 +51,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const confirmDisabled = useMemo(() =>
         borrowAmount <= 0 ||
         openTroveAmount <= 0 ||
+        collacteralRatio < 1.15 ||
         collacteralRatio < (pageData.minCollateralRatio - 0.00001),
         [openTroveAmount, borrowAmount, collacteralRatio, pageData])
 
