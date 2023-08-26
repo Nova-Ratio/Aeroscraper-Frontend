@@ -14,6 +14,7 @@ import { RiskyTroves } from '@/types/types';
 import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
+import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 
 type Props = {
     open: boolean;
@@ -27,6 +28,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
     const [loading, setLoading] = useState(false);
     const [processLoading, setProcessLoading] = useState<boolean>(false);
     const [riskyTroves, setRiskyTroves] = useState<RiskyTroves[]>([]);
+    const [seiPrice, setSeiPrice] = useState(0);
     const { addNotification } = useNotification();
 
     const liquidateTrovesa = async () => {
@@ -86,6 +88,29 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
             setLoading(false);
         }
     }, [contract])
+
+    useEffect(() => {
+        const getPrice = async () => {
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+        }
+
+        getPrice()
+    }, [])
 
     useEffect(() => {
         getRiskyTroves();
@@ -156,7 +181,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getRatioColor(item.liquidityThreshold)}>{Number(value) * 2}%</Text>//bu 2 sei price ı aslında oracle ile çekilince price bilgisi değiştirilecek
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getRatioColor(item.liquidityThreshold)}>{Number(value) * seiPrice}</Text>
                                             }
                                         />} />
                                 </div>
