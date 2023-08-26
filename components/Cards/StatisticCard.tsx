@@ -17,7 +17,7 @@ const StatisticCard: FC<Props> = ({ title, description, descriptionColor, toolti
     return (
         <div className={`${className} relative flex flex-col p-2 bg-english-violet rounded-lg`}>
             <Text size="base">{title}</Text>
-            <Text size="base" textColor={descriptionColor}>{description}</Text>
+            <Text size="base" dynamicTextColor={descriptionColor}>{description}</Text>
             <div className='absolute right-1 top-1'>
                 <Tooltip placement={tooltipPlacement} active={!isEmpty(tooltip)} title={<Text size='base'>{tooltip}</Text>} width='w-[191px]'>
                     <InfoIcon className='text-white w-4 h-4' />
