@@ -405,8 +405,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />
                         </motion.div>
-                        <div className='pt-6'>
-                        <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
+                        <div className='mt-6'>
+                            <Info message={"Collateral ratio must be at least 115%."} status={"normal"} dynamicTextColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined} />
                         </div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
                             <GradientButton

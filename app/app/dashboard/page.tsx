@@ -22,6 +22,8 @@ import RedeemSide from "./_components/RedeemSide";
 import { requestTotalTroves } from "@/services/graphql";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
+import Select from "@/components/Select/Select";
+import { mockChains } from "./_mock/mock";
 
 export default function Dashboard() {
     const { balanceByDenom, refreshBalance } = useWallet();
@@ -142,6 +144,33 @@ export default function Dashboard() {
 
     return (
         <div>
+            <div className="flex justify-end mb-6">
+                <Select
+                    initialValue={mockChains[0]}
+                    data={mockChains}
+                    keyExtractor={item => item.id}
+                    nameExtractor={item => item.name}
+                    renderItem={(item, isSelected) => (
+                        <div className="flex items-center justify-between gap-1">
+                            <div className="flex items-center gap-1">
+                                <img alt={item.name} src={item.imageUrl} className="w-8 h-8" />
+                                <Text>{item.name}</Text>
+                            </div>
+                            {isSelected && <img alt="selected" src="/images/tick.svg" />}
+                        </div>
+                    )}
+                    renderSelectedItem={(item) => (
+                        <div className="flex items-center gap-1">
+                            <img alt={item.name} src={item.imageUrl} className="w-8 h-8" />
+                            <Text>{item.name}</Text>
+                        </div>
+                    )
+                    }
+                    onSelect={() => { }}
+                    width="w-[272px]"
+                    height="h-14"
+                />
+            </div>
             <div className="grid grid-cols-[1fr_439px] gap-6 overflow-hidden">
                 <BorderedContainer containerClassName="w-full h-[122px]" className="px-8 py-6 flex justify-between items-center gap-2">
                     <div className="flex items-center gap-11">

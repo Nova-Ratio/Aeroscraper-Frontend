@@ -4,6 +4,7 @@ import React, { FC, PropsWithChildren, useEffect, useImperativeHandle, useRef, u
 import { AnimatePresence, motion } from 'framer-motion';
 import useOutsideHandler from '../../hooks/useOutsideHandler';
 import Text from '../Texts/Text';
+import BorderedContainer from '../Containers/BorderedContainer';
 
 export type AccordionRef = {
     closeAccordion: () => void
@@ -19,14 +20,27 @@ type Props = {
     text?: string,
     renderDefault?: React.ReactNode,
     placement?: "bottom" | "top",
+    width?: string,
+    height?: string
 }
 
 const Placement = {
-    "bottom": "absolute left-0 bottom-1 translate-y-full",
-    "top": "absolute left-0 top-1 -translate-y-full"
+    "bottom": "absolute left-0 bottom-[2px] translate-y-full",
+    "top": "absolute left-0 top-[2px] -translate-y-full"
 }
 
-const Accordion = React.forwardRef(({ children, containerClassName, buttonClassName, className, text, textClassName, responsiveText = true, placement = "bottom", renderDefault }: PropsWithChildren<Props>, externalRef) => {
+const Accordion = React.forwardRef(({
+    children,
+    buttonClassName,
+    className = "",
+    text,
+    textClassName,
+    responsiveText = true,
+    placement = "bottom",
+    renderDefault,
+    width = "w-full",
+    height = "h-full"
+}: PropsWithChildren<Props>, externalRef) => {
     const ref = useRef(null);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
@@ -43,7 +57,7 @@ const Accordion = React.forwardRef(({ children, containerClassName, buttonClassN
     useImperativeHandle(externalRef, (): AccordionRef => ({ closeAccordion: closeExpanded }))
 
     return (
-        <div ref={ref} className={`relative w-full h-full rounded-lg bg-dark-purple flex flex-col ${isExpanded ? placement === "bottom" ? 'rounded-b-none' : 'rounded-t-none' : ''}`}>
+        <BorderedContainer ref={ref} containerClassName={`${width} ${height} ${isExpanded ? "rounded-b-none" : ""}`} className={`relative w-full h-full rounded-lg bg-licorice flex flex-col ${isExpanded ? placement === "bottom" ? 'rounded-b-none' : 'rounded-t-none' : ''}`}>
             <button className={`${buttonClassName ?? ''} w-full h-16 flex justify-between items-center bg-transparent px-4`} onClick={toggleExpanded}>
                 {
                     renderDefault ?? <Text size='xl' className={textClassName} responsive={responsiveText}>{text}</Text>
@@ -54,18 +68,18 @@ const Accordion = React.forwardRef(({ children, containerClassName, buttonClassN
                 {
                     isExpanded &&
                     <motion.div
-                        className={`${className} w-full h-fit ${Placement[placement]} overflow-auto scrollbar-hidden border-0 z-[900]`}
+                        className={`${className} translate-x-[-3px] w-full h-fit ${Placement[placement]} overflow-auto scrollbar-hidden border-0 z-[900] main-gradient rounded-lg rounded-t-none p-[3px] pt-[2px] box-content`}
                         initial={{ height: 0 }}
                         animate={{ height: 'auto' }}
                         exit={{ height: 0 }}
                     >
-                        <div className={`w-full h-fit bg-dark-purple ${placement === "bottom" ? "rounded-b-lg" : "rounded-t-lg"}`}>
+                        <div className={`w-full h-fit bg-licorice ${placement === "bottom" ? "rounded-b-lg" : "rounded-t-lg"} pt-2`}>
                             {children}
                         </div>
                     </motion.div>
                 }
             </AnimatePresence>
-        </div>
+        </BorderedContainer>
     )
 }
 )
