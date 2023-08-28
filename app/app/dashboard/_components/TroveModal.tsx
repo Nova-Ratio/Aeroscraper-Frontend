@@ -267,7 +267,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Management Fee'
-                                                description={`${collateralAmount * 0.005} SEI (0.5%)`}
+                                                description={`${Number(collateralAmount * 0.005).toFixed(3)} SEI (0.5%)`}
                                                 tooltip='This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
@@ -366,7 +366,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                     </>
                     :
                     <div>
-                        <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
+                        <div className='pb-10'></div>
                         <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false }} />
                         <InputLayout label="Borrow" hintTitle="AUSD" value={borrowAmount} onValueChange={changeBorrowAmount} className="mt-4 mb-6" />
                         <motion.div
@@ -381,7 +381,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             className="grid grid-cols-12 content-center gap-6 mt-2">
                             <StatisticCard
                                 title="Management Fee"
-                                description={`${openTroveAmount * 0.005} SEI (0.5%)`}
+                                description={`${Number(openTroveAmount * 0.005).toFixed(3)} SEI (0.5%)`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                             />
@@ -405,6 +405,9 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />
                         </motion.div>
+                        <div className='pt-6'>
+                        <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
+                        </div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
                             <GradientButton
                                 loading={processLoading}
