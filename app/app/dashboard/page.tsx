@@ -24,6 +24,7 @@ import Tooltip from "@/components/Tooltip/Tooltip";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import Select from "@/components/Select/Select";
 import { mockChains } from "./_mock/mock";
+import NotificationDropdown from "./_components/NotificationDropdown";
 
 export default function Dashboard() {
     const { balanceByDenom, refreshBalance } = useWallet();
@@ -144,7 +145,8 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className="flex justify-end mb-6">
+            <div className="flex justify-end items-center gap-6 mb-6">
+                <NotificationDropdown pageData={pageData} />
                 <Select
                     initialValue={mockChains[0]}
                     data={mockChains}

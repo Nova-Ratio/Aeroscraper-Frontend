@@ -108,7 +108,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
 
             if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
         }
-         
+
         getPrice()
         console.log("Sei Price:", seiPrice)
     }, [])
@@ -182,9 +182,10 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{Number(value) * seiPrice}</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(item.liquidityThreshold ?? 0)}>{Number(value ?? 0) * (seiPrice ?? 0)}</Text>
                                             }
-                                        />} />
+                                        />}
+                                    />
                                 </div>
                         }} />
                 </div>
