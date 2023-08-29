@@ -13,7 +13,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { AUSD_PRICE, convertAmount, getRatioColor, getValueByRatio } from '@/utils/contractUtils';
+import { AUSD_PRICE, convertAmount, getRatioColor, getRatioText, getValueByRatio } from '@/utils/contractUtils';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 
 enum TABS {
@@ -406,7 +406,11 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             />
                         </motion.div>
                         <div className='mt-6'>
-                            <Info message={"Collateral ratio must be at least 115%."} status={"normal"} dynamicTextColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined} />
+                            <Info
+                                message={collacteralRatio > 0 ? getRatioText(collacteralRatio * 100) : "Collateral ratio must be at least 115%."}
+                                status={"normal"}
+                                dynamicTextColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined}
+                            />
                         </div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
                             <GradientButton
