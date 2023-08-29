@@ -108,8 +108,9 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
 
             if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
         }
-
+         
         getPrice()
+        console.log("Sei Price:", seiPrice)
     }, [])
 
     useEffect(() => {

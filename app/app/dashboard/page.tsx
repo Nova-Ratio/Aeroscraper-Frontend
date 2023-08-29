@@ -218,7 +218,7 @@ export default function Dashboard() {
                                 tooltipPlacement="top"
                             />
                             <StatisticCard
-                                title="AUSD supply"
+                                title="AUSD Supply"
                                 description={Number(pageData.totalAusdSupply).toFixed(3).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Aeroscraper Protocol."

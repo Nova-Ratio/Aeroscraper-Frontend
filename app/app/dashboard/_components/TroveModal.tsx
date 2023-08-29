@@ -276,12 +276,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                                 tooltip='The total amount of AUSD you have borrowed'
                                             />
                                             <StatisticCard
-                                                title='Liquidation price'
+                                                title='Liquidation Price'
                                                 description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
-                                                title='Collateral ratio'
+                                                title='Collateral Ratio'
                                                 description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
@@ -331,12 +331,12 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <InputLayout label="Borrow-Repay" hintTitle="AUSD" className='mt-2' value={borrowingAmount} onValueChange={changeBorrowingAmount} hasPercentButton={{ max: false, min: false }} />
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
-                                                title='Liquidation price'
+                                                title='Liquidation Price'
                                                 description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
-                                                title='Collateral ratio'
+                                                title='Collateral Ratio'
                                                 description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
@@ -386,19 +386,19 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                 tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                             />
                             <StatisticCard
-                                title="Total debt"
+                                title="Total Debt"
                                 description={`${borrowAmount} AUSD`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The total amount of AUSD you have borrowed"
                             />
                             <StatisticCard
-                                title="Liquidation price"
+                                title="Liquidation Price"
                                 description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(3).toString()}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
                             />
                             <StatisticCard
-                                title="Collateral ratio"
+                                title="Collateral Ratio"
                                 description={`${(collacteralRatio * 100).toFixed(3)} %`}
                                 descriptionColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined}
                                 className="w-full h-14 col-span-6"
