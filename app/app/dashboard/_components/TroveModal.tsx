@@ -6,14 +6,15 @@ import Text from '@/components/Texts/Text';
 import Info from '@/components/Tooltip/Info';
 import useAppContract from '@/contracts/app/useAppContract';
 import { motion } from 'framer-motion';
-import React, { FC, useMemo, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { NumberFormatValues } from 'react-number-format/types/types';
 import { PageData } from '../_types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { MOCK_AUSD_PRICE, MOCK_SEI_PRICE, SEI_TO_AUSD_RATIO, convertAmount, getValueByRatio } from '@/utils/contractUtils';
+import { AUSD_PRICE, convertAmount, getRatioColor, getRatioText, getValueByRatio } from '@/utils/contractUtils';
+import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 
 enum TABS {
     COLLATERAL = 0,
@@ -29,11 +30,12 @@ type Props = {
 
 const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const contract = useAppContract();
-    const { balanceByDenom, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
     const [borrowAmount, setBorrowAmount] = useState<number>(0);
     const [collateralAmount, setCollateralAmount] = useState<number>(0);
     const [borrowingAmount, setBorrowingAmount] = useState<number>(0);
+    const [seiPrice, setSeiPrice] = useState(0);
 
     const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
 
@@ -42,22 +44,24 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
-    const collacteralRatio = useMemo(() =>
-        Number((openTroveAmount || 0) * MOCK_SEI_PRICE) / ((borrowAmount || 1) * MOCK_AUSD_PRICE),
+    const collacteralRatioCalculate = useMemo(() =>
+        Number((openTroveAmount || 0) * seiPrice) / ((borrowAmount || 0)),
         [openTroveAmount, borrowAmount])
+
+    const collacteralRatio = isFinite(collacteralRatioCalculate) ? collacteralRatioCalculate : 0;
 
     const confirmDisabled = useMemo(() =>
         borrowAmount <= 0 ||
         openTroveAmount <= 0 ||
-        collacteralRatio < (SEI_TO_AUSD_RATIO - 0.00001),
-        [openTroveAmount, borrowAmount, collacteralRatio])
+        collacteralRatio < 1.15 ||
+        collacteralRatio < (pageData.minCollateralRatio - 0.00001),
+        [openTroveAmount, borrowAmount, collacteralRatio, pageData])
 
     const withdrawDepositDisabled = useMemo(() => collateralAmount <= 0, [collateralAmount])
     const repayBorrowDisabled = useMemo(() => borrowingAmount <= 0, [borrowingAmount])
 
     const changeOpenTroveAmount = (values: NumberFormatValues) => {
         setOpenTroveAmount(Number(values.value));
-        setBorrowAmount(getValueByRatio(Number(values.value), pageData.minCollateralRatio));
     }
 
     const changeBorrowAmount = (values: NumberFormatValues) => {
@@ -71,6 +75,29 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const changeBorrowingAmount = (values: NumberFormatValues) => {
         setBorrowingAmount(Number(values.value));
     }
+
+    useEffect(() => {
+        const getPrice = async () => {
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+        }
+
+        getPrice()
+    }, [])
 
     const queryAddColletral = async () => {
         setProcessLoading(true);
@@ -221,27 +248,27 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <BorderedContainer containerClassName='mt-2' className='flex flex-col gap-2 p-2'>
                                             <InputLayout
                                                 label='In Wallet'
-                                                hintTitle="SEI"
-                                                value={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)).toFixed(2)}
+                                                hintTitle={baseCoin.name}
+                                                value={Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)).toFixed(3)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[20%] text-end'
                                                 disabled
                                             />
                                             <InputLayout
                                                 label='In Trove Balance'
-                                                hintTitle="SEI"
+                                                hintTitle={baseCoin.name}
                                                 value={pageData.collateralAmount}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[20%] text-end'
                                                 disabled
                                             />
                                         </BorderedContainer>
-                                        <InputLayout label="Collateral" hintTitle="SEI" className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)))} hasPercentButton={{ max: true, min: false }} />
+                                        <InputLayout label="Collateral" hintTitle={baseCoin.name} className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)))} hasPercentButton={{ max: false, min: false }} />
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
-                                                title='Borrowing Fee'
-                                                description='0 AUSD (0%)'
-                                                tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
+                                                title='Management Fee'
+                                                description={`${Number(collateralAmount * 0.005).toFixed(3)} ${baseCoin.name} (0.5%)`}
+                                                tooltip='This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
                                                 title='Total Debt'
@@ -249,13 +276,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                                 tooltip='The total amount of AUSD you have borrowed'
                                             />
                                             <StatisticCard
-                                                title='Liquidation price'
-                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(2).toString()}
+                                                title='Liquidation Price'
+                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
-                                                title='Collateral ratio'
-                                                description={`${Number((pageData.collateralAmount * 2) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
+                                                title='Collateral Ratio'
+                                                description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
@@ -287,7 +314,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='Borrowing Capacity'
                                                 hintTitle="AUSD"
-                                                value={(((pageData.collateralAmount * 2 * 100) / 115) - (pageData.debtAmount)).toFixed(2)}
+                                                value={(((pageData.collateralAmount * seiPrice * 100) / 115) - (pageData.debtAmount)).toFixed(3)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[25%] text-end'
                                                 disabled
@@ -295,7 +322,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='Debt'
                                                 hintTitle="AUSD"
-                                                value={`${pageData.debtAmount} AUSD`}
+                                                value={`${pageData.debtAmount.toFixed(3)} AUSD`}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[25%] text-end'
                                                 disabled
@@ -304,18 +331,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <InputLayout label="Borrow-Repay" hintTitle="AUSD" className='mt-2' value={borrowingAmount} onValueChange={changeBorrowingAmount} hasPercentButton={{ max: false, min: false }} />
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
-                                                title='Borrowing Fee'
-                                                description='0 AUSD (0%)'
-                                                tooltip='This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free.'
-                                            />
-                                            <StatisticCard
-                                                title='Liquidation price'
-                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(2).toString()}
+                                                title='Liquidation Price'
+                                                description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
                                                 tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                                             />
                                             <StatisticCard
-                                                title='Collateral ratio'
-                                                description={`${Number((pageData.collateralAmount * 2) / (pageData.debtAmount || 1) * 100).toFixed(2)} %`}
+                                                title='Collateral Ratio'
+                                                description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
                                                 tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                                             />
                                         </div>
@@ -344,8 +366,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                     </>
                     :
                     <div>
-                        <Info message={"Collateral ratio must be at least 115%."} status={"normal"} />
-                        <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false }} />
+                        <div className='pb-10'></div>
+                        <InputLayout label="Collateral" hintTitle={baseCoin.name} value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false }} />
                         <InputLayout label="Borrow" hintTitle="AUSD" value={borrowAmount} onValueChange={changeBorrowAmount} className="mt-4 mb-6" />
                         <motion.div
                             initial={{ y: 200, x: 200, opacity: 0.1 }}
@@ -358,30 +380,38 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             }}
                             className="grid grid-cols-12 content-center gap-6 mt-2">
                             <StatisticCard
-                                title="Borrowing Fee"
-                                description="0 AUSD (0%)"
+                                title="Management Fee"
+                                description={`${Number(openTroveAmount * 0.005).toFixed(3)} ${baseCoin.name} (0.5%)`}
                                 className="w-full h-14 col-span-6"
-                                tooltip="This amount is deducted from the borrowed amount as a one-time fee. There are no recurring fees for borrowing, which is thus interest-free."
+                                tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                             />
                             <StatisticCard
-                                title="Total debt"
+                                title="Total Debt"
                                 description={`${borrowAmount} AUSD`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The total amount of AUSD you have borrowed"
                             />
                             <StatisticCard
-                                title="Liquidation price"
-                                description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(2).toString()}
+                                title="Liquidation Price"
+                                description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(3).toString()}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
                             />
                             <StatisticCard
-                                title="Collateral ratio"
-                                description={`${(collacteralRatio * 100).toFixed(2)} %`}
+                                title="Collateral Ratio"
+                                description={`${(collacteralRatio * 100).toFixed(3)} %`}
+                                descriptionColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined}
                                 className="w-full h-14 col-span-6"
                                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
                             />
                         </motion.div>
+                        <div className='mt-6'>
+                            <Info
+                                message={collacteralRatio > 0 ? getRatioText(collacteralRatio * 100) : "Collateral ratio must be at least 115%."}
+                                status={"normal"}
+                                dynamicTextColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined}
+                            />
+                        </div>
                         <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
                             <GradientButton
                                 loading={processLoading}

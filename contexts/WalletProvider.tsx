@@ -1,9 +1,10 @@
 "use client"
 
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { SigningArchwayClient } from "@archwayhq/arch3.js"
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Coin } from "@cosmjs/stargate";
-import { Dictionary } from "lodash";
+import { Dictionary, isNil } from "lodash";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { getConfig } from "@/config";
@@ -14,6 +15,8 @@ import { useCompass } from "@/services/compass";
 import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
+import { BaseCoin, ClientEnum } from "@/types/types";
+import { BaseCoinByClient, getBaseCoinByClient } from "@/constants/walletConstants";
 
 const SideEffects = () => {
     const leap = useLeap();
@@ -62,9 +65,19 @@ const SideEffects = () => {
 
 export async function createClient(
     signer: OfflineSigner,
-    network: string
-): Promise<SigningCosmWasmClient> {
-    const config = getConfig(network);
+    network: string,
+    clientType?: ClientEnum
+): Promise<SigningCosmWasmClient | SigningArchwayClient> {
+    const config = getConfig(network, clientType);
+
+    if (clientType === ClientEnum.ARCHWAY) {
+        return SigningArchwayClient.connectWithSigner(config.rpcUrl, signer, {
+            gasPrice: {
+                amount: Decimal.fromUserInput("0.0025", 100),
+                denom: config.feeToken,
+            },
+        });
+    }
 
     return SigningCosmWasmClient.connectWithSigner(config.rpcUrl, signer, {
         gasPrice: {
@@ -82,7 +95,7 @@ export interface WalletContextType {
     readonly name: string;
     readonly balance: readonly Coin[];
     readonly refreshBalance: () => Promise<void>;
-    readonly getClient: () => SigningCosmWasmClient;
+    readonly getClient: () => SigningCosmWasmClient | SigningArchwayClient;
     readonly getSigner: () => OfflineSigner;
     readonly updateSigner: (singer: OfflineSigner) => void;
     readonly network: string;
@@ -95,6 +108,9 @@ export interface WalletContextType {
     readonly processLoader: boolean;
     readonly setProcessLoader: (arg: boolean) => void;
     // readonly accountNumber: number;
+    readonly clientType: ClientEnum | undefined;
+    readonly selectClientType: (value: ClientEnum | undefined) => void;
+    readonly baseCoin: BaseCoin;
 }
 
 function throwNotInitialized(): any {
@@ -121,7 +137,10 @@ const defaultContext: WalletContextType = {
     processLoader: false,
     profileDetail: undefined,
     setProfileDetail: throwNotInitialized,
-    setProcessLoader: throwNotInitialized
+    setProcessLoader: throwNotInitialized,
+    clientType: undefined,
+    selectClientType: () => { },
+    baseCoin: BaseCoinByClient[ClientEnum.COSMWASM]
     // accountNumber: 0,
 };
 
@@ -150,11 +169,24 @@ export function WalletProvider({
     const [walletLoading, setWalletLoading] = useState(false);
     const [processLoader, setProcessLoader] = useState(false);
     const [signer, setSigner] = useState<OfflineSigner>();
-    const [client, setClient] = useState<SigningCosmWasmClient>();
+    const [client, setClient] = useState<SigningCosmWasmClient | SigningArchwayClient>();
     const [walletType, setWalletType] = useState<WalletType | undefined>(undefined);
+    const [clientType, setClientType] = useState<ClientEnum | undefined>(localStorage.getItem("selectedClientType") as (ClientEnum | undefined));
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
 
-    const config = getConfig(network);
+    const config = getConfig(network, clientType);
+
+    const baseCoin = React.useMemo(() => getBaseCoinByClient(clientType), [clientType])
+
+    const selectClientType = React.useCallback((value: ClientEnum | undefined) => {
+        setClientType(value);
+        if (!isNil(value)) {
+            localStorage.setItem("selectedClientType", value);
+        }
+        else {
+            localStorage.removeItem("selectedClientType");
+        }
+    }, [])
 
     const init = React.useCallback((signer: OfflineSigner, walletType: WalletType) => {
         setSigner(signer);
@@ -179,6 +211,8 @@ export function WalletProvider({
         setClient(undefined);
         setSigner(undefined);
         setWalletType(undefined);
+        setClientType(undefined);
+        localStorage.removeItem("selectedClientType");
         localStorage.setItem("selectedWalletType", WalletType.NOT_SELECTED);
     }, []);
     // Get balance for each coin specified in config.coinMap
@@ -241,16 +275,18 @@ export function WalletProvider({
         (async function updateClient(): Promise<void> {
             try {
                 setWalletLoading(true);
-                const client = await createClient(signer, network);
+                const client = await createClient(signer, network, clientType);
                 setClient(client);
             } catch (error) {
                 console.log(error);
                 setWalletLoading(false);
                 setWalletType(undefined);
+                setClientType(undefined);
+                localStorage.removeItem("selectedClientType");
                 localStorage.setItem("selectedWalletType", WalletType.NOT_SELECTED);
             }
         })();
-    }, [signer]);
+    }, [signer, clientType]);
 
     useEffect(() => {
         if (!signer || !client) return;
@@ -308,7 +344,10 @@ export function WalletProvider({
                         setProfileDetail(profile)
                     },
                     processLoader,
-                    setProcessLoader
+                    setProcessLoader,
+                    clientType,
+                    selectClientType,
+                    baseCoin
                 })
                 setWalletLoading(false);
             }
@@ -318,6 +357,11 @@ export function WalletProvider({
             updateValue()
         }
     }, [client]);
+
+    useEffect(() => {
+        const savedClientType = localStorage.getItem("selectedClientType");
+        setClientType(savedClientType as (ClientEnum | undefined));
+    }, [])
 
     useEffect(() => {
         setValue({ ...value, network });
@@ -336,8 +380,11 @@ export function WalletProvider({
         walletLoading,
         walletType,
         processLoader,
-        profileDetail
-    }), [value, walletLoading, walletType, processLoader, profileDetail])
+        profileDetail,
+        clientType,
+        selectClientType,
+        baseCoin
+    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin])
 
     return (
         <WalletContext.Provider value={providedValue}>

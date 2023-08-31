@@ -13,3 +13,9 @@ export type PageData = {
     minRedeemAmount: number;
     totalTrovesAmount: number;
 }
+
+export type Chain = {
+    id: string;
+    name: string;
+    imageUrl: string;
+}

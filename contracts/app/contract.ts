@@ -2,12 +2,36 @@ import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponse } from "./types";
+import { PriceServiceConnection } from '@pythnetwork/price-service-client'
+import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
 
-export const getAppContract = (client: SigningCosmWasmClient) => {
+export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+    const oraclecontractAddress = process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string;
     const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;
 
     //GET QUERIES
+
+    const getVAA = async (): Promise<any> => {
+        const connection = new PriceServiceConnection("https://xc-mainnet.pyth.network/",
+            {
+                priceFeedRequestConfig: {
+                    binary: true,
+                },
+            }
+        )
+
+        const priceIds = ["53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb"];
+
+        const res = await connection.getLatestPriceFeeds(priceIds);
+
+        if (res) {
+            return res[0].getVAA()
+        } else {
+            throw new Error("Error getting price feed")
+        }
+    }
+
     const getTotalCollateralAmount = async (): Promise<string> => {
         return await client.queryContractSmart(contractAddress, { total_collateral_amount: {} });
     }
@@ -44,50 +68,121 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
         return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
     }
 
+
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
-        return await client.execute(
+        const vaa = await getVAA();
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+                    funds: [coin(getRequestAmount(amount), "usei")]
+                }
+            ],
             "auto",
             "Open Trove",
-            [coin(getRequestAmount(amount), "usei")]
-        )
+        ).catch(err => console.log(err))
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
-        return await client.execute(
+        const vaa = await getVAA();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { add_collateral: {} },
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { add_collateral: {} },
+                    funds: [coin(getRequestAmount(amount), "usei")]
+                }
+            ],
             "auto",
             "Add Collateral",
-            [coin(getRequestAmount(amount), "usei")]
         )
     }
 
     const removeCollateral = async (senderAddress: string, amount: number) => {
-        return await client.execute(
+        const vaa = await getVAA();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { remove_collateral: { collateral_amount: getRequestAmount(amount) } }
+                }
+            ],
             "auto",
-            "Remove Collateral"
+            "Remove Collateral",
         )
     }
 
     const borrowLoan = async (senderAddress: string, amount: number) => {
-        return await client.execute(
+        const vaa = await getVAA();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { borrow_loan: { loan_amount: getRequestAmount(amount) } },
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { borrow_loan: { loan_amount: getRequestAmount(amount) } }
+                }
+            ],
             "auto",
-            "Borrow Loan"
+            "Borrow Loan",
         )
     }
 
     const repayLoan = async (senderAddress: string, amount: number) => {
+
+        const vaa = await getVAA();
+
         const msg = {
             send: {
                 contract: contractAddress,
@@ -96,12 +191,27 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             }
         }
 
-        return client.execute(
+        return await client.executeMultiple(
             senderAddress,
-            ausdContractAddress,
-            msg,
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    msg,
+                    contractAddress: ausdContractAddress,
+                }
+            ],
             "auto",
-            "Repay Loan"
+            "Repay Loan",
         )
     }
 
@@ -134,6 +244,8 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
     }
 
     const redeem = async (senderAddress: string, amount: number) => {
+        const vaa = await getVAA();
+
         const msg = {
             send: {
                 contract: contractAddress,
@@ -142,22 +254,54 @@ export const getAppContract = (client: SigningCosmWasmClient) => {
             }
         }
 
-        return client.execute(
+        return client.executeMultiple(
             senderAddress,
-            ausdContractAddress,
-            msg,
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    msg,
+                    contractAddress: ausdContractAddress
+                }
+            ],
             "auto",
             "Redeem"
-        )
+        ).catch(err => console.log(err))
     }
 
     const liquidateTroves = async (senderAddress: string) => {
-        return await client.execute(
+        const vaa = await getVAA();
+
+        return await client.executeMultiple(
             senderAddress,
-            contractAddress,
-            { liquidate_troves: {} },
+            [
+                {
+                    contractAddress: oraclecontractAddress,
+                    msg: {
+                        update_price_feeds: {
+                            data: [
+                                vaa
+                            ]
+                        }
+                    },
+                    funds: [{ amount: "1", denom: "usei" }],
+                },
+                {
+                    contractAddress,
+                    msg: { liquidate_troves: {} }
+                }
+            ],
             "auto",
-            "Liquidate Troves"
+            "Liquidate Troves",
         )
     }
 

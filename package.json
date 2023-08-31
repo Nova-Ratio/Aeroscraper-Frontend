@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@archwayhq/arch3.js": "^0.4.0",
     "@cosmjs/cosmwasm-stargate": "^0.31.0",
     "@cosmjs/math": "^0.31.0",
     "@cosmjs/proto-signing": "^0.31.0",
+    "@pythnetwork/price-service-client": "^1.6.2",
     "@types/node": "20.4.0",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",

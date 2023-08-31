@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import React, { FC, PropsWithChildren } from 'react'
 
 export type TextSizes = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
@@ -7,7 +8,8 @@ type Props = {
     size?: TextSizes,
     responsive?: boolean,
     weight?: string,
-    textColor?: string
+    textColor?: string,
+    dynamicTextColor?: string
 }
 
 const textResponsiveSizes: Record<TextSizes, string> = {
@@ -27,11 +29,12 @@ const Text: FC<PropsWithChildren<Props>> = ({
     size = 'xl',
     responsive = true,
     weight = 'font-normal',
-    textColor = 'text-ghost-white'
+    textColor = 'text-ghost-white',
+    dynamicTextColor
 }) => {
 
     return (
-        <p className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} ${textColor}`}>
+        <p className={`${className ?? ''} ${responsive ? textResponsiveSizes[size] : `text-${size}`} ${weight} ${isNil(dynamicTextColor) ? textColor : ''}`} style={{ color: dynamicTextColor }}>
             {children}
         </p>
     )

@@ -12,7 +12,7 @@ import { NumericFormat } from 'react-number-format'
 import TroveModal from "./_components/TroveModal";
 import useAppContract from "@/contracts/app/useAppContract";
 import { PageData } from "./_types/types";
-import { MOCK_AUSD_PRICE, MOCK_SEI_PRICE, SEI_TO_AUSD_RATIO, convertAmount } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 
 import StabilityPoolModal from "./_components/StabilityPoolModal";
 import RiskyTrovesModal from "./_components/RiskyTrovesModal";
@@ -21,12 +21,18 @@ import { getSettledValue } from "@/utils/promiseUtils";
 import RedeemSide from "./_components/RedeemSide";
 import { requestTotalTroves } from "@/services/graphql";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import { PriceServiceConnection } from "@pythnetwork/price-service-client";
+import Select from "@/components/Select/Select";
+import { mockChains } from "./_mock/mock";
+import NotificationDropdown from "./_components/NotificationDropdown";
+import { getBaseCoinByClient } from "@/constants/walletConstants";
 
 export default function Dashboard() {
-    const { balanceByDenom, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
+    const [seiPrice, setSeiPrice] = useState(0);
     const [pageData, setPageData] = useState<PageData>({
         collateralAmount: 0,
         debtAmount: 0,
@@ -42,6 +48,29 @@ export default function Dashboard() {
         minCollateralRatio: 0,
         minRedeemAmount: 0
     })
+
+    useEffect(() => {
+        const getPrice = async () => {
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+        }
+
+        getPrice()
+    }, [])
 
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
@@ -71,19 +100,22 @@ export default function Dashboard() {
                 requestTotalTroves()
             ]);
 
+            const collateralAmount = convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0)
+            const debtAmount = convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0)
+
             setPageData({
-                collateralAmount: convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0),
-                debtAmount: convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0),
+                collateralAmount,
+                debtAmount,
                 ausdBalance: convertAmount(getSettledValue(ausdBalanceRes)?.balance ?? 0),
                 stakedAmount: convertAmount(getSettledValue(stakeRes)?.amount ?? 0),
                 totalCollateralAmount: convertAmount(getSettledValue(totalCollateralRes) ?? 0),
                 totalDebtAmount: convertAmount(getSettledValue(totalDebtRes) ?? 0),
                 totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0),
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
-                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(2)),
+                poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(3)),
                 rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
-                minCollateralRatio: MOCK_SEI_PRICE / (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE),
-                minRedeemAmount: (SEI_TO_AUSD_RATIO * MOCK_AUSD_PRICE) / MOCK_SEI_PRICE,
+                minCollateralRatio: (collateralAmount * seiPrice) / (debtAmount || 1),
+                minRedeemAmount: seiPrice,
                 totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
             })
         }
@@ -106,7 +138,7 @@ export default function Dashboard() {
                 totalTrovesAmount: 0
             })
         }
-    }, [contract])
+    }, [contract, seiPrice])
 
     useEffect(() => {
         getPageData();
@@ -126,13 +158,16 @@ export default function Dashboard() {
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <div className="flex items-center gap-2">
-                                <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
-                                <Text size="2xl">SEI</Text>
+                                <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.image} />
+                                <Text size="2xl">{baseCoin.name}</Text>
                             </div>
-                            <Text>$2.00</Text>
+                            <Text>$ {seiPrice.toFixed(3)}</Text>
                         </div>
                     </div>
-                    <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
+                    <div className="flex items-center gap-4">
+                        <NotificationDropdown pageData={pageData} />
+                        <WalletButton ausdBalance={pageData.ausdBalance} baseCoinBalance={Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0))} />
+                    </div>
                 </BorderedContainer>
                 <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} />
                 <BorderedContainer containerClassName="w-full mt-4" className="p-3">
@@ -140,28 +175,32 @@ export default function Dashboard() {
                         <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>
                         <div className="flex flex-wrap justify-center gap-6 mt-2 px-4">
                             <StatisticCard
-                                title="Borrowing Fee"
-                                description="0%"
+                                title="Management Fee"
+                                description="0.5%"
                                 className="w-[191px] h-14"
-                                tooltip="The Borrowing Fee is a one-off fee charged as a percentage of the borrowed amount (in AUSD) and is part of a Trove's debt."
+                                tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${Number(pageData.totalCollateralAmount).toFixed(2)} SEI`}
+                                description={`${Number(pageData.totalCollateralAmount).toFixed(3)} ${baseCoin.name}`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="Troves"
                                 description={`${pageData.totalTrovesAmount}`}
                                 className="w-[191px] h-14"
                                 tooltip="The total number of active Troves in the system."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
-                                title="AUSD supply"
-                                description={Number(pageData.totalAusdSupply).toFixed(2).toString()}
+                                title="AUSD Supply"
+                                description={Number(pageData.totalAusdSupply).toFixed(3).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Aeroscraper Protocol."
+                                tooltipPlacement="top"
                             />
                             <StatisticCard
                                 title="Liquidation Threshold"
@@ -173,16 +212,16 @@ export default function Dashboard() {
                             <StatisticCard
                                 title="AUSD in Stability Pool"
                                 tooltipPlacement="top"
-                                description={Number(pageData.totalStakedAmount).toFixed(2).toString()}
+                                description={Number(pageData.totalStakedAmount).toFixed(3).toString()}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD currently held in the Stability Pool."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
                                 tooltipPlacement="top"
-                                description={`${Number(((pageData.totalCollateralAmount * 2) / pageData.totalDebtAmount) * 100).toFixed(2)} %`}
+                                description={`${isFinite(Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
                                 className="w-[191px] h-14"
-                                tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
+                                tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin.name}:AUSD price, to the entire system debt.`}
                             />
                         </div>
                     </div>
@@ -233,11 +272,11 @@ export default function Dashboard() {
                 <ShapeContainer hasAnimation={pageData.rewardAmount > 0} layoutId="stability-pool" className="flex-[3]" width="" height="">
                     <div className='flex flex-col w-full h-full'>
                         <div className="flex flex-row">
-                        <Text size="3xl" weight="font-normal">Stability Pool</Text>
-                        <Tooltip title={<Text size='base'>If the frame is glowing, you have a claimable reward.</Text>} width='w-[191px]'>
-                            <InfoIcon className='text-white w-4 h-4' />
-                        </Tooltip>
-                        </div>                    
+                            <Text size="3xl" weight="font-normal">Stability Pool</Text>
+                            <Tooltip title={<Text size='base'>If the frame is glowing, you have a claimable reward.</Text>} width='w-[191px]'>
+                                <InfoIcon className='text-white w-4 h-4' />
+                            </Tooltip>
+                        </div>
                         <NumericFormat
                             value={pageData.stakedAmount}
                             thousandsGroupStyle="thousand"

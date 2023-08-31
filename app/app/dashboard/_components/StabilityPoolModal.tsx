@@ -25,7 +25,7 @@ type Props = {
 }
 
 const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData }) => {
-  const { refreshBalance } = useWallet();
+  const { baseCoin, refreshBalance } = useWallet();
   const contract = useAppContract();
   const { addNotification } = useNotification();
 
@@ -163,7 +163,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
               <div className='bg-dark-purple rounded-lg px-2 py-4 flex items-center mt-6'>
                 <Text textColor="text-white" weight="font-normal">Reward</Text>
                 <div className='bg-english-violet rounded-lg flex px-2 py-2 mx-10 flex-1'>
-                  <img alt="aero" className="w-6 h-6" src="/images/sei.png" />
+                  <img alt="aero" className="w-6 h-6" src={baseCoin.image} />
                   <NumericFormat
                     value={pageData.rewardAmount}
                     thousandsGroupStyle="thousand"
@@ -173,7 +173,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                     displayType="text"
                     renderText={(value) =>
                       <Text size='base' className='flex ml-2 gap-2'>
-                        {value} SEI
+                        {value} {baseCoin.name}
                       </Text>
                     }
                   />

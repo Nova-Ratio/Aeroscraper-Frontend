@@ -3,9 +3,7 @@ import { Coin, EncodeObject } from "@cosmjs/proto-signing";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 
 const DEFAULT_DECIMAL = 6;
-export const SEI_TO_AUSD_RATIO = 1.15;
-export const MOCK_SEI_PRICE = 2;
-export const MOCK_AUSD_PRICE = 1;
+export const AUSD_PRICE = 1;
 
 export const jsonToBinary = (json: any) => {
     return toBase64(toUtf8(JSON.stringify(json)));
@@ -66,4 +64,26 @@ export const convertAmount = (value: string | number, decimal: number = DEFAULT_
 
 export const getValueByRatio = (value: string | number, ratio: string | number) => {
     return Number((Number(value) * Number(ratio)).toFixed(6));
+}
+
+export const getRatioColor = (value: number) => {
+    if (value < 115) {
+        return '#D43752';
+    }
+    else if (value > 115 && value < 130) {
+        return '#D48237'
+    }
+
+    return '#37D489'
+}
+
+export const getRatioText = (value: number) => {
+    if (value < 115) {
+        return "Troves below 115% collateral ratio will be liquidated. Your trove is in the risky troves range."
+    }
+    else if (value > 115 && value < 130) {
+        return "Troves below 115% collateral ratio will be liquidated. Your trove's risk is moderate."
+    }
+
+    return "Troves below 115% collateral ratio will be liquidated. Your trove is in the safe range."
 }

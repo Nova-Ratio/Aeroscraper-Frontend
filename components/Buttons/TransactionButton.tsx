@@ -25,8 +25,6 @@ const Transaction: React.FC<PropsWithChildren<Props>> = ({
 }
 ) => {
 
-  console.log(status);
-
 
   const returnText = status?.status ?? text;
 

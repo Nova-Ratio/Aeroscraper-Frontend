@@ -11,20 +11,11 @@ import useAppContract from '@/contracts/app/useAppContract';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { requestRiskyTroves } from '@/services/graphql';
 import { RiskyTroves } from '@/types/types';
-import { convertAmount } from '@/utils/contractUtils';
+import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
-
-const getLiquidityThresholdColor = (value: number) => {
-    if (value < 115) {
-        return 'text-dark-red';
-    }
-    else if (value > 115 && value < 130) {
-        return 'text-chinese-bronze'
-    }
-
-    return 'text-ufo-green'
-}
+import { PriceServiceConnection } from '@pythnetwork/price-service-client';
+import { useWallet } from '@/contexts/WalletProvider';
 
 type Props = {
     open: boolean;
@@ -34,10 +25,12 @@ type Props = {
 }
 
 const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) => {
+    const { baseCoin } = useWallet();
     const contract = useAppContract();
     const [loading, setLoading] = useState(false);
     const [processLoading, setProcessLoading] = useState<boolean>(false);
     const [riskyTroves, setRiskyTroves] = useState<RiskyTroves[]>([]);
+    const [seiPrice, setSeiPrice] = useState(0);
     const { addNotification } = useNotification();
 
     const liquidateTrovesa = async () => {
@@ -99,6 +92,30 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
     }, [contract])
 
     useEffect(() => {
+        const getPrice = async () => {
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+        }
+
+        getPrice()
+        console.log("Sei Price:", seiPrice)
+    }, [])
+
+    useEffect(() => {
         getRiskyTroves();
     }, [getRiskyTroves])
 
@@ -143,7 +160,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap'>{value} SEI</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap'>{value} {baseCoin.name}</Text>
                                             }
                                         />} />
                                     <TableBodyCol col={1} text="XXXXXX" value={
@@ -167,9 +184,10 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' textColor={getLiquidityThresholdColor(item.liquidityThreshold)}>{Number(value)*2}%</Text>//bu 2 sei price ı aslında oracle ile çekilince price bilgisi değiştirilecek
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(item.liquidityThreshold ?? 0)}>{Number(value ?? 0) * (seiPrice ?? 0)}</Text>
                                             }
-                                        />} />
+                                        />}
+                                    />
                                 </div>
                         }} />
                 </div>

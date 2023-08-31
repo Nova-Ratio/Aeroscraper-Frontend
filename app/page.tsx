@@ -1,8 +1,12 @@
+'use client'
+
 import ShapeContainer from '@/components/Containers/ShapeContainer'
 import Text from '@/components/Texts/Text'
 import LandingLayout from '@/layouts/LandingLayout'
+import { useEffect } from 'react'
 
 export default function Home() {
+
   return (
     <LandingLayout>
       <main className='flex flex-col'>

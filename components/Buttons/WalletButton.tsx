@@ -17,16 +17,20 @@ import { Modal } from '../Modal/Modal'
 import AccountModal from '../AccountModal/AccountModal'
 import { NumericFormat } from 'react-number-format'
 import { CounterUp } from '../CounterUp'
+import { ClientImagesByName, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
+import { isNil } from 'lodash'
+import { ClientEnum } from '@/types/types'
 
 type Props = {
     ausdBalance?: number;
-    seiBalance?: number;
+    baseCoinBalance?: number;
     className?: string;
 }
 
-const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = "w-[268px] h-[69px]" }) => {
+const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, className = "w-[268px] h-[69px]" }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
+    const { clientType, baseCoin, selectClientType } = useWallet();
 
     const leap = useLeap();
     const keplr = useKeplr();
@@ -35,6 +39,10 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
     const wallet = useWallet();
 
     const [accountModal, setAccountModal] = useState(false);
+
+    const selectClient = (value: ClientEnum) => {
+        selectClientType(value)
+    }
 
     const connectWallet = (walletType: WalletType) => {
         const anyWindow: any = window;
@@ -77,6 +85,10 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
 
     const closeWalletSelection = () => {
         setWalletSelectionOpen(false);
+        if (!wallet.initialized) {
+            //Reset client type selection
+            selectClientType(undefined);
+        }
     }
 
     useOutsideHandler(ref, closeWalletSelection);
@@ -116,9 +128,9 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
                                     </Text>
                                 }
                             />
-                            <img alt="sei" className="w-6 h-6 ml-4" src="/images/sei.png" />
+                            <img alt="sei" className="w-6 h-6 ml-4" src={baseCoin.image} />
                             <NumericFormat
-                                value={seiBalance}
+                                value={baseCoinBalance}
                                 thousandsGroupStyle="thousand"
                                 thousandSeparator=","
                                 fixedDecimalScale
@@ -126,14 +138,14 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
                                 displayType="text"
                                 renderText={(value) =>
                                     <Text size='base' className='flex ml-2 gap-2'>
-                                        SEI: {value}
+                                        {baseCoin.name}: {value}
                                     </Text>
                                 }
                             />
                         </div>
                     </div>
                 </div>
-                <AccountModal balance={{ ausd: ausdBalance, sei: seiBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
+                <AccountModal balance={{ ausd: ausdBalance, base: baseCoinBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
             </>
         )
     }
@@ -145,26 +157,24 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
             </GradientButton>
             <Modal modalSize='sm' title='Connect Wallet' showModal={walletSelectionOpen}>
                 <div ref={ref} className='space-y-2 mt-10 mx-10'>
-                    <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(WalletType.LEAP); }}>
-                        <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                            <img alt="leap" src='/images/leap-dark.svg' />
-                        </div>
-                    </GradientButton>
-                    <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(WalletType.COMPASS); }}>
-                        <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                            <img alt="compass" src='/images/compass.png' />
-                        </div>
-                    </GradientButton>
-                    <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(WalletType.FIN); }}>
-                        <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                            <img alt="fin" src='/images/fin.png' />
-                        </div>
-                    </GradientButton>
-                    <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(WalletType.KEPLR); }}>
-                        <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                            <img alt="keplr" src='/images/keplr-dark.svg' />
-                        </div>
-                    </GradientButton>
+                    {
+                        !isNil(clientType) && WalletByClient[clientType].map(walletType => (
+                            <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(walletType); }}>
+                                <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                                    <img alt={walletType} src={WalletImagesByName[walletType].image} />
+                                </div>
+                            </GradientButton>
+                        ))
+                    }
+                    {
+                        isNil(clientType) && Object.values(ClientEnum).map(clientType => (
+                            <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
+                                <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                                    <img alt={clientType} src={ClientImagesByName[clientType].image} className='h-full' />
+                                </div>
+                            </GradientButton>
+                        ))
+                    }
                 </div>
             </Modal>
         </div>
