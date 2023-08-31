@@ -3,8 +3,9 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponse } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
+import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
 
-export const getAppContract = (client: SigningCosmWasmClient) => {
+export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayClient) => {
     const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
     const oraclecontractAddress = process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string;
     const ausdContractAddress = process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string;

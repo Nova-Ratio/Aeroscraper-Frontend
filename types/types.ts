@@ -1,3 +1,8 @@
+export enum ClientEnum {
+    COSMWASM = "COSMWASM",
+    ARCHWAY = "ARCHWAY"
+}
+
 export type RiskyTrovesResponse = {
     troves: {
         nodes: {
