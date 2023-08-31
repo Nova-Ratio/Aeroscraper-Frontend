@@ -22,9 +22,9 @@ export async function loadFinWallet(
 }
 
 export function useFin() {
-    const { clear, init, initialized, network, walletLoading } = useWallet();
+    const { clear, init, initialized, network, walletLoading, clientType } = useWallet();
     const [initializing, setInitializing] = useState(false);
-    const config = getConfig(network);
+    const config = getConfig(network, clientType);
 
     const disconnect = () => {
         localStorage.removeItem("wallet_address");
