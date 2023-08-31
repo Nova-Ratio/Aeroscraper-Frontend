@@ -24,3 +24,9 @@ export type TotalTrovesResponse = {
         totalCount: number
     }
 }
+
+export type BaseCoin = {
+    name: string,
+    denom: string,
+    image: string
+}

@@ -12,6 +12,7 @@ import { PageData } from '../_types/types'
 import useAppContract from '@/contracts/app/useAppContract'
 import { INotification } from '@/contexts/NotificationProvider'
 import TransactionButton from '@/components/Buttons/TransactionButton'
+import { useWallet } from '@/contexts/WalletProvider'
 
 interface Props {
   pageData: PageData,
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
+  const { baseCoin } = useWallet();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [seiAmount, setSeiAmount] = useState(0);
   const [processLoading, setProcessLoading] = useState<boolean>(false);
@@ -127,8 +129,8 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
       </div>
       <div className="w-full bg-dark-purple rounded-lg px-2 py-7 flex items-center justify-between mt-8">
         <div className="flex items-center gap-2">
-          <img alt="sei" src="/images/sei.png" className="w-10 h-10" />
-          <Text size="2xl" weight="font-medium">SEI</Text>
+          <img alt="sei" src={baseCoin.image} className="w-10 h-10" />
+          <Text size="2xl" weight="font-medium">{baseCoin.name}</Text>
         </div>
         <BorderedNumberInput
           value={seiAmount}

@@ -22,7 +22,7 @@ import ProfilePhotoSlider from "./ProfilePhotosSlider";
 interface Props {
     showModal: boolean,
     onClose: () => void,
-    balance: { ausd: number, sei: number }
+    balance: { ausd: number, base: number }
 }
 
 const AccountModal: FC<Props> = (props: Props) => {
@@ -36,7 +36,7 @@ const AccountModal: FC<Props> = (props: Props) => {
     const fin = useFin();
     const compass = useCompass();
 
-    const { walletType, name, address, profileDetail, setProfileDetail } = useWallet();
+    const { walletType, name, address, profileDetail, baseCoin, setProfileDetail } = useWallet();
 
     const [avatarSelectionOpen, setAvatarSelectionOpen] = useState(false);
     const [qrCodeViewOpen, setQrCodeViewOpen] = useState(false);
@@ -101,7 +101,7 @@ const AccountModal: FC<Props> = (props: Props) => {
 
                     localStorage.setItem(
                         "previous-photos",
-                        JSON.stringify([photoUrl,...previousPhotos])
+                        JSON.stringify([photoUrl, ...previousPhotos])
                     );
 
                     localStorage.setItem("profile-detail", JSON.stringify(data.user));
@@ -164,7 +164,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                         <div>
                             <div className='flex items-end justify-between h-full'>
                                 <NumericFormat
-                                    value={props.balance.sei}
+                                    value={props.balance.base}
                                     thousandsGroupStyle="thousand"
                                     thousandSeparator=","
                                     fixedDecimalScale
@@ -172,7 +172,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                                     displayType="text"
                                     renderText={(value) =>
                                         <Text size='3xl' className='mt-2 flex gap-2'>
-                                            <CounterUp from={"0"} to={value} duration={0.5} /> SEI
+                                            <CounterUp from={"0"} to={value} duration={0.5} /> {baseCoin.name}
                                         </Text>
                                     }
                                 />
@@ -203,7 +203,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                         <div className='flex flex-col lg:flex-row items-start lg:items-center gap-5 mt-6'>
                             {walletType && <img alt={`walletType-${walletType}`} className='w-16 h-16 object-contain' src={WalletIconMap[walletType]} />}
                             <div className='w-full flex flex-col justify-between'>
-                                <Text size='2xl'>SEI</Text>
+                                <Text size='2xl'>{baseCoin.name}</Text>
                                 <div className='w-full flex items-center gap-2'>
                                     <Text size='xl' responsive className='lg:w-[352px] truncate'>{address}</Text>
                                     {isClipped === "WALLET" ?

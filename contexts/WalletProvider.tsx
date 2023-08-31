@@ -15,7 +15,8 @@ import { useCompass } from "@/services/compass";
 import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
-import { ClientEnum } from "@/types/types";
+import { BaseCoin, ClientEnum } from "@/types/types";
+import { BaseCoinByClient, getBaseCoinByClient } from "@/constants/walletConstants";
 
 const SideEffects = () => {
     const leap = useLeap();
@@ -109,6 +110,7 @@ export interface WalletContextType {
     // readonly accountNumber: number;
     readonly clientType: ClientEnum | undefined;
     readonly selectClientType: (value: ClientEnum | undefined) => void;
+    readonly baseCoin: BaseCoin;
 }
 
 function throwNotInitialized(): any {
@@ -137,7 +139,8 @@ const defaultContext: WalletContextType = {
     setProfileDetail: throwNotInitialized,
     setProcessLoader: throwNotInitialized,
     clientType: undefined,
-    selectClientType: () => { }
+    selectClientType: () => { },
+    baseCoin: BaseCoinByClient[ClientEnum.COSMWASM]
     // accountNumber: 0,
 };
 
@@ -172,6 +175,8 @@ export function WalletProvider({
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
 
     const config = getConfig(network, clientType);
+
+    const baseCoin = React.useMemo(() => getBaseCoinByClient(clientType), [clientType])
 
     const selectClientType = React.useCallback((value: ClientEnum | undefined) => {
         setClientType(value);
@@ -341,7 +346,8 @@ export function WalletProvider({
                     processLoader,
                     setProcessLoader,
                     clientType,
-                    selectClientType
+                    selectClientType,
+                    baseCoin
                 })
                 setWalletLoading(false);
             }
@@ -376,8 +382,9 @@ export function WalletProvider({
         processLoader,
         profileDetail,
         clientType,
-        selectClientType
-    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType])
+        selectClientType,
+        baseCoin
+    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin])
 
     return (
         <WalletContext.Provider value={providedValue}>

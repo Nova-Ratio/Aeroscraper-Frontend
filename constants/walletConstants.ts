@@ -1,5 +1,6 @@
 import { WalletType } from "@/enums/WalletType";
-import { ClientEnum } from "@/types/types";
+import { BaseCoin, ClientEnum } from "@/types/types";
+import { isNil } from "lodash";
 
 export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     [ClientEnum.COSMWASM]: [
@@ -46,4 +47,21 @@ export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: 
         image: "/images/archway.png",
         thumbnail: ""
     }
+}
+
+export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
+    [ClientEnum.COSMWASM]: {
+        name: "SEI",
+        denom: "usei",
+        image: "/images/sei.png",
+    },
+    [ClientEnum.ARCHWAY]: {
+        name: "ARCH",
+        denom: "ARCH",
+        image: "/images/archway-coin.png",
+    }
+}
+
+export const getBaseCoinByClient = (clientType?: ClientEnum) => {
+    return !isNil(clientType) ? BaseCoinByClient[clientType] : BaseCoinByClient[ClientEnum.COSMWASM]
 }

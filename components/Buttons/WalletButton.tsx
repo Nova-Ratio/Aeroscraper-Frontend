@@ -23,14 +23,14 @@ import { ClientEnum } from '@/types/types'
 
 type Props = {
     ausdBalance?: number;
-    seiBalance?: number;
+    baseCoinBalance?: number;
     className?: string;
 }
 
-const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = "w-[268px] h-[69px]" }) => {
+const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, className = "w-[268px] h-[69px]" }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
-    const { clientType, selectClientType } = useWallet();
+    const { clientType, baseCoin, selectClientType } = useWallet();
 
     const leap = useLeap();
     const keplr = useKeplr();
@@ -128,9 +128,9 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
                                     </Text>
                                 }
                             />
-                            <img alt="sei" className="w-6 h-6 ml-4" src="/images/sei.png" />
+                            <img alt="sei" className="w-6 h-6 ml-4" src={baseCoin.image} />
                             <NumericFormat
-                                value={seiBalance}
+                                value={baseCoinBalance}
                                 thousandsGroupStyle="thousand"
                                 thousandSeparator=","
                                 fixedDecimalScale
@@ -138,14 +138,14 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, seiBalance = 0, className = 
                                 displayType="text"
                                 renderText={(value) =>
                                     <Text size='base' className='flex ml-2 gap-2'>
-                                        SEI: {value}
+                                        {baseCoin.name}: {value}
                                     </Text>
                                 }
                             />
                         </div>
                     </div>
                 </div>
-                <AccountModal balance={{ ausd: ausdBalance, sei: seiBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
+                <AccountModal balance={{ ausd: ausdBalance, base: baseCoinBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
             </>
         )
     }

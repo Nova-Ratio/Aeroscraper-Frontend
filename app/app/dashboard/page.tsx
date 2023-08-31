@@ -25,9 +25,10 @@ import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import Select from "@/components/Select/Select";
 import { mockChains } from "./_mock/mock";
 import NotificationDropdown from "./_components/NotificationDropdown";
+import { getBaseCoinByClient } from "@/constants/walletConstants";
 
 export default function Dashboard() {
-    const { balanceByDenom, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -145,34 +146,6 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className="flex justify-end items-center gap-6 mb-6">
-                <NotificationDropdown pageData={pageData} />
-                <Select
-                    initialValue={mockChains[0]}
-                    data={mockChains}
-                    keyExtractor={item => item.id}
-                    nameExtractor={item => item.name}
-                    renderItem={(item, isSelected) => (
-                        <div className="flex items-center justify-between gap-1">
-                            <div className="flex items-center gap-1">
-                                <img alt={item.name} src={item.imageUrl} className="w-8 h-8" />
-                                <Text>{item.name}</Text>
-                            </div>
-                            {isSelected && <img alt="selected" src="/images/tick.svg" />}
-                        </div>
-                    )}
-                    renderSelectedItem={(item) => (
-                        <div className="flex items-center gap-1">
-                            <img alt={item.name} src={item.imageUrl} className="w-8 h-8" />
-                            <Text>{item.name}</Text>
-                        </div>
-                    )
-                    }
-                    onSelect={() => { }}
-                    width="w-[272px]"
-                    height="h-14"
-                />
-            </div>
             <div className="grid grid-cols-[1fr_439px] gap-6 overflow-hidden">
                 <BorderedContainer containerClassName="w-full h-[122px]" className="px-8 py-6 flex justify-between items-center gap-2">
                     <div className="flex items-center gap-11">
@@ -185,13 +158,16 @@ export default function Dashboard() {
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <div className="flex items-center gap-2">
-                                <img alt="ausd" className="w-10 h-10" src="/images/sei.png" />
-                                <Text size="2xl">SEI</Text>
+                                <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.image} />
+                                <Text size="2xl">{baseCoin.name}</Text>
                             </div>
                             <Text>$ {seiPrice.toFixed(3)}</Text>
                         </div>
                     </div>
-                    <WalletButton ausdBalance={pageData.ausdBalance} seiBalance={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0))} />
+                    <div className="flex items-center gap-4">
+                        <NotificationDropdown pageData={pageData} />
+                        <WalletButton ausdBalance={pageData.ausdBalance} baseCoinBalance={Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0))} />
+                    </div>
                 </BorderedContainer>
                 <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} />
                 <BorderedContainer containerClassName="w-full mt-4" className="p-3">
@@ -207,7 +183,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${Number(pageData.totalCollateralAmount).toFixed(3)} SEI`}
+                                description={`${Number(pageData.totalCollateralAmount).toFixed(3)} ${baseCoin.name}`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
                                 tooltipPlacement="top"
@@ -245,7 +221,7 @@ export default function Dashboard() {
                                 tooltipPlacement="top"
                                 description={`${isFinite(Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
                                 className="w-[191px] h-14"
-                                tooltip="The ratio of the Dollar value of the entire system collateral at the current SEI:AUSD price, to the entire system debt."
+                                tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin.name}:AUSD price, to the entire system debt.`}
                             />
                         </div>
                     </div>

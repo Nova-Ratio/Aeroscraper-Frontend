@@ -15,6 +15,7 @@ import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
+import { useWallet } from '@/contexts/WalletProvider';
 
 type Props = {
     open: boolean;
@@ -24,6 +25,7 @@ type Props = {
 }
 
 const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) => {
+    const { baseCoin } = useWallet();
     const contract = useAppContract();
     const [loading, setLoading] = useState(false);
     const [processLoading, setProcessLoading] = useState<boolean>(false);
@@ -158,7 +160,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData }) =
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap'>{value} SEI</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap'>{value} {baseCoin.name}</Text>
                                             }
                                         />} />
                                     <TableBodyCol col={1} text="XXXXXX" value={

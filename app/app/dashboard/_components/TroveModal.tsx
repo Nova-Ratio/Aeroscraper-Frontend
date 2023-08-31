@@ -30,7 +30,7 @@ type Props = {
 
 const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const contract = useAppContract();
-    const { balanceByDenom, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
     const [borrowAmount, setBorrowAmount] = useState<number>(0);
     const [collateralAmount, setCollateralAmount] = useState<number>(0);
@@ -248,26 +248,26 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                         <BorderedContainer containerClassName='mt-2' className='flex flex-col gap-2 p-2'>
                                             <InputLayout
                                                 label='In Wallet'
-                                                hintTitle="SEI"
-                                                value={Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)).toFixed(3)}
+                                                hintTitle={baseCoin.name}
+                                                value={Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)).toFixed(3)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[20%] text-end'
                                                 disabled
                                             />
                                             <InputLayout
                                                 label='In Trove Balance'
-                                                hintTitle="SEI"
+                                                hintTitle={baseCoin.name}
                                                 value={pageData.collateralAmount}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[20%] text-end'
                                                 disabled
                                             />
                                         </BorderedContainer>
-                                        <InputLayout label="Collateral" hintTitle="SEI" className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(Number(convertAmount(balanceByDenom['usei']?.amount ?? 0)))} hasPercentButton={{ max: false, min: false }} />
+                                        <InputLayout label="Collateral" hintTitle={baseCoin.name} className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)))} hasPercentButton={{ max: false, min: false }} />
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Management Fee'
-                                                description={`${Number(collateralAmount * 0.005).toFixed(3)} SEI (0.5%)`}
+                                                description={`${Number(collateralAmount * 0.005).toFixed(3)} ${baseCoin.name} (0.5%)`}
                                                 tooltip='This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free.'
                                             />
                                             <StatisticCard
@@ -367,7 +367,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                     :
                     <div>
                         <div className='pb-10'></div>
-                        <InputLayout label="Collateral" hintTitle="SEI" value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false }} />
+                        <InputLayout label="Collateral" hintTitle={baseCoin.name} value={openTroveAmount} onValueChange={changeOpenTroveAmount} hasPercentButton={{ max: false, min: false }} />
                         <InputLayout label="Borrow" hintTitle="AUSD" value={borrowAmount} onValueChange={changeBorrowAmount} className="mt-4 mb-6" />
                         <motion.div
                             initial={{ y: 200, x: 200, opacity: 0.1 }}
@@ -381,7 +381,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                             className="grid grid-cols-12 content-center gap-6 mt-2">
                             <StatisticCard
                                 title="Management Fee"
-                                description={`${Number(openTroveAmount * 0.005).toFixed(3)} SEI (0.5%)`}
+                                description={`${Number(openTroveAmount * 0.005).toFixed(3)} ${baseCoin.name} (0.5%)`}
                                 className="w-full h-14 col-span-6"
                                 tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                             />
