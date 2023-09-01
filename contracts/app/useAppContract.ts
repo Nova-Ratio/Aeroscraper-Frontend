@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { getAppContract } from "./contract";
 import { isNil } from "lodash";
 import { callBorrowerOperationsContract, callTroveManagerContract, callStabilityPoolContract, callAEROStakingContract, callSortedTrovesContract, callHintHelpersContract, getCommunityIssuanceContractAddress } from "./ethereumContract";
-import web3 from "web3/lib/commonjs/web3";
+import web3 from "web3"
 
 const useAppContract = () => {
     const wallet = useWallet();
