@@ -4,13 +4,10 @@ import GradientButton from "@/components/Buttons/GradientButton"
 import { Logo, RightArrow, TwitterLogo, DiscordLogo, NovaRatioIcon } from "@/components/Icons/Icons"
 import { Modal } from "@/components/Modal/Modal"
 import Text from "@/components/Texts/Text"
-import { useWallet } from "@/contexts/WalletProvider";
 import Link from "next/link"
 import { useState } from "react"
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
-    const { baseCoin } = useWallet();
-    const [privacyModal, setPrivacyModal] = useState(false);
     const [whiteSpaceModal, setWhiteSpaceModal] = useState(false);
 
     return (
@@ -109,50 +106,44 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     <Text size="lg" className="mt-4">Our Vision</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">“The core objective of the Aeroscraper revolves around bolstering the establishment, expansion, and widespread acceptance of a highly secure, trustless, and decentralized financial framework. By being community-owned, it aims to instill enhanced stability and transparency into DeFi.”</Text>
                     <Text size="lg" className="mt-4">Intro</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is the first truly decentralized lending protocol built for Sei Network. Its operations are immutable, non-custodial, and governance-free. It is a finished product with no admin keys.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is the first truly decentralized lending protocol built on Sei Network, Archway, Neutron and Shardeum. Its operations are immutable, non-custodial, and governance-free. It is a finished product with no admin keys.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        The protocol was developed to allow owners of Sei Network coin ({baseCoin.name}) a method of extracting value from their holdings, without the need to ever sell. By locking up {baseCoin.name} coins and minting aUSD (a USD pegged stablecoin), a {baseCoin.name} holder can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
+                    The protocol was developed to allow owners of SEI, ARCH, NTRN, ETH, ATOM a method of extracting value from their holdings, without the need to ever sell. By locking up SEI, ARCH, NTRN, ETH, ATOM coins and minting aUSD (a USD pegged stablecoin), a SEI, ARCH, NTRN, ETH, ATOM holder can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
                     <Text size="lg" className="mt-4">What is Aeroscraper?</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is a decentralized lending protocol that allows you to draw interest-free loans against {baseCoin.name} (Sei Network coin) used as collateral.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is a decentralized lending protocol that allows you to draw interest-free loans against SEI, ARCH, NTRN, ETH, ATOM used as collateral.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        Users deposit {baseCoin.name} and mint aUSD (stablecoin). These individual collateralized debt positions are called troves.
-                        The minted stablecoins are economically geared towards maintaining a value of 1 aUSD = $1 USD of {baseCoin.name} value, due to the following properties;
+                    Users deposit SEI, ARCH, NTRN, ETH, ATOM and mint aUSD (stablecoin). These individual collateralized debt positions are called troves. The minted stablecoins are economically geared towards maintaining a value of 1 aUSD = $1 USD of SEI, ARCH, NTRN, ETH, ATOM value, due to the following properties;
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        1. The system is designed to always be over-collateralized.
-                        The dollar value of the locked {baseCoin.name} exceeds the dollar value of the issued stablecoins.
+                        1. The system is designed to always be over-collateralized. The dollar value of the locked SEI, ARCH, NTRN, ETH, ATOM exceeds the dollar value of the issued stablecoins.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        2. The stablecoins are fully redeemable.
-                        Users can always swap aUSD for {baseCoin.name} (minus fees), directly within the system.
+                        2. The stablecoins are fully redeemable. Users can always swap aUSD for SEI, ARCH, NTRN, ETH, ATOM (minus fees), directly within the system.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
                         3. The system controls the generation of aUSD.
                         The operations are done algorithmically, through a variable issuance fee.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        After opening a Vault, users mint their own stablecoin to a collateral ratio of at least 115%.
-                        As an example, a user with $11,500 worth of {baseCoin.name} can mint up to 10,000 aUSD.
+                    After opening a Vault, users mint their own stablecoin to a collateral ratio of at least 115%. As an example, a user with $11,500 worth of SEI, ARCH, NTRN, ETH, ATOM can mint up to 10,000 aUSD.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">The tokens are freely exchangeable – anyone can send or receive aUSD tokens. aUSD tokens are burned upon repayment of a Trove’s debt or via a directly redemption process.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        The Aeroscraper system regularly updates the {baseCoin.name}:USD price via a decentralized data feed.
-                        When a Vault falls below a minimum collateralization ratio (MCR) of 115%, it is considered under-collateralized, and is vulnerable to liquidation. This is to ensure the protocol remains solvent at all times, and 1 aUSD can always be redeemed for $1 USD worth of {baseCoin.name}.
+                    The Aeroscraper system regularly updates the (SEI, ARCH, NTRN, ETH, ATOM):USD price via a decentralized data feed. When a Vault falls below a minimum collateralization ratio (MCR) of 115%, it is considered under-collateralized, and is vulnerable to liquidation. This is to ensure the protocol remains solvent at all times, and 1 aUSD can always be redeemed for $1 USD worth of SEI, ARCH, NTRN, ETH, ATOM.
                     </Text>
                     <Text size="lg" className="mt-4">What’s the motivation behind Aeroscraper?</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                        The protocol was developed to allow owners of {baseCoin.name} a method of extracting value from their holdings, without the need to ever sell their tokens.
-                        By locking up {baseCoin.name} and minting aUSD, {baseCoin.name} holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
+                    The protocol was developed to allow owners of SEI, ARCH, NTRN, ETH, ATOM a method of extracting value from their holdings, without the need to ever sell their tokens. By locking up SEI, ARCH, NTRN, ETH, ATOM and minting aUSD, SEI, ARCH, NTRN, ETH, ATOM holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Stablecoins are an essential building block on any blockchain. However, the vast majority of this value is made up of centralized stablecoins. Decentralized stablecoins make up only a small portion of the total stablecoin supply.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper addresses this by creating a more capital-efficient and user-friendly way to borrow a decentralized stablecoin.
                         Furthermore, Aeroscraper is completely immutable, governance-free, and non-custodial.</Text>
                     <Text size="lg" className="mt-4">What are the key benefits of Aeroscraper?</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">0% interest rate – as a borrower, there’s no need to worry about constantly accruing debt.</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">115% MCR – a low minimum collateralization ratio means more efficient usage of your deposited {baseCoin.name}.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">115% MCR – a low minimum collateralization ratio means more efficient usage of your deposited SEI, ARCH, NTRN, ETH, ATOM.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Governance free – all operations are algorithmic and fully automated, and protocol parameters are set at time of deployment.</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">Directly redeemable – the protocol allows you to exchange 1 aUSD stablecoin for $1 USD worth of {baseCoin.name} at any time.</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">Fully decentralized – the contracts have no admin keys and can be accessible via other front ends, making it censorship resistant.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Directly redeemable – the protocol allows you to exchange 1 aUSD stablecoin for $1 USD worth of SEI, ARCH, NTRN, ETH, ATOM at any time.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Fully decentralized – the contracts have no admin keys and can be accessible via other front ends, making it censorship resistant. Borrow aUSD against SEI, ARCH, NTRN, ETH, ATOM by opening a ‘​Trove’.</Text>
                     <Text size="lg" className="mt-4">Does anyone “own” or operate the protocol?</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">No. The contract is immutable and therefore has no owner or operator.</Text>
                     <Text size="lg" className="mt-4">Can Aeroscraper be upgraded or changed?</Text>
@@ -162,10 +153,10 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     <Text size="lg" className="mt-4">Has the protocol been third-party verified, certified, and/or audited?</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">The protocol will be audited and the full report will be made publicly available.</Text>
                     <Text size="lg" className="mt-4">What are the main use cases of Aeroscraper?</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">Borrow aUSD against {baseCoin.name} by opening a ‘​Trove’.</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300">Deposit USDL to the Stability Pool and earn liquidation gains in {baseCoin.name} as rewards.</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300"> Redeem 1 aUSD for $1 USD worth of {baseCoin.name} at any time.</Text>
-                    <Text size="sm" className="mt-2" textColor="text-gray-300"> Arbitrage potential gains if the 1 aUSD peg falls below $1 USD.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Borrow aUSD against SEI, ARCH, NTRN, ETH, ATOM by opening a ‘​Trove’.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Deposit aUSD to the Stability Pool and earn liquidation gains in SEI, ARCH, NTRN, ETH, ATOM as rewards.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Redeem 1 aUSD for $1 USD worth of SEI, ARCH, NTRN, ETH, ATOM at any time.</Text>
+                    <Text size="sm" className="mt-2" textColor="text-gray-300">Arbitrage potential gains if the 1 aUSD peg falls below $1 USD.</Text>
 
 
                 </>
