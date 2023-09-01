@@ -63,7 +63,7 @@ const useAppContract = () => {
 
     //Parametreler ana fonksiyona eklenecek
     //_upperHint, _lowerHint kontrat tarafından çekilecek değerler.
-    const openTrove = useCallback(async (amount: number) => {
+    const openTrove = useCallback(async (amount: number, loan_amount: number) => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
             const _maxFeePercentage = 5;
@@ -72,14 +72,41 @@ const useAppContract = () => {
 
             const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
 
-            (await callBorrowerOperationsContract()).openTrove(_maxFeePercentage, amount, _upperHint, _lowerHint, {
+            (await callBorrowerOperationsContract()).openTrove(_maxFeePercentage, loan_amount, _upperHint, _lowerHint, {
                 from: wallet.address,
                 value: amountInWei
             });
 
         } else {
-            return await contract.openTrove(wallet.address, amount);
+            return await contract.openTrove(wallet.address, amount, loan_amount);
         }
+        return await contract.getTotalDebtAmount();
+    }, [contract])
+
+
+    const getTroveByAddress = useCallback(async (address: string) => {
+        if (isNil(contract)) return;
+        return await contract.getTrove(address);
+    }, [contract])
+
+    const getTotalStake = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.getTotalStake();
+    }, [contract])
+
+    const getAusdBalance = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.getAusdBalance(wallet.address);
+    }, [wallet, contract])
+
+    const getAusdInfo = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.getAusdInfo();
+    }, [contract])
+
+    const getReward = useCallback(async () => {
+        if (isNil(contract)) return;
+        return await contract.getReward(wallet.address);
     }, [wallet, contract])
 
     const addCollateral = useCallback(async (amount: number) => {
@@ -208,7 +235,12 @@ const useAppContract = () => {
         getTotalDebtAmount,
         getTrove,
         getStake,
+        getTroveByAddress,
+        getTotalStake,
         getCollateralPrice,
+        getAusdBalance,
+        getAusdInfo,
+        getReward,
         openTrove,
         addCollateral,
         removeCollateral,
@@ -224,7 +256,12 @@ const useAppContract = () => {
         getTotalDebtAmount,
         getTrove,
         getStake,
+        getTroveByAddress,
+        getTotalStake,
         getCollateralPrice,
+        getAusdBalance,
+        getAusdInfo,
+        getReward,
         openTrove,
         addCollateral,
         removeCollateral,

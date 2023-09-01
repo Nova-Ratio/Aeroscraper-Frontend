@@ -5,6 +5,7 @@ import React, { FC } from 'react'
 type Props = {
     width?: number
     height?: number
+    className?: string;
 }
 
 const Loading: FC<Props> = ({ width = 200, height = 200 }) => {

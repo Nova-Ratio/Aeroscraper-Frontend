@@ -17,14 +17,23 @@ import Loading from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import { TransactionsProvider } from '@/contexts/TransactionContext'
 import useAppContract from '@/contracts/app/useAppContract'
+import AccountModal from '../AccountModal/AccountModal'
+import { NumericFormat } from 'react-number-format'
+import { CounterUp } from '../CounterUp'
+import { ClientImagesByName, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
+import { isNil } from 'lodash'
+import { ClientEnum } from '@/types/types'
 
 type Props = {
+    ausdBalance?: number;
+    baseCoinBalance?: number;
     className?: string;
 }
 
-const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
+const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, className = "w-[268px] h-[69px]" }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
+    const { clientType, baseCoin, selectClientType } = useWallet();
 
     const contract = useAppContract();
 
@@ -34,6 +43,12 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
     const compass = useCompass();
     const metamask = useMetamask();
     const wallet = useWallet();
+
+    const [accountModal, setAccountModal] = useState(false);
+
+    const selectClient = (value: ClientEnum) => {
+        selectClientType(value)
+    }
 
     const connectWallet = (walletType: WalletType) => {
         const anyWindow: any = window;
@@ -70,12 +85,13 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
         fin.disconnect()
         compass.disconnect()
         metamask.disconnect()
+    const openAccountModal = () => {
+        setAccountModal(true);
     }
 
     const toggleWallet = () => {
         if (wallet.initialized) {
-            //TODO: Open wallet info modal
-            disconnectWallet();
+            openAccountModal();
         }
         else {
             setWalletSelectionOpen(prev => !prev);
@@ -84,21 +100,68 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
 
     const closeWalletSelection = () => {
         setWalletSelectionOpen(false);
+        if (!wallet.initialized) {
+            //Reset client type selection
+            selectClientType(undefined);
+        }
     }
 
     useOutsideHandler(ref, closeWalletSelection);
 
     if (wallet.initialized) {
         return (
-            <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[200]' onClick={disconnectWallet}>
-                <BorderedContainer className={`${className} flex items-center justify-center space-x-4 p-4`}>
-                    <img alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
-                    <div className='w-[85%] flex flex-col'>
-                        <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
-                        <Text size='sm' className='truncate'>{wallet.address}</Text>
+            <>
+                <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50] flex items-center gap-4' onClick={openAccountModal}>
+                    <div className="secondary-gradient w-[72px] h-[72px] p-0.5 rounded flex justify-between items-center gap-2 cursor-pointer">
+                        <img
+                            alt="user-profile-image"
+                            src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
+                            className='w-full h-full rounded-sm bg-raisin-black'
+                        />
+                        <motion.div layoutId="profile" />
                     </div>
-                </BorderedContainer>
-            </div>
+                    <div className='max-w-[300px]'>
+                        <div className='flex gap-4  items-center'>
+                            <img alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
+                            <div className='w-[75%] flex flex-col'>
+                                <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
+                                <Text size='sm' className='truncate'>{wallet.address}</Text>
+                            </div>
+                        </div>
+                        <div className='flex items-center mt-2'>
+                            <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
+                            <NumericFormat
+                                value={ausdBalance}
+                                thousandsGroupStyle="thousand"
+                                thousandSeparator=","
+                                fixedDecimalScale
+                                decimalScale={2}
+                                displayType="text"
+                                renderText={(value) =>
+                                    <Text size='base' className='flex ml-2 gap-2'>
+                                        AUSD: {value}
+                                    </Text>
+                                }
+                            />
+                            <img alt="sei" className="w-6 h-6 ml-4" src={baseCoin.image} />
+                            <NumericFormat
+                                value={baseCoinBalance}
+                                thousandsGroupStyle="thousand"
+                                thousandSeparator=","
+                                fixedDecimalScale
+                                decimalScale={2}
+                                displayType="text"
+                                renderText={(value) =>
+                                    <Text size='base' className='flex ml-2 gap-2'>
+                                        {baseCoin.name}: {value}
+                                    </Text>
+                                }
+                            />
+                        </div>
+                    </div>
+                </div>
+                <AccountModal balance={{ ausd: ausdBalance, base: baseCoinBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
+            </>
         )
     }
 
@@ -134,10 +197,28 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                             <img alt="metamask" src='/images/metamask.svg' />
                         </div>
                     </GradientButton>
+                    {
+                        !isNil(clientType) && WalletByClient[clientType].map(walletType => (
+                            <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(walletType); }}>
+                                <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                                    <img alt={walletType} src={WalletImagesByName[walletType].image} />
+                                </div>
+                            </GradientButton>
+                        ))
+                    }
+                    {
+                        isNil(clientType) && Object.values(ClientEnum).map(clientType => (
+                            <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
+                                <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                                    <img alt={clientType} src={ClientImagesByName[clientType].image} className='h-full' />
+                                </div>
+                            </GradientButton>
+                        ))
+                    }
                 </div>
             </Modal>
         </div>
     )
 }
-
+}
 export default WalletButton

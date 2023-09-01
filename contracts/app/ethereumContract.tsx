@@ -792,13 +792,15 @@ export const callBorrowerOperationsContract = async () => {
   return { getSystemColl, getSystemDebt, openTrove, addColl, withdrawColl, withdrawAUSD, repayAUSD, getCollateralPrice };
 }
 
+
 export const callPriceFeedContract = async () => {
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  (await signer).connect(provider)
+  (await signer).connect(provider);
   const abi = JSON.stringify([
     {
+      "anonymous": false,
       "inputs": [
         {
           "indexed": false,
@@ -1056,9 +1058,11 @@ export const callPriceFeedContract = async () => {
       "type": "function"
     }
   ]);
-  const Address = "0x9D56c13ad116633d952dcb35Ff896c258d8d58D9";
+  const Address = "0x4e599cB2A38d7290DDdee3a1f50697dC79f8910D";
   const myPriceFeedContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myPriceFeedContract.connect(signer);
+  const price = contractWithSigner.lastGoodPrice.call();
+  return { price };
 }
 
 export const callSortedTrovesContract = async () => {
@@ -1553,6 +1557,7 @@ export const callTroveManagerContract = async () => {
   const signer = provider.getSigner();
   const abi = [
     {
+      "anonymous": false,
       "inputs": [
         {
           "indexed": false,
@@ -3267,7 +3272,7 @@ export const callTroveManagerContract = async () => {
       "type": "function"
     }
   ];
-  const Address = "0x48a0Ab7A5bc9Cd93bfDd05B2De0fdcceb5D0d642";
+  const Address = "0x6E9182731e9414D3968F66d50A5951FaF537c9fe";
   const myTroveManagerContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myTroveManagerContract.connect(signer);
   const getTroveFromTroveOwnersArray = await contractWithSigner.getTroveFromTroveOwnersArray().call();
@@ -3275,7 +3280,10 @@ export const callTroveManagerContract = async () => {
   const liquidateTroves = await contractWithSigner.liquidateTroves().call();
   const getTroveStake = await contractWithSigner.getTroveStake().call();
   const stake = await contractWithSigner.stake().call();
-  return { getTroveFromTroveOwnersArray, redeemCollateral, liquidateTroves, getTroveStake, stake };
+  const troveOwnersCount = await contractWithSigner.getTroveOwnersCount().call();
+  const troveOwnerColl = await contractWithSigner.getTroveColl().call();
+  const troveOwnerDebt = await contractWithSigner.getTroveDebt().call();
+  return { getTroveFromTroveOwnersArray, redeemCollateral, liquidateTroves, getTroveStake, stake, troveOwnersCount, troveOwnerColl, troveOwnerDebt };
 }
 
 export const callAEROStakingContract = async () => {
