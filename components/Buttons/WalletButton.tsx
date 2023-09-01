@@ -158,8 +158,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
             <Modal modalSize='sm' title='Connect Wallet' showModal={walletSelectionOpen}>
                 <div ref={ref} className='space-y-2 mt-10 mx-10'>
                     {
-                        !isNil(clientType) && WalletByClient[clientType].map(walletType => (
-                            <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(walletType); }}>
+                        !isNil(clientType) && WalletByClient[clientType].map((walletType, idx) => (
+                            <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(walletType); }}>
                                 <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
                                     <img alt={walletType} src={WalletImagesByName[walletType].image} />
                                 </div>
@@ -167,8 +167,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
                         ))
                     }
                     {
-                        isNil(clientType) && Object.values(ClientEnum).map(clientType => (
-                            <GradientButton rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
+                        isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
+                            <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
                                 <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
                                     <img alt={clientType} src={ClientImagesByName[clientType].image} className='h-full' />
                                 </div>

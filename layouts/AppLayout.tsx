@@ -14,6 +14,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
                     <Text size='3xl'>Aeroscraper</Text>
                     <Logo className='lg:w-[72px] lg:h-[72px] w-[64px] h-[64px]' />
                 </div>
+                <div>
+                    <Text size='xs'>Work in Progress</Text>
+                </div>
             </header>
             <div className='container mx-auto px-8'>
                 {children}
