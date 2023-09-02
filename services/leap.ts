@@ -23,9 +23,9 @@ export async function loadLeapWallet(
 }
 
 export function useLeap() {
-    const { clear, init, initialized, network, walletLoading, clientType } = useWallet();
+    const { clear, init, initialized, network, walletLoading } = useWallet();
     const [initializing, setInitializing] = useState(false);
-    const config = getConfig(network, clientType);
+    const config = getConfig(network);
 
     const disconnect = () => {
         localStorage.removeItem("wallet_address");

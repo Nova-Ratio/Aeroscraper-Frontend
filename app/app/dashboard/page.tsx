@@ -89,9 +89,9 @@ export default function Dashboard() {
                 rewardRes,
                 totalTrovesRes
             ] = await Promise.allSettled([
-                contract.getTrove(),
+                contract.getTrove("0xe29ddD8F8a8AB5D44a39EF90E1143C26b437f039"),
                 contract.getAusdBalance(),
-                contract.getStake(),
+                contract.getStake("0xe29ddD8F8a8AB5D44a39EF90E1143C26b437f039"),
                 contract.getTotalStake(),
                 contract.getTotalCollateralAmount(),
                 contract.getTotalDebtAmount(),

@@ -18,8 +18,9 @@ import AccountModal from '../AccountModal/AccountModal'
 import { NumericFormat } from 'react-number-format'
 import { CounterUp } from '../CounterUp'
 import { ClientImagesByName, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import { ClientEnum } from '@/types/types'
+import { useTransaction } from '@/contexts/TransactionContext'
 
 type Props = {
     ausdBalance?: number;
@@ -31,6 +32,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
     const { clientType, baseCoin, selectClientType } = useWallet();
+    const { currentAccount, connectWallet: connectMetamask } = useTransaction();
+    console.log(currentAccount);
 
     const leap = useLeap();
     const keplr = useKeplr();
@@ -66,6 +69,10 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
 
             compass.connect();
         }
+        else if (walletType === WalletType.METAMASK) {
+            
+            connectMetamask();
+        }
 
         setWalletSelectionOpen(false);
     }
@@ -93,7 +100,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
 
     useOutsideHandler(ref, closeWalletSelection);
 
-    if (wallet.initialized) {
+    if (wallet.initialized || currentAccount !== '') {
         return (
             <>
                 <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50] flex items-center gap-4' onClick={openAccountModal}>
@@ -110,7 +117,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
                             <img alt={wallet.walletType} className='w-8 h-8 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
                             <div className='w-[75%] flex flex-col'>
                                 <Text size='base' weight='font-semibold' className='truncate'>{wallet.name}</Text>
-                                <Text size='sm' className='truncate'>{wallet.address}</Text>
+                                <Text size='sm' className='truncate'>{(!isNil(wallet.address) && !isEmpty(wallet.address)) ?  wallet.address : currentAccount}</Text>
                             </div>
                         </div>
                         <div className='flex items-center mt-2'>

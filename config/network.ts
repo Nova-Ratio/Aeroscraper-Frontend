@@ -1,24 +1,4 @@
-import { ClientEnum } from "@/types/types"
 import { AppConfig } from "./app"
-
-export const mainnetArchwayConfig: AppConfig = {
-    chainId: 'archway-1',
-    chainName: 'Archway Mainnet',
-    addressPrefix: 'archway',
-    rpcUrl: 'https://rpc.mainnet.archway.io:443',
-    httpUrl: 'https://api.mainnet.archway.io',
-    feeToken: 'ARCH',
-    stakingToken: 'ARCH',
-    coinMap: {
-        ARCH: { denom: 'ARCH', fractionalDigits: 18 },
-    },
-    gasPrice: 0.025,
-    fees: {
-        upload: 1500000,
-        init: 500000,
-        exec: 200000,
-    },
-}
 
 export const mainnetConfig: AppConfig = {
     chainId: 'pacific-1',
@@ -40,11 +20,11 @@ export const mainnetConfig: AppConfig = {
 }
 
 export const uniTestnetConfig: AppConfig = {
-    chainId: 'pacific-1',
-    chainName: 'Sei Mainnet',
+    chainId: 'atlantic-2',
+    chainName: 'Sei Testnet',
     addressPrefix: 'sei',
-    rpcUrl: 'https://sei-rpc.brocha.in/',
-    httpUrl: 'https://sei-rest.brocha.in/',
+    rpcUrl: 'https://sei.kingnodes.com/',
+    httpUrl: 'https://rest.atlantic-2.seinetwork.io/',
     feeToken: 'usei',
     stakingToken: 'usei',
     coinMap: {
@@ -52,12 +32,8 @@ export const uniTestnetConfig: AppConfig = {
     }
 }
 
-export const getConfig = (network: string, clientType?: ClientEnum): AppConfig => {
+export const getConfig = (network: string): AppConfig => {
     /* if (network === 'mainnet') return mainnetConfig
     return mainnetConfig */
-    if (clientType === ClientEnum.ARCHWAY) {
-        return mainnetArchwayConfig
-    }
-
     return uniTestnetConfig
 }

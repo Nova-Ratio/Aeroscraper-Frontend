@@ -337,4 +337,3 @@ const TowerSixteenthIcon: FC<SvgProps> = ({ isGradient }) => {
     </motion.svg>
   )
 }
-

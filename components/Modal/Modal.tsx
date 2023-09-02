@@ -116,4 +116,3 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
     </div>
     , document.body);
 };
-

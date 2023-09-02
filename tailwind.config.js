@@ -18,9 +18,7 @@ module.exports = {
       'raisin-black': '#271A2A',
       'dark-purple': '#322136',
       'english-violet': '#543B59',
-      'dark-red': '#D43752',
-      'chinese-bronze': '#D48237',
-      'ufo-green': '#37D489'
+      'dark-red': '#D43752'
     }
   },
   plugins: [],

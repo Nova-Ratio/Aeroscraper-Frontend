@@ -94,7 +94,7 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             ],
             "auto",
             "Open Trove",
-        ).catch(err => console.log(err))
+        ).catch((err: any) => console.log(err))
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
@@ -275,7 +275,7 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             ],
             "auto",
             "Redeem"
-        ).catch(err => console.log(err))
+        ).catch((err: any) => console.log(err))
     }
 
     const liquidateTroves = async (senderAddress: string) => {

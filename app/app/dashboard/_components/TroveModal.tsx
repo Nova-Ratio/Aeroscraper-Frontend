@@ -15,6 +15,7 @@ import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
 import { AUSD_PRICE, convertAmount, getRatioColor, getRatioText, getValueByRatio } from '@/utils/contractUtils';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
+import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 
 enum TABS {
     COLLATERAL = 0,
@@ -211,7 +212,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
 
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash
+                directLink: (res as ExecuteResult).transactionHash
             });
             getPageData();
             refreshBalance();

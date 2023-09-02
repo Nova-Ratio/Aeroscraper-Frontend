@@ -1,5 +1,5 @@
 import { WalletType } from "@/enums/WalletType";
-import { BaseCoin, ClientEnum } from "@/types/types";
+import { BaseCoin, ClientEnum } from "../types/types";
 import { isNil } from "lodash";
 
 export const WalletByClient: Record<ClientEnum, WalletType[]> = {
@@ -12,6 +12,9 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     [ClientEnum.ARCHWAY]: [
         WalletType.LEAP,
         WalletType.KEPLR
+    ],
+    [ClientEnum.SHARDEUM]: [
+        WalletType.METAMASK
     ]
 }
 
@@ -35,6 +38,10 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
     [WalletType.NOT_SELECTED]: {
         image: "",
         thumbnail: ""
+    },
+    [WalletType.METAMASK]: {
+        image: "",
+        thumbnail: ""
     }
 }
 
@@ -45,6 +52,10 @@ export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: 
     },
     [ClientEnum.ARCHWAY]: {
         image: "/images/archway.png",
+        thumbnail: ""
+    },
+    [ClientEnum.SHARDEUM]: {
+        image: "/images/metamask-icon.svg",
         thumbnail: ""
     }
 }
@@ -58,6 +69,11 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     [ClientEnum.ARCHWAY]: {
         name: "ARCH",
         denom: "ARCH",
+        image: "/images/archway-coin.png",
+    },
+    [ClientEnum.SHARDEUM]: {
+        name: "SHM",
+        denom: "SHM",
         image: "/images/archway-coin.png",
     }
 }

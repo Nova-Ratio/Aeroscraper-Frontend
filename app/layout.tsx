@@ -1,7 +1,8 @@
 import { WalletProvider } from '@/contexts/WalletProvider'
 import './globals.css'
 import { Exo } from 'next/font/google'
-import { NotificationProvider } from '@/contexts/NotificationProvider'
+import { NotificationProvider } from '../contexts/NotificationProvider'
+import { TransactionsProvider } from '@/contexts/TransactionContext'
 
 const exo = Exo({ subsets: ['latin'] })
 
@@ -19,7 +20,9 @@ export default function RootLayout({
       <body className={`${exo.className} relative min-h-screen flex flex-col`}>
         <NotificationProvider>
           <WalletProvider>
-            {children}
+            <TransactionsProvider>
+              {children}
+            </TransactionsProvider>
           </WalletProvider>
         </NotificationProvider>
       </body>
