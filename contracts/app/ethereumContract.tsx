@@ -6927,9 +6927,3 @@ export const callHintHelpersContract = async () => {
   return { contractWithSigner, Address, abi };
 }
 
-
-export const getCommunityIssuanceContractAddress = async () => {
-  await window.ethereum.request({ method: 'eth_requestAccounts' });
-  const _address = "0x58a0F432EB6308181f7C3e6339450AcE2A552444";
-  return { _address };
-}
