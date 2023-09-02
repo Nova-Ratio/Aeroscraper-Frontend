@@ -15,7 +15,7 @@ const useAppContract = () => {
     const getTotalCollateralAmount = useCallback(async () => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            (await callBorrowerOperationsContract()).getSystemColl;
+            return (await callBorrowerOperationsContract()).contractWithSigner.getEntireSystemColl();
         } else {
             return await contract.getTotalCollateralAmount();
         }
@@ -25,7 +25,7 @@ const useAppContract = () => {
     const getTotalDebtAmount = useCallback(async () => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            (await callBorrowerOperationsContract()).getSystemDebt;
+            return (await callBorrowerOperationsContract()).contractWithSigner.getSystemDebt();
         } else {
             return await contract.getTotalDebtAmount();
         }
@@ -36,7 +36,7 @@ const useAppContract = () => {
     const getTrove = useCallback(async (user_addr: string) => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            (await callTroveManagerContract()).getTroveFromTroveOwnersArray();
+            return (await callTroveManagerContract()).contractWithSigner.Troves(user_addr);
         } else {
             return await contract.getTrove(user_addr);
         }
@@ -46,7 +46,7 @@ const useAppContract = () => {
     const getStake = useCallback(async (user_addr: string) => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            (await callTroveManagerContract()).getTroveStake(user_addr);
+            (await callTroveManagerContract()).contractWithSigner.getTroveStake(user_addr);
         } else {
             return await contract.getStake(user_addr);
         }
@@ -54,10 +54,10 @@ const useAppContract = () => {
 
     //Parametreler ana fonksiyona eklenecek
     //fetchPrice/_getUSDValue ** pricefeed/borroweroperations
-    const getCollateralPrice = useCallback(async (_coll: number, _price: number) => {
+    const getCollateralPrice = useCallback(async (_coll: number) => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            (await callBorrowerOperationsContract()).getCollateralPrice(_coll, _price);
+            (await callBorrowerOperationsContract()).contractWithSigner.getCollateralPrice(_coll);
         } else {
             return await contract.getCollateralPrice();
         }
@@ -74,8 +74,12 @@ const useAppContract = () => {
             const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
             console.log(amountInWei);
 
-            const { openTrove: openTroveMetamask } = await callBorrowerOperationsContract()
+            /* const { openTrove: openTroveMetamask } = await callBorrowerOperationsContract()
             await openTroveMetamask(_maxFeePercentage, loan_amount, _getNext, _getPrev, {
+                from: currentAccount,
+                value: amountInWei
+            }); */
+            return (await callBorrowerOperationsContract()).contractWithSigner.openTrove(_maxFeePercentage, loan_amount, _getNext, _getPrev, {
                 from: currentAccount,
                 value: amountInWei
             });
@@ -116,14 +120,15 @@ const useAppContract = () => {
         if (isNil(contract)) return;
     
         if (wallet.walletType === "metamask") {
-            const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
-            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address);
+            const {_getNext, Address, _getPrev} = (await callSortedTrovesContract(currentAccount));
+            /* const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
+            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address); */
     
             // Convert the amount from number (assuming it's in Ether) to Wei for the transaction
             const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
     
             // Send the transaction with the payable value
-            (await callBorrowerOperationsContract()).addColl(_upperHint, _lowerHint, {
+            (await callBorrowerOperationsContract()).contractWithSigner.addColl(_getNext, _getPrev, {
                 from: wallet.address,
                 value: amountInWei
             });
@@ -136,9 +141,10 @@ const useAppContract = () => {
     const removeCollateral = useCallback(async (amount: number) => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
-            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address);
-            (await callBorrowerOperationsContract()).withdrawColl(amount, _upperHint, _lowerHint);
+            const {_getNext, Address, _getPrev} = (await callSortedTrovesContract(currentAccount));
+            /* const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
+            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address); */
+            (await callBorrowerOperationsContract()).contractWithSigner.withdrawColl(amount, _getNext, _getPrev);
         } else {
             return await contract.removeCollateral(wallet.address, amount);
         }
@@ -149,9 +155,10 @@ const useAppContract = () => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
             const _maxFeePercentage = 5;
-            const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
-            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address);
-            (await callBorrowerOperationsContract()).withdrawAUSD(_maxFeePercentage, amount, _upperHint, _lowerHint);
+            const {_getNext, Address, _getPrev} = (await callSortedTrovesContract(currentAccount));
+            /* const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
+            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address); */
+            (await callBorrowerOperationsContract()).contractWithSigner.withdrawAUSD(_maxFeePercentage, amount, _getNext, _getPrev);
         } else {
             return await contract.borrowLoan(wallet.address, amount);
         }
@@ -161,9 +168,10 @@ const useAppContract = () => {
     const repayLoan = useCallback(async (amount: number) => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
-            const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
-            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address);
-            (await callBorrowerOperationsContract()).repayAUSD(amount, _upperHint, _lowerHint);
+            const {_getNext, Address, _getPrev} = (await callSortedTrovesContract(currentAccount));
+            /* const _upperHint = (await callSortedTrovesContract())._getNext(wallet.address);
+            const _lowerHint = (await callSortedTrovesContract())._getPrev(wallet.address); */
+            (await callBorrowerOperationsContract()).contractWithSigner.repayAUSD(amount, _getNext, _getPrev);
         } else {
             return await contract.repayLoan(wallet.address, amount);
         }
@@ -197,12 +205,13 @@ const useAppContract = () => {
             const _maxFeePercentage = 5;
             const _maxIterations = 0;
             const _price = 1;
-            const _upperPartialRedemptionHint = (await callSortedTrovesContract())._getNext(wallet.address);
-            const _lowerPartialRedemptionHint = (await callSortedTrovesContract())._getPrev(wallet.address);
+            const {_getNext, Address, _getPrev} = (await callSortedTrovesContract(currentAccount));
+            /* const _upperPartialRedemptionHint = (await callSortedTrovesContract())._getNext(wallet.address);
+            const _lowerPartialRedemptionHint = (await callSortedTrovesContract())._getPrev(wallet.address); */
             const _hints = (await callHintHelpersContract())._getRedemptionHints(amount, _price, _maxIterations);
             const _firstRedemptionHint = _hints.firstRedemptionHint;
             const _partialRedemptionHintNICR = _hints.partialRedemptionHintNICR;
-            (await callTroveManagerContract()).redeemCollateral(amount, _firstRedemptionHint, _upperPartialRedemptionHint, _lowerPartialRedemptionHint, _partialRedemptionHintNICR, _maxIterations, _maxFeePercentage);
+            //(await callTroveManagerContract()).redeemCollateral(amount, _firstRedemptionHint, _getNext, _getPrev, _partialRedemptionHintNICR, _maxIterations, _maxFeePercentage);
         } else {
             return await contract.redeem(wallet.address, amount);
         }
@@ -213,7 +222,7 @@ const useAppContract = () => {
         if (isNil(contract)) return;
         if (wallet.walletType == "metamask") {
             const _n = 3;
-            (await callTroveManagerContract()).liquidateTroves(_n);
+            //(await callTroveManagerContract()).liquidateTroves(_n);
         } else {
             return await contract.liquidateTroves(wallet.address);
         }

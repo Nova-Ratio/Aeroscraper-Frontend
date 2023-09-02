@@ -781,15 +781,7 @@ export const callBorrowerOperationsContract = async () => {
   const Address = "0x2a3e1d7090fc013af4d31f7d60939e60ca67b425";
   const myBorrowerOperationsContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myBorrowerOperationsContract.connect(signer);
-  //const getSystemColl = await contractWithSigner.getEntireSystemColl();
-  //const getSystemDebt = await contractWithSigner.getEntireSystemDebt();
-  // const addColl = await contractWithSigner.addColl();
-  // const withdrawColl = await contractWithSigner.withdrawColl();
-  // const withdrawAUSD = await contractWithSigner.withdrawAUSD();
-  // const repayAUSD = await contractWithSigner.repayAUSD();
-  // const getCollateralPrice = await contractWithSigner._getUSDValue();
-  //return { getSystemColl, getSystemDebt, openTrove, addColl, withdrawColl, withdrawAUSD, repayAUSD, getCollateralPrice, Address, abi };
-  return { openTrove: contractWithSigner.openTrove };
+  return {contractWithSigner, Address, abi}
 }
 
 
@@ -1061,11 +1053,10 @@ export const callPriceFeedContract = async () => {
   const Address = "0x4e599cB2A38d7290DDdee3a1f50697dC79f8910D";
   const myPriceFeedContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myPriceFeedContract.connect(signer);
-  const price = contractWithSigner.lastGoodPrice.call();
-  return { price, Address, abi };
+  return { contractWithSigner, Address, abi };
 }
 
-export const callSortedTrovesContract = async (userAddress: string) => {
+export const callSortedTrovesContract = async () => {
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
@@ -1546,11 +1537,7 @@ export const callSortedTrovesContract = async (userAddress: string) => {
   const Address = "0xEFcD08275a95303546D7dF1428F0B8e70eBd738B";
   const mySortedTrovesContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = mySortedTrovesContract.connect(signer);
-  const _getNext = await contractWithSigner.getNext(userAddress);
-  console.log("hi2");
-  const _getPrev = await contractWithSigner.getPrev(userAddress);
-  console.log("hi3");
-  return { _getNext, _getPrev, Address, abi };
+  return {contractWithSigner, Address, abi};
 }
 
 export const callTroveManagerContract = async () => {
@@ -3277,15 +3264,7 @@ export const callTroveManagerContract = async () => {
   const Address = "0x6E9182731e9414D3968F66d50A5951FaF537c9fe";
   const myTroveManagerContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myTroveManagerContract.connect(signer);
-  const getTroveFromTroveOwnersArray = await contractWithSigner.getTroveFromTroveOwnersArray().call();
-  const redeemCollateral = await contractWithSigner.redeemCollateral().call();
-  const liquidateTroves = await contractWithSigner.liquidateTroves().call();
-  const getTroveStake = await contractWithSigner.getTroveStake().call();
-  const stake = await contractWithSigner.stake().call();
-  const troveOwnersCount = await contractWithSigner.getTroveOwnersCount().call();
-  const troveOwnerColl = await contractWithSigner.getTroveColl().call();
-  const troveOwnerDebt = await contractWithSigner.getTroveDebt().call();
-  return { getTroveFromTroveOwnersArray, redeemCollateral, liquidateTroves, getTroveStake, stake, troveOwnersCount, troveOwnerColl, troveOwnerDebt,  };
+  return { contractWithSigner, Address, abi};
 }
 
 export const callAEROStakingContract = async () => {
@@ -3834,9 +3813,7 @@ export const callAEROStakingContract = async () => {
   const Address = "0x8238dAeC5EB9360B369E77917DD6C8C0BAc7126c";
   const myAEROStakingContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myAEROStakingContract.connect(signer);
-  const stake = await contractWithSigner.stake().call();
-  const unstake = await contractWithSigner.unstake().call();
-  return { stake, unstake };
+  return { contractWithSigner, Address, abi };
 }
 
 
@@ -4196,6 +4173,7 @@ export const callActivePoolContract = async () => {
   const Address = "0x08039177e28F00566b7BeF5Eedbf1318fE271Ac3";
   const myActivePoolContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myActivePoolContract.connect(signer);
+  return {contractWithSigner, Address, abi};
 }
 
 export const callStabilityPoolContract = async () => {
@@ -5469,8 +5447,7 @@ export const callStabilityPoolContract = async () => {
   const Address = "0x03f27cC03401D86FEBF9940C3FF116791727B611";
   const myStabilityPoolContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myStabilityPoolContract.connect(signer);
-  const _payOutAEROGains = await contractWithSigner._payOutAEROGains().call();
-  return { _payOutAEROGains };
+  return { contractWithSigner, Address, abi };
 }
 
 export const callDefaultPoolContract = async () => {
@@ -5776,6 +5753,7 @@ export const callDefaultPoolContract = async () => {
   const Address = "0xee9941e19be454C04Ce4Fe49403139d61a214f40";
   const myDefaulPoolContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myDefaulPoolContract.connect(signer);
+  return {contractWithSigner, Address, abi};
 }
 
 export const callAUSDTokenContract = async () => {
@@ -6358,6 +6336,7 @@ export const callAUSDTokenContract = async () => {
   const Address = "0x1dE1651e48CE0F15e514e0774d946245a2476cbE";
   const myAUSDTokenContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myAUSDTokenContract.connect(signer);
+  return {contractWithSigner, Address, abi};
 }
 
 export const callFunctionCallerContract = async () => {
@@ -6505,6 +6484,7 @@ export const callFunctionCallerContract = async () => {
   const Address = "0xD63Eb76F2386129DcAAC4e579ff226903ca44E49";
   const myFunctionCallerContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = myFunctionCallerContract.connect(signer);
+  return {contractWithSigner, Address, abi};
 }
 
 export const callHintHelpersContract = async () => {
@@ -6944,8 +6924,7 @@ export const callHintHelpersContract = async () => {
   const Address = "0xF54145a611eFa2967124d2F5046349837e0e26c5";
   const mySortedTrovesContract = new ethers.Contract(Address, abi, signer);
   const contractWithSigner = mySortedTrovesContract.connect(signer);
-  const _getRedemptionHints = await contractWithSigner.getRedemptionHints().call();
-  return { _getRedemptionHints };
+  return { contractWithSigner, Address, abi };
 }
 
 
