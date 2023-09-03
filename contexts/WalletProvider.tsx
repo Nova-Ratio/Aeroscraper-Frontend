@@ -171,7 +171,7 @@ export function WalletProvider({
     const [signer, setSigner] = useState<OfflineSigner>();
     const [client, setClient] = useState<SigningCosmWasmClient | SigningArchwayClient>();
     const [walletType, setWalletType] = useState<WalletType | undefined>(undefined);
-    const [clientType, setClientType] = useState<ClientEnum | undefined>(localStorage.getItem("selectedClientType") as (ClientEnum | undefined));
+    const [clientType, setClientType] = useState<ClientEnum | undefined>(undefined);
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
 
     const config = getConfig(network, clientType);

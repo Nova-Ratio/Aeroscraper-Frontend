@@ -6,7 +6,7 @@ import { isNil } from "lodash";
 const useAppContract = () => {
     const wallet = useWallet();
 
-    const contract = useMemo(() => wallet.initialized ? getAppContract(wallet.getClient()) : undefined, [wallet]);
+    const contract = useMemo(() => wallet.initialized ? getAppContract(wallet.getClient(), wallet.clientType) : undefined, [wallet]);
 
     const getTotalCollateralAmount = useCallback(async () => {
         if (isNil(contract)) return;

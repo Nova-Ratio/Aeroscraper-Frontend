@@ -11,6 +11,7 @@ export const mainnetArchwayConfig: AppConfig = {
     stakingToken: 'ARCH',
     coinMap: {
         ARCH: { denom: 'ARCH', fractionalDigits: 18 },
+        'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB': { denom: 'ATOM', fractionalDigits: 6 }
     },
     gasPrice: 0.025,
     fees: {

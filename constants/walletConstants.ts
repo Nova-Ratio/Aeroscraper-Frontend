@@ -56,12 +56,35 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         image: "/images/sei.png",
     },
     [ClientEnum.ARCHWAY]: {
-        name: "ARCH",
-        denom: "ARCH",
-        image: "/images/archway-coin.png",
+        name: "ATOM",
+        denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB",
+        image: "/images/ATOM.svg",
     }
 }
 
 export const getBaseCoinByClient = (clientType?: ClientEnum) => {
     return !isNil(clientType) ? BaseCoinByClient[clientType] : BaseCoinByClient[ClientEnum.COSMWASM]
+}
+
+export const getContractAddressesByClient = (clientType?: ClientEnum) => {
+    if (clientType === ClientEnum.COSMWASM) {
+        return {
+            contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
+            ausdContractAddress: process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string,
+            oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string
+        }
+    }
+    else if (clientType === ClientEnum.ARCHWAY) {
+        return {
+            contractAddress: process.env.NEXT_PUBLIC_ARCH_CONTRACT_ADDRESS as string,
+            ausdContractAddress: process.env.NEXT_PUBLIC_ARCH_AUSD_CONTRACT_ADDRESS as string,
+            oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string
+        }
+    }
+
+    return {
+        contractAddress: '',
+        ausdContractAddress: '',
+        oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string
+    }
 }
