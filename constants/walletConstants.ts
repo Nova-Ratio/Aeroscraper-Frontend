@@ -63,7 +63,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
 }
 
 export const getBaseCoinByClient = (clientType?: ClientEnum) => {
-    return !isNil(clientType) ? BaseCoinByClient[clientType] : BaseCoinByClient[ClientEnum.COSMWASM]
+    return clientType && BaseCoinByClient[clientType];
 }
 
 export const getContractAddressesByClient = (clientType?: ClientEnum) => {

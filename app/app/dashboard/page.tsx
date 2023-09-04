@@ -25,6 +25,7 @@ import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import NotificationDropdown from "./_components/NotificationDropdown";
 import { getBaseCoinByClient } from "@/constants/walletConstants";
 import { ClientEnum } from "@/types/types";
+import { isNil } from "lodash";
 
 export default function Dashboard() {
     const { balanceByDenom, baseCoin, clientType, refreshBalance } = useWallet();
@@ -49,7 +50,13 @@ export default function Dashboard() {
         minRedeemAmount: 0
     })
 
-    const basePrice = useMemo(() => clientType === ClientEnum.ARCHWAY ? atomPrice : seiPrice, [clientType, seiPrice, atomPrice])
+    const basePrice = useMemo(() =>
+        clientType === ClientEnum.ARCHWAY ?
+            atomPrice :
+            clientType === ClientEnum.COSMWASM ?
+                seiPrice :
+                0,
+        [clientType, seiPrice, atomPrice])
 
     useEffect(() => {
         const getPrice = async () => {
@@ -162,17 +169,20 @@ export default function Dashboard() {
                             </div>
                             <Text>$1.00</Text>
                         </div>
-                        <div className="flex flex-col items-center gap-2">
-                            <div className="flex items-center gap-2">
-                                <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.image} />
-                                <Text size="2xl">{baseCoin.name}</Text>
+                        {
+                            !isNil(baseCoin) &&
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="flex items-center gap-2">
+                                    <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.image} />
+                                    <Text size="2xl">{baseCoin.name}</Text>
+                                </div>
+                                <Text>$ {basePrice.toFixed(3)}</Text>
                             </div>
-                            <Text>$ {basePrice.toFixed(3)}</Text>
-                        </div>
+                        }
                     </div>
                     <div className="flex items-center gap-4">
                         <NotificationDropdown pageData={pageData} />
-                        <WalletButton ausdBalance={pageData.ausdBalance} baseCoinBalance={Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0))} />
+                        <WalletButton ausdBalance={pageData.ausdBalance} baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)) : 0} />
                     </div>
                 </BorderedContainer>
                 <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} />
@@ -189,7 +199,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="TVL"
-                                description={`${Number(pageData.totalCollateralAmount).toFixed(3)} ${baseCoin.name}`}
+                                description={isNil(baseCoin) ? '-' : `${Number(pageData.totalCollateralAmount).toFixed(3)} ${baseCoin.name}`}
                                 className="w-[191px] h-14"
                                 tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
                                 tooltipPlacement="top"
@@ -227,7 +237,7 @@ export default function Dashboard() {
                                 tooltipPlacement="top"
                                 description={`${isFinite(Number(((pageData.totalCollateralAmount * basePrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * basePrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
                                 className="w-[191px] h-14"
-                                tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin.name}:AUSD price, to the entire system debt.`}
+                                tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.name}:AUSD price, to the entire system debt.`}
                             />
                         </div>
                     </div>
@@ -263,7 +273,12 @@ export default function Dashboard() {
                                     "You can borrow AUSD by opening a Trove."
                             }
                         </Text>
-                        <GradientButton onClick={() => { setTroveModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto 2xl:mx-auto" rounded="rounded-lg">
+                        <GradientButton
+                            onClick={() => { setTroveModal(true); }}
+                            className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto 2xl:mx-auto"
+                            rounded="rounded-lg"
+                            disabled={isNil(baseCoin)}
+                        >
                             <Text>
                                 {
                                     isTroveOpened ?
@@ -297,7 +312,12 @@ export default function Dashboard() {
                             }
                         />
                         {pageData.stakedAmount <= 0 && <Text size="base" className="mt-2">You can earn AUSD rewards by deposting AUSD.</Text>}
-                        <GradientButton onClick={() => { setStabilityModal(true); }} className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto" rounded="rounded-lg">
+                        <GradientButton
+                            onClick={() => { setStabilityModal(true); }}
+                            className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto"
+                            rounded="rounded-lg"
+                            disabled={isNil(baseCoin)}
+                        >
                             <Text>Enter</Text>
                         </GradientButton>
                     </div>

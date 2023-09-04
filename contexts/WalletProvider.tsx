@@ -110,7 +110,7 @@ export interface WalletContextType {
     // readonly accountNumber: number;
     readonly clientType: ClientEnum | undefined;
     readonly selectClientType: (value: ClientEnum | undefined) => void;
-    readonly baseCoin: BaseCoin;
+    readonly baseCoin: BaseCoin | undefined;
 }
 
 function throwNotInitialized(): any {
@@ -140,7 +140,7 @@ const defaultContext: WalletContextType = {
     setProcessLoader: throwNotInitialized,
     clientType: undefined,
     selectClientType: () => { },
-    baseCoin: BaseCoinByClient[ClientEnum.COSMWASM]
+    baseCoin: undefined
     // accountNumber: 0,
 };
 

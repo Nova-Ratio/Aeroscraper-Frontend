@@ -135,10 +135,15 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
         <RedeemIcon height="48" width="48" className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[40px]" />
       </div>
       <div className="w-full bg-dark-purple rounded-lg px-2 py-7 flex items-center justify-between mt-8">
-        <div className="flex items-center gap-2">
-          <img alt="sei" src={baseCoin.image} className="w-10 h-10" />
-          <Text size="2xl" weight="font-medium">{baseCoin.name}</Text>
-        </div>
+        {
+          !isNil(baseCoin) ?
+            <div className="flex items-center gap-2">
+              <img alt="sei" src={baseCoin.image} className="w-10 h-10" />
+              <Text size="2xl" weight="font-medium">{baseCoin.name}</Text>
+            </div>
+            :
+            <Text size="2xl" weight="font-medium" className='flex-1 text-center'>-</Text>
+        }
         <BorderedNumberInput
           value={seiAmount}
           containerClassName="h-10"

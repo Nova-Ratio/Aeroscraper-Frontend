@@ -135,7 +135,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap'>{value} {baseCoin.name}</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap'>{value} {baseCoin?.name}</Text>
                                             }
                                         />} />
                                     <TableBodyCol col={1} text="XXXXXX" value={

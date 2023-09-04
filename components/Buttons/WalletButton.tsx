@@ -93,7 +93,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
 
     useOutsideHandler(ref, closeWalletSelection);
 
-    if (wallet.initialized) {
+    if (wallet.initialized && !isNil(baseCoin)) {
         return (
             <>
                 <div className='w-fit h-fit cursor-pointer active:scale-95 transition-all z-[50] flex items-center gap-4' onClick={openAccountModal}>
