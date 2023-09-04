@@ -105,8 +105,8 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
             <OutlinedButton
               containerClassName="w-[61px] h-6"
               onClick={() => {
-                setRedeemAmount(getValueByRatio(pageData.ausdBalance, 0.5))
-                setSeiAmount(getValueByRatio(getValueByRatio(pageData.ausdBalance, 0.5), pageData.minRedeemAmount))
+                setRedeemAmount(getValueByRatio(pageData.ausdBalance, 2))
+                setSeiAmount(getValueByRatio(getValueByRatio(pageData.ausdBalance, 2), pageData.minRedeemAmount))
               }}
             >
               Half

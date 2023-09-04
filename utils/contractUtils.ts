@@ -63,7 +63,7 @@ export const convertAmount = (value: string | number, decimal: number = DEFAULT_
 }
 
 export const getValueByRatio = (value: string | number, ratio: string | number) => {
-    return Number((Number(value) * Number(ratio)).toFixed(6));
+    return Number((Number(value) / Number(ratio)).toFixed(6));
 }
 
 export const getRatioColor = (value: number) => {
