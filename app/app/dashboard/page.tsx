@@ -33,6 +33,7 @@ export default function Dashboard() {
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
     const [seiPrice, setSeiPrice] = useState(0);
+    const [atomPrice, setAtomPrice] = useState(0);
     const [pageData, setPageData] = useState<PageData>({
         collateralAmount: 0,
         debtAmount: 0,
@@ -67,6 +68,30 @@ export default function Dashboard() {
             const currentPrices = await connection.getLatestPriceFeeds(priceIds);
 
             if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+        }
+
+        getPrice()
+    }, [])
+
+    //seçilen chaine göre proje genelinde seiPrice verilen yerlerin düzenlenmesi lazım
+    useEffect(() => {
+        const getPrice = async () => {
+            const connection = new PriceServiceConnection(
+                "https://xc-mainnet.pyth.network/",
+                {
+                    priceFeedRequestConfig: {
+                        binary: true,
+                    },
+                }
+            )
+
+            const priceIds = [
+                "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819",
+            ];
+
+            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
+
+            if (currentPrices) setAtomPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
         }
 
         getPrice()
