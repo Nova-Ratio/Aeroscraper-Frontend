@@ -40,11 +40,11 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
 
 export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: string }> = {
     [ClientEnum.COSMWASM]: {
-        image: "/images/cosmwasm.png",
+        image: "/images/sei-network.png",
         thumbnail: ""
     },
     [ClientEnum.ARCHWAY]: {
-        image: "/images/archway.png",
+        image: "/images/archway.svg",
         thumbnail: ""
     }
 }

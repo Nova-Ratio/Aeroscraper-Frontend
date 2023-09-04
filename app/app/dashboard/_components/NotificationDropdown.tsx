@@ -35,7 +35,8 @@ const NotificationDropdown: FC<Props> = ({ pageData }) => {
                 </BorderedContainer>
             }
         >
-            <BorderedContainer containerClassName='w-[406px] h-[226px]' className='flex flex-col gap-2 p-4 overflow-auto scrollbar-hidden'>
+            <BorderedContainer containerClassName='w-[406px] h-[226px]' className='relative flex flex-col gap-2 p-4 overflow-auto scrollbar-hidden backdrop-blur-[25px]'>
+                <div className='absolute inset-10 top-20 bg-white -z-10 blur-3xl opacity-[0.15]' />
                 <Text>Notifications</Text>
                 <NotificationItem text={`Your trove is ${isTroveOpened ? "open" : "close"}.`} />
                 <NotificationItem text={`You have ${Number(pageData.rewardAmount > 0) > 0 ? pageData.rewardAmount > 0 : "no"} reward in the Stability Pool.`} hasDivider={false} />

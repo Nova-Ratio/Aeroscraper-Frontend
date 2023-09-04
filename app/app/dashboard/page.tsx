@@ -22,13 +22,12 @@ import RedeemSide from "./_components/RedeemSide";
 import { requestTotalTroves } from "@/services/graphql";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
-import Select from "@/components/Select/Select";
-import { mockChains } from "./_mock/mock";
 import NotificationDropdown from "./_components/NotificationDropdown";
 import { getBaseCoinByClient } from "@/constants/walletConstants";
+import { ClientEnum } from "@/types/types";
 
 export default function Dashboard() {
-    const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, clientType, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -50,6 +49,8 @@ export default function Dashboard() {
         minRedeemAmount: 0
     })
 
+    const basePrice = useMemo(() => clientType === ClientEnum.ARCHWAY ? atomPrice : seiPrice, [clientType, seiPrice, atomPrice])
+
     useEffect(() => {
         const getPrice = async () => {
             const connection = new PriceServiceConnection(
@@ -63,35 +64,15 @@ export default function Dashboard() {
 
             const priceIds = [
                 "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
+                "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819"
             ];
 
             const currentPrices = await connection.getLatestPriceFeeds(priceIds);
 
-            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
-        }
-
-        getPrice()
-    }, [])
-
-    //seçilen chaine göre proje genelinde seiPrice verilen yerlerin düzenlenmesi lazım
-    useEffect(() => {
-        const getPrice = async () => {
-            const connection = new PriceServiceConnection(
-                "https://xc-mainnet.pyth.network/",
-                {
-                    priceFeedRequestConfig: {
-                        binary: true,
-                    },
-                }
-            )
-
-            const priceIds = [
-                "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819",
-            ];
-
-            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
-
-            if (currentPrices) setAtomPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+            if (currentPrices) {
+                setAtomPrice(Number(currentPrices[1].getPriceUnchecked().price) / 100000000)
+                setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+            }
         }
 
         getPrice()
@@ -139,8 +120,8 @@ export default function Dashboard() {
                 totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
                 poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(3)),
                 rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
-                minCollateralRatio: (collateralAmount * seiPrice) / (debtAmount || 1),
-                minRedeemAmount: seiPrice,
+                minCollateralRatio: (collateralAmount * basePrice) / (debtAmount || 1),
+                minRedeemAmount: basePrice,
                 totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
             })
         }
@@ -163,7 +144,7 @@ export default function Dashboard() {
                 totalTrovesAmount: 0
             })
         }
-    }, [contract, seiPrice])
+    }, [contract, basePrice])
 
     useEffect(() => {
         getPageData();
@@ -186,7 +167,7 @@ export default function Dashboard() {
                                 <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.image} />
                                 <Text size="2xl">{baseCoin.name}</Text>
                             </div>
-                            <Text>$ {seiPrice.toFixed(3)}</Text>
+                            <Text>$ {basePrice.toFixed(3)}</Text>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -244,7 +225,7 @@ export default function Dashboard() {
                             <StatisticCard
                                 title="Total Collateral Ratio"
                                 tooltipPlacement="top"
-                                description={`${isFinite(Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * seiPrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
+                                description={`${isFinite(Number(((pageData.totalCollateralAmount * basePrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * basePrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
                                 className="w-[191px] h-14"
                                 tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin.name}:AUSD price, to the entire system debt.`}
                             />
@@ -334,6 +315,7 @@ export default function Dashboard() {
                 onClose={() => { setTroveModal(false); }}
                 pageData={pageData}
                 getPageData={getPageData}
+                basePrice={basePrice}
             />
 
             {stabilityModal &&
@@ -352,6 +334,7 @@ export default function Dashboard() {
                     onClose={() => { setRiskyModal(false); }}
                     pageData={pageData}
                     getPageData={getPageData}
+                    basePrice={basePrice}
                 />
             }
         </div>

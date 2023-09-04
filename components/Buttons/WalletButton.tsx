@@ -170,7 +170,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
                         isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
                             <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
                                 <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                                    <img alt={clientType} src={ClientImagesByName[clientType].image} className='h-full' />
+                                    <img alt={clientType} src={ClientImagesByName[clientType].image} className='w-full px-10' />
                                 </div>
                             </GradientButton>
                         ))

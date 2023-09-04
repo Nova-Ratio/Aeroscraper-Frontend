@@ -5,7 +5,7 @@ import { Logo, RedeemIcon } from '@/components/Icons/Icons'
 import BorderedNumberInput from '@/components/Input/BorderedNumberInput'
 import { getValueByRatio } from '@/utils/contractUtils'
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { NumberFormatValues, NumericFormat } from 'react-number-format'
 import Text from "@/components/Texts/Text"
 import { PageData } from '../_types/types'
@@ -13,6 +13,7 @@ import useAppContract from '@/contracts/app/useAppContract'
 import { INotification } from '@/contexts/NotificationProvider'
 import TransactionButton from '@/components/Buttons/TransactionButton'
 import { useWallet } from '@/contexts/WalletProvider'
+import { isNil } from 'lodash'
 
 interface Props {
   pageData: PageData,
@@ -34,6 +35,12 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
     setRedeemAmount(Number(values.value))
     setSeiAmount(getValueByRatio(values.value, pageData.minRedeemAmount))
   }, [pageData]);
+
+  const redeemDisabled = useMemo(() =>
+    isNil(redeemAmount) ||
+    redeemAmount <= 0 ||
+    redeemAmount > pageData.ausdBalance,
+    [redeemAmount, pageData])
 
   useEffect(() => {
     if (notification) {
@@ -145,6 +152,7 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
         className="w-[221px] h-11 mt-7"
         onClick={redeem}
         text='Redeem'
+        disabled={redeemDisabled}
       />
     </BorderedContainer>
   )

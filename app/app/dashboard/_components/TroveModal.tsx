@@ -14,7 +14,6 @@ import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
 import { AUSD_PRICE, convertAmount, getRatioColor, getRatioText, getValueByRatio } from '@/utils/contractUtils';
-import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 
 enum TABS {
     COLLATERAL = 0,
@@ -26,16 +25,16 @@ type Props = {
     onClose?: () => void;
     pageData: PageData;
     getPageData: () => void;
+    basePrice: number;
 }
 
-const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
+const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice }) => {
     const contract = useAppContract();
     const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
     const [borrowAmount, setBorrowAmount] = useState<number>(0);
     const [collateralAmount, setCollateralAmount] = useState<number>(0);
     const [borrowingAmount, setBorrowingAmount] = useState<number>(0);
-    const [seiPrice, setSeiPrice] = useState(0);
 
     const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
 
@@ -45,8 +44,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
     const collacteralRatioCalculate = useMemo(() =>
-        Number((openTroveAmount || 0) * seiPrice) / ((borrowAmount || 0)),
-        [openTroveAmount, borrowAmount])
+        Number((openTroveAmount || 0) * basePrice) / ((borrowAmount || 0)),
+        [openTroveAmount, borrowAmount, basePrice])
 
     const collacteralRatio = isFinite(collacteralRatioCalculate) ? collacteralRatioCalculate : 0;
 
@@ -75,29 +74,6 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
     const changeBorrowingAmount = (values: NumberFormatValues) => {
         setBorrowingAmount(Number(values.value));
     }
-
-    useEffect(() => {
-        const getPrice = async () => {
-            const connection = new PriceServiceConnection(
-                "https://xc-mainnet.pyth.network/",
-                {
-                    priceFeedRequestConfig: {
-                        binary: true,
-                    },
-                }
-            )
-
-            const priceIds = [
-                "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
-            ];
-
-            const currentPrices = await connection.getLatestPriceFeeds(priceIds);
-
-            if (currentPrices) setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
-        }
-
-        getPrice()
-    }, [])
 
     const queryAddColletral = async () => {
         setProcessLoading(true);
@@ -314,7 +290,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData }) => {
                                             <InputLayout
                                                 label='Borrowing Capacity'
                                                 hintTitle="AUSD"
-                                                value={(((pageData.collateralAmount * seiPrice * 100) / 115) - (pageData.debtAmount)).toFixed(3)}
+                                                value={(((pageData.collateralAmount * basePrice * 100) / 115) - (pageData.debtAmount)).toFixed(3)}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[25%] text-end'
                                                 disabled
