@@ -5,7 +5,7 @@ import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveR
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
 import { ClientEnum } from "@/types/types";
-import { getContractAddressesByClient } from "@/constants/walletConstants";
+import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
 
 export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayClient, clientType?: ClientEnum) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
@@ -71,6 +71,17 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+                "auto",
+                "Open Trove",
+                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+            )
+        }
+
         const vaa = await getVAA();
         return await client.executeMultiple(
             senderAddress,
@@ -94,23 +105,21 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             ],
             "auto",
             "Open Trove",
-        ).catch(err => console.log(err))
-    }
-
-    const openTroveArchway = async (senderAddress: string, amount: number, loanAmount: number) => {
-        console.log("senderAddress:", senderAddress)
-        console.log("contractAddress:", contractAddress)
-        return await client.execute(
-            senderAddress,
-            contractAddress,
-            {open_trove: {loan_amount: getRequestAmount(loanAmount)}},
-            "auto",
-            "Open Trove",
-            [coin(getRequestAmount(amount), "ATOM")],
-        ).catch(err => console.log(err))
+        )
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { add_collateral: {} },
+                "auto",
+                "Add Collateral",
+                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+            )
+        }
+
         const vaa = await getVAA();
 
         return await client.executeMultiple(
@@ -139,6 +148,16 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
     }
 
     const removeCollateral = async (senderAddress: string, amount: number) => {
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
+                "auto",
+                "Remove Collateral"
+            )
+        }
+
         const vaa = await getVAA();
 
         return await client.executeMultiple(
@@ -166,6 +185,16 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
     }
 
     const borrowLoan = async (senderAddress: string, amount: number) => {
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { borrow_loan: { loan_amount: getRequestAmount(amount) } },
+                "auto",
+                "Borrow Loan"
+            )
+        }
+
         const vaa = await getVAA();
 
         return await client.executeMultiple(
@@ -193,9 +222,6 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
     }
 
     const repayLoan = async (senderAddress: string, amount: number) => {
-
-        const vaa = await getVAA();
-
         const msg = {
             send: {
                 contract: contractAddress,
@@ -203,6 +229,18 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
                 msg: jsonToBinary({ repay_loan: {} })
             }
         }
+
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                ausdContractAddress,
+                msg,
+                "auto",
+                "Repay Loan"
+            )
+        }
+
+        const vaa = await getVAA();
 
         return await client.executeMultiple(
             senderAddress,
@@ -257,8 +295,6 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
     }
 
     const redeem = async (senderAddress: string, amount: number) => {
-        const vaa = await getVAA();
-
         const msg = {
             send: {
                 contract: contractAddress,
@@ -266,6 +302,18 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
                 msg: jsonToBinary({ redeem: {} })
             }
         }
+
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                ausdContractAddress,
+                msg,
+                "auto",
+                "Redeem"
+            )
+        }
+
+        const vaa = await getVAA();
 
         return client.executeMultiple(
             senderAddress,
@@ -288,10 +336,20 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             ],
             "auto",
             "Redeem"
-        ).catch(err => console.log(err))
+        )
     }
 
     const liquidateTroves = async (senderAddress: string) => {
+        if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { liquidate_troves: {} },
+                "auto",
+                "Liquidate Troves"
+            )
+        }
+
         const vaa = await getVAA();
 
         return await client.executeMultiple(
@@ -347,7 +405,6 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
         unstake,
         redeem,
         liquidateTroves,
-        withdrawLiquidationGains,
-        openTroveArchway
+        withdrawLiquidationGains
     }
 }

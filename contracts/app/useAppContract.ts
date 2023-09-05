@@ -63,11 +63,6 @@ const useAppContract = () => {
         return await contract.openTrove(wallet.address, amount, loan_amount);
     }, [wallet, contract])
 
-    const openTroveArchway = useCallback(async (amount: number, loan_amount: number) => {
-        if (isNil(contract)) return;
-        return await contract.openTroveArchway(wallet.address, amount, loan_amount);
-    }, [wallet, contract])
-
     const addCollateral = useCallback(async (amount: number) => {
         if (isNil(contract)) return;
         return await contract.addCollateral(wallet.address, amount);
@@ -133,8 +128,7 @@ const useAppContract = () => {
         unstake,
         redeem,
         liquidateTroves,
-        withdrawLiquidationGains,
-        openTroveArchway
+        withdrawLiquidationGains
     }), [
         getTotalCollateralAmount,
         getTotalDebtAmount,
@@ -155,8 +149,7 @@ const useAppContract = () => {
         unstake,
         redeem,
         liquidateTroves,
-        withdrawLiquidationGains,
-        openTroveArchway
+        withdrawLiquidationGains
     ])
 
     return value;

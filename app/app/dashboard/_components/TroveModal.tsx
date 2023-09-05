@@ -199,6 +199,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                 status: 'error',
                 directLink: ""
             })
+            console.error(err)
         }
         finally {
             setProcessLoading(false);

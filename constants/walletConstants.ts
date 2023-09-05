@@ -1,6 +1,5 @@
 import { WalletType } from "@/enums/WalletType";
 import { BaseCoin, ClientEnum } from "@/types/types";
-import { isNil } from "lodash";
 
 export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     [ClientEnum.COSMWASM]: [
@@ -56,7 +55,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     },
     [ClientEnum.ARCHWAY]: {
         name: "ATOM",
-        denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB",
+        denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
         image: "/images/atom.svg",
     }
 }
@@ -77,7 +76,7 @@ export const getContractAddressesByClient = (clientType?: ClientEnum) => {
         return {
             contractAddress: process.env.NEXT_PUBLIC_ARCH_CONTRACT_ADDRESS as string,
             ausdContractAddress: process.env.NEXT_PUBLIC_ARCH_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string
+            oraclecontractAddress: ''
         }
     }
 
