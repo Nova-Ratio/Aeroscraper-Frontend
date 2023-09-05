@@ -10,7 +10,6 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
         WalletType.KEPLR
     ],
     [ClientEnum.ARCHWAY]: [
-        WalletType.LEAP,
         WalletType.KEPLR
     ]
 }
@@ -58,7 +57,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     [ClientEnum.ARCHWAY]: {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB",
-        image: "/images/ATOM.svg",
+        image: "/images/atom.svg",
     }
 }
 
@@ -85,6 +84,6 @@ export const getContractAddressesByClient = (clientType?: ClientEnum) => {
     return {
         contractAddress: '',
         ausdContractAddress: '',
-        oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string
+        oraclecontractAddress: '',
     }
 }
