@@ -360,6 +360,7 @@ export function WalletProvider({
 
     useEffect(() => {
         const savedClientType = localStorage.getItem("selectedClientType");
+        console.log(savedClientType)
         setClientType(savedClientType as (ClientEnum | undefined));
     }, [])
 

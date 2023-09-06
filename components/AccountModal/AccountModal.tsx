@@ -6,7 +6,7 @@ import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { FC, useRef, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { Modal } from "../Modal/Modal";
 import TooltipWrapper from "./TooltipWrapper";
 import QRCode from 'react-qr-code';
@@ -18,16 +18,16 @@ import ImageUpload from "./ImageUpload";
 import Loading from "../Loading/Loading";
 import GradientButton from "../Buttons/GradientButton";
 import ProfilePhotoSlider from "./ProfilePhotosSlider";
+import { AUSD_PRICE } from "@/utils/contractUtils";
 
 interface Props {
     showModal: boolean,
     onClose: () => void,
     balance: { ausd: number, base: number }
+    basePrice: number
 }
 
 const AccountModal: FC<Props> = (props: Props) => {
-
-
     const avatarSelectRef = useRef<HTMLDivElement>(null);
     const qrCodeViewRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +44,8 @@ const AccountModal: FC<Props> = (props: Props) => {
 
     const [photoUrlInput, setPhotoUrlInput] = useState<string>("");
     const [processLoading, setProcessLoading] = useState<{ status: boolean, idx?: number }>({ status: false, idx: -1 });
+
+    const totalDollarBalance = useMemo(() => (props.balance.ausd * AUSD_PRICE) + (props.balance.base * props.basePrice), [props.balance, props.basePrice])
 
     const openAvatarSelection = () => {
         setAvatarSelectionOpen(true);
@@ -144,7 +146,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                     <div className="bg-raisin-black px-6 py-4 rounded-lg flex gap-16">
                         <div>
                             <Text size='2xl' textColor='text-dark-silver'>Balance</Text>
-                            <Text size='2xl' className='mt-4'>$0</Text>
+                            <Text size='2xl' className='mt-4'>${totalDollarBalance}</Text>
                             <div className='flex items-center justify-around'>
                                 <NumericFormat
                                     value={props.balance.ausd}

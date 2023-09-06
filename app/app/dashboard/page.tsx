@@ -182,7 +182,11 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center gap-4">
                         <NotificationDropdown pageData={pageData} />
-                        <WalletButton ausdBalance={pageData.ausdBalance} baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)) : 0} />
+                        <WalletButton
+                            ausdBalance={pageData.ausdBalance}
+                            baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)) : 0}
+                            basePrice={basePrice}
+                        />
                     </div>
                 </BorderedContainer>
                 <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} />

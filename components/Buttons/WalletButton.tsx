@@ -25,9 +25,10 @@ type Props = {
     ausdBalance?: number;
     baseCoinBalance?: number;
     className?: string;
+    basePrice?: number;
 }
 
-const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, className = "w-[268px] h-[69px]" }) => {
+const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePrice = 0, className = "w-[268px] h-[69px]" }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
     const { clientType, baseCoin, selectClientType } = useWallet();
@@ -145,7 +146,12 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, classNa
                         </div>
                     </div>
                 </div>
-                <AccountModal balance={{ ausd: ausdBalance, base: baseCoinBalance }} showModal={accountModal} onClose={() => { setAccountModal(false); }} />
+                <AccountModal
+                    balance={{ ausd: ausdBalance, base: baseCoinBalance }}
+                    showModal={accountModal}
+                    basePrice={basePrice}
+                    onClose={() => { setAccountModal(false); }}
+                />
             </>
         )
     }

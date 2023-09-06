@@ -13,7 +13,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { AUSD_PRICE, convertAmount, getRatioColor, getRatioText, getValueByRatio } from '@/utils/contractUtils';
+import { convertAmount, getRatioColor, getRatioText } from '@/utils/contractUtils';
 import { isNil } from 'lodash';
 
 enum TABS {
