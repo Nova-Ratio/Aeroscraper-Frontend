@@ -146,7 +146,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                     <div className="bg-raisin-black px-6 py-4 rounded-lg flex gap-16">
                         <div>
                             <Text size='2xl' textColor='text-dark-silver'>Balance</Text>
-                            <Text size='2xl' className='mt-4'>${totalDollarBalance}</Text>
+                            <Text size='2xl' className='mt-4'>${totalDollarBalance.toFixed(2)}</Text>
                             <div className='flex items-center justify-around'>
                                 <NumericFormat
                                     value={props.balance.ausd}
