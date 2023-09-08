@@ -275,6 +275,14 @@ export const ShapeNotification: React.FC<IconProps> = () => {
     )
 }
 
+export const RedDotIcon: React.FC<IconProps> = ({className}) => {
+    return (
+        <svg className={className} width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <rect width="12" height="12" rx="6" fill="#D43752" />
+        </svg>
+    )
+}
+
 export const RedeemIcon: React.FC<IconProps> = ({ className, width = "63", height = "63" }) => {
     return (
         <svg className={className} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 63 63" fill="none">

@@ -5,12 +5,12 @@ import { Logo, RedeemIcon } from '@/components/Icons/Icons'
 import BorderedNumberInput from '@/components/Input/BorderedNumberInput'
 import { getValueByRatio } from '@/utils/contractUtils'
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { NumberFormatValues, NumericFormat } from 'react-number-format'
 import Text from "@/components/Texts/Text"
 import { PageData } from '../_types/types'
 import useAppContract from '@/contracts/app/useAppContract'
-import { INotification } from '@/contexts/NotificationProvider'
+import { INotification, useNotification } from '@/contexts/NotificationProvider'
 import TransactionButton from '@/components/Buttons/TransactionButton'
 import { useWallet } from '@/contexts/WalletProvider'
 import { isNil } from 'lodash'
@@ -28,6 +28,8 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
   const [processLoading, setProcessLoading] = useState<boolean>(false);
 
   const [notification, setNotification] = useState<INotification | undefined>(undefined);
+
+  const notifications = useNotification();
 
   const contract = useAppContract();
 
@@ -67,6 +69,12 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
           directLink: transactionHash
         }
       )
+      notifications.addNotification({
+        status: 'success',
+        directLink: transactionHash,
+        message: `${redeemAmount} units were reedem as AUSD SEI`
+      });
+
       getPageData();
       refreshBalance();
     }

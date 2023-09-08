@@ -5,7 +5,8 @@ import useOutsideHandler from '../../hooks/useOutsideHandler'
 type Props = {
     toggleButton: React.ReactNode,
     containerClassName?: string,
-    menuClassName?: string
+    menuClassName?: string,
+    onOpen?: () => void
 }
 
 export type DropdownRef = {
@@ -13,7 +14,7 @@ export type DropdownRef = {
 }
 
 const Dropdown = React.forwardRef<DropdownRef, PropsWithChildren<Props>>(
-    ({ children, toggleButton, containerClassName, menuClassName }, parentRef) => {
+    ({ children, toggleButton, containerClassName, menuClassName, onOpen }, parentRef) => {
         const ref = useRef(null);
         const [isExpanded, setIsExpanded] = useState(false);
 
@@ -25,6 +26,8 @@ const Dropdown = React.forwardRef<DropdownRef, PropsWithChildren<Props>>(
 
         const toggleDropdown = () => {
             setIsExpanded(!isExpanded);
+
+            onOpen?.();
         }
 
         const closeDropdown = useCallback(() => {
