@@ -7,6 +7,7 @@ import { RedDotIcon } from '@/components/Icons/Icons';
 import { INotification, useNotification } from '@/contexts/NotificationProvider';
 import Link from 'next/link';
 import { ClientEnum } from '@/types/types';
+import { motion } from 'framer-motion';
 
 type Props = {
     pageData: PageData;
@@ -28,8 +29,13 @@ const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider 
     }
 
     if (directLink) {
-        return <Link className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-2 flex`} href={`${scanDomain}${directLink}`}>
+        return <Link className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-2 flex hover:opacity-30 duration-500 transition-opacity`} href={`${scanDomain}${directLink}`} target="_blank">
             <Text size='base'>{text}</Text>
+            <motion.img
+                initial={{ marginLeft: 0 }}
+                animate={{ marginLeft: 16 }}
+                transition={{ stiffness: 50 }}
+                layout alt='external-link' src='/images/external-link.svg' className='w-4 h-4 ml-1 mt-0.5' />
             {isRead === false && <RedDotIcon className=' ml-auto' />}
         </Link>
     }
@@ -72,7 +78,7 @@ const NotificationDropdown: FC<Props> = () => {
                     className='w-full h-full flex justify-center items-center'
                 >
                     <img alt="bell" src="/images/bell.svg" />
-                    {notifications.filter(item=>item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute -top-1.5 -right-2' />}
+                    {notifications.filter(item => item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute -top-1.5 -right-2' />}
                 </BorderedContainer>
             }
         >
@@ -82,8 +88,8 @@ const NotificationDropdown: FC<Props> = () => {
                 {notifications.reverse().map((item, index) => {
                     return <NotificationItem key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
                 })}
-                {notifications.filter(item=>item.status === "success").length === 0 && (
-                    <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'> 
+                {notifications.filter(item => item.status === "success").length === 0 && (
+                    <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'>
                         <img alt="bell" src="/images/bell.svg" />
                         <Text size='sm'>Your notifications are empty</Text>
                     </div>

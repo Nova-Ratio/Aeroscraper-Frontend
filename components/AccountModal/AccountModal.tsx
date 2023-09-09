@@ -19,6 +19,7 @@ import Loading from "../Loading/Loading";
 import GradientButton from "../Buttons/GradientButton";
 import ProfilePhotoSlider from "./ProfilePhotosSlider";
 import { AUSD_PRICE } from "@/utils/contractUtils";
+import { ClientEnum } from "@/types/types";
 
 interface Props {
     showModal: boolean,
@@ -129,6 +130,9 @@ const AccountModal: FC<Props> = (props: Props) => {
     useOutsideHandler(avatarSelectRef, closeAvatarSelection);
     useOutsideHandler(qrCodeViewRef, closeQrCodeview);
 
+    let clientType = localStorage.getItem("selectedClientType");
+    let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/account/" : "https://sei.explorers.guru/account/"
+
     return (
         <Modal layoutId="profile" title="Profile" showModal={props.showModal} onClose={closeModal}>
             <div>
@@ -185,8 +189,8 @@ const AccountModal: FC<Props> = (props: Props) => {
                         <div className='flex items-center justify-between'>
                             <Text size='2xl' textColor='text-dark-silver'>Wallet</Text>
                             <div className='flex items-center gap-6'>
-                                <TooltipWrapper title='SeiScan'>
-                                    <a href={`https://sei.explorers.guru/account/${address}`} target='_blank' rel="noreferrer" className='w-6 h-6'>
+                                <TooltipWrapper title={ClientEnum.ARCHWAY === clientType ? "MintScan" : "SeiScan"}>
+                                    <a href={`${scanDomain}${address}`} target='_blank' rel="noreferrer" className='w-6 h-6'>
                                         <img alt='link' src="/images/external-link.svg" className='w-full h-full object-contain' />
                                     </a>
                                 </TooltipWrapper>

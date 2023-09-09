@@ -1,4 +1,5 @@
 import { useNotification } from '@/contexts/NotificationProvider';
+import { ClientEnum } from '@/types/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { FC } from 'react'
 import { ShapeNotification } from '../Icons/Icons'
@@ -24,6 +25,9 @@ const ModalNotification: FC = () => {
 
   const { notification } = useNotification();
 
+  let clientType = localStorage.getItem("selectedClientType");
+  let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/transactions/" : "https://sei.explorers.guru/transaction/"
+
   return (
     <>
       <AnimatePresence>
@@ -44,7 +48,7 @@ const ModalNotification: FC = () => {
                 </div>
                 <span className="text-base font-medium text-white flex-1">{VARIANTS[notification.status].title}</span>
               </div>
-              <a href={notification.directLink ? `https://sei.explorers.guru/transaction/${notification.directLink}` : undefined} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 mt-1.5">
+              <a href={notification.directLink ? `${scanDomain}${notification.directLink}` : undefined} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 mt-1.5">
                 <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
                 <span className="text-white underline font-medium text-base">View Explorer</span>
               </a>
