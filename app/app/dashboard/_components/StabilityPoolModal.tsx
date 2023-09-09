@@ -47,7 +47,8 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       setStakeAmount(0);
       addNotification({
         status: 'success',
-        directLink: res?.transactionHash
+        directLink: res?.transactionHash,
+        message:`${stakeAmount} ausd deposit paid`
       })
       getPageData();
       refreshBalance();
@@ -70,7 +71,8 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       const res = await contract.withdrawLiquidationGains();
       addNotification({
         status: 'success',
-        directLink: res?.transactionHash
+        directLink: res?.transactionHash,
+        message:`${stakeAmount} ausd reward received`
       })
       getPageData();
       refreshBalance();
@@ -95,7 +97,8 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       setUnstakeAmount(0);
       addNotification({
         status: 'success',
-        directLink: res?.transactionHash
+        directLink: res?.transactionHash,
+        message:`${stakeAmount} ausd deposit withdrawn`
       })
       getPageData();
       refreshBalance();

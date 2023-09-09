@@ -38,7 +38,8 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
             const res = await contract.liquidateTroves();
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash
+                directLink: res?.transactionHash,
+                message:'Risky troves successfully liquidated.'
             });
             getPageData();
             getRiskyTroves();

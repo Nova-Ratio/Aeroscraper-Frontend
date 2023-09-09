@@ -2,8 +2,10 @@
 
 import GradientButton from "@/components/Buttons/GradientButton"
 import { Logo, RightArrow, TwitterLogo, DiscordLogo, NovaRatioIcon } from "@/components/Icons/Icons"
+import PYTH from "../public/images/pyth.svg"
 import { Modal } from "@/components/Modal/Modal"
 import Text from "@/components/Texts/Text"
+import Image from "next/image";
 import Link from "next/link"
 import { useState } from "react"
 
@@ -15,11 +17,12 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
             <img src='/images/left-secondary-wave.svg' className='absolute left-0 top-0 w-[60%] max-w-[871px] object-contain -z-20 select-none pointer-events-none' alt="left-wave-shadow" />
             <img src='/images/left-gradient-wave.svg' className='absolute left-0 top-0 w-1/2 max-w-[711px] object-contain -z-10 select-none pointer-events-none' alt="left-wave" />
             <img src='/images/landing-wave.svg' className='absolute right-0 lg:opacity-100 opacity-25 top-[213px] w-1/2 max-w-[900px] object-contain -z-10 select-none pointer-events-none' alt="landing-wave" />
-            <header className='w-full flex flex-col items-end gap-10 pt-8 pb-10 px-8'>
+            <header className='w-full flex flex-col items-end pt-8 pb-10 px-8'>
                 <div className='flex items-center gap-6'>
                     <Text size='4xl'>Aeroscraper</Text>
                     <Logo className='lg:w-[96px] lg:h-[96px] w-[64px] h-[64px]' />
                 </div>
+                <Image src={PYTH} alt={"PYTH"} className="mr-48 mb-10"/>
                 <Link href={"/app/dashboard"}>
                     <GradientButton
                         className='w-full lg:w-[314px] self-end px-8 group'
@@ -108,11 +111,11 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     <Text size="lg" className="mt-4">Intro</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is the first truly decentralized lending protocol built on Sei Network, Archway, Neutron and Shardeum. Its operations are immutable, non-custodial, and governance-free. It is a finished product with no admin keys.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                    The protocol was developed to allow owners of SEI, ARCH, NTRN, ETH, ATOM a method of extracting value from their holdings, without the need to ever sell. By locking up SEI, ARCH, NTRN, ETH, ATOM coins and minting aUSD (a USD pegged stablecoin), a SEI, ARCH, NTRN, ETH, ATOM holder can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
+                        The protocol was developed to allow owners of SEI, ARCH, NTRN, ETH, ATOM a method of extracting value from their holdings, without the need to ever sell. By locking up SEI, ARCH, NTRN, ETH, ATOM coins and minting aUSD (a USD pegged stablecoin), a SEI, ARCH, NTRN, ETH, ATOM holder can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
                     <Text size="lg" className="mt-4">What is Aeroscraper?</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper is a decentralized lending protocol that allows you to draw interest-free loans against SEI, ARCH, NTRN, ETH, ATOM used as collateral.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                    Users deposit SEI, ARCH, NTRN, ETH, ATOM and mint aUSD (stablecoin). These individual collateralized debt positions are called troves. The minted stablecoins are economically geared towards maintaining a value of 1 aUSD = $1 USD of SEI, ARCH, NTRN, ETH, ATOM value, due to the following properties;
+                        Users deposit SEI, ARCH, NTRN, ETH, ATOM and mint aUSD (stablecoin). These individual collateralized debt positions are called troves. The minted stablecoins are economically geared towards maintaining a value of 1 aUSD = $1 USD of SEI, ARCH, NTRN, ETH, ATOM value, due to the following properties;
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
                         1. The system is designed to always be over-collateralized. The dollar value of the locked SEI, ARCH, NTRN, ETH, ATOM exceeds the dollar value of the issued stablecoins.
@@ -125,16 +128,16 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                         The operations are done algorithmically, through a variable issuance fee.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                    After opening a Vault, users mint their own stablecoin to a collateral ratio of at least 115%. As an example, a user with $11,500 worth of SEI, ARCH, NTRN, ETH, ATOM can mint up to 10,000 aUSD.
+                        After opening a Vault, users mint their own stablecoin to a collateral ratio of at least 115%. As an example, a user with $11,500 worth of SEI, ARCH, NTRN, ETH, ATOM can mint up to 10,000 aUSD.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">The tokens are freely exchangeable – anyone can send or receive aUSD tokens. aUSD tokens are burned upon repayment of a Trove’s debt or via a directly redemption process.
                     </Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                    The Aeroscraper system regularly updates the (SEI, ARCH, NTRN, ETH, ATOM):USD price via a decentralized data feed. When a Vault falls below a minimum collateralization ratio (MCR) of 115%, it is considered under-collateralized, and is vulnerable to liquidation. This is to ensure the protocol remains solvent at all times, and 1 aUSD can always be redeemed for $1 USD worth of SEI, ARCH, NTRN, ETH, ATOM.
+                        The Aeroscraper system regularly updates the (SEI, ARCH, NTRN, ETH, ATOM):USD price via a decentralized data feed. When a Vault falls below a minimum collateralization ratio (MCR) of 115%, it is considered under-collateralized, and is vulnerable to liquidation. This is to ensure the protocol remains solvent at all times, and 1 aUSD can always be redeemed for $1 USD worth of SEI, ARCH, NTRN, ETH, ATOM.
                     </Text>
                     <Text size="lg" className="mt-4">What’s the motivation behind Aeroscraper?</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">
-                    The protocol was developed to allow owners of SEI, ARCH, NTRN, ETH, ATOM a method of extracting value from their holdings, without the need to ever sell their tokens. By locking up SEI, ARCH, NTRN, ETH, ATOM and minting aUSD, SEI, ARCH, NTRN, ETH, ATOM holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
+                        The protocol was developed to allow owners of SEI, ARCH, NTRN, ETH, ATOM a method of extracting value from their holdings, without the need to ever sell their tokens. By locking up SEI, ARCH, NTRN, ETH, ATOM and minting aUSD, SEI, ARCH, NTRN, ETH, ATOM holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Stablecoins are an essential building block on any blockchain. However, the vast majority of this value is made up of centralized stablecoins. Decentralized stablecoins make up only a small portion of the total stablecoin supply.</Text>
                     <Text size="sm" className="mt-2" textColor="text-gray-300">Aeroscraper addresses this by creating a more capital-efficient and user-friendly way to borrow a decentralized stablecoin.
                         Furthermore, Aeroscraper is completely immutable, governance-free, and non-custodial.</Text>
