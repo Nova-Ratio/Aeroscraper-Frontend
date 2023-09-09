@@ -82,7 +82,7 @@ const NotificationDropdown: FC<Props> = () => {
                 {notifications.reverse().map((item, index) => {
                     return <NotificationItem key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
                 })}
-                {notifications.length === 0 && (
+                {notifications.filter(item=>item.status === "success").length === 0 && (
                     <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'> 
                         <img alt="bell" src="/images/bell.svg" />
                         <Text size='sm'>Your notifications are empty</Text>
