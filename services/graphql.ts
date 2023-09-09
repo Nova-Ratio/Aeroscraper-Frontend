@@ -1,7 +1,21 @@
-import { RiskyTrovesResponse, TotalTrovesResponse } from '@/types/types';
+import { ClientEnum, RiskyTrovesResponse, TotalTrovesResponse } from '@/types/types';
 import { request, gql } from 'graphql-request'
 
-const URL = process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
+const URL = (): string => {
+    let clientType = localStorage.getItem("selectedClientType");
+
+    switch (clientType) {
+        case ClientEnum.ARCHWAY:
+            return process.env.NEXT_PUBLIC_INDEXER_ARCH as string;
+
+        case ClientEnum.COSMWASM:
+            return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
+
+        default:
+            return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
+    }
+}
+
 
 const getRiskyTrovesQuery = gql`
 query {
@@ -23,9 +37,9 @@ query {
 `
 
 export const requestRiskyTroves = async (): Promise<RiskyTrovesResponse> => {
-    return await request(URL, getRiskyTrovesQuery);
+    return await request(URL(), getRiskyTrovesQuery);
 }
 
 export const requestTotalTroves = async (): Promise<TotalTrovesResponse> => {
-    return await request(URL, getTotalTrovesQuery);
+    return await request(URL(), getTotalTrovesQuery);
 }

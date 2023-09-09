@@ -39,6 +39,8 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
     };
 
     try {
+      if (!notiElement.status) { return }
+      
       let notiArray = JSON.parse(localStorage.getItem('notifications') ?? "");
       notiArray.push(notiElement);
 
