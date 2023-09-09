@@ -160,7 +160,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(item.liquidityThreshold ?? 0)}>{Number(value ?? 0) * (basePrice ?? 0)}</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(Number(value ?? 0) * (basePrice ?? 0) ?? 0)}>{Number(value ?? 0) * (basePrice ?? 0)}</Text>
                                             }
                                         />}
                                     />
