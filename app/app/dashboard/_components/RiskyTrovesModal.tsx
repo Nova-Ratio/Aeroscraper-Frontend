@@ -62,6 +62,9 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
             setLoading(true);
             const res = await requestRiskyTroves();
             const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {
+                console.log("item.liquidityThreshold: ",item.liquidityThreshold)
+                console.log("seiprice:", basePrice)
+                
                 try {
                     const troveRes = await contract.getTroveByAddress(item.owner);
                     return {
@@ -160,7 +163,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
                                             decimalScale={2}
                                             displayType="text"
                                             renderText={(value) =>
-                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(Number(value ?? 0) * (basePrice ?? 0) ?? 0)}>{Number(value ?? 0) * (basePrice ?? 0)}</Text>
+                                                <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}</Text>
                                             }
                                         />}
                                     />
