@@ -44,8 +44,8 @@ export const uniTestnetConfig: AppConfig = {
     chainId: 'pacific-1',
     chainName: 'Sei Mainnet',
     addressPrefix: 'sei',
-    rpcUrl: 'https://sei-rpc.brocha.in/',
-    httpUrl: 'https://sei-rest.brocha.in/',
+    rpcUrl: 'https://rpc-sei.stingray.plus/',
+    httpUrl: 'https://api-sei.stingray.plus/',
     feeToken: 'usei',
     stakingToken: 'usei',
     coinMap: {

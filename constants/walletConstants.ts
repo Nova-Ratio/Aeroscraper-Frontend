@@ -9,7 +9,8 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
         WalletType.KEPLR
     ],
     [ClientEnum.ARCHWAY]: [
-        WalletType.KEPLR
+        WalletType.LEAP,
+        WalletType.KEPLR,        
     ]
 }
 
