@@ -85,7 +85,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash,
-                message: `${borrowingAmount} ${baseCoin?.name} colletral added`
+                message: `${collateralAmount} ${baseCoin?.name} Collateral Added Successfully`
             });
             getPageData();
             refreshBalance();
@@ -112,7 +112,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash,
-                message: `${borrowingAmount} amount withdrawn ${baseCoin?.name}`
+                message: `${collateralAmount} ${baseCoin?.name} Collateral Removed Successfully`
             });
             getPageData();
             refreshBalance();
@@ -139,7 +139,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash,
-                message: `${borrowingAmount} amount ausd borrowed`
+                message: `${borrowingAmount} AUSD Loan Borrowed`
             });
             getPageData();
             refreshBalance();
@@ -166,14 +166,14 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash,
-                message: `${borrowingAmount} amount ausd repaid`
+                message: `${borrowingAmount} AUSD Loan Repayed`
             });
 
             if (borrowingAmount >= pageData.debtAmount) {
                 setTimeout(() => {
                     addNotification({
                         status: 'success',
-                        message: `trove closed successfully`
+                        message: `Trove Closed Successfully`
                     });
                 }, 1000);
             }
@@ -203,7 +203,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash,
-                message: "trove opened successfully"
+                message: "Trove Opened Successfully"
             });
             getPageData();
             refreshBalance();

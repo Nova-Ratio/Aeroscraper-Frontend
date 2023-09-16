@@ -161,7 +161,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
             <GradientButton className={className} onClick={toggleWallet}>
                 {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text>Connect Wallet</Text>}
             </GradientButton>
-            <Modal modalSize='sm' title='Connect Wallet' showModal={walletSelectionOpen}>
+            <Modal childrenClassName='pt-6' modalSize='sm' title='Select Chain&Wallet' showModal={walletSelectionOpen}>
                 <div ref={ref} className='space-y-2 mt-10 mx-10'>
                     {
                         !isNil(clientType) && WalletByClient[clientType].map((walletType, idx) => (

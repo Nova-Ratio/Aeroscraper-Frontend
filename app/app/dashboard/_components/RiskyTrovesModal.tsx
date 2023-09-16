@@ -61,10 +61,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
         try {
             setLoading(true);
             const res = await requestRiskyTroves();
-            const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {
-                console.log("item.liquidityThreshold: ",item.liquidityThreshold)
-                console.log("seiprice:", basePrice)
-                
+            const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {                
                 try {
                     const troveRes = await contract.getTroveByAddress(item.owner);
                     return {

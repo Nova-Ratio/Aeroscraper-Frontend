@@ -19,9 +19,10 @@ interface Props {
   pageData: PageData,
   getPageData: () => void,
   refreshBalance: () => void
+  basePrice: number;
 }
 
-const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
+const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice }) => {
   const { baseCoin } = useWallet();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [seiAmount, setSeiAmount] = useState(0);
@@ -72,7 +73,7 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance }) => {
       notifications.addNotification({
         status: 'success',
         directLink: transactionHash,
-        message: `${redeemAmount} units were reedem as AUSD SEI`
+        message: `${redeemAmount} AUSD has Redeemed, Received ${Number(redeemAmount * basePrice).toFixed(3)} of ${baseCoin?.name}`
       });
 
       getPageData();

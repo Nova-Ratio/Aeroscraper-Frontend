@@ -189,7 +189,7 @@ export default function Dashboard() {
                         />
                     </div>
                 </BorderedContainer>
-                <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} />
+                <RedeemSide pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />
                 <BorderedContainer containerClassName="w-full mt-4" className="p-3">
                     <div className="w-full rounded-lg px-4 py-2">
                         <Text size="2xl" weight="font-normal">Aeroscraper Statics</Text>

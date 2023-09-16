@@ -34,9 +34,6 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
                         }
                     </div>
                 )}
-                <div>
-                    <Text size='xs'>Work in Progress</Text>
-                </div>
             </header>
             <div className='container mx-auto px-8'>
                 {children}
