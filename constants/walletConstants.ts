@@ -43,15 +43,15 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
 export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: string }> = {
     [ClientEnum.COSMWASM]: {
         image: "/images/sei-network.png",
-        thumbnail: ""
+        thumbnail: "sei"
     },
     [ClientEnum.ARCHWAY]: {
         image: "/images/archway.svg",
-        thumbnail: ""
+        thumbnail: "archway"
     },
     [ClientEnum.NEUTRON]: {
-        image: "",
-        thumbnail: ""
+        image: "/images/neutron-network.svg",
+        thumbnail: "neutron"
     }
 }
 
@@ -67,9 +67,9 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         image: "/images/atom.svg",
     },
     [ClientEnum.NEUTRON]: {
-        name: "ATOM",
-        denom: "neutron",
-        image: "/images/atom.svg",
+        name: "NTRN",
+        denom: "untrn",
+        image: "/images/neutron.svg",
     }
 }
 

@@ -23,13 +23,15 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
                     <Logo className='lg:w-[72px] lg:h-[72px] w-[64px] h-[64px]' />
                 </div>
                 {clientType && (
-                    <div className={`flex items-center absolute ${clientType === ClientEnum.ARCHWAY ? "top-20 right-32" : "top-14 right-40"}`}>
+                    <div className={`flex items-center absolute ${clientType === ClientEnum.ARCHWAY ? "top-20 right-32" : clientType === ClientEnum.NEUTRON ? "top-[84px] right-32" : "top-14 right-40"}`}>
                         <Text size='lg'>on</Text>
                         {
                             clientType == ClientEnum.ARCHWAY ?
-                                <img alt={clientType} src={"/images/archway.svg"} className='w-full h-12 -ml-1' />
-                                :
-                                <img alt={clientType} src={"/images/sei-red.svg"} className='w-full h-24 -ml-2' />
+                                <img alt={clientType} src={"/images/archway.svg"} className='w-full h-12 -ml-1' /> :
+                                clientType == ClientEnum.NEUTRON ?
+                                    <img alt={clientType} src={"/images/neutron-network.svg"} className='w-full h-5 ml-2' />
+                                    :
+                                    <img alt={clientType} src={"/images/sei-red.svg"} className='w-full h-24 -ml-2' />
 
                         }
                     </div>

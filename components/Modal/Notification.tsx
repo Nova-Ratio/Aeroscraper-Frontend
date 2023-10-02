@@ -26,7 +26,7 @@ const ModalNotification: FC = () => {
   const { notification } = useNotification();
 
   let clientType = localStorage.getItem("selectedClientType");
-  let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/transactions/" : "https://sei.explorers.guru/transaction/"
+  let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/transactions/" : clientType === ClientEnum.NEUTRON ? "https://neutron.celat.one/transactions/" : "https://sei.explorers.guru/transaction/"
 
   return (
     <>

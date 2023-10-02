@@ -30,7 +30,7 @@ export const mainnetNeutronConfig: AppConfig = {
     feeToken: 'untrn',
     stakingToken: 'untrn',
     coinMap: {
-        NTRN: { denom: 'NTRN', fractionalDigits: 6 },
+        untrn: { denom: 'untrn', fractionalDigits: 6 },
     },
     gasPrice: 0.025,
     fees: {

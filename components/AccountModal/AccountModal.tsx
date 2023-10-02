@@ -131,7 +131,7 @@ const AccountModal: FC<Props> = (props: Props) => {
     useOutsideHandler(qrCodeViewRef, closeQrCodeview);
 
     let clientType = localStorage.getItem("selectedClientType");
-    let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/account/" : "https://sei.explorers.guru/account/"
+    let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/account/" : ClientEnum.ARCHWAY ? "https://neutron.celat.one/account/" : "https://sei.explorers.guru/account/"
 
     return (
         <Modal layoutId="profile" title="Profile" showModal={props.showModal} onClose={closeModal}>

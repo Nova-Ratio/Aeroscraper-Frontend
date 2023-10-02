@@ -82,6 +82,17 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             )
         }
 
+        if (clientType === ClientEnum.NEUTRON) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+                "auto",
+                "Open Trove",
+                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+            )
+        }
+
         const vaa = await getVAA();
         return await client.executeMultiple(
             senderAddress,
@@ -110,6 +121,17 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
 
     const addCollateral = async (senderAddress: string, amount: number) => {
         if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { add_collateral: {} },
+                "auto",
+                "Add Collateral",
+                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+            )
+        }
+
+        if (clientType === ClientEnum.NEUTRON) {
             return await client.execute(
                 senderAddress,
                 contractAddress,
@@ -158,6 +180,17 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             )
         }
 
+        if (clientType === ClientEnum.NEUTRON) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
+                "auto",
+                "Remove Collateral"
+            )
+        }
+
+
         const vaa = await getVAA();
 
         return await client.executeMultiple(
@@ -186,6 +219,16 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
 
     const borrowLoan = async (senderAddress: string, amount: number) => {
         if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { borrow_loan: { loan_amount: getRequestAmount(amount) } },
+                "auto",
+                "Borrow Loan"
+            )
+        }
+
+        if (clientType === ClientEnum.NEUTRON) {
             return await client.execute(
                 senderAddress,
                 contractAddress,
@@ -231,6 +274,16 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
         }
 
         if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                ausdContractAddress,
+                msg,
+                "auto",
+                "Repay Loan"
+            )
+        }
+
+        if (clientType === ClientEnum.NEUTRON) {
             return await client.execute(
                 senderAddress,
                 ausdContractAddress,
@@ -313,6 +366,16 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
             )
         }
 
+        if (clientType === ClientEnum.NEUTRON) {
+            return await client.execute(
+                senderAddress,
+                ausdContractAddress,
+                msg,
+                "auto",
+                "Redeem"
+            )
+        }
+
         const vaa = await getVAA();
 
         return client.executeMultiple(
@@ -341,6 +404,16 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
 
     const liquidateTroves = async (senderAddress: string) => {
         if (clientType === ClientEnum.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { liquidate_troves: {} },
+                "auto",
+                "Liquidate Troves"
+            )
+        }
+
+        if (clientType === ClientEnum.NEUTRON) {
             return await client.execute(
                 senderAddress,
                 contractAddress,

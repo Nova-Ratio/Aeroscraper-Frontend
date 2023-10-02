@@ -33,6 +33,7 @@ export default function Dashboard() {
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
     const [seiPrice, setSeiPrice] = useState(0);
+    const [ntrnPrice, setNtrnPrice] = useState(0.38); // TODO:After updating NTRN data on PYTH, initial value will be 0
     const [atomPrice, setAtomPrice] = useState(0);
     const [pageData, setPageData] = useState<PageData>({
         collateralAmount: 0,
@@ -55,8 +56,10 @@ export default function Dashboard() {
             atomPrice :
             clientType === ClientEnum.COSMWASM ?
                 seiPrice :
-                0,
-        [clientType, seiPrice, atomPrice])
+                clientType === ClientEnum.NEUTRON ?
+                    ntrnPrice :
+                    0,
+        [clientType, seiPrice, atomPrice, ntrnPrice])
 
     useEffect(() => {
         const getPrice = async () => {
@@ -71,7 +74,9 @@ export default function Dashboard() {
 
             const priceIds = [
                 "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
-                "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819"
+                "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819",
+                // TODO:After updating NTRN data on PYTH, comment line will be opened
+                // "8112fed370f3d9751e513f7696472eab61b7f4e2487fd9f46c93de00a338631c"
             ];
 
             const currentPrices = await connection.getLatestPriceFeeds(priceIds);
@@ -79,6 +84,8 @@ export default function Dashboard() {
             if (currentPrices) {
                 setAtomPrice(Number(currentPrices[1].getPriceUnchecked().price) / 100000000)
                 setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
+                 // TODO:After updating NTRN data on PYTH, comment line will be opened
+                // setNtrnPrice(Number(currentPrices[2].getPriceUnchecked().price) / 100000000)
             }
         }
 
