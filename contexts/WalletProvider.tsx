@@ -16,7 +16,7 @@ import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { BaseCoin, ClientEnum } from "@/types/types";
-import { BaseCoinByClient, getBaseCoinByClient } from "@/constants/walletConstants";
+import { getBaseCoinByClient } from "@/constants/walletConstants";
 
 const SideEffects = () => {
     const leap = useLeap();
@@ -72,6 +72,13 @@ export async function createClient(
 
     if (clientType === ClientEnum.ARCHWAY) {
         return SigningArchwayClient.connectWithSigner(config.rpcUrl, signer, {
+            gasPrice: {
+                amount: Decimal.fromUserInput("0.0025", 100),
+                denom: config.feeToken,
+            },
+        });
+    }else if (clientType === ClientEnum.NEUTRON) {        
+        return SigningCosmWasmClient.connectWithSigner(config.rpcUrl, signer, {
             gasPrice: {
                 amount: Decimal.fromUserInput("0.0025", 100),
                 denom: config.feeToken,
@@ -274,7 +281,7 @@ export function WalletProvider({
         if (!signer) return;
         (async function updateClient(): Promise<void> {
             try {
-                setWalletLoading(true);
+                setWalletLoading(true);                
                 const client = await createClient(signer, network, clientType);
                 setClient(client);
             } catch (error) {

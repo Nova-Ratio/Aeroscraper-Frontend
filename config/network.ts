@@ -21,6 +21,25 @@ export const mainnetArchwayConfig: AppConfig = {
     },
 }
 
+export const mainnetNeutronConfig: AppConfig = {
+    chainId: 'neutron-1',
+    chainName: 'neutron',
+    addressPrefix: 'neutron',
+    rpcUrl: 'https://rpc-kralum.neutron-1.neutron.org',
+    httpUrl: 'https://rest-kralum.neutron-1.neutron.org',
+    feeToken: 'untrn',
+    stakingToken: 'untrn',
+    coinMap: {
+        NTRN: { denom: 'NTRN', fractionalDigits: 6 },
+    },
+    gasPrice: 0.025,
+    fees: {
+        upload: 1500000,
+        init: 500000,
+        exec: 200000,
+    },
+}
+
 export const mainnetConfig: AppConfig = {
     chainId: 'pacific-1',
     chainName: 'Sei Mainnet',
@@ -53,11 +72,15 @@ export const uniTestnetConfig: AppConfig = {
     }
 }
 
+
 export const getConfig = (network: string, clientType?: ClientEnum): AppConfig => {
     /* if (network === 'mainnet') return mainnetConfig
     return mainnetConfig */
     if (clientType === ClientEnum.ARCHWAY) {
         return mainnetArchwayConfig
+    }
+    if (clientType === ClientEnum.NEUTRON) {
+        return mainnetNeutronConfig
     }
 
     return uniTestnetConfig

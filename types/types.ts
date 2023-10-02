@@ -1,6 +1,7 @@
 export enum ClientEnum {
     COSMWASM = "COSMWASM",
-    ARCHWAY = "ARCHWAY"
+    ARCHWAY = "ARCHWAY",
+    NEUTRON = "NEUTRON"
 }
 
 export type RiskyTrovesResponse = {

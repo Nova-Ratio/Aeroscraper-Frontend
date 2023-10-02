@@ -10,7 +10,10 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     ],
     [ClientEnum.ARCHWAY]: [
         WalletType.LEAP,
-        WalletType.KEPLR,        
+        WalletType.KEPLR,
+    ],
+    [ClientEnum.NEUTRON]: [
+        WalletType.KEPLR,
     ]
 }
 
@@ -45,6 +48,10 @@ export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: 
     [ClientEnum.ARCHWAY]: {
         image: "/images/archway.svg",
         thumbnail: ""
+    },
+    [ClientEnum.NEUTRON]: {
+        image: "",
+        thumbnail: ""
     }
 }
 
@@ -57,6 +64,11 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     [ClientEnum.ARCHWAY]: {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+        image: "/images/atom.svg",
+    },
+    [ClientEnum.NEUTRON]: {
+        name: "ATOM",
+        denom: "neutron",
         image: "/images/atom.svg",
     }
 }
@@ -78,6 +90,12 @@ export const getContractAddressesByClient = (clientType?: ClientEnum) => {
             contractAddress: process.env.NEXT_PUBLIC_ARCH_CONTRACT_ADDRESS as string,
             ausdContractAddress: process.env.NEXT_PUBLIC_ARCH_AUSD_CONTRACT_ADDRESS as string,
             oraclecontractAddress: ''
+        }
+    } else if (clientType === ClientEnum.NEUTRON) {
+        return {
+            contractAddress: process.env.NEXT_PUBLIC_NEUTRON_CONTRACT_ADDRESS as string,
+            ausdContractAddress: process.env.NEXT_PUBLIC_NEUTRON_AUSD_CONTRACT_ADDRESS as string,
+            oraclecontractAddress: process.env.NEXT_PUBLIC_NEUTRON_ORACLE_CONTRACT_ADDRESS as string
         }
     }
 
