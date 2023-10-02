@@ -39,7 +39,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
             addNotification({
                 status: 'success',
                 directLink: res?.transactionHash,
-                message:'Risky troves successfully liquidated.'
+                message:'Risky Troves Successfully Liquidated.'
             });
             getPageData();
             getRiskyTroves();
