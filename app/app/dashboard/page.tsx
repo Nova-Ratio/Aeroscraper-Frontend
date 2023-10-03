@@ -23,12 +23,11 @@ import { requestTotalTroves } from "@/services/graphql";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import NotificationDropdown from "./_components/NotificationDropdown";
-import { getBaseCoinByClient } from "@/constants/walletConstants";
 import { ClientEnum } from "@/types/types";
 import { isNil } from "lodash";
 
 export default function Dashboard() {
-    const { balanceByDenom, baseCoin, clientType, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, clientType, walletType, refreshBalance } = useWallet();
     const [troveModal, setTroveModal] = useState(false);
     const [stabilityModal, setStabilityModal] = useState(false);
     const [riskyModal, setRiskyModal] = useState(false);
@@ -84,7 +83,7 @@ export default function Dashboard() {
             if (currentPrices) {
                 setAtomPrice(Number(currentPrices[1].getPriceUnchecked().price) / 100000000)
                 setSeiPrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000)
-                 // TODO:After updating NTRN data on PYTH, comment line will be opened
+                // TODO:After updating NTRN data on PYTH, comment line will be opened
                 // setNtrnPrice(Number(currentPrices[2].getPriceUnchecked().price) / 100000000)
             }
         }
@@ -217,7 +216,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="Troves"
-                                description={`${pageData.totalTrovesAmount}`}
+                                description={`${isNil(walletType) ? "-" : pageData.totalTrovesAmount}`}
                                 className="w-[191px] h-14"
                                 tooltip="The total number of active Troves in the system."
                                 tooltipPlacement="top"
@@ -288,7 +287,7 @@ export default function Dashboard() {
                             onClick={() => { setTroveModal(true); }}
                             className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto 2xl:mx-auto"
                             rounded="rounded-lg"
-                            disabled={isNil(baseCoin)}
+                            disabled={isNil(baseCoin) || isNil(walletType)}
                         >
                             <Text>
                                 {
@@ -327,14 +326,14 @@ export default function Dashboard() {
                             onClick={() => { setStabilityModal(true); }}
                             className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto"
                             rounded="rounded-lg"
-                            disabled={isNil(baseCoin)}
+                            disabled={isNil(baseCoin) || isNil(walletType)}
                         >
                             <Text>Enter</Text>
                         </GradientButton>
                     </div>
                 </ShapeContainer>
                 <ShapeContainer layoutId="risky-troves" className="flex-1 cursor-pointer" width="" height="">
-                    <div onClick={() => { setRiskyModal(true); }} className="w-full h-full flex flex-wrap justify-center items-center">
+                    <div onClick={() => { !isNil(walletType) && setRiskyModal(true); }} className="w-full h-full flex flex-wrap justify-center items-center">
                         <Text size="base" className="whitespace-nowrap">Risky Troves</Text>
                         <RightArrow width="24" height="24" />
                     </div>
