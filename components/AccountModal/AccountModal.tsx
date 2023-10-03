@@ -46,7 +46,9 @@ const AccountModal: FC<Props> = (props: Props) => {
     const [photoUrlInput, setPhotoUrlInput] = useState<string>("");
     const [processLoading, setProcessLoading] = useState<{ status: boolean, idx?: number }>({ status: false, idx: -1 });
 
-    const totalDollarBalance = useMemo(() => (props.balance.ausd * AUSD_PRICE) + (props.balance.base * props.basePrice), [props.balance, props.basePrice])
+    const totalDollarBalance = useMemo(() => (props.balance.ausd * AUSD_PRICE) + (props.balance.base * props.basePrice), [props.balance, props.basePrice]);
+
+    const [errorLargeSize, setErrorLargeSize] = useState<boolean>(false);
 
     const openAvatarSelection = () => {
         setAvatarSelectionOpen(true);
@@ -118,6 +120,12 @@ const AccountModal: FC<Props> = (props: Props) => {
                     });
 
                     closeAvatarSelection();
+
+                    setErrorLargeSize(false);
+                }
+
+                if (response.status === 413) {
+                    setErrorLargeSize(true);
                 }
             }
             catch (error) {
@@ -296,6 +304,16 @@ const AccountModal: FC<Props> = (props: Props) => {
                                 </div>
                                 <Text size='sm' className="mx-auto" >or</Text>
                                 <ImageUpload processLoading={processLoading.status} onImageUpload={(e) => { updateProfilePhoto(e); }} />
+                                {errorLargeSize &&
+                                    <motion.div
+                                        onClick={() => { setErrorLargeSize(false); }}
+                                        initial={{ scale: 0.6 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                        className='text-orange-600 p-2 bg-orange-200 rounded text-sm w-full cursor-pointer'>
+                                        Payload too Large (max. 75kb)
+                                    </motion.div>
+                                }
                                 <button onClick={closeAvatarSelection}>
                                     <img alt="close-qr-view" src="/images/close.svg" className='absolute top-5 right-5' />
                                 </button>
