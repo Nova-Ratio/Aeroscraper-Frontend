@@ -14,6 +14,9 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     ],
     [ClientEnum.NEUTRON]: [
         WalletType.KEPLR,
+    ],
+    [ClientEnum.INJECTIVE]: [
+        WalletType.KEPLR,
     ]
 }
 
@@ -52,6 +55,29 @@ export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: 
     [ClientEnum.NEUTRON]: {
         image: "/images/neutron-network.svg",
         thumbnail: "neutron"
+    },
+    [ClientEnum.INJECTIVE]: {
+        image: "/images/injective.svg",
+        thumbnail: "injective"
+    }
+}
+
+export const ClientTransactionUrlByName: Record<ClientEnum, { accountUrl: string, txDetailUrl: string }> = {
+    [ClientEnum.COSMWASM]: {
+        txDetailUrl: "https://sei.explorers.guru/transaction/",
+        accountUrl: "https://sei.explorers.guru/account/"
+    },
+    [ClientEnum.ARCHWAY]: {
+        txDetailUrl: "https://www.mintscan.io/archway/transactions/",
+        accountUrl: "https://www.mintscan.io/archway/account/"
+    },
+    [ClientEnum.NEUTRON]: {
+        txDetailUrl: "https://neutron.celat.one/transactions/",
+        accountUrl: "https://neutron.celat.one/account/"
+    },
+    [ClientEnum.INJECTIVE]: {
+        txDetailUrl: "",
+        accountUrl: ""
     }
 }
 
@@ -70,6 +96,11 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "NTRN",
         denom: "untrn",
         image: "/images/neutron.svg",
+    },
+    [ClientEnum.INJECTIVE]: {
+        name: "INJ",
+        denom: "inj",
+        image: "/images/inj.svg",
     }
 }
 
@@ -96,6 +127,12 @@ export const getContractAddressesByClient = (clientType?: ClientEnum) => {
             contractAddress: process.env.NEXT_PUBLIC_NEUTRON_CONTRACT_ADDRESS as string,
             ausdContractAddress: process.env.NEXT_PUBLIC_NEUTRON_AUSD_CONTRACT_ADDRESS as string,
             oraclecontractAddress: process.env.NEXT_PUBLIC_NEUTRON_ORACLE_CONTRACT_ADDRESS as string
+        }
+    } else if (clientType === ClientEnum.INJECTIVE) {
+        return {
+            contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS as string,
+            ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS as string,
+            oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
         }
     }
 

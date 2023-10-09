@@ -6,7 +6,7 @@ import Text from '@/components/Texts/Text';
 import Info from '@/components/Tooltip/Info';
 import useAppContract from '@/contracts/app/useAppContract';
 import { motion } from 'framer-motion';
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { NumberFormatValues } from 'react-number-format/types/types';
 import { PageData } from '../_types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';

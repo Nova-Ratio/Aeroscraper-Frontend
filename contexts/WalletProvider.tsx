@@ -77,7 +77,7 @@ export async function createClient(
                 denom: config.feeToken,
             },
         });
-    }else if (clientType === ClientEnum.NEUTRON) {        
+    } else if (clientType === ClientEnum.NEUTRON) {
         return SigningCosmWasmClient.connectWithSigner(config.rpcUrl, signer, {
             gasPrice: {
                 amount: Decimal.fromUserInput("0.0025", 100),
@@ -281,7 +281,7 @@ export function WalletProvider({
         if (!signer) return;
         (async function updateClient(): Promise<void> {
             try {
-                setWalletLoading(true);                
+                setWalletLoading(true);
                 const client = await createClient(signer, network, clientType);
                 setClient(client);
             } catch (error) {
