@@ -41,9 +41,9 @@ export default function InjectiveDashboard() {
         }
       )
 
-      const priceId = "7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592";
+      const priceId = ["7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592"];
 
-      const currentPrices = await connection.getLatestPriceFeeds([priceId]);
+      const currentPrices = await connection.getLatestPriceFeeds(priceId);
 
       if (currentPrices) {
         setBasePrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000);

@@ -42,7 +42,7 @@ export default function ArchwayDashboard() {
       )
 
       const priceId = "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819";
-
+      
       const currentPrices = await connection.getLatestPriceFeeds([priceId]);
 
       if (currentPrices) {
