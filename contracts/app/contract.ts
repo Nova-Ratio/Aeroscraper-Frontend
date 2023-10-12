@@ -4,10 +4,30 @@ import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponse } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
-import { ClientEnum } from "@/types/types";
+import { ClientEnum, isClientInjective } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
+import { ChainGrpcWasmApi, MsgExecuteContractCompat, fromBase64, toBase64 } from "@injectivelabs/sdk-ts";
+import { Network, getNetworkEndpoints } from "@injectivelabs/networks";
+import { MsgBroadcaster, WalletStrategy } from '@injectivelabs/wallet-ts'
+import { ChainId } from '@injectivelabs/ts-types';
 
-export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayClient, clientType?: ClientEnum) => {
+const walletStrategy = new WalletStrategy({
+    chainId: ChainId.Testnet
+});
+
+const NETWORK = Network.Testnet;
+const ENDPOINTS = getNetworkEndpoints(NETWORK);
+
+const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
+const msgBroadcastClient = new MsgBroadcaster({
+    walletStrategy,
+    network: NETWORK,
+});
+
+export const getAppContract = (
+    client: SigningArchwayClient | SigningCosmWasmClient,
+    clientType?: ClientEnum
+) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
 
     //GET QUERIES
@@ -33,44 +53,114 @@ export const getAppContract = (client: SigningCosmWasmClient | SigningArchwayCli
     }
 
     const getTotalCollateralAmount = async (): Promise<string> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_collateral_amount: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { total_collateral_amount: {} });
     }
 
     const getTotalDebtAmount = async (): Promise<string> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_debt_amount: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { total_debt_amount: {} });
     }
 
     const getTrove = async (user_addr: string): Promise<GetTroveResponse> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ trove: { user_addr } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { trove: { user_addr } });
     }
 
     const getStake = async (user_addr: string): Promise<GetStakeResponse> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ stake: { user_addr } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { stake: { user_addr } });
     }
 
     const getTotalStake = async (): Promise<string> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_stake_amount: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { total_stake_amount: {} });
     }
 
     const getCollateralPrice = async () => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ collateral_price: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { collateral_price: {} });
     }
 
     const getAusdBalance = async (address: string): Promise<CW20BalanceResponse> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(ausdContractAddress, toBase64({ balance: { address } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(ausdContractAddress, { balance: { address } })
     }
 
     const getAusdInfo = async (): Promise<CW20TokenInfoResponse> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(ausdContractAddress, toBase64({ token_info: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(ausdContractAddress, { token_info: {} })
     }
 
     const getReward = async (user_addr: string): Promise<string> => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ liquidation_gains: { user_addr } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
+        }
+
         return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
     }
 
-
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContractCompat.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: {
+                    open_trove: {
+                        loan_amount: getRequestAmount(loanAmount)
+                    }
+                },
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: msg,
+                injectiveAddress: senderAddress
+            })
+        }
+
         if (clientType === ClientEnum.ARCHWAY) {
             return await client.execute(
                 senderAddress,
