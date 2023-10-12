@@ -153,6 +153,7 @@ export const getAppContract = (
                         loan_amount: getRequestAmount(loanAmount)
                     }
                 },
+                funds: [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
             })
 
             return await msgBroadcastClient.broadcast({
