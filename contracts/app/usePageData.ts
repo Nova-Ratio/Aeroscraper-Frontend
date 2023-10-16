@@ -1,4 +1,5 @@
 import { PageData } from "@/app/app/dashboard/_types/types";
+import { useWallet } from "@/contexts/WalletProvider";
 import { requestTotalTroves } from "@/services/graphql";
 import { convertAmount } from "@/utils/contractUtils";
 import { getSettledValue } from "@/utils/promiseUtils";
@@ -12,6 +13,8 @@ interface Props {
 const usePageData = ({ basePrice }: Props) => {
 
   const contract = useAppContract();
+
+  const { baseCoin } = useWallet();
 
   const [pageData, setPageData] = useState<PageData>({
     collateralAmount: 0,
@@ -53,20 +56,20 @@ const usePageData = ({ basePrice }: Props) => {
         requestTotalTroves()
       ]);
 
-      const collateralAmount = convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0)
-      const debtAmount = convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0)
+      const collateralAmount = convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0, baseCoin?.decimal)
+      const debtAmount = convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0, baseCoin?.ausdDecimal)
 
       setPageData({
         collateralAmount,
         debtAmount,
-        ausdBalance: convertAmount(getSettledValue(ausdBalanceRes)?.balance ?? 0),
-        stakedAmount: convertAmount(getSettledValue(stakeRes)?.amount ?? 0),
-        totalCollateralAmount: convertAmount(getSettledValue(totalCollateralRes) ?? 0),
-        totalDebtAmount: convertAmount(getSettledValue(totalDebtRes) ?? 0),
-        totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0),
-        totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0),
+        ausdBalance: convertAmount(getSettledValue(ausdBalanceRes)?.balance ?? 0, baseCoin?.decimal),
+        stakedAmount: convertAmount(getSettledValue(stakeRes)?.amount ?? 0, baseCoin?.decimal),
+        totalCollateralAmount: convertAmount(getSettledValue(totalCollateralRes) ?? 0, baseCoin?.decimal),
+        totalDebtAmount: convertAmount(getSettledValue(totalDebtRes) ?? 0, baseCoin?.ausdDecimal),
+        totalAusdSupply: convertAmount(getSettledValue(ausdInfoRes)?.total_supply ?? 0, baseCoin?.ausdDecimal),
+        totalStakedAmount: convertAmount(getSettledValue(totalStakeRes) ?? 0, baseCoin?.decimal),
         poolShare: Number(Number(getSettledValue(stakeRes)?.percentage).toFixed(3)),
-        rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0),
+        rewardAmount: convertAmount(getSettledValue(rewardRes) ?? 0, baseCoin?.decimal),
         minCollateralRatio: (collateralAmount * basePrice) / (debtAmount || 1),
         minRedeemAmount: basePrice,
         totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
@@ -91,7 +94,7 @@ const usePageData = ({ basePrice }: Props) => {
         totalTrovesAmount: 0
       })
     }
-  }, [contract, basePrice])
+  }, [contract, basePrice,baseCoin])
 
   useEffect(() => {
     getPageData();

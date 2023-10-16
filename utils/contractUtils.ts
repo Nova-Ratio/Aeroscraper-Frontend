@@ -1,6 +1,10 @@
+import { ClientEnum } from "@/types/types";
+import { ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { toBase64, toUtf8 } from "@cosmjs/encoding";
 import { Coin, EncodeObject } from "@cosmjs/proto-signing";
+import { TxResponse } from "@injectivelabs/sdk-ts";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
+import { isNil } from "lodash";
 
 const DEFAULT_DECIMAL = 6;
 export const AUSD_PRICE = 1;
@@ -87,3 +91,5 @@ export const getRatioText = (value: number) => {
 
     return "Troves below 115% collateral ratio will be liquidated. Your trove is in the safe range."
 }
+
+export const getIsInjectiveResponse = (res?: ExecuteResult | TxResponse): res is TxResponse => !isNil((res as (TxResponse | undefined))?.txHash)

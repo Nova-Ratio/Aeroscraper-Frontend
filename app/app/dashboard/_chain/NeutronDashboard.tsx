@@ -59,7 +59,7 @@ export default function NeutronDashboard() {
             <NotificationDropdown pageData={pageData} />
             <WalletButton
               ausdBalance={pageData.ausdBalance}
-              baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)) : 0}
+              baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0,baseCoin.decimal)) : 0}
               basePrice={basePrice}
             />
           </div>

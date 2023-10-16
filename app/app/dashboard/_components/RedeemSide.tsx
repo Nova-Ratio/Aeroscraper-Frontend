@@ -3,7 +3,7 @@ import OutlinedButton from '@/components/Buttons/OutlinedButton'
 import BorderedContainer from '@/components/Containers/BorderedContainer'
 import { Logo, RedeemIcon } from '@/components/Icons/Icons'
 import BorderedNumberInput from '@/components/Input/BorderedNumberInput'
-import { getValueByRatio } from '@/utils/contractUtils'
+import { getIsInjectiveResponse, getValueByRatio } from '@/utils/contractUtils'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { NumberFormatValues, NumericFormat } from 'react-number-format'
@@ -62,7 +62,7 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance, basePric
 
       const res = await contract.redeem(redeemAmount);
 
-      transactionHash = res?.transactionHash;
+      transactionHash = getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash;
 
       setNotification(
         {

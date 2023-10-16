@@ -4,12 +4,13 @@ import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponse } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
-import { ClientEnum, isClientInjective } from "@/types/types";
+import { BaseCoin, ClientEnum } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
-import { ChainGrpcWasmApi, MsgExecuteContractCompat, fromBase64, toBase64 } from "@injectivelabs/sdk-ts";
+import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract, MsgExecuteContractCompat } from "@injectivelabs/sdk-ts";
 import { Network, getNetworkEndpoints } from "@injectivelabs/networks";
 import { MsgBroadcaster, WalletStrategy } from '@injectivelabs/wallet-ts'
 import { ChainId } from '@injectivelabs/ts-types';
+import { isNil } from "lodash";
 
 const walletStrategy = new WalletStrategy({
     chainId: ChainId.Testnet
@@ -26,6 +27,7 @@ const msgBroadcastClient = new MsgBroadcaster({
 
 export const getAppContract = (
     client: SigningArchwayClient | SigningCosmWasmClient,
+    baseCoin: BaseCoin,
     clientType?: ClientEnum
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
@@ -33,7 +35,19 @@ export const getAppContract = (
     //GET QUERIES
 
     const getVAA = async (): Promise<any> => {
-        const connection = new PriceServiceConnection("https://xc-mainnet.pyth.network/",
+        if (isNil(clientType)) {
+            throw new Error("Error getting client")
+        }
+
+        const priceIdByCLient: Record<ClientEnum, { priceId: string, serviceUrl: string }> = {
+            [ClientEnum.COSMWASM]: { priceId: "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb", serviceUrl: "https://xc-mainnet.pyth.network/" },
+            [ClientEnum.ARCHWAY]: { priceId: "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb", serviceUrl: "https://xc-mainnet.pyth.network/" },
+            [ClientEnum.NEUTRON]: { priceId: "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb", serviceUrl: "https://xc-mainnet.pyth.network/" },
+            [ClientEnum.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://xc-testnet.pyth.network/" },
+        }
+
+
+        const connection = new PriceServiceConnection(priceIdByCLient[clientType!].serviceUrl,
             {
                 priceFeedRequestConfig: {
                     binary: true,
@@ -41,9 +55,7 @@ export const getAppContract = (
             }
         )
 
-        const priceIds = ["53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb"];
-
-        const res = await connection.getLatestPriceFeeds(priceIds);
+        const res = await connection.getLatestPriceFeeds([priceIdByCLient[clientType!].priceId]);
 
         if (res) {
             return res[0].getVAA()
@@ -144,20 +156,36 @@ export const getAppContract = (
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
+
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg = MsgExecuteContractCompat.fromJSON({
+            const vaa = await getVAA();
+
+            const msg = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
                 contractAddress: contractAddress,
                 sender: senderAddress,
                 msg: {
                     open_trove: {
-                        loan_amount: getRequestAmount(loanAmount)
+                        loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal)
                     }
                 },
-                funds: [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
             })
 
             return await msgBroadcastClient.broadcast({
-                msgs: msg,
+                msgs: [msg, msg1],
                 injectiveAddress: senderAddress
             })
         }
@@ -166,10 +194,10 @@ export const getAppContract = (
             return await client.execute(
                 senderAddress,
                 contractAddress,
-                { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+                { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
                 "auto",
                 "Open Trove",
-                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
             )
         }
 
@@ -177,14 +205,15 @@ export const getAppContract = (
             return await client.execute(
                 senderAddress,
                 contractAddress,
-                { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
+                { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
                 "auto",
                 "Open Trove",
-                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
             )
         }
 
         const vaa = await getVAA();
+
         return await client.executeMultiple(
             senderAddress,
             [
@@ -201,8 +230,8 @@ export const getAppContract = (
                 },
                 {
                     contractAddress,
-                    msg: { open_trove: { loan_amount: getRequestAmount(loanAmount) } },
-                    funds: [coin(getRequestAmount(amount), "usei")]
+                    msg: { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
+                    funds: [coin(getRequestAmount(amount, baseCoin.decimal), "usei")]
                 }
             ],
             "auto",
@@ -218,7 +247,7 @@ export const getAppContract = (
                 { add_collateral: {} },
                 "auto",
                 "Add Collateral",
-                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
             )
         }
 
@@ -229,11 +258,38 @@ export const getAppContract = (
                 { add_collateral: {} },
                 "auto",
                 "Add Collateral",
-                [coin(getRequestAmount(amount), BaseCoinByClient[clientType].denom)]
+                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
             )
         }
 
         const vaa = await getVAA();
+
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { add_collateral: {} },
+                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: [msg, msg1],
+                injectiveAddress: senderAddress
+            })
+        }
 
         return await client.executeMultiple(
             senderAddress,
@@ -252,7 +308,7 @@ export const getAppContract = (
                 {
                     contractAddress,
                     msg: { add_collateral: {} },
-                    funds: [coin(getRequestAmount(amount), "usei")]
+                    funds: [coin(getRequestAmount(amount, baseCoin.decimal), "usei")]
                 }
             ],
             "auto",
@@ -265,7 +321,7 @@ export const getAppContract = (
             return await client.execute(
                 senderAddress,
                 contractAddress,
-                { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
+                { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } },
                 "auto",
                 "Remove Collateral"
             )
@@ -275,14 +331,39 @@ export const getAppContract = (
             return await client.execute(
                 senderAddress,
                 contractAddress,
-                { remove_collateral: { collateral_amount: getRequestAmount(amount) } },
+                { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } },
                 "auto",
                 "Remove Collateral"
             )
         }
 
-
         const vaa = await getVAA();
+
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } }
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: [msg, msg1],
+                injectiveAddress: senderAddress
+            })
+        }
 
         return await client.executeMultiple(
             senderAddress,
@@ -300,7 +381,7 @@ export const getAppContract = (
                 },
                 {
                     contractAddress,
-                    msg: { remove_collateral: { collateral_amount: getRequestAmount(amount) } }
+                    msg: { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } }
                 }
             ],
             "auto",
@@ -313,7 +394,7 @@ export const getAppContract = (
             return await client.execute(
                 senderAddress,
                 contractAddress,
-                { borrow_loan: { loan_amount: getRequestAmount(amount) } },
+                { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
                 "auto",
                 "Borrow Loan"
             )
@@ -323,13 +404,39 @@ export const getAppContract = (
             return await client.execute(
                 senderAddress,
                 contractAddress,
-                { borrow_loan: { loan_amount: getRequestAmount(amount) } },
+                { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
                 "auto",
                 "Borrow Loan"
             )
         }
 
         const vaa = await getVAA();
+
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: [msg, msg1],
+                injectiveAddress: senderAddress
+            })
+        }
 
         return await client.executeMultiple(
             senderAddress,
@@ -347,7 +454,7 @@ export const getAppContract = (
                 },
                 {
                     contractAddress,
-                    msg: { borrow_loan: { loan_amount: getRequestAmount(amount) } }
+                    msg: { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
                 }
             ],
             "auto",
@@ -359,7 +466,7 @@ export const getAppContract = (
         const msg = {
             send: {
                 contract: contractAddress,
-                amount: getRequestAmount(amount),
+                amount: getRequestAmount(amount, baseCoin.ausdDecimal),
                 msg: jsonToBinary({ repay_loan: {} })
             }
         }
@@ -385,6 +492,32 @@ export const getAppContract = (
         }
 
         const vaa = await getVAA();
+
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msgVAA = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: ausdContractAddress,
+                sender: senderAddress,
+                msg
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: [msgVAA, msg1],
+                injectiveAddress: senderAddress
+            })
+        }
 
         return await client.executeMultiple(
             senderAddress,
@@ -414,9 +547,22 @@ export const getAppContract = (
         const msg = {
             send: {
                 contract: contractAddress,
-                amount: getRequestAmount(amount),
+                amount: getRequestAmount(amount, baseCoin.ausdDecimal),
                 msg: jsonToBinary({ stake: {} })
             }
+        }
+
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: ausdContractAddress,
+                sender: senderAddress,
+                msg
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: msg1,
+                injectiveAddress: senderAddress
+            })
         }
 
         return client.execute(
@@ -429,10 +575,23 @@ export const getAppContract = (
     }
 
     const unstake = async (senderAddress: string, amount: number) => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: msg1,
+                injectiveAddress: senderAddress
+            })
+        }
+
         return await client.execute(
             senderAddress,
             contractAddress,
-            { unstake: { amount: getRequestAmount(amount) } },
+            { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
             "auto",
             "Unstake"
         )
@@ -442,7 +601,7 @@ export const getAppContract = (
         const msg = {
             send: {
                 contract: contractAddress,
-                amount: getRequestAmount(amount),
+                amount: getRequestAmount(amount, baseCoin.decimal),
                 msg: jsonToBinary({ redeem: {} })
             }
         }
@@ -468,6 +627,32 @@ export const getAppContract = (
         }
 
         const vaa = await getVAA();
+
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg0 = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress: ausdContractAddress,
+                sender: senderAddress,
+                msg
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: [msg0, msg1],
+                injectiveAddress: senderAddress
+            })
+        }
 
         return client.executeMultiple(
             senderAddress,
@@ -516,6 +701,32 @@ export const getAppContract = (
 
         const vaa = await getVAA();
 
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg0 = MsgExecuteContract.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContract.fromJSON({
+                contractAddress,
+                sender: senderAddress,
+                msg: { liquidate_troves: {} }
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: [msg0, msg1],
+                injectiveAddress: senderAddress
+            })
+        }
+
         return await client.executeMultiple(
             senderAddress,
             [
@@ -541,6 +752,19 @@ export const getAppContract = (
     }
 
     const withdrawLiquidationGains = async (senderAddress: string) => {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContract.fromJSON({
+                contractAddress,
+                sender: senderAddress,
+                msg: { withdraw_liquidation_gains: {} }
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: msg,
+                injectiveAddress: senderAddress
+            })
+        }
+
         return await client.execute(
             senderAddress,
             contractAddress,

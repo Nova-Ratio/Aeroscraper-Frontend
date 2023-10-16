@@ -11,7 +11,7 @@ import useAppContract from '@/contracts/app/useAppContract';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { requestRiskyTroves } from '@/services/graphql';
 import { RiskyTroves } from '@/types/types';
-import { convertAmount, getRatioColor } from '@/utils/contractUtils';
+import { convertAmount, getIsInjectiveResponse, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import { useWallet } from '@/contexts/WalletProvider';
@@ -38,8 +38,8 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
             const res = await contract.liquidateTroves();
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash,
-                message:'Risky Troves Successfully Liquidated.'
+                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
+                message: 'Risky Troves Successfully Liquidated.'
             });
             getPageData();
             getRiskyTroves();
@@ -61,14 +61,14 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
         try {
             setLoading(true);
             const res = await requestRiskyTroves();
-            const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {                
+            const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {
                 try {
                     const troveRes = await contract.getTroveByAddress(item.owner);
                     return {
                         owner: item.owner,
                         liquidityThreshold: item.liquidityThreshold,
-                        collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0),
-                        debtAmount: convertAmount(troveRes?.debt_amount ?? 0)
+                        collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal),
+                        debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)
                     }
                 }
                 catch (err) {
@@ -89,7 +89,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
         finally {
             setLoading(false);
         }
-    }, [contract])
+    }, [contract, baseCoin])
 
     useEffect(() => {
         getRiskyTroves();

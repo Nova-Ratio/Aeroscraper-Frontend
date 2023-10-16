@@ -59,7 +59,7 @@ export default function Dashboard() {
                         <NotificationDropdown pageData={{} as PageData} />
                         <WalletButton
                             ausdBalance={0}
-                            baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)) : 0}
+                            baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
                             basePrice={0}
                         />
                     </div>
