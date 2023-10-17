@@ -30,6 +30,29 @@ export default function NeutronDashboard() {
   const [basePrice, setBasePrice] = useState(1); // TODO:After updating NTRN data on PYTH, initial value will be 0
   const { pageData, getPageData } = usePageData({ basePrice });
 
+  useEffect(() => {
+    const getPrice = async () => {
+      const connection = new PriceServiceConnection(
+        "https://xc-testnet.pyth.network/",
+        {
+          priceFeedRequestConfig: {
+            binary: true,
+          },
+        }
+      )
+
+      const priceId = ["8112fed370f3d9751e513f7696472eab61b7f4e2487fd9f46c93de00a338631c"];
+
+      const currentPrices = await connection.getLatestPriceFeeds(priceId);
+
+      if (currentPrices) {
+        setBasePrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000);
+      }
+    }
+
+    getPrice()
+  }, [])
+  
   const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
   return (

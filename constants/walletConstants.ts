@@ -108,7 +108,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         denom: "inj",
         image: "/images/inj.svg",
         decimal: 18,
-        ausdDecimal: 12
+        ausdDecimal: 18
     }
 }
 
