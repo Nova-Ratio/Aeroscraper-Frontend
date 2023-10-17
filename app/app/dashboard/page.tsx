@@ -92,7 +92,7 @@ export default function Dashboard() {
                             />
                             <StatisticCard
                                 title="AUSD Supply"
-                                description={"0.000"}
+                                description={"-"}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD minted by the Aeroscraper Protocol."
                                 tooltipPlacement="top"
@@ -107,14 +107,14 @@ export default function Dashboard() {
                             <StatisticCard
                                 title="AUSD in Stability Pool"
                                 tooltipPlacement="top"
-                                description={"0.000"}
+                                description={"-"}
                                 className="w-[191px] h-14"
                                 tooltip="The total AUSD currently held in the Stability Pool."
                             />
                             <StatisticCard
                                 title="Total Collateral Ratio"
                                 tooltipPlacement="top"
-                                description={"0 %"}
+                                description={"- %"}
                                 className="w-[191px] h-14"
                                 tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.name}:AUSD price, to the entire system debt.`}
                             />

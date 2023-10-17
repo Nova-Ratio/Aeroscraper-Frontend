@@ -170,7 +170,7 @@ export const getAppContract = (
                         ]
                     }
                 },
-                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContract.fromJSON({
@@ -181,7 +181,7 @@ export const getAppContract = (
                         loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal)
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
             })
 
             return await msgBroadcastClient.broadcast({
