@@ -41,15 +41,15 @@ export const testnetInjectiveConfig: AppConfig = {
 }
 
 export const mainnetNeutronConfig: AppConfig = {
-    chainId: 'neutron-1',
-    chainName: 'neutron',
+    chainId: 'pion-1',
+    chainName: 'Neutron Testnet',
     addressPrefix: 'neutron',
-    rpcUrl: 'https://rpc-kralum.neutron-1.neutron.org',
-    httpUrl: 'https://rest-kralum.neutron-1.neutron.org',
+    rpcUrl: 'https://rpc-palvus.pion-1.ntrn.tech',
+    httpUrl: 'https://rest-palvus.pion-1.ntrn.tech',
     feeToken: 'untrn',
     stakingToken: 'untrn',
     coinMap: {
-        untrn: { denom: 'untrn', fractionalDigits: 6 },
+        NTRN: { denom: 'untrn', fractionalDigits: 6 },
     },
     gasPrice: 0.025,
     fees: {
