@@ -20,8 +20,10 @@ module.exports = {
       'english-violet': '#543B59',
       'dark-red': '#D43752',
       'chinese-bronze': '#D48237',
+      'chinese-black': '#150A17',
       'ufo-green': '#37D489'
     }
-  },
+  }
+  ,
   plugins: [],
 }

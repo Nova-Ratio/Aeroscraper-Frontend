@@ -1,6 +1,6 @@
 import GradientButton from '@/components/Buttons/GradientButton';
 import InputLayout from '@/components/Input/InputLayout';
-import { Modal } from '@/components/Modal/Modal';
+import { WaveModal } from '@/components/Modal/WaveModal';
 import Text from '@/components/Texts/Text';
 import Info from '@/components/Tooltip/Info';
 import React, { FC, useMemo, useState } from 'react'
@@ -120,7 +120,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
   }
 
   return (
-    <Modal processLoading={processLoading} key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={open} onClose={() => { onClose?.(); }}>
+    <WaveModal processLoading={processLoading} key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={open} onClose={() => { onClose?.(); }}>
       <div className="-ml-4">
         <Info message={"Enter the amount of AUSD you'd like to deposit/withdraw."} status={"normal"} />
         <div className={`flex flex-row w-2/3 ml-10 gap-6 mt-6 ${pageData.stakedAmount > 0 ? "mb-10" : ""}`}>
@@ -236,7 +236,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
           </motion.div>
         )}
       </div>
-    </Modal >
+    </WaveModal >
   )
 }
 

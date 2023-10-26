@@ -4,7 +4,10 @@ import useOutsideHandler from "@/hooks/useOutsideHandler";
 import { motion } from "framer-motion";
 import { FunctionComponent, ReactElement, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
+import ShapeContainer from "../Containers/ShapeContainer";
+import Text from '@/components/Texts/Text';
 import { CloseIcon } from "../Icons/Icons";
+import ModalNotification from "./Notification";
 
 interface ModalProps {
   title?: string,
@@ -12,20 +15,23 @@ interface ModalProps {
   showModal: boolean,
   onClose?: () => void,
   modalSize?: "sm" | "md" | "lg",
+  childrenClassName?: string,
+  layoutId?: string,
+  processLoading?: boolean
 }
 
 const SIZE_VARIANT = {
   'sm': {
-    width: 'w-[65%]',
-    height: 'h-[65%]',
+    width: 'w-[660px]',
+    height: 'h-[660px]',
   },
   'md': {
-    width: 'w-[65%]',
-    height: 'h-[65%]',
+    width: 'w-[1140px]',
+    height: 'h-[1100px]',
   },
   'lg': {
-    width: 'w-[65%]',
-    height: 'h-[65%]',
+    width: 'w-[1140px]',
+    height: 'h-[1100px]',
   }
 }
 
@@ -35,7 +41,13 @@ const TITLE_SIZE_VARIANT: Record<string, 'lg' | 'base' | '2xl'> = {
   'lg': '2xl'
 }
 
-export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...props }: ModalProps) => {
+const TITLE_POSITION_VARIANT: Record<string, string> = {
+  'sm': '-top-4',
+  'md': 'base',
+  'lg': '-top-16'
+}
+
+export const WaveModal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...props }: ModalProps) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -75,21 +87,32 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
     <div className="inset-0 fixed flex items-center justify-center px-2 z-50">
       <motion.div
         ref={ref}
-        initial={{ scale: 0.85, opacity: 0.8 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{
+        initial={props.layoutId ? undefined : { scale: 0.85, opacity: 0.8 }}
+        animate={props.layoutId ? undefined : { scale: 1, opacity: 1 }}
+        transition={props.layoutId ? undefined : {
           type: "spring",
           stiffness: 200,
           damping: 25,
         }}
-        className={`z-[70] ${SIZE_VARIANT[modalSize].width} bg-chinese-black rounded-[28px] relative`}
+        className={`z-[60]`}
+        layoutId={props.layoutId}
       >
-        <button onClick={closeModal} className="absolute top-8 right-8">
-          <CloseIcon className="w-6 h-6" />
-        </button>
-        {props.children}
+        <ShapeContainer hasAnimation={props.processLoading} width={SIZE_VARIANT[modalSize].width} height={SIZE_VARIANT[modalSize].height}>
+          <div className={`w-1/2 absolute flex justify-between ${TITLE_POSITION_VARIANT[modalSize]}`}>
+            <Text size={TITLE_SIZE_VARIANT[modalSize]}>{props.title}</Text>
+            <button onClick={closeModal}>
+              <CloseIcon className="w-6 h-6" />
+            </button>
+          </div>
+          <div className={props.childrenClassName}>
+            {props.children}
+          </div>
+          <div className='absolute -right-10 top-0 overflow-hidden'>
+            <ModalNotification />
+          </div>
+        </ShapeContainer>
       </motion.div>
-      <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60 backdrop-blur-[1px]"></div>
+      <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60"></div>
     </div>
     , document.body);
 };

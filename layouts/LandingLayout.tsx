@@ -3,7 +3,7 @@
 import GradientButton from "@/components/Buttons/GradientButton"
 import { Logo, RightArrow, TwitterLogo, DiscordLogo, NovaRatioIcon } from "@/components/Icons/Icons"
 import PYTH from "../public/images/pyth.svg"
-import { Modal } from "@/components/Modal/Modal"
+import { WaveModal } from "@/components/Modal/WaveModal"
 import Text from "@/components/Texts/Text"
 import Image from "next/image";
 import Link from "next/link"
@@ -102,7 +102,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                 </Text>
             </Modal> */}
 
-            <Modal title="Whitepaper" showModal={whiteSpaceModal} onClose={() => { setWhiteSpaceModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
+            <WaveModal title="Whitepaper" showModal={whiteSpaceModal} onClose={() => { setWhiteSpaceModal(false); }} childrenClassName="h-[70%] overflow-y-scroll mt-10">
                 <>
                     <Text size="2xl">Aeroscraper</Text>
                     <Text size="base" className="mt-2">Governance-free, interest-free, decentralized lending-borrowing protocol.</Text>
@@ -163,7 +163,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
 
 
                 </>
-            </Modal>
+            </WaveModal>
         </>
     )
 }

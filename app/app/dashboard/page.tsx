@@ -25,7 +25,7 @@ export default function Dashboard() {
     const { balanceByDenom, baseCoin, walletType, clientType, refreshBalance } = useWallet();
 
     if (!isNil(walletType) && !isNil(clientType)) {
-        if (clientType === ClientEnum.COSMWASM) {
+        if (clientType === ClientEnum.SEI) {
             return <SeiDashboard />
         }
 

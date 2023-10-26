@@ -5,9 +5,8 @@ import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { FC, useMemo, useRef, useState } from "react";
-import { Modal } from "../Modal/Modal";
+import { WaveModal } from "../Modal/WaveModal";
 import TooltipWrapper from "./TooltipWrapper";
 import QRCode from 'react-qr-code';
 import { WalletType } from "@/enums/WalletType";
@@ -143,7 +142,7 @@ const AccountModal: FC<Props> = (props: Props) => {
     let scanDomain = ClientTransactionUrlByName[clientType]?.accountUrl
 
     return (
-        <Modal layoutId="profile" title="Profile" showModal={props.showModal} onClose={closeModal}>
+        <WaveModal layoutId="profile" title="Profile" showModal={props.showModal} onClose={closeModal}>
             <div>
                 <div className="flex items-center gap-14 mb-4">
                     <div onClick={openAvatarSelection} className="secondary-gradient w-[148px] h-[148px] p-0.5 rounded-lg flex justify-between items-center gap-2 cursor-pointer">
@@ -323,7 +322,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                     }
                 </AnimatePresence>
             </div>
-        </Modal>
+        </WaveModal>
     )
 }
 

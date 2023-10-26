@@ -31,6 +31,12 @@ body::-webkit-scrollbar {
   margin-block: 0.2em;
 }
 
+@layer components{
+  .gradient-background {
+    @apply  main-gradient transition-all delay-300
+  }
+}
+
 @keyframes gradient-animation {
   0% {
     stop-color: #56235C;

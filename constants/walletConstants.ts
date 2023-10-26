@@ -2,7 +2,7 @@ import { WalletType } from "@/enums/WalletType";
 import { BaseCoin, ClientEnum } from "@/types/types";
 
 export const WalletByClient: Record<ClientEnum, WalletType[]> = {
-    [ClientEnum.COSMWASM]: [
+    [ClientEnum.SEI]: [
         WalletType.LEAP,
         WalletType.COMPASS,
         WalletType.FIN,
@@ -45,7 +45,7 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
 }
 
 export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: string }> = {
-    [ClientEnum.COSMWASM]: {
+    [ClientEnum.SEI]: {
         image: "/images/sei-network.png",
         thumbnail: "sei"
     },
@@ -64,7 +64,7 @@ export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: 
 }
 
 export const ClientTransactionUrlByName: Record<ClientEnum, { accountUrl: string, txDetailUrl: string }> = {
-    [ClientEnum.COSMWASM]: {
+    [ClientEnum.SEI]: {
         txDetailUrl: "https://sei.explorers.guru/transaction/",
         accountUrl: "https://sei.explorers.guru/account/"
     },
@@ -83,7 +83,7 @@ export const ClientTransactionUrlByName: Record<ClientEnum, { accountUrl: string
 }
 
 export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
-    [ClientEnum.COSMWASM]: {
+    [ClientEnum.SEI]: {
         name: "SEI",
         denom: "usei",
         image: "/images/sei.png",
@@ -93,7 +93,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     [ClientEnum.ARCHWAY]: {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-        image: "/images/atom.svg",
+        image: "/images/archway.svg",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -118,7 +118,7 @@ export const getBaseCoinByClient = (clientType?: ClientEnum) => {
 }
 
 export const getContractAddressesByClient = (clientType?: ClientEnum) => {
-    if (clientType === ClientEnum.COSMWASM) {
+    if (clientType === ClientEnum.SEI) {
         return {
             contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
             ausdContractAddress: process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string,

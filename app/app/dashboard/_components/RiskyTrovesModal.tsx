@@ -1,5 +1,5 @@
 import GradientButton from '@/components/Buttons/GradientButton';
-import { Modal } from '@/components/Modal/Modal';
+import { WaveModal } from '@/components/Modal/WaveModal';
 import { Table } from '@/components/Table/Table';
 import { TableBodyCol } from '@/components/Table/TableBodyCol';
 import { TableHeaderCol } from '@/components/Table/TableHeaderCol';
@@ -96,7 +96,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
     }, [getRiskyTroves])
 
     return (
-        <Modal
+        <WaveModal
             layoutId="risky-troves"
             title="Risky Troves"
             showModal={open}
@@ -178,7 +178,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
                     </GradientButton>
                 </div>
             </>
-        </Modal>
+        </WaveModal>
     )
 }
 

@@ -11,7 +11,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     const { clientType } = useWallet();
 
     const chainTheme: Record<ClientEnum, ReactNode> = {
-        [ClientEnum.COSMWASM]: <PrimaryTheme clientType={ClientEnum.COSMWASM} />,
+        [ClientEnum.SEI]: <PrimaryTheme clientType={ClientEnum.SEI} />,
         [ClientEnum.ARCHWAY]: <PrimaryTheme clientType={ClientEnum.ARCHWAY} />,
         [ClientEnum.NEUTRON]: <PrimaryTheme clientType={ClientEnum.NEUTRON} />,
         [ClientEnum.INJECTIVE]: <PrimaryTheme clientType={ClientEnum.INJECTIVE} />,

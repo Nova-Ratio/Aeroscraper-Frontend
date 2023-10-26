@@ -6,20 +6,19 @@ import { useWallet } from '@/contexts/WalletProvider'
 import { useKeplr } from '@/services/keplr'
 import Text from '@/components/Texts/Text'
 import { WalletInfoMap, WalletType } from '@/enums/WalletType'
-import { AnimatePresence, motion } from 'framer-motion'
-import BorderedContainer from '../Containers/BorderedContainer'
+import { motion } from 'framer-motion'
 import useOutsideHandler from '@/hooks/useOutsideHandler'
 import { useCompass } from '@/services/compass'
 import { useFin } from '@/services/fin'
 import { useLeap } from '@/services/leap'
 import Loading from '../Loading/Loading'
-import { Modal } from '../Modal/Modal'
 import AccountModal from '../AccountModal/AccountModal'
 import { NumericFormat } from 'react-number-format'
-import { CounterUp } from '../CounterUp'
-import { ClientImagesByName, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
+import { BaseCoinByClient, ClientImagesByName, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
 import { isNil } from 'lodash'
 import { ClientEnum } from '@/types/types'
+import { Modal } from '../Modal/Modal'
+import { LogoSecondary } from '../Icons/Icons'
 
 type Props = {
     ausdBalance?: number;
@@ -157,30 +156,55 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     }
 
     return (
-        <div className='relative' ref={ref}>
+        <div className='relative'>
             <GradientButton className={className} onClick={toggleWallet}>
                 {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text>Connect Wallet</Text>}
             </GradientButton>
-            <Modal childrenClassName='pt-6' modalSize='sm' title='Select Chain&Wallet' showModal={walletSelectionOpen}>
-                <div ref={ref} className='space-y-2 mt-10 mx-10'>
-                    {
-                        !isNil(clientType) && WalletByClient[clientType]?.map((walletType, idx) => (
-                            <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(walletType); }}>
-                                <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                                    <img alt={walletType} src={WalletImagesByName[walletType].image} />
-                                </div>
-                            </GradientButton>
-                        ))
-                    }
-                    {
-                        isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
-                            <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
-                                <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
-                                    <img alt={clientType} src={ClientImagesByName[clientType].image} className='w-full px-10' />
-                                </div>
-                            </GradientButton>
-                        ))
-                    }
+            <Modal modalSize='lg' showModal={walletSelectionOpen}>
+                <div ref={ref} className='flex h-[644px]'>
+                    <div className='pt-10 px-8 border-r border-white/10'>
+                        <h2 className='text-[#F7F7FF] text-2xl font-medium'>Connect Wallet</h2>
+                        <div className='space-y-2 mt-10'>
+                            {
+                                !isNil(clientType) && WalletByClient[clientType].map((walletType, idx) => (
+                                    <button key={idx} className='flex rounded border border-white/10 px-6 py-2 scale-90 gap-2 items-center hover:gradient-background' onClick={() => { connectWallet(walletType); }}>
+                                        <img alt={walletType} src={WalletImagesByName[walletType].image} />
+                                    </button>
+                                ))
+                            }
+                        </div>
+                    </div>
+                    <div className={`flex-1 flex flex-col items-center justify-center text-center`}>
+                        {!isNil(clientType) ?
+                            (
+                                <motion.div
+                                    initial={{ opacity: 0.1 }}
+                                    animate={{ opacity: 1 }}
+                                >
+                                    <LogoSecondary className='w-40 h-40 mb-10 mx-auto' />
+                                    <p className='text-base font-medium text-[#989396]'>Before you start,</p>
+                                    <h3 className='text-white text-3xl font-medium'>Please choose your wallet</h3>
+                                </motion.div>
+                            )
+                            :
+                            (
+                                <>
+                                    <p className='text-base font-medium text-[#989396]'>Before you start,</p>
+                                    <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
+                                    <div className='space-y-6 mt-10'>
+                                        {
+                                            isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
+                                                <button key={idx} className='flex rounded border border-white/10 px-6 py-2 gap-2 items-center hover:gradient-background mx-auto' onClick={() => { selectClient(clientType); }}>
+                                                    <img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />
+                                                    <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
+                                                </button>
+                                            ))
+                                        }
+                                    </div>
+                                </>
+                            )
+                        }
+                    </div>
                 </div>
             </Modal>
         </div>
@@ -188,3 +212,24 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
 }
 
 export default WalletButton
+
+{/* <div ref={ref} className='space-y-2 mt-10 mx-10'>
+{
+    !isNil(clientType) && WalletByClient[clientType].map((walletType, idx) => (
+        <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { connectWallet(walletType); }}>
+            <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                <img alt={walletType} src={WalletImagesByName[walletType].image} />
+            </div>
+        </GradientButton>
+    ))
+}
+{
+    isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
+        <GradientButton key={idx} rounded='rounded-lg' className='w-full h-12 px-[2px]' onClick={() => { selectClient(clientType); }}>
+            <div className='w-full h-11 flex justify-center items-center rounded-[6px] bg-dark-purple'>
+                <img alt={clientType} src={ClientImagesByName[clientType].image} className='w-full px-10' />
+            </div>
+        </GradientButton>
+    ))
+}
+</div> */}

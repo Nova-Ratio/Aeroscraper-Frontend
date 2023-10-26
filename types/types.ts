@@ -3,7 +3,7 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { InjectiveStargate } from "@injectivelabs/sdk-ts";
 
 export enum ClientEnum {
-    COSMWASM = "COSMWASM",
+    SEI = "SEI",
     ARCHWAY = "ARCHWAY",
     NEUTRON = "NEUTRON",
     INJECTIVE = "INJECTIVE",
