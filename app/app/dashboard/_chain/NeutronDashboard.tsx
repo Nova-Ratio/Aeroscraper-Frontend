@@ -33,7 +33,7 @@ export default function NeutronDashboard() {
   useEffect(() => {
     const getPrice = async () => {
       const connection = new PriceServiceConnection(
-        "https://xc-testnet.pyth.network/",
+        "https://hermes-beta.pyth.network/",
         {
           priceFeedRequestConfig: {
             binary: true,
