@@ -2,6 +2,7 @@
 
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { SigningArchwayClient } from "@archwayhq/arch3.js"
+import { InjectiveStargate } from "@injectivelabs/sdk-ts"
 import { OfflineSigner } from "@cosmjs/proto-signing";
 import { Coin } from "@cosmjs/stargate";
 import { Dictionary, isNil } from "lodash";
@@ -67,7 +68,7 @@ export async function createClient(
     signer: OfflineSigner,
     network: string,
     clientType?: ClientEnum
-): Promise<SigningCosmWasmClient | SigningArchwayClient> {
+): Promise<SigningCosmWasmClient | SigningArchwayClient | InjectiveStargate.InjectiveSigningStargateClient> {
     const config = getConfig(network, clientType);
 
     if (clientType === ClientEnum.ARCHWAY) {
@@ -77,13 +78,15 @@ export async function createClient(
                 denom: config.feeToken,
             },
         });
-    }else if (clientType === ClientEnum.NEUTRON) {        
+    } else if (clientType === ClientEnum.NEUTRON) {
         return SigningCosmWasmClient.connectWithSigner(config.rpcUrl, signer, {
             gasPrice: {
                 amount: Decimal.fromUserInput("0.0025", 100),
                 denom: config.feeToken,
             },
         });
+    } else if (clientType === ClientEnum.INJECTIVE) {
+        return InjectiveStargate.InjectiveSigningStargateClient.connectWithSigner(config.rpcUrl, signer)
     }
 
     return SigningCosmWasmClient.connectWithSigner(config.rpcUrl, signer, {
@@ -102,7 +105,7 @@ export interface WalletContextType {
     readonly name: string;
     readonly balance: readonly Coin[];
     readonly refreshBalance: () => Promise<void>;
-    readonly getClient: () => SigningCosmWasmClient | SigningArchwayClient;
+    readonly getClient: () => SigningArchwayClient | SigningCosmWasmClient | InjectiveStargate.InjectiveSigningStargateClient;
     readonly getSigner: () => OfflineSigner;
     readonly updateSigner: (singer: OfflineSigner) => void;
     readonly network: string;
@@ -176,7 +179,7 @@ export function WalletProvider({
     const [walletLoading, setWalletLoading] = useState(false);
     const [processLoader, setProcessLoader] = useState(false);
     const [signer, setSigner] = useState<OfflineSigner>();
-    const [client, setClient] = useState<SigningCosmWasmClient | SigningArchwayClient>();
+    const [client, setClient] = useState<SigningArchwayClient | SigningCosmWasmClient | InjectiveStargate.InjectiveSigningStargateClient>();
     const [walletType, setWalletType] = useState<WalletType | undefined>(undefined);
     const [clientType, setClientType] = useState<ClientEnum | undefined>(undefined);
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
@@ -281,7 +284,7 @@ export function WalletProvider({
         if (!signer) return;
         (async function updateClient(): Promise<void> {
             try {
-                setWalletLoading(true);                
+                setWalletLoading(true);
                 const client = await createClient(signer, network, clientType);
                 setClient(client);
             } catch (error) {

@@ -20,6 +20,7 @@ import GradientButton from "../Buttons/GradientButton";
 import ProfilePhotoSlider from "./ProfilePhotosSlider";
 import { AUSD_PRICE } from "@/utils/contractUtils";
 import { ClientEnum } from "@/types/types";
+import { ClientTransactionUrlByName } from "@/constants/walletConstants";
 
 interface Props {
     showModal: boolean,
@@ -138,8 +139,8 @@ const AccountModal: FC<Props> = (props: Props) => {
     useOutsideHandler(avatarSelectRef, closeAvatarSelection);
     useOutsideHandler(qrCodeViewRef, closeQrCodeview);
 
-    let clientType = localStorage.getItem("selectedClientType");
-    let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/account/" : ClientEnum.ARCHWAY ? "https://neutron.celat.one/account/" : "https://sei.explorers.guru/account/"
+    let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+    let scanDomain = ClientTransactionUrlByName[clientType]?.accountUrl
 
     return (
         <Modal layoutId="profile" title="Profile" showModal={props.showModal} onClose={closeModal}>

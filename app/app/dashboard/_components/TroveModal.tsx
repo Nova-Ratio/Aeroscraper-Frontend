@@ -6,14 +6,14 @@ import Text from '@/components/Texts/Text';
 import Info from '@/components/Tooltip/Info';
 import useAppContract from '@/contracts/app/useAppContract';
 import { motion } from 'framer-motion';
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { NumberFormatValues } from 'react-number-format/types/types';
 import { PageData } from '../_types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
-import { convertAmount, getRatioColor, getRatioText } from '@/utils/contractUtils';
+import { convertAmount, getIsInjectiveResponse, getRatioColor, getRatioText } from '@/utils/contractUtils';
 import { isNil } from 'lodash';
 
 enum TABS {
@@ -31,7 +31,7 @@ type Props = {
 
 const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice }) => {
     const contract = useAppContract();
-    const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
+    const { balanceByDenom, baseCoin, refreshBalance, clientType } = useWallet();
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
     const [borrowAmount, setBorrowAmount] = useState<number>(0);
     const [collateralAmount, setCollateralAmount] = useState<number>(0);
@@ -84,7 +84,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
 
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash,
+                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
                 message: `${collateralAmount} ${baseCoin?.name} Collateral Added Successfully`
             });
             getPageData();
@@ -103,6 +103,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
         setProcessLoading(false);
     }
 
+
     const queryWithdraw = async () => {
         setProcessLoading(true);
 
@@ -111,7 +112,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
 
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash,
+                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
                 message: `${collateralAmount} ${baseCoin?.name} Collateral Removed Successfully`
             });
             getPageData();
@@ -138,7 +139,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
 
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash,
+                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
                 message: `${borrowingAmount} AUSD Loan Borrowed`
             });
             getPageData();
@@ -165,7 +166,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
 
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash,
+                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
                 message: `${borrowingAmount} AUSD Loan Repayed`
             });
 
@@ -202,7 +203,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
 
             addNotification({
                 status: 'success',
-                directLink: res?.transactionHash,
+                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
                 message: "Trove Opened Successfully"
             });
             getPageData();
@@ -242,7 +243,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                                             <InputLayout
                                                 label='In Wallet'
                                                 hintTitle={baseCoin?.name}
-                                                value={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)).toFixed(3) : 0}
+                                                value={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)).toFixed(3) : 0}
                                                 bgVariant='transparent'
                                                 inputClassName='w-full pr-[20%] text-end'
                                                 disabled
@@ -256,7 +257,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                                                 disabled
                                             />
                                         </BorderedContainer>
-                                        <InputLayout label="Collateral" hintTitle={baseCoin?.name} className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0)) : 0)} hasPercentButton={{ max: false, min: false }} />
+                                        <InputLayout label="Collateral" hintTitle={baseCoin?.name} className='mt-2' value={collateralAmount} onValueChange={changeCollateralAmount} maxButtonClick={() => setCollateralAmount(!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0)} hasPercentButton={{ max: false, min: false }} />
                                         <div className='grid grid-cols-2 gap-6 gap-y-4 p-4'>
                                             <StatisticCard
                                                 title='Management Fee'

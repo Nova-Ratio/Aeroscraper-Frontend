@@ -11,6 +11,7 @@ import useAppContract from '@/contracts/app/useAppContract';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { PageData } from '../_types/types';
 import { useWallet } from '@/contexts/WalletProvider';
+import { getIsInjectiveResponse } from '@/utils/contractUtils';
 
 enum TABS {
   DEPOSIT = 0,
@@ -47,7 +48,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       setStakeAmount(0);
       addNotification({
         status: 'success',
-        directLink: res?.transactionHash,
+        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
         message:`${stakeAmount} AUSD Staked to Stability Pool`
       })
       getPageData();
@@ -71,7 +72,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       const res = await contract.withdrawLiquidationGains();
       addNotification({
         status: 'success',
-        directLink: res?.transactionHash,
+        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
         message:`${stakeAmount} AUSD Reward Received from Stability Pool`
       })
       getPageData();
@@ -97,7 +98,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       setUnstakeAmount(0);
       addNotification({
         status: 'success',
-        directLink: res?.transactionHash,
+        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
         message:`${stakeAmount} AUSD Unstaked from Stability Pool`
       })
       getPageData();

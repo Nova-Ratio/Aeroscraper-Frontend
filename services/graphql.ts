@@ -7,10 +7,12 @@ const URL = (): string => {
     switch (clientType) {
         case ClientEnum.ARCHWAY:
             return process.env.NEXT_PUBLIC_INDEXER_ARCH as string;
-
         case ClientEnum.COSMWASM:
             return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
-
+        case ClientEnum.NEUTRON:
+            return process.env.NEXT_PUBLIC_INDEXER_NEUTRON as string;
+        case ClientEnum.INJECTIVE:
+            return process.env.NEXT_PUBLIC_INDEXER_INJ as string;
         default:
             return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
     }

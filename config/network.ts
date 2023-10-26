@@ -21,16 +21,16 @@ export const mainnetArchwayConfig: AppConfig = {
     },
 }
 
-export const mainnetNeutronConfig: AppConfig = {
-    chainId: 'neutron-1',
-    chainName: 'neutron',
-    addressPrefix: 'neutron',
-    rpcUrl: 'https://rpc-kralum.neutron-1.neutron.org',
-    httpUrl: 'https://rest-kralum.neutron-1.neutron.org',
-    feeToken: 'untrn',
-    stakingToken: 'untrn',
+export const testnetInjectiveConfig: AppConfig = {
+    chainId: 'injective-888',
+    chainName: 'Injective (Testnet)',
+    addressPrefix: 'inj',
+    rpcUrl: 'https://k8s.testnet.tm.injective.network',
+    httpUrl: 'https://k8s.testnet.lcd.injective.network',
+    feeToken: 'inj',
+    stakingToken: 'inj',
     coinMap: {
-        untrn: { denom: 'untrn', fractionalDigits: 6 },
+        inj: { denom: 'inj', fractionalDigits: 18 }
     },
     gasPrice: 0.025,
     fees: {
@@ -40,7 +40,45 @@ export const mainnetNeutronConfig: AppConfig = {
     },
 }
 
-export const mainnetConfig: AppConfig = {
+export const mainnetNeutronConfig: AppConfig = {
+    chainId: 'pion-1',
+    chainName: 'Neutron Testnet',
+    addressPrefix: 'neutron',
+    rpcUrl: 'https://rpc-palvus.pion-1.ntrn.tech',
+    httpUrl: 'https://rest-palvus.pion-1.ntrn.tech',
+    feeToken: 'untrn',
+    stakingToken: 'untrn',
+    coinMap: {
+        NTRN: { denom: 'untrn', fractionalDigits: 6 },
+    },
+    gasPrice: 0.025,
+    fees: {
+        upload: 1500000,
+        init: 500000,
+        exec: 200000,
+    },
+}
+
+export const mainnetNibiruConfig: AppConfig = {
+    chainId: 'nibiru-itn-3',
+    chainName: 'nibiru-itn-3',
+    addressPrefix: 'nibiru',
+    rpcUrl: 'https://rpc.itn-3.nibiru.fi/',
+    httpUrl: 'https://lcd.itn-3.nibiru.fi/',
+    feeToken: 'unibi',
+    stakingToken: 'unibi',
+    coinMap: {
+        unibi: { denom: 'unibi', fractionalDigits: 6 },
+    },
+    gasPrice: 0.025,
+    fees: {
+        upload: 1500000,
+        init: 500000,
+        exec: 200000,
+    },
+}
+
+export const mainnetSeiConfig: AppConfig = {
     chainId: 'pacific-1',
     chainName: 'Sei Mainnet',
     addressPrefix: 'sei',
@@ -81,6 +119,9 @@ export const getConfig = (network: string, clientType?: ClientEnum): AppConfig =
     }
     if (clientType === ClientEnum.NEUTRON) {
         return mainnetNeutronConfig
+    }
+    if (clientType === ClientEnum.INJECTIVE) {
+        return testnetInjectiveConfig
     }
 
     return uniTestnetConfig

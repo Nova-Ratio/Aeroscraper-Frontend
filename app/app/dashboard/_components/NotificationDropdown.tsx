@@ -8,6 +8,7 @@ import { INotification, useNotification } from '@/contexts/NotificationProvider'
 import Link from 'next/link';
 import { ClientEnum } from '@/types/types';
 import { motion } from 'framer-motion';
+import { ClientTransactionUrlByName } from '@/constants/walletConstants';
 
 type Props = {
     pageData: PageData;
@@ -21,8 +22,9 @@ type ItemProps = {
 }
 
 const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider = true }) => {
-    let clientType = localStorage.getItem("selectedClientType");
-    let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/transactions/" : clientType === ClientEnum.NEUTRON ? "https://neutron.celat.one/transactions/" : "https://sei.explorers.guru/transaction/"
+
+    let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+    let scanDomain = ClientTransactionUrlByName[clientType]?.txDetailUrl
 
     if (!text) {
         return null

@@ -1,3 +1,4 @@
+import { ClientTransactionUrlByName } from '@/constants/walletConstants';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { ClientEnum } from '@/types/types';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -25,8 +26,8 @@ const ModalNotification: FC = () => {
 
   const { notification } = useNotification();
 
-  let clientType = localStorage.getItem("selectedClientType");
-  let scanDomain = clientType === ClientEnum.ARCHWAY ? "https://www.mintscan.io/archway/transactions/" : clientType === ClientEnum.NEUTRON ? "https://neutron.celat.one/transactions/" : "https://sei.explorers.guru/transaction/"
+  let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+  let scanDomain = ClientTransactionUrlByName[clientType]?.txDetailUrl
 
   return (
     <>
@@ -35,7 +36,7 @@ const ModalNotification: FC = () => {
           <motion.div
             initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ opacity: 0,scale:0 }}
+            exit={{ opacity: 0, scale: 0 }}
             transition={{
               duration: 0.5,
               ease: "backInOut"

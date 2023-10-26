@@ -2,11 +2,14 @@ import { useWallet } from "@/contexts/WalletProvider"
 import { useCallback, useMemo } from "react";
 import { getAppContract } from "./contract";
 import { isNil } from "lodash";
+import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 const useAppContract = () => {
     const wallet = useWallet();
 
-    const contract = useMemo(() => wallet.initialized ? getAppContract(wallet.getClient(), wallet.clientType) : undefined, [wallet]);
+    //TODO: Remove client type convertion after adding all transaction methods
+    const contract = useMemo(() => (wallet.initialized && !isNil(wallet.baseCoin)) ? getAppContract(wallet.getClient() as SigningArchwayClient | SigningCosmWasmClient, wallet.baseCoin, wallet.clientType) : undefined, [wallet]);
 
     const getTotalCollateralAmount = useCallback(async () => {
         if (isNil(contract)) return;
