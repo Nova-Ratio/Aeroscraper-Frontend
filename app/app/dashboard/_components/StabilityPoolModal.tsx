@@ -145,7 +145,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
           >
             <InputLayout label="Deposit" hintTitle="AUSD" className='mb-4' value={stakeAmount} onValueChange={(e) => { setStakeAmount(Number(e.value)); }} maxButtonClick={() => setStakeAmount(pageData.ausdBalance)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
-                <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
+                <img alt="aero" className="w-6 h-6" src="/images/token-images/ausd.svg" />
                 <NumericFormat
                   value={pageData.ausdBalance}
                   thousandsGroupStyle="thousand"
@@ -207,7 +207,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
           >
             <InputLayout label="Withdraw" hintTitle="AUSD" className='mb-4' value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} maxButtonClick={() => setUnstakeAmount(pageData.stakedAmount)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
               <div className='flex justify-end mt-2 mr-5'>
-                <img alt="ausd" className="w-6 h-6" src="/images/ausd.svg" />
+                <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd.svg" />
                 <NumericFormat
                   value={pageData.stakedAmount}
                   thousandsGroupStyle="thousand"

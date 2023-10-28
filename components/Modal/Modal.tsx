@@ -84,7 +84,7 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
         }}
         className={`z-[70] ${SIZE_VARIANT[modalSize].width} bg-chinese-black rounded-[28px] relative`}
       >
-        <button onClick={closeModal} className="absolute top-8 right-8">
+        <button onClick={closeModal} className="absolute top-8 right-8 z-[100]">
           <CloseIcon className="w-6 h-6" />
         </button>
         {props.children}

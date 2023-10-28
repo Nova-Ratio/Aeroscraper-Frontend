@@ -86,28 +86,28 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     [ClientEnum.SEI]: {
         name: "SEI",
         denom: "usei",
-        image: "/images/sei.png",
+        image: "/images/token-images/sei.png",
         decimal: 6,
         ausdDecimal: 6
     },
     [ClientEnum.ARCHWAY]: {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-        image: "/images/archway.svg",
+        image: "/images/token-images/archway.svg",
         decimal: 6,
         ausdDecimal: 6
     },
     [ClientEnum.NEUTRON]: {
         name: "NTRN",
         denom: "untrn",
-        image: "/images/neutron.svg",
+        image: "/images/token-images/neutron.svg",
         decimal: 6,
         ausdDecimal: 6
     },
     [ClientEnum.INJECTIVE]: {
         name: "INJ",
         denom: "inj",
-        image: "/images/inj.svg",
+        image: "/images/token-images/inj.svg",
         decimal: 18,
         ausdDecimal: 18
     }

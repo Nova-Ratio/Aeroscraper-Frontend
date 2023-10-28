@@ -19,6 +19,7 @@ import { isNil } from 'lodash'
 import { ClientEnum } from '@/types/types'
 import { Modal } from '../Modal/Modal'
 import { LogoSecondary } from '../Icons/Icons'
+import Button from './Button'
 
 type Props = {
     ausdBalance?: number;
@@ -114,7 +115,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                             </div>
                         </div>
                         <div className='flex items-center mt-2'>
-                            <img alt="aero" className="w-6 h-6" src="/images/ausd.svg" />
+                            <img alt="aero" className="w-6 h-6" src="/images/token-images/ausd.svg" />
                             <NumericFormat
                                 value={ausdBalance}
                                 thousandsGroupStyle="thousand"
@@ -164,45 +165,49 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                 <div ref={ref} className='flex h-[644px]'>
                     <div className='pt-10 px-8 border-r border-white/10'>
                         <h2 className='text-[#F7F7FF] text-2xl font-medium'>Connect Wallet</h2>
-                        <div className='space-y-2 mt-10'>
+                        <div className={`space-y-2 mt-10 ${isNil(clientType) ? "opacity-50" : ""}`}>
                             {
                                 !isNil(clientType) && WalletByClient[clientType].map((walletType, idx) => (
-                                    <button key={idx} className='flex rounded border border-white/10 px-6 py-2 scale-90 gap-2 items-center hover:gradient-background' onClick={() => { connectWallet(walletType); }}>
-                                        <img alt={walletType} src={WalletImagesByName[walletType].image} />
-                                    </button>
+                                    <Button
+                                        key={idx}
+                                        onClick={() => { connectWallet(walletType); }}
+                                        startIcon={<img alt={walletType} src={WalletImagesByName[walletType].image} />}
+                                    >
+                                        <span className='text-[18px] font-medium text-ghost-white'>{walletType}</span>
+                                    </Button>
                                 ))
                             }
                         </div>
                     </div>
-                    <div className={`flex-1 flex flex-col items-center justify-center text-center`}>
+                    <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl ${!isNil(clientType) ? "bg-black/40 opacity-50" : ""}`}>
                         {!isNil(clientType) ?
-                            (
-                                <motion.div
-                                    initial={{ opacity: 0.1 }}
-                                    animate={{ opacity: 1 }}
-                                >
-                                    <LogoSecondary className='w-40 h-40 mb-10 mx-auto' />
-                                    <p className='text-base font-medium text-[#989396]'>Before you start,</p>
-                                    <h3 className='text-white text-3xl font-medium'>Please choose your wallet</h3>
-                                </motion.div>
+                            (<motion.div
+                                initial={{ opacity: 0.1 }}
+                                animate={{ opacity: 1 }}
+                            >
+                                <LogoSecondary className='w-40 h-40 mb-10 mx-auto' />
+                                <p className='text-base font-medium text-[#989396]'>Before you start,</p>
+                                <h3 className='text-white text-3xl font-medium'>Please choose your wallet</h3>
+                            </motion.div>
                             )
                             :
-                            (
-                                <>
-                                    <p className='text-base font-medium text-[#989396]'>Before you start,</p>
-                                    <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
-                                    <div className='space-y-6 mt-10'>
-                                        {
-                                            isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
-                                                <button key={idx} className='flex rounded border border-white/10 px-6 py-2 gap-2 items-center hover:gradient-background mx-auto' onClick={() => { selectClient(clientType); }}>
-                                                    <img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />
-                                                    <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
-                                                </button>
-                                            ))
-                                        }
-                                    </div>
-                                </>
-                            )
+                            (<>
+                                <p className='text-base font-medium text-[#989396]'>Before you start,</p>
+                                <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
+                                <div className='space-y-6 mt-10'>
+                                    {
+                                        isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
+                                            <Button
+                                                key={idx}
+                                                onClick={() => { selectClient(clientType); }}
+                                                startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />}
+                                            >
+                                                <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
+                                            </Button>
+                                        ))
+                                    }
+                                </div>
+                            </>)
                         }
                     </div>
                 </div>
