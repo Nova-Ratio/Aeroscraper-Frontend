@@ -1,18 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import Text from "@/components/Texts/Text"
-import { LogoSecondary } from '@/components/Icons/Icons';
+import { ExitIcon, LogoSecondary } from '@/components/Icons/Icons';
 import NotificationDropdown from '@/app/app/dashboard/_components/NotificationDropdown';
 import usePageData from '@/contracts/app/usePageData';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { useWallet } from '@/contexts/WalletProvider';
 import { isNil } from 'lodash';
 import { WalletInfoMap, WalletType } from '@/enums/WalletType';
+import { useCompass } from '@/services/compass';
+import { useFin } from '@/services/fin';
+import { useKeplr } from '@/services/keplr';
+import { useLeap } from '@/services/leap';
+import InjectiveAccountModal from '@/components/AccountModal/InjectiveAccountModal';
+import { convertAmount } from '@/utils/contractUtils';
 
 const InjeciveTheme = () => {
   const { balanceByDenom, baseCoin, walletType, refreshBalance } = useWallet();
   const [basePrice, setBasePrice] = useState(0);
   const { pageData, getPageData } = usePageData({ basePrice });
   const wallet = useWallet();
+
+  const keplr = useKeplr();
+  const leap = useLeap();
+  const fin = useFin();
+  const compass = useCompass();
+
+  const [accountModal, setAccountModal] = useState(false);
 
   useEffect(() => {
     const getPrice = async () => {
@@ -37,6 +50,14 @@ const InjeciveTheme = () => {
     getPrice()
   }, []);
 
+  const disconnect = () => {
+    keplr.disconnect();
+    leap.disconnect();
+    fin.disconnect();
+    compass.disconnect();
+    localStorage.removeItem("profile-detail");
+  }
+
   return (
     <header className='mb-[88px] mx-[85px] mt-8 flex justify-between items-center'>
       <div className='flex items-center gap-2'>
@@ -50,13 +71,13 @@ const InjeciveTheme = () => {
         </div>
         {
           !isNil(baseCoin) &&
-          <div className="flex items-center gap-2 mr-16">
+          <div className="flex items-center gap-2 mr-12">
             <Text size='base'>$ {basePrice.toFixed(3)}</Text>
             <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.image} />
           </div>
         }
         <NotificationDropdown />
-        <div className='flex ml-16 gap-2'>
+        <button onClick={() => { setAccountModal(true); }} className='flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300'>
           <img
             alt="user-profile-image"
             src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
@@ -64,15 +85,25 @@ const InjeciveTheme = () => {
           />
           <div className='flex flex-col'>
             <div className='flex items-center ml-auto'>
-              <img alt={wallet.walletType} className='w-4 h-4 object-contain' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
+              <img alt={wallet.walletType} className='w-4 h-4 object-contain rounded' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
               <Text size='lg' weight='font-regular' className='truncate ml-2'>{wallet.name}</Text>
             </div>
             <Text size='sm'>{wallet.address.slice(32)}...{wallet.address.slice(-5)}</Text>
             <div>
             </div>
           </div>
-        </div>
+          <button className='w-12 h-12 flex items-center justify-center' onClick={disconnect}>
+            <ExitIcon className='text-white'/>
+          </button>
+        </button>
       </div>
+
+      <InjectiveAccountModal
+        balance={{ ausd: pageData.ausdBalance, base: !isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0 }}
+        basePrice={basePrice}
+        showModal={accountModal}
+        onClose={() => { setAccountModal(false); }}
+      />
     </header>
   )
 }

@@ -23,19 +23,19 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
 
 export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: string }> = {
     [WalletType.KEPLR]: {
-        image: "/images/keplr-dark.svg",
+        image: "/images/wallet-images/keplr-dark.svg",
         thumbnail: ""
     },
     [WalletType.LEAP]: {
-        image: "/images/leap-dark.svg",
+        image: "/images/wallet-images/leap-dark.svg",
         thumbnail: ""
     },
     [WalletType.FIN]: {
-        image: "/images/fin.png",
+        image: "/images/wallet-images/fin.png",
         thumbnail: ""
     },
     [WalletType.COMPASS]: {
-        image: "/images/compass.png",
+        image: "/images/wallet-images/compass.png",
         thumbnail: ""
     },
     [WalletType.NOT_SELECTED]: {
@@ -46,19 +46,19 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
 
 export const ClientImagesByName: Record<ClientEnum, { image: string, thumbnail: string }> = {
     [ClientEnum.SEI]: {
-        image: "/images/sei-network.png",
+        image: "/images/token-images/sei-network.png",
         thumbnail: "sei"
     },
     [ClientEnum.ARCHWAY]: {
-        image: "/images/archway.svg",
+        image: "/images/token-images/archway.svg",
         thumbnail: "archway"
     },
     [ClientEnum.NEUTRON]: {
-        image: "/images/neutron-network.svg",
+        image: "/images/token-images/neutron-network.svg",
         thumbnail: "neutron"
     },
     [ClientEnum.INJECTIVE]: {
-        image: "/images/injective.svg",
+        image: "/images/token-images/injective.svg",
         thumbnail: "injective"
     }
 }

@@ -56,7 +56,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <NotificationDropdown pageData={{} as PageData} />
+                        <NotificationDropdown />
                         <WalletButton
                             ausdBalance={0}
                             baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}

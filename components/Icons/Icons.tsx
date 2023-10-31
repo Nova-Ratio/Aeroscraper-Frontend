@@ -361,3 +361,30 @@ export const BellIcon: React.FC<IconProps> = ({ className, width, height }) => {
         </svg>
     )
 }
+
+export const ExitIcon: React.FC<IconProps> = ({ className, width, height }) => {
+    return (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={className}>
+            <path d="M10 2L12.6667 2C13.0203 2 13.3594 2.14048 13.6095 2.39052C13.8595 2.64057 14 2.97971 14 3.33333L14 12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M7 11L10 8L7 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M10 8L2 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    )
+}
+
+export const ArrowLeftIcon: React.FC<IconProps> = ({ className, width = 24, height = 24 }) => {
+    return (
+        <svg width={width} height={height} viewBox="0 0 24 24" fill="none" className={className}>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.7071 4.29289C11.0976 4.68342 11.0976 5.31658 10.7071 5.70711L5.41421 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H5.41421L10.7071 18.2929C11.0976 18.6834 11.0976 19.3166 10.7071 19.7071C10.3166 20.0976 9.68342 20.0976 9.29289 19.7071L2.29289 12.7071C1.90237 12.3166 1.90237 11.6834 2.29289 11.2929L9.29289 4.29289C9.68342 3.90237 10.3166 3.90237 10.7071 4.29289Z" fill="currentColor" />
+        </svg>
+    )
+}
+
+export const PlusIcon: React.FC<IconProps> = ({ className}) => {
+    return (
+        <svg viewBox="0 0 12 12" fill="none" className={className}>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 5.99996C0 5.63177 0.298477 5.3333 0.666667 5.3333H11.3333C11.7015 5.3333 12 5.63177 12 5.99996C12 6.36815 11.7015 6.66663 11.3333 6.66663H0.666667C0.298477 6.66663 0 6.36815 0 5.99996Z" fill="currentColor" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 -2.91409e-08C6.36803 -1.30468e-08 6.6665 0.298477 6.6665 0.666667L6.6665 11.3333C6.6665 11.7015 6.36803 12 5.99984 12C5.63165 12 5.33317 11.7015 5.33317 11.3333L5.33317 0.666667C5.33317 0.298477 5.63165 -4.5235e-08 5.99984 -2.91409e-08Z" fill="currentColor" />
+        </svg>
+    )
+}

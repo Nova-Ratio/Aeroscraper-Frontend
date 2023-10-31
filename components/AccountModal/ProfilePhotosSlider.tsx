@@ -54,7 +54,7 @@ const ProfilePhotoSlider: React.FC<Props> = (props) => {
               className={`relative cursor-pointer hover:opacity-80 transition secondary-gradient flex items-center rounded-md justify-center p-0.5 ${profileDetail?.photoUrl === photo ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() => { props.updateProfilePhoto(photo, idx); }}
             >
-              <img alt={`profile_photo`} className='rounded bg-[#6F6F73] min-w-[80px] min-h-[80px] object-cover' src={photo} />
+              <img alt={`profile_photo`} className='rounded bg-[#6F6F73] w-[80px] h-[80px] object-cover' src={photo} />
               {(props.processLoading.status && props.processLoading.idx == idx) && <Loading height={48} width={48} className="absolute" />}
             </div>
           </motion.div>

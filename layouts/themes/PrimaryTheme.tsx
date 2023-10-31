@@ -21,14 +21,14 @@ export const PrimaryTheme: FC<{ clientType: ClientEnum | undefined }> = ({ clien
           <Text size='lg'>on</Text>
           {
             clientType == ClientEnum.ARCHWAY ?
-              <img alt={clientType} src={"/images/archway.svg"} className='w-full h-12 -ml-1' /> :
+              <img alt={clientType} src={"/images/token-images/archway.svg"} className='w-full h-12 -ml-1' /> :
               clientType == ClientEnum.NEUTRON ?
-                <img alt={clientType} src={"/images/neutron-network.svg"} className='w-full h-5 ml-2' />
+                <img alt={clientType} src={"/images/token-images/neutron-network.svg"} className='w-full h-5 ml-2' />
                 :
                 clientType == ClientEnum.INJECTIVE ?
-                  <img alt={clientType} src={"/images/injective.svg"} className='w-full h-5 ml-2' />
+                  <img alt={clientType} src={"/images/token-images/injective.svg"} className='w-full h-5 ml-2' />
                   :
-                  <img alt={clientType} src={"/images/sei-red.svg"} className='w-full h-24 -ml-2' />
+                  <img alt={clientType} src={"/images/token-images/sei-red.svg"} className='w-full h-24 -ml-2' />
 
           }
         </div>
