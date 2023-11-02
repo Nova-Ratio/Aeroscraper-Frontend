@@ -21,7 +21,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             {selectedTheme}
-            <div className='container mx-auto px-8'>
+            <div className='container mx-auto'>
                 {children}
             </div>
         </>

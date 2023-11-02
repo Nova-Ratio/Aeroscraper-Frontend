@@ -21,6 +21,7 @@ import { BaseCoinByClient, ClientTransactionUrlByName, WalletImagesByName } from
 import { Modal } from "../Modal/Modal";
 import Button from "../Buttons/Button";
 import { ArrowLeftIcon, ExitIcon } from "../Icons/Icons";
+import { capitalizeFirstLetter } from "@/utils/stringUtils";
 
 interface Props {
   showModal: boolean,
@@ -147,7 +148,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   return (
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
       <div className='flex h-[644px]'>
-        <div className='pt-10 pr-24 px-8 border-r border-white/10 h-full relative'>
+        <div className='pt-10 pr-24 shrink-0 px-8 border-r border-white/10 h-full relative'>
           <h2 className='text-[#F7F7FF] text-2xl font-medium'>Profile</h2>
           <div className="mt-6 space-y-6">
             <Button active={selectedTab === "avatar-select"} onClick={() => { setSelectedTab("avatar-select"); }}>Set an avatar</Button>
@@ -165,7 +166,7 @@ const AccountModal: FC<Props> = (props: Props) => {
             </button>
           )}
           {selectedTab === null && (
-            <div className="px-32">
+            <div className="px-28">
               <div className="space-y-8">
                 <div onClick={openAvatarSelection} className="secondary-gradient w-[148px] h-[148px] p-0.5 rounded-lg gap-2 mx-auto cursor-pointer">
                   <img
@@ -229,7 +230,7 @@ const AccountModal: FC<Props> = (props: Props) => {
             </div>
           )}
           {selectedTab === "avatar-select" && (
-            <div className='px-20 text-start'>
+            <div className='px-16 text-start'>
               <Text size='lg' textColor="text-dark-silver" className="mb-6">Select an avatar</Text>
               <ProfilePhotoSlider processLoading={processLoading} updateProfilePhoto={updateProfilePhoto} slider={profilePhotos} />
               <div className="mt-6 pt-6 border-t-2 border-white/10">
@@ -273,7 +274,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                   <Button
                     startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
                   >
-                    {clientType.toLocaleLowerCase()}
+                    {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
                   </Button>
                 </div>
                 <div className="ml-14">
@@ -281,7 +282,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                   <Button
                     startIcon={<img alt={walletType} src={WalletImagesByName[walletType!].image} className='w-6 h-6' />}
                   >
-                    {walletType?.toLocaleLowerCase()}
+                    {capitalizeFirstLetter(walletType?.toLocaleLowerCase() ?? "")}
                   </Button>
                 </div>
                 <a href={`${scanDomain}${address}`} target='_blank' rel="noreferrer" className='ml-auto underline flex text-white'>

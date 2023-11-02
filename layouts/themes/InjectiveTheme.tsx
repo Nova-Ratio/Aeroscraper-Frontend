@@ -48,6 +48,12 @@ const InjeciveTheme = () => {
     }
 
     getPrice()
+
+    const bodyElement = document.querySelector('body');
+
+    if(bodyElement){      
+      bodyElement.className += " injective-background";
+    }
   }, []);
 
   const disconnect = () => {
@@ -59,6 +65,8 @@ const InjeciveTheme = () => {
   }
 
   return (
+    <>
+    <div className='bg-[#5C5CFF] opacity-[0.09] h-[600px] w-[600px] absolute -top-60 -translate-x-1/3 left-1/3 rounded-full blur-3xl'/>
     <header className='mb-[88px] mx-[85px] mt-8 flex justify-between items-center'>
       <div className='flex items-center gap-2'>
         <LogoSecondary className='w-10 h-10' />
@@ -105,6 +113,7 @@ const InjeciveTheme = () => {
         onClose={() => { setAccountModal(false); }}
       />
     </header>
+    </>
   )
 }
 

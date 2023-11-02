@@ -380,11 +380,34 @@ export const ArrowLeftIcon: React.FC<IconProps> = ({ className, width = 24, heig
     )
 }
 
-export const PlusIcon: React.FC<IconProps> = ({ className}) => {
+export const ArrowDownIcon: React.FC<IconProps> = ({ className }) => {
+    return (
+        <svg viewBox="0 0 17 16" fill="none" className={className}>
+            <path d="M8.5 4L8.5 12M8.5 12L12.5 8M8.5 12L4.5 8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    )
+}
+
+export const PlusIcon: React.FC<IconProps> = ({ className }) => {
     return (
         <svg viewBox="0 0 12 12" fill="none" className={className}>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M0 5.99996C0 5.63177 0.298477 5.3333 0.666667 5.3333H11.3333C11.7015 5.3333 12 5.63177 12 5.99996C12 6.36815 11.7015 6.66663 11.3333 6.66663H0.666667C0.298477 6.66663 0 6.36815 0 5.99996Z" fill="currentColor" />
             <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 -2.91409e-08C6.36803 -1.30468e-08 6.6665 0.298477 6.6665 0.666667L6.6665 11.3333C6.6665 11.7015 6.36803 12 5.99984 12C5.63165 12 5.33317 11.7015 5.33317 11.3333L5.33317 0.666667C5.33317 0.298477 5.63165 -4.5235e-08 5.99984 -2.91409e-08Z" fill="currentColor" />
+        </svg>
+    )
+}
+export const ChevronUpIcon: React.FC<IconProps> = ({ className }) => {
+    return (
+        <svg viewBox="0 0 16 17" fill="none" className={className}>
+            <path d="M12 10.5L8 6.5L4 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    )
+}
+
+export const RocketIcon: React.FC<IconProps> = ({ className }) => {
+    return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
         </svg>
     )
 }

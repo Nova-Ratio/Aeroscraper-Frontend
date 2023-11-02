@@ -6,6 +6,7 @@ interface TableHeaderCol {
   textCenter?: boolean,
 }
 
+const mockSpan = ["col-span-3"]
 export const TableHeaderCol: FunctionComponent<TableHeaderCol> = (props: TableHeaderCol) => {
   return (
     <div className={`col-span-${props.col} p-4 py-[13px] w-full ${props.textCenter ? "text-center" : ""}`}>

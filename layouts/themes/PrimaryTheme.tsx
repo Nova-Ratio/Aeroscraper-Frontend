@@ -6,7 +6,7 @@ import Text from "@/components/Texts/Text"
 
 export const PrimaryTheme: FC<{ clientType: ClientEnum | undefined }> = ({ clientType }) => {
 
-  return <>
+  return <div className="px-8">
     <TowerAnimation />
     <img src='/images/bg-shape-1.svg' className='fixed right-0 top-0 -z-20 select-none pointer-events-none' alt="tower" />
     <img src='/images/bg-shape-2.svg' className='fixed right-4 top-[420px] -z-20 select-none pointer-events-none' alt="tower" />
@@ -34,5 +34,5 @@ export const PrimaryTheme: FC<{ clientType: ClientEnum | undefined }> = ({ clien
         </div>
       )}
     </header>
-  </>
+  </div>
 }

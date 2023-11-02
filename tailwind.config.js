@@ -21,7 +21,10 @@ module.exports = {
       'dark-red': '#D43752',
       'chinese-bronze': '#D48237',
       'chinese-black': '#150A17',
-      'ufo-green': '#37D489'
+      'ufo-green': '#37D489',
+      'isabelline': '#F2EFED99',
+      'cetacean-dark-blue': 'rgba(12, 17, 39, 0.40)',
+      'cetacean-blue': '#15153c'
     }
   }
   ,
