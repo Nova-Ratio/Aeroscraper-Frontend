@@ -5,7 +5,7 @@ import React, { FC } from 'react';
 interface TabsProps<T> {
   tabs: T[];
   selectedTab: T;
-  onTabSelected?: (tab: T) => void;
+  onTabSelected?: (tab: any) => void;
 }
 
 const Tabs: FC<TabsProps<string>> = ({ tabs, selectedTab, onTabSelected }) => {

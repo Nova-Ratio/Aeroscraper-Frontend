@@ -1,16 +1,12 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Text from "@/components/Texts/Text"
 import { INotification, useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
 import useAppContract from '@/contracts/app/useAppContract';
-import { getValueByRatio, getIsInjectiveResponse } from '@/utils/contractUtils';
 import { isNil } from 'lodash';
-import { NumberFormatValues, NumericFormat } from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 import { PageData } from '../../../_types/types';
 import TransactionButton from '@/components/Buttons/TransactionButton';
-import { ArrowDownIcon } from '@/components/Icons/Icons';
-import BorderedNumberInput from '@/components/Input/BorderedNumberInput';
-import BorderedContainer from '@/components/Containers/BorderedContainer';
 
 interface Props {
   pageData: PageData,
@@ -19,29 +15,14 @@ interface Props {
   basePrice: number;
 }
 
-const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice }) => {
+const ClaimRewardTab: FC<Props> = ({ }) => {
 
   const { baseCoin } = useWallet();
-  const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
   const [processLoading, setProcessLoading] = useState<boolean>(false);
 
   const [notification, setNotification] = useState<INotification | undefined>(undefined);
 
-  const notifications = useNotification();
-
-  const contract = useAppContract();
-
-  const changeRedeemAmount = useCallback((values: NumberFormatValues) => {
-    setRedeemAmount(Number(values.value))
-    setInjAmount(getValueByRatio(values.value, pageData.minRedeemAmount))
-  }, [pageData]);
-
-  const redeemDisabled = useMemo(() =>
-    isNil(redeemAmount) ||
-    redeemAmount <= 0 ||
-    redeemAmount > pageData.ausdBalance,
-    [redeemAmount, pageData])
 
   useEffect(() => {
     if (notification) {
@@ -52,76 +33,13 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
   }, [notification])
 
 
-  const redeem = async () => {
-    let transactionHash;
-
-    try {
-      setProcessLoading(true);
-
-      const res = await contract.redeem(redeemAmount);
-
-      transactionHash = getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash;
-
-      setNotification(
-        {
-          status: 'success',
-          directLink: transactionHash
-        }
-      )
-      notifications.addNotification({
-        status: 'success',
-        directLink: transactionHash,
-        message: `${redeemAmount} AUSD has Redeemed, Received ${Number(redeemAmount * basePrice).toFixed(3)} of ${baseCoin?.name}`
-      });
-
-      getPageData();
-      refreshBalance();
-    }
-    catch (err) {
-      setNotification(
-        {
-          status: 'error',
-          directLink: transactionHash
-        }
-      )
-    }
-
-    setProcessLoading(false);
-  };
-
   return (
     <section>
       <Text size='3xl'>Claim your rewards in INJ</Text>
-      <Text size='base'>You have generated <span className='text-[#E4462D]'>0 AUSD</span> which are available to claim in INJ</Text>
       <div className='mt-6'>
-        <div className="relative w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4">
-          <div className="flex items-end justify-between">
-            <div>
-              <Text size="sm" weight="mb-2">Claim</Text>
-              <div className="flex items-center gap-2 mb-2">
-                <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd-blue.svg" />
-                <Text size="base" weight="font-medium">AUSD</Text>
-              </div>
-            </div>
-            <BorderedNumberInput
-              value={redeemAmount}
-              onValueChange={changeRedeemAmount}
-              containerClassName="h-10 text-end flex-1 ml-6"
-              bgVariant="blue"
-              className="text-end"
-            />
-          </div>
-          <div className='absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[40px]'>
-            <BorderedContainer containerClassName='w-12 h-12 mx-auto mt-2 p-[1.8px]'>
-              <div className='bg-cetacean-dark-blue h-full w-full rounded-lg flex items-center justify-center'>
-                <ArrowDownIcon className="w-4 h-4 text-white " />
-              </div>
-            </BorderedContainer>
-          </div>
-        </div>
         <div className="w-full bg-cetacean-dark-blue border border-white/10 rounded-2xl px-6 py-9 flex items-end justify-between mt-6">
           <div>
-            <Text size="sm" weight="mb-2">Receive</Text>
+            <Text size="sm" weight="mb-2">Reward</Text>
             {
               !isNil(baseCoin) ?
                 <div className="flex items-center gap-2">
@@ -150,9 +68,8 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
           status={notification}
           loading={processLoading}
           className="w-[375px] h-11 mt-7 ml-auto"
-          onClick={redeem}
+          onClick={()=>{}}
           text='Claim Rewards'
-          disabled={redeemDisabled}
         />
       </div>
     </section>

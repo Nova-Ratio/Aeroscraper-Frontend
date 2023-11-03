@@ -155,3 +155,18 @@ body::-webkit-scrollbar {
 background: radial-gradient(72.72% 72.72% at 38.3% 0%, rgba(92, 92, 255, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), #1A0B1C !important;
 background-blend-mode: multiply, normal, normal;
 }
+
+.gradient-checkbox {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.gradient-checkbox input:checked + .checkbox-label::before {
+  content: '';
+  width: 1.5rem;
+  height: 1.5rem;
+  background: linear-gradient(90deg, #D43752 0%, #E4462D 56.53%, #F8B810 181.25%);
+  border-radius: 0.375rem;
+  margin-right: 0.5rem;
+}

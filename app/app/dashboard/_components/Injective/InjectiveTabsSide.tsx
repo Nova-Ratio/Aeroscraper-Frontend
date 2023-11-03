@@ -3,22 +3,24 @@ import { useWallet } from '@/contexts/WalletProvider';
 import usePageData from '@/contracts/app/usePageData';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import ClaimRewardTab from './Tabs/ClaimRewardTab';
 import RedeemTab from './Tabs/RedeemTab';
 import RiskyTrovesTab from './Tabs/RiskyTrovesTab';
+import StabilityPoolTab from './Tabs/StabilityPoolTab';
+import TroveTab from './Tabs/TroveTab';
 
-type Tabs = "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "claimRewards";
-
-const TabList: Tabs[] = ["createTrove", "stabilityPool", "redeem", "riskyTroves", "claimRewards"];
+type Tabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "claimRewards";
 
 const InjectiveTabsSide = () => {
-
   const [basePrice, setBasePrice] = useState(0);
-  const { refreshBalance } = useWallet();
   const { pageData, getPageData, } = usePageData({ basePrice });
+  const { refreshBalance } = useWallet();
 
-  const [selectedTab, setSelectedTab] = useState<Tabs>("createTrove");
+  const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
+  let TabList: Tabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "claimRewards"];
+
+  const [selectedTab, setSelectedTab] = useState<Tabs>(isTroveOpened ? "trove" : "createTrove");
 
   useEffect(() => {
     const getPrice = async () => {
@@ -51,13 +53,13 @@ const InjectiveTabsSide = () => {
         key={selectedTab}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1}}
+        transition={{ duration: 1 }}
         className='mt-14'>
-        {selectedTab === "createTrove" && <></>}
-        {selectedTab === "stabilityPool" && <></>}
+        {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
+        {selectedTab === "stabilityPool" && <StabilityPoolTab pageData={pageData} getPageData={getPageData} />}
         {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
         {selectedTab === "riskyTroves" && <RiskyTrovesTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
-        {selectedTab === "claimRewards" && <ClaimRewardTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice}/>}
+        {selectedTab === "claimRewards" && <ClaimRewardTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
       </motion.main>
     </div>
   )
