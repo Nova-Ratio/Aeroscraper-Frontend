@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import React, { Dispatch, FC, useState } from 'react';
-import BorderedContainer from './Containers/BorderedContainer';
+import React, { FC } from 'react';
 
 interface CheckboxProps {
   label: string;
@@ -13,26 +12,25 @@ const Checkbox: FC<CheckboxProps> = ({ label, checked, onChange, className }) =>
 
   const variants = {
     checked: {
-      scale: 1.1,
-      backgroundColor: '#D43752',
-      borderColor: '#D43752',
+      scale: 1,
     },
     unchecked: {
-      scale: 1,
-      backgroundColor: '#E5E7EB',
-      borderColor: '#E5E7EB',
+      scale: 0.7,
     },
   };
 
   return (
     <label onClick={onChange} className={`inline-flex items-center cursor-pointer ${className}`}>
-      <div>
-        <motion.div
-          className="w-5 h-5 border-6 rounded-full cursor-pointer p-1"
-          variants={variants}
-          initial={checked ? 'checked' : 'unchecked'}
-          animate={checked ? 'checked' : 'unchecked'}
+      <div className='tertiary-gradient w-7 h-7 rounded-full relative'>
+        <div className='w-6 h-6 bg-[#1A0B1C] rounded-full top-0.5 left-0.5 z-50 absolute p-[3px]'>
+          <motion.div
+            className={`w-[18px] h-[18px] rounded-full cursor-pointer ${checked ? "tertiary-gradient" : ""}`}
+            variants={variants}
+            initial={checked ? 'checked' : 'unchecked'}
+            animate={checked ? 'checked' : 'unchecked'}
+            transition={{ease:"easeOut"}}
           />
+        </div>
       </div>
       <span className="ml-2 text-ghost-white font-medium leading-7 text-2xl checkbox-label">{label}</span>
     </label>
@@ -40,3 +38,4 @@ const Checkbox: FC<CheckboxProps> = ({ label, checked, onChange, className }) =>
 };
 
 export default Checkbox;
+

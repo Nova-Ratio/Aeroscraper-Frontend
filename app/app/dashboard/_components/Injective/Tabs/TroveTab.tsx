@@ -226,18 +226,20 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   return (
     <>
       {
-        isTroveOpened ?
+        !isTroveOpened ?
           <>
             <Text size='3xl'>Manage your collateral</Text>
             <Text size='base' weight='font-regular' className='mt-1'>Mint AUSD or repay your debt.</Text>
-            <div className='flex flex-col gap-8 mt-8'>
+            <div className='flex flex-col mt-8'>
               <Checkbox label={'Collateral'} checked={selectedTab === TABS.COLLATERAL} onChange={() => { setSelectedTab(TABS.COLLATERAL); }} />
-              <Checkbox label={'Borrow/Repay'} checked={selectedTab === TABS.BORROWING} onChange={() => { setSelectedTab(TABS.BORROWING); }} />
-            </div>
-            {
-              selectedTab === TABS.COLLATERAL ?
-                (
-                  <div className='flex flex-col mt-6'>
+              {
+                selectedTab === TABS.COLLATERAL && (
+                  <motion.div
+                  initial={{ opacity: 0, y: -15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -100 }}
+                  transition={{ duration: 0.3, ease: "easeIn" }}
+                  className='flex flex-col mt-6'>
                     <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
                       <div className="flex items-end justify-between">
                         <div>
@@ -311,11 +313,17 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         <Text>Deposit</Text>
                       </GradientButton>
                     </div>
-                  </div>
-                )
-                :
+                  </motion.div>
+                )}
+              <Checkbox label={'Borrow/Repay'} checked={selectedTab === TABS.BORROWING} onChange={() => { setSelectedTab(TABS.BORROWING); }} className="mt-8" />
+              {selectedTab === TABS.BORROWING &&
                 (
-                  <div className='flex flex-col'>
+                  <motion.div
+                    initial={{ opacity: 0, y: -15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -100 }}
+                    transition={{ duration: 0.3, ease: "easeIn" }}
+                    className='flex flex-col'>
                     <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -374,9 +382,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         <Text>Borrow</Text>
                       </GradientButton>
                     </div>
-                  </div>
-                )
-            }
+                  </motion.div>
+                )}
+            </div>
           </>
           :
           <div>
