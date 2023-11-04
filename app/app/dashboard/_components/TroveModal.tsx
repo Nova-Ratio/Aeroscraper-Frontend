@@ -1,7 +1,7 @@
 import GradientButton from '@/components/Buttons/GradientButton';
 import StatisticCard from '@/components/Cards/StatisticCard';
 import InputLayout from '@/components/Input/InputLayout';
-import { Modal } from '@/components/Modal/Modal';
+import { WaveModal } from '@/components/Modal/WaveModal';
 import Text from '@/components/Texts/Text';
 import Info from '@/components/Tooltip/Info';
 import useAppContract from '@/contracts/app/useAppContract';
@@ -223,7 +223,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
     }
 
     return (
-        <Modal processLoading={processLoading} layoutId="trove" title="Trove" showModal={open} onClose={onClose}>
+        <WaveModal processLoading={processLoading} layoutId="trove" title="Trove" showModal={open} onClose={onClose}>
             {
                 isTroveOpened ?
                     <>
@@ -419,7 +419,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                         </div>
                     </div>
             }
-        </Modal>
+        </WaveModal>
     )
 }
 

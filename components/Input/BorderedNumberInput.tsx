@@ -3,7 +3,8 @@ import { NumericFormat, OnValueChange } from 'react-number-format'
 
 export const BG_VARIANTS = {
     "standard": "bg-english-violet",
-    "transparent": "bg-transparent"
+    "transparent": "bg-transparent",
+    "blue": "bg-cetacean-blue"
 }
 
 type ExtraProps = {

@@ -25,7 +25,7 @@ export default function Dashboard() {
     const { balanceByDenom, baseCoin, walletType, clientType, refreshBalance } = useWallet();
 
     if (!isNil(walletType) && !isNil(clientType)) {
-        if (clientType === ClientEnum.COSMWASM) {
+        if (clientType === ClientEnum.SEI) {
             return <SeiDashboard />
         }
 
@@ -49,14 +49,14 @@ export default function Dashboard() {
                     <div className="flex items-center gap-11">
                         <div className="flex flex-col items-center gap-2">
                             <div className="flex items-center gap-2">
-                                <img alt="ausd" className="w-10 h-10" src="/images/ausd.svg" />
+                                <img alt="ausd" className="w-10 h-10" src="/images/token-images/ausd.svg" />
                                 <Text size="2xl">AUSD</Text>
                             </div>
                             <Text>$1.00</Text>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <NotificationDropdown pageData={{} as PageData} />
+                        <NotificationDropdown />
                         <WalletButton
                             ausdBalance={0}
                             baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}

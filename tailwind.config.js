@@ -20,8 +20,14 @@ module.exports = {
       'english-violet': '#543B59',
       'dark-red': '#D43752',
       'chinese-bronze': '#D48237',
-      'ufo-green': '#37D489'
+      'chinese-black': '#150A17',
+      'ufo-green': '#37D489',
+      'isabelline': '#F2EFED99',
+      'cetacean-dark-blue': 'rgba(12, 17, 39, 0.40)',
+      'cetacean-blue': '#15153c',
+      'absolute-zero':'#073DC8'
     }
-  },
+  }
+  ,
   plugins: [],
 }

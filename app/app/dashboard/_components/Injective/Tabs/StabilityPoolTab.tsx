@@ -9,9 +9,11 @@ import { NumericFormat } from 'react-number-format';
 import { motion } from 'framer-motion';
 import useAppContract from '@/contracts/app/useAppContract';
 import { useNotification } from '@/contexts/NotificationProvider';
-import { PageData } from '../_types/types';
 import { useWallet } from '@/contexts/WalletProvider';
 import { getIsInjectiveResponse } from '@/utils/contractUtils';
+import { PageData } from '../../../_types/types';
+import Checkbox from '@/components/Checkbox';
+import BorderedNumberInput from '@/components/Input/BorderedNumberInput';
 
 enum TABS {
   DEPOSIT = 0,
@@ -19,13 +21,11 @@ enum TABS {
 }
 
 type Props = {
-  open: boolean;
-  onClose?: () => void;
   pageData: PageData;
   getPageData: () => void;
 }
 
-const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData }) => {
+const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
   const { baseCoin, refreshBalance } = useWallet();
   const contract = useAppContract();
   const { addNotification } = useNotification();
@@ -49,7 +49,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message:`${stakeAmount} AUSD Staked to Stability Pool`
+        message: `${stakeAmount} AUSD Staked to Stability Pool`
       })
       getPageData();
       refreshBalance();
@@ -73,7 +73,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message:`${stakeAmount} AUSD Reward Received from Stability Pool`
+        message: `${stakeAmount} AUSD Reward Received from Stability Pool`
       })
       getPageData();
       refreshBalance();
@@ -99,7 +99,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message:`${stakeAmount} AUSD Unstaked from Stability Pool`
+        message: `${stakeAmount} AUSD Unstaked from Stability Pool`
       })
       getPageData();
       refreshBalance();
@@ -120,22 +120,11 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
   }
 
   return (
-    <WaveModal processLoading={processLoading} key="stability-pool" layoutId="stability-pool" title="Stability Pool" showModal={open} onClose={() => { onClose?.(); }}>
-      <div className="-ml-4">
-        <Info message={"Enter the amount of AUSD you'd like to deposit/withdraw."} status={"normal"} />
-        <div className={`flex flex-row w-2/3 ml-10 gap-6 mt-6 ${pageData.stakedAmount > 0 ? "mb-10" : ""}`}>
-          {
-            pageData.stakedAmount > 0 &&
-            <>
-              <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.DEPOSIT ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.DEPOSIT); setStakeAmount(0); }}>
-                Deposit
-              </OutlinedButton>
-              <OutlinedButton containerClassName='w-[281px]' className='h-16' innerClassName={`${selectedTab === TABS.WITHDRAW ? "bg-opacity-0" : "bg-opacity-100"}`} onClick={() => { setSelectedTab(TABS.WITHDRAW); setUnstakeAmount(0); }}>
-                Withdraw
-              </OutlinedButton>
-            </>
-          }
-        </div>
+    <div className="-ml-4">
+      <Text size='3xl'>Add to stability pool to earn rewards</Text>
+      <Text size='base' weight='font-regular' className='mt-1 mb-8'>Deposit or Withdraw AUSD from your wallet to the Aeroscaper protocol to earn rewards. </Text>
+      <div className='flex flex-col'>
+        {pageData.stakedAmount > 0 && <Checkbox label={'Deposit'} checked={selectedTab === TABS.DEPOSIT} onChange={() => { setSelectedTab(TABS.DEPOSIT); }} />}
         {selectedTab === TABS.DEPOSIT && (
           <motion.div
             initial={{ opacity: 0, x: 30 }}
@@ -143,9 +132,25 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Deposit" hintTitle="AUSD" className='mb-4' value={stakeAmount} onValueChange={(e) => { setStakeAmount(Number(e.value)); }} maxButtonClick={() => setStakeAmount(pageData.ausdBalance)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
-              <div className='flex justify-end mt-2 mr-5'>
-                <img alt="aero" className="w-6 h-6" src="/images/token-images/ausd.svg" />
+            <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd-blue.svg" />
+                  <Text size="base" weight="font-medium">AUSD</Text>
+                </div>
+                <BorderedNumberInput
+                  value={stakeAmount}
+                  onValueChange={(e) => { setStakeAmount(Number(e.value)); }}
+                  containerClassName="h-10 text-end flex-1 ml-6"
+                  bgVariant="blue"
+                  className="text-end"
+                />
+              </div>
+              <div className='flex justify-between mt-6'>
+                <div className='flex'>
+                  <label className="font-regular text-base text-white">Pool Share:</label>
+                  <p className='text-[#00CF30] font-regular text-base ml-3'>{pageData.poolShare ?? "-"}%</p>
+                </div>
                 <NumericFormat
                   value={pageData.ausdBalance}
                   thousandsGroupStyle="thousand"
@@ -155,59 +160,49 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                   displayType="text"
                   renderText={(value) =>
                     <Text size='base' className='flex ml-2 gap-2'>
-                      Balance: {value} AUSD
+                      Available Balance: {value} AUSD
                     </Text>
                   }
                 />
               </div>
-            } />
-            {pageData.poolShare > 0 && <InputLayout disabled label="Pool Share" hintTitle="%" value={pageData.poolShare} />}
-            {
-              pageData.rewardAmount > 0 &&
-              <div className='bg-dark-purple rounded-lg px-2 py-4 flex items-center mt-6'>
-                <Text textColor="text-white" weight="font-normal">Reward</Text>
-                <div className='bg-english-violet rounded-lg flex px-2 py-2 mx-10 flex-1'>
-                  <img alt="aero" className="w-6 h-6" src={baseCoin?.image} />
-                  <NumericFormat
-                    value={pageData.rewardAmount}
-                    thousandsGroupStyle="thousand"
-                    thousandSeparator=","
-                    fixedDecimalScale
-                    decimalScale={2}
-                    displayType="text"
-                    renderText={(value) =>
-                      <Text size='base' className='flex ml-2 gap-2'>
-                        {value} {baseCoin?.name}
-                      </Text>
-                    }
-                  />
-                </div>
-                <GradientButton className="min-w-[140px] h-0 ml-auto" rounded="rounded-lg" onClick={rewardClaim} loading={processLoading}>
-                  <Text>Claim</Text>
-                </GradientButton>
-              </div>
-            }
+            </div>
             <GradientButton
               disabled={stakeDisabled}
               loading={processLoading}
               onClick={stakePool}
-              className="min-w-[221px] h-11 mt-6 ml-auto"
+              className="min-w-[374px] h-11 mt-6 ml-auto"
               rounded="rounded-lg"
             >
-              <Text>Confirm</Text>
+              <Text>Deposit</Text>
             </GradientButton>
           </motion.div>
         )}
-        {selectedTab === TABS.WITHDRAW && (
+        {pageData.stakedAmount > 0 && <Checkbox label={'Withdraw'} checked={selectedTab === TABS.WITHDRAW} onChange={() => { setSelectedTab(TABS.WITHDRAW); }} className="mt-8"/>}      {selectedTab === TABS.WITHDRAW && (
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3, ease: "easeIn" }}
           >
-            <InputLayout label="Withdraw" hintTitle="AUSD" className='mb-4' value={unstakeAmount} onValueChange={e => { setUnstakeAmount(Number(e.value)); }} maxButtonClick={() => setUnstakeAmount(pageData.stakedAmount)} hasPercentButton={{ max: true, min: false }} rightBottomSide={
-              <div className='flex justify-end mt-2 mr-5'>
-                <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd.svg" />
+            <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd-blue.svg" />
+                  <Text size="base" weight="font-medium">AUSD</Text>
+                </div>
+                <BorderedNumberInput
+                  value={unstakeAmount}
+                  onValueChange={(e) => { setUnstakeAmount(Number(e.value)); }}
+                  containerClassName="h-10 text-end flex-1 ml-6"
+                  bgVariant="blue"
+                  className="text-end"
+                />
+              </div>
+              <div className='flex justify-between mt-6'>
+                <div className='flex'>
+                  <label className="font-regular text-base text-white">Pool Share:</label>
+                  <p className='text-[#ED0E00] font-regular text-base ml-3'>{pageData.poolShare ?? "-"}%</p>
+                </div>
                 <NumericFormat
                   value={pageData.stakedAmount}
                   thousandsGroupStyle="thousand"
@@ -217,27 +212,26 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
                   displayType="text"
                   renderText={(value) =>
                     <Text size='base' className='flex ml-2 gap-2'>
-                      Balance: {value} AUSD
+                      Available Balance: {value} AUSD
                     </Text>
                   }
                 />
               </div>
-            } />
-            {pageData.poolShare > 0 && <InputLayout disabled label="Pool Share" hintTitle="%" value={pageData.poolShare} />}
+            </div>
             <GradientButton
               disabled={unstakeDisabled}
               loading={processLoading}
               onClick={unStakePool}
-              className="min-w-[221px] h-11 mt-6 ml-auto"
+              className="min-w-[374px] h-11 mt-6 ml-auto"
               rounded="rounded-lg"
             >
-              <Text>Confirm</Text>
+              <Text>Withdraw</Text>
             </GradientButton>
           </motion.div>
         )}
       </div>
-    </WaveModal >
+    </div>
   )
 }
 
-export default StabilityPoolModal
+export default StabilityPoolTab;

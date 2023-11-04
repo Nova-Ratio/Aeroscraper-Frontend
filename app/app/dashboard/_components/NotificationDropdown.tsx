@@ -3,28 +3,87 @@ import { PageData } from '../_types/types';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import Text from '@/components/Texts/Text';
-import { RedDotIcon } from '@/components/Icons/Icons';
+import { BellIcon, RedDotIcon } from '@/components/Icons/Icons';
 import { INotification, useNotification } from '@/contexts/NotificationProvider';
 import Link from 'next/link';
 import { ClientEnum } from '@/types/types';
 import { motion } from 'framer-motion';
 import { ClientTransactionUrlByName } from '@/constants/walletConstants';
-
-type Props = {
-    pageData: PageData;
-}
+import { useWallet } from '@/contexts/WalletProvider';
 
 type ItemProps = {
+    clientType: ClientEnum,
     text: string;
     hasDivider?: boolean;
     isRead?: boolean;
     directLink?: string;
 }
 
-const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider = true }) => {
+const NotificationDropdown: FC = () => {
+    const { clientType } = useWallet();
+    const listenNotification = useNotification();
+    const [notifications, setNotifications] = useState<INotification[]>([]);
 
-    let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
-    let scanDomain = ClientTransactionUrlByName[clientType]?.txDetailUrl
+    useEffect(() => {
+        let parsedNotifications: INotification[];
+
+        try {
+            parsedNotifications = JSON.parse(localStorage.getItem("notifications") ?? "");
+            setNotifications(parsedNotifications);
+        } catch (error) { }
+    }, [listenNotification.notification]);
+
+    const allReadNotifications = () => {
+        try {
+            localStorage.setItem("notifications", JSON.stringify(notifications.map(item => {
+                return { ...item, isRead: true };
+            })));
+        } catch (error) { }
+    }
+
+
+    return (
+        <Dropdown
+            onOpen={allReadNotifications}
+            toggleButton={
+                clientType === ClientEnum.INJECTIVE ?
+                    <div
+                        className='w-full h-full flex justify-center items-center'
+                    >
+                        <BellIcon className='text-white w-12 h-12' />
+                        {notifications.filter(item => item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute -top-1.5 -right-2' />}
+                    </div>
+                    :
+                    <BorderedContainer
+                        containerClassName='w-8 h-8 active:scale-95 transition-all'
+                        className='w-full h-full flex justify-center items-center'
+                    >
+                        <img alt="bell" src="/images/bell.svg" />
+                        {notifications.filter(item => item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute -top-1.5 -right-2' />}
+                    </BorderedContainer>
+            }
+        >
+            <BorderedContainer containerClassName='w-[406px] h-[226px]' className='relative flex flex-col gap-2 p-4 overflow-auto scrollbar-hidden backdrop-blur-[25px]'>
+                <div className='absolute inset-10 top-20 bg-white -z-10 blur-3xl opacity-[0.15]' />
+                <Text>Notifications</Text>
+                {notifications.reverse().map((item, index) => {
+                    return clientType && <NotificationItem clientType={clientType} key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
+                })}
+                {notifications.filter(item => item.status === "success").length === 0 && (
+                    <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'>
+                        <Text size='sm'>Your notifications are empty</Text>
+                    </div>
+                )}
+            </BorderedContainer>
+        </Dropdown>
+    )
+}
+
+export default NotificationDropdown
+
+const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider = true, clientType }) => {
+
+    let scanDomain = ClientTransactionUrlByName[clientType!]?.txDetailUrl
 
     if (!text) {
         return null
@@ -49,56 +108,3 @@ const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider 
         </div>
     )
 }
-
-const NotificationDropdown: FC<Props> = () => {
-    const listenNotification = useNotification();
-    const [notifications, setNotifications] = useState<INotification[]>([]);
-
-    useEffect(() => {
-        let parsedNotifications: INotification[];
-
-        try {
-            parsedNotifications = JSON.parse(localStorage.getItem("notifications") ?? "");
-            setNotifications(parsedNotifications);
-        } catch (error) { }
-    }, [listenNotification.notification]);
-
-    const allReadNotifications = () => {
-        try {
-            localStorage.setItem("notifications", JSON.stringify(notifications.map(item => {
-                return { ...item, isRead: true };
-            })));
-        } catch (error) { }
-    }
-
-    return (
-        <Dropdown
-            onOpen={allReadNotifications}
-            toggleButton={
-                <BorderedContainer
-                    containerClassName='w-8 h-8 active:scale-95 transition-all'
-                    className='w-full h-full flex justify-center items-center'
-                >
-                    <img alt="bell" src="/images/bell.svg" />
-                    {notifications.filter(item => item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute -top-1.5 -right-2' />}
-                </BorderedContainer>
-            }
-        >
-            <BorderedContainer containerClassName='w-[406px] h-[226px]' className='relative flex flex-col gap-2 p-4 overflow-auto scrollbar-hidden backdrop-blur-[25px]'>
-                <div className='absolute inset-10 top-20 bg-white -z-10 blur-3xl opacity-[0.15]' />
-                <Text>Notifications</Text>
-                {notifications.reverse().map((item, index) => {
-                    return <NotificationItem key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
-                })}
-                {notifications.filter(item => item.status === "success").length === 0 && (
-                    <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'>
-                        <img alt="bell" src="/images/bell.svg" />
-                        <Text size='sm'>Your notifications are empty</Text>
-                    </div>
-                )}
-            </BorderedContainer>
-        </Dropdown>
-    )
-}
-
-export default NotificationDropdown

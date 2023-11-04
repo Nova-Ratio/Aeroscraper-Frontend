@@ -9,23 +9,23 @@ export enum WalletType {
 export const WalletInfoMap: Record<WalletType, { name: string, imageURL: string, thumbnailURL: string }> = {
     [WalletType.KEPLR]: {
         name: 'Keplr',
-        imageURL: '/images/keplr.svg',
-        thumbnailURL: '/images/keplr-icon.svg'
+        imageURL: '/images/wallet-images/keplr.svg',
+        thumbnailURL: '/images/wallet-images/keplr-icon.svg'
     },
     [WalletType.LEAP]: {
         name: 'Leap',
-        imageURL: '/images/leap.svg',
-        thumbnailURL: '/images/leap-icon.png'
+        imageURL: '/images/wallet-images/leap.svg',
+        thumbnailURL: '/images/wallet-images/leap-icon.png'
     },
     [WalletType.FIN]: {
         name: 'Fin',
-        imageURL: '/images/fin.png',
-        thumbnailURL: '/images/fin-icon.png'
+        imageURL: '/images/wallet-images/fin.png',
+        thumbnailURL: '/images/wallet-images/fin-icon.png'
     },
     [WalletType.COMPASS]: {
         name: 'Compass',
-        imageURL: '/images/compass.png',
-        thumbnailURL: '/images/compass-icon.png'
+        imageURL: '/images/wallet-images/compass.png',
+        thumbnailURL: '/images/wallet-images/compass-icon.png'
     },
     [WalletType.NOT_SELECTED]: {
         name: '',
