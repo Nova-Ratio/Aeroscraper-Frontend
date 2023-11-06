@@ -14,12 +14,14 @@ import { useLeap } from '@/services/leap'
 import Loading from '../Loading/Loading'
 import AccountModal from '../AccountModal/AccountModal'
 import { NumericFormat } from 'react-number-format'
-import { BaseCoinByClient, ClientImagesByName, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
+import { BaseCoinByClient, WalletByClient, WalletImagesByName } from '@/constants/walletConstants'
 import { isNil } from 'lodash'
 import { ClientEnum } from '@/types/types'
 import { Modal } from '../Modal/Modal'
-import { LogoSecondary } from '../Icons/Icons'
+import { ChangeIcon } from '../Icons/Icons'
 import Button from './Button'
+import { capitalizeFirstLetter } from '@/utils/stringUtils'
+import TransactionButton from './TransactionButton'
 
 type Props = {
     ausdBalance?: number;
@@ -41,19 +43,26 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
 
     const [accountModal, setAccountModal] = useState(false);
 
-    useEffect(() => {
-     if(wallet.initialized && !isNil(baseCoin)){
+    const [walletExtensions, setWalletExtensions] = useState<{ installed: { name: WalletType }[], otherWallets: { name: WalletType, downloadLink: string }[] } | undefined>();
+    const [showDownloadExtension, setShowDownloadExtension] = useState<{ name: WalletType, downloadLink: string } | undefined>();
 
-        // setWalletSelectionOpen(false);
-     }
-    }, [wallet,baseCoin])
-    
+    useEffect(() => {
+        checkWalletExtensions();
+    }, []);
+
+    useEffect(() => {
+        if (wallet.initialized && !isNil(baseCoin)) {
+
+            // setWalletSelectionOpen(false);
+        }
+    }, [wallet, baseCoin])
+
 
     const selectClient = (value: ClientEnum) => {
         selectClientType(value)
     }
 
-    const connectWallet = (walletType: WalletType) => {
+    const connectWallet = async (walletType: WalletType) => {
         const anyWindow: any = window;
 
         if (walletType === WalletType.KEPLR) {
@@ -71,12 +80,25 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
             fin.connect();
         }
         else if (walletType === WalletType.COMPASS) {
-            if (!anyWindow.compass.getOfflineSigner) { return window.open("https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb", '_blank', 'noopener,noreferrer'); }
+            if (!anyWindow.compass?.getOfflineSigner) { return window.open("https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb", '_blank', 'noopener,noreferrer'); }
 
             compass.connect();
         }
 
         setWalletSelectionOpen(false);
+    }
+
+    const checkWalletExtensions = () => {
+        const anyWindow: any = window;
+
+        const walletExtensions: { installed: { name: WalletType }[], otherWallets: { name: WalletType, downloadLink: string }[] } = { installed: [], otherWallets: [] };
+
+        anyWindow.keplr?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.KEPLR }) : walletExtensions.otherWallets.push({ name: WalletType.KEPLR, downloadLink: "https://www.keplr.app/" });
+        anyWindow.leap?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.LEAP }) : walletExtensions.otherWallets.push({ name: WalletType.LEAP, downloadLink: "https://www.leapwallet.io/" });
+        anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
+        anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
+
+        setWalletExtensions(walletExtensions);
     }
 
     const openAccountModal = () => {
@@ -94,8 +116,15 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
 
     const closeWalletSelection = () => {
         setWalletSelectionOpen(false);
+        setShowDownloadExtension(undefined);
         if (!wallet.initialized) {
             //Reset client type selection
+            selectClientType(undefined);
+        }
+    }
+
+    const resetChain = () => {
+        if (!wallet.initialized) {
             selectClientType(undefined);
         }
     }
@@ -164,6 +193,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         )
     }
 
+    console.log(walletExtensions);
+
     return (
         <div className='relative'>
             <GradientButton className={className} onClick={toggleWallet}>
@@ -171,51 +202,108 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
             </GradientButton>
             <Modal modalSize='lg' showModal={walletSelectionOpen}>
                 <div ref={ref} className='flex h-[644px]'>
-                    <div className='pt-10 px-8 border-r border-white/10'>
+                    <div className='pt-10 pl-8 w-[300px] border-r border-white/10 relative'>
                         <h2 className='text-[#F7F7FF] text-2xl font-medium'>Connect Wallet</h2>
-                        <div className={`space-y-2 mt-10 ${isNil(clientType) ? "opacity-50" : ""}`}>
+                        <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
                             {
-                                !isNil(clientType) && WalletByClient[clientType].map((walletType, idx) => (
-                                    <Button
-                                        key={idx}
-                                        onClick={() => { connectWallet(walletType); }}
-                                        startIcon={<img alt={walletType} src={WalletImagesByName[walletType].image} />}
-                                    >
-                                        <span className='text-[18px] font-medium text-ghost-white'>{walletType}</span>
-                                    </Button>
+                                !isNil(clientType) && WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                    <div className='inline-block mr-auto'>
+                                        {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
+                                        <Button
+                                            key={idx}
+                                            onClick={() => { connectWallet(walletType); }}
+                                            startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                        >
+                                            <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                        </Button>
+                                    </div>
+                                ))
+                            }
+                            {
+                                !isNil(clientType) && WalletByClient[clientType].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                    <div className='inline-block mr-auto'>
+                                        {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
+                                        <Button
+                                            key={idx}
+                                            onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
+                                            startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                        >
+                                            <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                        </Button>
+                                    </div>
                                 ))
                             }
                         </div>
+                        {clientType && (
+                            <div className='flex gap-4 items-center mt-auto absolute bottom-6'>
+                                <Text size='base'>Chain</Text>
+                                <Button
+                                    onClick={resetChain}
+                                    startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
+                                >
+                                    {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
+                                </Button>
+                                <ChangeIcon className='w-5 h-5' />
+                            </div>
+                        )}
                     </div>
-                    <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl ${!isNil(clientType) ? "bg-black/40 opacity-50" : ""}`}>
-                        {!isNil(clientType) ?
-                            (<motion.div
+                    <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl`}>
+                        {showDownloadExtension &&
+                            <motion.div
                                 initial={{ opacity: 0.1 }}
                                 animate={{ opacity: 1 }}
+                                className="mx-[140px]"
                             >
-                                <LogoSecondary className='w-40 h-40 mb-10 mx-auto' />
-                                <p className='text-base font-medium text-[#989396]'>Before you start,</p>
-                                <h3 className='text-white text-3xl font-medium'>Please choose your wallet</h3>
+                                <img className='w-[112px] h-[112px] object-contain mx-auto mb-14' alt={showDownloadExtension.name} src={WalletImagesByName[showDownloadExtension.name].thumbnail} />
+                                <Text size='4xl' textColor='text-white' className='mb-10'>{capitalizeFirstLetter(showDownloadExtension.name)} is not installed</Text>
+                                <Text size='base' textColor='text-[#989396]'>If {capitalizeFirstLetter(showDownloadExtension.name)} installed on your device, please refresh this page or follow the browser instructions.</Text>
+                                <TransactionButton
+                                    className="w-[375px] h-11 mt-10 mx-auto"
+                                    onClick={() => { window.open(showDownloadExtension.downloadLink, '_blank', 'noopener,noreferrer'); }}
+                                    text={`Install ${capitalizeFirstLetter(showDownloadExtension.name)}`}
+                                />
                             </motion.div>
-                            )
-                            :
-                            (<>
-                                <p className='text-base font-medium text-[#989396]'>Before you start,</p>
-                                <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
-                                <div className='space-y-6 mt-10'>
-                                    {
-                                        isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
-                                            <Button
-                                                key={idx}
-                                                onClick={() => { selectClient(clientType); }}
-                                                startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />}
-                                            >
-                                                <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
-                                            </Button>
-                                        ))
-                                    }
-                                </div>
-                            </>)
+                        }
+                        {!showDownloadExtension && (
+                            !isNil(clientType) ?
+                                (<motion.div
+                                    initial={{ opacity: 0.1 }}
+                                    animate={{ opacity: 1 }}
+                                    className="mx-[140px]"
+                                >
+                                    <Text size='4xl' textColor='text-white' className='mb-10'>How do I connect my wallet?</Text>
+                                    <div className='flex justify-center items-center gap-16 mb-8'>
+                                        {
+                                            Object.values(WalletInfoMap).map((walletType, idx) => {
+                                                if (walletType.name) {
+                                                    return <img alt={walletType.name} key={idx} className="w-6 h-6 object-contain" src={walletType.thumbnailURL} />
+                                                }
+                                            })
+                                        }
+                                    </div>
+                                    <Text size='base' textColor='text-[#989396]'>If you want to connect an installed wallet, you can log in by selecting your wallet under "Installed Wallets" on the left side of the screen and using the browser extension.</Text>
+                                    <Text size='base' textColor='text-[#989396]' className='mt-10'>If you do not have an installed wallet, you can choose one of the wallet options on the left side of the screen and follow the instructions to set up your wallet.</Text>
+                                </motion.div>
+                                )
+                                :
+                                (<>
+                                    <p className='text-base font-medium text-[#989396]'>Before you start,</p>
+                                    <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
+                                    <div className='space-y-6 mt-10'>
+                                        {
+                                            isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
+                                                <Button
+                                                    key={idx}
+                                                    onClick={() => { selectClient(clientType); }}
+                                                    startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />}
+                                                >
+                                                    <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
+                                                </Button>
+                                            ))
+                                        }
+                                    </div>
+                                </>)
+                        )
                         }
                     </div>
                 </div>
