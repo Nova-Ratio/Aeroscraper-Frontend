@@ -25,8 +25,8 @@ export const testnetInjectiveConfig: AppConfig = {
     chainId: 'injective-888',
     chainName: 'Injective (Testnet)',
     addressPrefix: 'inj',
-    rpcUrl: 'https://injective-rpc.publicnode.com:443',
-    httpUrl: 'https://injective-rest.publicnode.com',
+    rpcUrl: 'https://testnet.sentry.tm.injective.network/',
+    httpUrl: 'https://injective-testnet-rest.publicnode.com',
     feeToken: 'inj',
     stakingToken: 'inj',
     coinMap: {
