@@ -204,36 +204,67 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                 <div ref={ref} className='flex h-[644px]'>
                     <div className='pt-10 pl-8 w-[300px] border-r border-white/10 relative'>
                         <h2 className='text-[#F7F7FF] text-2xl font-medium'>Connect Wallet</h2>
-                        <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
-                            {
-                                !isNil(clientType) && WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                    <div key={idx} className='inline-block mr-auto'>
-                                        {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
-                                        <Button
-                                            key={idx}
-                                            onClick={() => { connectWallet(walletType); }}
-                                            startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
-                                        >
-                                            <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
-                                        </Button>
-                                    </div>
-                                ))
-                            }
-                            {
-                                !isNil(clientType) && WalletByClient[clientType].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                    <div key={idx} className='inline-block mr-auto'>
-                                        {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
-                                        <Button
-                                            key={idx}
-                                            onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
-                                            startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
-                                        >
-                                            <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
-                                        </Button>
-                                    </div>
-                                ))
-                            }
-                        </div>
+                        {!isNil(clientType) &&
+                            <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
+                                {
+                                    WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                        <div key={idx} className='inline-block mr-auto'>
+                                            {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
+                                            <Button
+                                                onClick={() => { connectWallet(walletType); }}
+                                                startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                            >
+                                                <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                            </Button>
+                                        </div>
+                                    ))
+                                }
+                                {
+                                    WalletByClient[clientType].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                        <div key={idx} className='inline-block mr-auto'>
+                                            {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
+                                            <Button
+                                                onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
+                                                startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                            >
+                                                <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                            </Button>
+                                        </div>
+                                    ))
+                                }
+                            </div>}
+                        {isNil(clientType) &&
+                            <div className={`gap-y-4 flex flex-col mt-10 opacity-25`}>
+                                {
+                                    [WalletType.KEPLR, WalletType.LEAP, WalletType.FIN, WalletType.COMPASS].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                        <div key={idx} className='inline-block mr-auto'>
+                                            {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
+                                            <Button
+                                                disabled
+                                                onClick={() => { connectWallet(walletType); }}
+                                                startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                            >
+                                                <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                            </Button>
+                                        </div>
+                                    ))
+                                }
+                                {
+                                    [WalletType.KEPLR, WalletType.LEAP, WalletType.FIN, WalletType.COMPASS].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                        <div key={idx} className='inline-block mr-auto'>
+                                            {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
+                                            <Button
+                                                disabled
+                                                onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
+                                                startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                            >
+                                                <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                            </Button>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        }
                         {clientType && (
                             <div className='flex gap-4 items-center mt-auto absolute bottom-6'>
                                 <Text size='base'>Chain</Text>

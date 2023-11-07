@@ -28,11 +28,9 @@ type Props = {
 const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
   const { baseCoin, refreshBalance } = useWallet();
   const contract = useAppContract();
-  const { addNotification } = useNotification();
+  const { addNotification,processLoading,setProcessLoading } = useNotification();
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.DEPOSIT);
-
-  const [processLoading, setProcessLoading] = useState(false);
 
   const [stakeAmount, setStakeAmount] = useState<number>(0);
   const [unstakeAmount, setUnstakeAmount] = useState<number>(0);

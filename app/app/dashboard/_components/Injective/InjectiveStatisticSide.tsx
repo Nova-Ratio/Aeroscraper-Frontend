@@ -1,13 +1,21 @@
 import InjectiveStatisticCard from '@/components/Cards/InjectiveStatisticCard';
 import { ChevronUpIcon } from '@/components/Icons/Icons';
 import { useWallet } from '@/contexts/WalletProvider';
+import usePageData from '@/contracts/app/usePageData';
 import { motion } from 'framer-motion';
-import React, { useState } from 'react'
+import { isNil } from 'lodash';
+import React, { FC, useState } from 'react'
 
-const InjectiveStatisticSide = () => {
+interface Props {
+  basePrice:number
+}
 
-  const { baseCoin } = useWallet();
+const InjectiveStatisticSide:FC<Props> = ({basePrice}) => {
+
+  const { baseCoin,walletType } = useWallet();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
+
+  const { pageData } = usePageData({ basePrice });
 
   return (
     <div className="max-w-[400px] w-[379px]">
@@ -39,7 +47,7 @@ const InjectiveStatisticSide = () => {
           />
           <InjectiveStatisticCard
             title="Total Value Locked"
-            description={"-"}
+            description={isNil(baseCoin) ? '-' : `${Number(pageData.totalCollateralAmount).toFixed(3)} ${baseCoin.name}`}
             className="w-[191px] h-14"
             tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
             tooltipPlacement="top"
@@ -47,13 +55,13 @@ const InjectiveStatisticSide = () => {
           <InjectiveStatisticCard
             title="AUSD in Stability Pool"
             tooltipPlacement="top"
-            description={"-"}
+            description={Number(pageData.totalStakedAmount).toFixed(3).toString()}
             className="w-[191px] h-14"
             tooltip="The total AUSD currently held in the Stability Pool."
           />
           <InjectiveStatisticCard
             title="Troves"
-            description={"-"}
+            description={`${isNil(walletType) ? "-" : pageData.totalTrovesAmount}`}
             className="w-[191px] h-14"
             tooltip="The total number of active Troves in the system."
             tooltipPlacement="right-bottom"
@@ -61,13 +69,13 @@ const InjectiveStatisticSide = () => {
           <InjectiveStatisticCard
             title="Total Collateral Ratio"
             tooltipPlacement="top"
-            description={"- %"}
+            description={`${isFinite(Number(((pageData.totalCollateralAmount * basePrice) / pageData.totalDebtAmount) * 100)) ? Number(((pageData.totalCollateralAmount * basePrice) / pageData.totalDebtAmount) * 100).toFixed(3) : 0} %`}
             className="w-[191px] h-14"
             tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.name}:AUSD price, to the entire system debt.`}
           />
           <InjectiveStatisticCard
             title="AUSD Supply"
-            description={"-"}
+            description={Number(pageData.totalAusdSupply).toFixed(3).toString()}
             className="w-[191px] h-14"
             tooltip="The total AUSD minted by the Aeroscraper Protocol."
             tooltipPlacement="top"
@@ -78,4 +86,4 @@ const InjectiveStatisticSide = () => {
   )
 }
 
-export default InjectiveStatisticSide
+export default React.memo(InjectiveStatisticSide)

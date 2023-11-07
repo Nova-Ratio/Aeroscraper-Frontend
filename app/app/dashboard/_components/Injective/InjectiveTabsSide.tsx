@@ -3,24 +3,29 @@ import { useWallet } from '@/contexts/WalletProvider';
 import usePageData from '@/contracts/app/usePageData';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { motion } from 'framer-motion';
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Dispatch, FC, useEffect, useMemo, useState } from 'react'
 import ClaimRewardTab from './Tabs/ClaimRewardTab';
 import RedeemTab from './Tabs/RedeemTab';
 import RiskyTrovesTab from './Tabs/RiskyTrovesTab';
 import StabilityPoolTab from './Tabs/StabilityPoolTab';
 import TroveTab from './Tabs/TroveTab';
 
-type Tabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "claimRewards";
+interface Props {
+  setTabPosition: Dispatch<InjectiveTabs>
+}
 
-const InjectiveTabsSide = () => {
+export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "claimRewards";
+
+const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   const [basePrice, setBasePrice] = useState(0);
   const { pageData, getPageData, } = usePageData({ basePrice });
   const { refreshBalance } = useWallet();
 
-  const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
-  let TabList: Tabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "claimRewards"];
+  const isTroveOpened = useMemo(() => { return pageData.collateralAmount > 0 }, [pageData])
 
-  const [selectedTab, setSelectedTab] = useState<Tabs>(isTroveOpened ? "trove" : "createTrove");
+  let TabList: InjectiveTabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "claimRewards"];
+
+  const [selectedTab, setSelectedTab] = useState<InjectiveTabs>("redeem");
 
   useEffect(() => {
     const getPrice = async () => {
@@ -46,14 +51,13 @@ const InjectiveTabsSide = () => {
   }, [])
 
   return (
-    <div className='flex-1 max-w-[768px] ml-auto'>
-      <Tabs tabs={TabList} selectedTab={selectedTab} onTabSelected={(e) => { setSelectedTab(e); }} />
-
+    <div className='flex-1 max-w-[784px] mt-16 ml-auto'>
+      <Tabs tabs={TabList} selectedTab={selectedTab} onTabSelected={(e) => { setSelectedTab(e); setTabPosition(e); }} />
       <motion.main
         key={selectedTab}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.7 }}
         className='mt-14'>
         {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
         {selectedTab === "stabilityPool" && <StabilityPoolTab pageData={pageData} getPageData={getPageData} />}
@@ -65,4 +69,4 @@ const InjectiveTabsSide = () => {
   )
 }
 
-export default InjectiveTabsSide
+export default React.memo(InjectiveTabsSide);

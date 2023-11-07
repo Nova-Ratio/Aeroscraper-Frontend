@@ -51,7 +51,7 @@ const NotificationDropdown: FC = () => {
                         className='w-full h-full flex justify-center items-center'
                     >
                         <BellIcon className='text-white w-12 h-12' />
-                        {notifications.filter(item => item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute -top-1.5 -right-2' />}
+                        {notifications.filter(item => item.status === "success").some(i => !i.isRead) && <RedDotIcon className='absolute top-2 right-1' />}
                     </div>
                     :
                     <BorderedContainer

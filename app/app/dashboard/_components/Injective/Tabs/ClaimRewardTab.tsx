@@ -1,12 +1,13 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import Text from "@/components/Texts/Text"
-import { INotification, useNotification } from '@/contexts/NotificationProvider';
+import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
 import useAppContract from '@/contracts/app/useAppContract';
 import { isNil } from 'lodash';
 import { NumericFormat } from 'react-number-format';
 import { PageData } from '../../../_types/types';
 import TransactionButton from '@/components/Buttons/TransactionButton';
+import { getIsInjectiveResponse } from '@/utils/contractUtils';
 
 interface Props {
   pageData: PageData,
@@ -15,24 +16,35 @@ interface Props {
   basePrice: number;
 }
 
-const ClaimRewardTab: FC<Props> = ({ }) => {
+const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice }) => {
 
   const { baseCoin } = useWallet();
-  const [injAmount, setInjAmount] = useState(0);
-  const [processLoading, setProcessLoading] = useState<boolean>(false);
 
-  const [notification, setNotification] = useState<INotification | undefined>(undefined);
+  const contract = useAppContract();
+  const { addNotification, processLoading, setProcessLoading } = useNotification();
 
+  const rewardClaim = async () => {
+    setProcessLoading(true);
 
-  useEffect(() => {
-    if (notification) {
-      setTimeout(() => {
-        setNotification(undefined);
-      }, 2000);
+    try {
+      const res = await contract.withdrawLiquidationGains();
+      addNotification({
+        status: 'success',
+        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
+      })
+      getPageData();
+      refreshBalance();
     }
-  }, [notification])
-
-
+    catch (err) {
+      console.log(err);
+      addNotification({
+        message: "",
+        status: 'error',
+        directLink: ""
+      })
+    }
+    setProcessLoading(false);
+  }
   return (
     <section>
       <Text size='3xl'>Claim your rewards in INJ</Text>
@@ -51,7 +63,7 @@ const ClaimRewardTab: FC<Props> = ({ }) => {
             }
           </div>
           <NumericFormat
-            value={injAmount}
+            value={pageData.rewardAmount}
             thousandsGroupStyle="thousand"
             thousandSeparator=","
             fixedDecimalScale
@@ -65,10 +77,9 @@ const ClaimRewardTab: FC<Props> = ({ }) => {
           />
         </div>
         <TransactionButton
-          status={notification}
           loading={processLoading}
           className="w-[375px] h-11 mt-7 ml-auto"
-          onClick={()=>{}}
+          onClick={() => { rewardClaim(); }}
           text='Claim Rewards'
         />
       </div>

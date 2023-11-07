@@ -16,16 +16,22 @@ interface INotificationContext {
   notification: INotification | null;
   addNotification: (notification: INotification) => void;
   clearNotification: () => void;
+  processLoading: boolean;
+  setProcessLoading: (arg: boolean) => void;
 }
 
 const NotificationContext = createContext<INotificationContext>({
   notification: null,
   addNotification: () => { },
   clearNotification: () => { },
+  processLoading: false,
+  setProcessLoading: () => { }
 });
 
 const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
+
+  const [processLoading, setProcessLoading] = useState(false);
 
   const addNotification = (notification: INotification) => {
     setNotification(notification);
@@ -40,7 +46,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
 
     try {
       if (!notiElement.status) { return }
-      
+
       let notiArray = JSON.parse(localStorage.getItem('notifications') ?? "");
       notiArray.push(notiElement);
 
@@ -51,7 +57,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
 
     setTimeout(() => {
       clearNotification();
-    }, 2500);
+    }, 3000);
   }
   const clearNotification = () => {
     setNotification(null);
@@ -59,7 +65,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <NotificationContext.Provider
-      value={{ notification, addNotification, clearNotification }}
+      value={{ notification, addNotification, clearNotification,processLoading,setProcessLoading }}
     >
       {children}
     </NotificationContext.Provider>

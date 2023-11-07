@@ -27,13 +27,13 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   const { baseCoin } = useWallet();
   const contract = useAppContract();
   const [loading, setLoading] = useState(false);
-  const [processLoading, setProcessLoading] = useState<boolean>(false);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTroves[]>([]);
-  const { addNotification } = useNotification();
+  const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const liquidateTroves = async () => {
     try {
       setProcessLoading(true);
+
       const res = await contract.liquidateTroves();
       addNotification({
         status: 'success',
