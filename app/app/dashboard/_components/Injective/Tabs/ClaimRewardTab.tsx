@@ -78,6 +78,7 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
         </div>
         <TransactionButton
           loading={processLoading}
+          disabled={pageData.rewardAmount == 0}
           className="w-[375px] h-11 mt-7 ml-auto"
           onClick={() => { rewardClaim(); }}
           text='Claim Rewards'
