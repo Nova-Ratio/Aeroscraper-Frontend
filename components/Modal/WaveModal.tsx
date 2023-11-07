@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 import ShapeContainer from "../Containers/ShapeContainer";
 import Text from '@/components/Texts/Text';
 import { CloseIcon } from "../Icons/Icons";
-import ModalNotification from "./Notification";
+import ModalNotification from "./ModalNotification";
 
 interface ModalProps {
   title?: string,

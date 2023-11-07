@@ -40,8 +40,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
 
-  const [processLoading, setProcessLoading] = useState<boolean>(false);
-  const { addNotification } = useNotification();
+  const { addNotification, processLoading, setProcessLoading } = useNotification();
 
   const isTroveOpened = useMemo(() => pageData.collateralAmount > 0, [pageData]);
 
@@ -235,11 +234,11 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
               {
                 selectedTab === TABS.COLLATERAL && (
                   <motion.div
-                  initial={{ opacity: 0, y: -15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -100 }}
-                  transition={{ duration: 0.3, ease: "easeIn" }}
-                  className='flex flex-col mt-6'>
+                    initial={{ opacity: 0, y: -15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -100 }}
+                    transition={{ duration: 0.3, ease: "easeIn" }}
+                    className='flex flex-col mt-6'>
                     <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
                       <div className="flex items-end justify-between">
                         <div>

@@ -16,7 +16,7 @@ const Tabs: FC<TabsProps<string>> = ({ tabs, selectedTab, onTabSelected }) => {
           <motion.li
             key={tab}
             onClick={() => onTabSelected && onTabSelected(tab)}
-            className={`px-6 py-3 m-1 text-base font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700`}
+            className={`px-6 py-3 m-1 text-base font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
           >
             {camelCaseToTitleCase(tab)}
             {tab === selectedTab && <motion.div layoutId={"gliding"} className="absolute bottom-0 h-[48px] border rounded-md border-red-500 left-0 right-0" />}

@@ -58,6 +58,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
 
     try {
       setProcessLoading(true);
+      notifications.setProcessLoading(true);
 
       const res = await contract.redeem(redeemAmount);
 
@@ -88,6 +89,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
     }
 
     setProcessLoading(false);
+    notifications.setProcessLoading(false);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { INotification } from '@/contexts/NotificationProvider';
 import { motion } from 'framer-motion';
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren } from 'react'
 import Loading from '../Loading/Loading';
 
 const bgColor = {
