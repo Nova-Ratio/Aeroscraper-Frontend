@@ -207,7 +207,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                         <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
                             {
                                 !isNil(clientType) && WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                    <div className='inline-block mr-auto'>
+                                    <div key={idx} className='inline-block mr-auto'>
                                         {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
                                         <Button
                                             key={idx}
@@ -221,7 +221,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                             }
                             {
                                 !isNil(clientType) && WalletByClient[clientType].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                    <div className='inline-block mr-auto'>
+                                    <div key={idx} className='inline-block mr-auto'>
                                         {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
                                         <Button
                                             key={idx}
@@ -281,7 +281,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                             })
                                         }
                                     </div>
-                                    <Text size='base' textColor='text-[#989396]'>If you want to connect an installed wallet, you can log in by selecting your wallet under "Installed Wallets" on the left side of the screen and using the browser extension.</Text>
+                                    <Text size='base' textColor='text-[#989396]'>If you want to connect an installed wallet, you can log in by selecting your wallet under &quot;Installed Wallets&quot; on the left side of the screen and using the browser extension.</Text>
                                     <Text size='base' textColor='text-[#989396]' className='mt-10'>If you do not have an installed wallet, you can choose one of the wallet options on the left side of the screen and follow the instructions to set up your wallet.</Text>
                                 </motion.div>
                                 )
