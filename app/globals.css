@@ -33,7 +33,7 @@ body::-webkit-scrollbar {
 
 @layer components{
   .gradient-background {
-    @apply  main-gradient transition-all delay-300
+    @apply  tertiary-gradient transition-all delay-300
   }
 }
 
