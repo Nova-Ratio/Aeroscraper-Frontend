@@ -5,7 +5,7 @@ import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { motion } from "framer-motion";
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import QRCode from 'react-qr-code';
 import { WalletType } from "@/enums/WalletType";
 import { NumericFormat } from "react-number-format";
@@ -142,7 +142,13 @@ const AccountModal: FC<Props> = (props: Props) => {
   useOutsideHandler(avatarSelectRef, closeAvatarSelection);
   useOutsideHandler(qrCodeViewRef, closeQrCodeview);
 
-  let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+  let clientType = "INJECTIVE" 
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+          }
+    }, [])
+    //@ts-ignore
   let scanDomain = ClientTransactionUrlByName[clientType]?.accountUrl
 
   return (
@@ -272,7 +278,9 @@ const AccountModal: FC<Props> = (props: Props) => {
                 <div >
                   <Text size='sm' className="text-start mb-3" textColor='text-dark-silver'>Selected chain</Text>
                   <Button
-                    startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
+                    startIcon={<img alt={clientType} src={
+                      //@ts-ignore
+                      BaseCoinByClient[clientType].image} className='w-6 h-6' />}
                   >
                     {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
                   </Button>
