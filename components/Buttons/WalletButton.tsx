@@ -322,15 +322,19 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
                                     <div className='space-y-6 mt-10'>
                                         {
-                                            isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => (
-                                                <Button
+                                            isNil(clientType) && Object.values(ClientEnum).map((clientType, idx) => {
+                                                if (clientType === ClientEnum.NEUTRON) { // NEUTRON inj sunumu öncesi disabled yapıldı, tekrar açmak için bu yorum satırı silinebilir
+                                                    return null;
+                                                }
+
+                                                return <Button
                                                     key={idx}
                                                     onClick={() => { selectClient(clientType); }}
                                                     startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />}
                                                 >
                                                     <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
                                                 </Button>
-                                            ))
+                                            })
                                         }
                                     </div>
                                 </>)
