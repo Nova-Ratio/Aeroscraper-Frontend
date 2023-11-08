@@ -112,8 +112,8 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
           header={<div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4">
             <TableHeaderCol col={3} text="Owner" />
             <TableHeaderCol col={1} text="Collateral" textCenter />
-            <TableHeaderCol col={1} text="Debt" textCenter />
-            <TableHeaderCol col={1} text="Coll. Ratio" />
+            <TableHeaderCol col={1} text="Debt" textCenter/>
+            <TableHeaderCol col={1} text="Coll. Ratio" textEnd/>
           </div>}
           bodyCss='space-y-1 max-h-[350px] overflow-auto'
           renderItem={(item: RiskyTroves) => {
@@ -163,7 +163,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     decimalScale={2}
                     displayType="text"
                     renderText={(value) =>
-                      <Text size='sm' responsive={false} className='whitespace-nowrap text-end' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{item.liquidityThreshold}%</Text>
+                      <Text size='sm' responsive={false} className='whitespace-nowrap text-center pl-4' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{item.liquidityThreshold}%</Text>
                     }
                   />}
                 />
