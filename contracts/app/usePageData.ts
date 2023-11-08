@@ -1,17 +1,24 @@
 import { PageData } from "@/app/app/dashboard/_types/types";
 import { useWallet } from "@/contexts/WalletProvider";
-import { requestTotalTroves } from "@/services/graphql";
 import { convertAmount } from "@/utils/contractUtils";
 import { getSettledValue } from "@/utils/promiseUtils";
 import { useCallback, useEffect, useState } from "react";
 import useAppContract from "./useAppContract";
+import Deneme from "@/services/graphql";
+import { ClientEnum } from "@/types/types";
 
 interface Props {
   basePrice: number
 }
 
 const usePageData = ({ basePrice }: Props) => {
-
+  const [clientType, setClientType] = useState<ClientEnum>("INJECTIVE" as ClientEnum);
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setClientType(localStorage.getItem("selectedClientType") as ClientEnum);
+        }
+    }, [])
+    const {requestTotalTroves ,requestRiskyTroves } = Deneme({clientType});
   const contract = useAppContract();
 
   const { baseCoin } = useWallet();

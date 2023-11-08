@@ -5,7 +5,7 @@ import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { AnimatePresence, motion } from "framer-motion";
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { WaveModal } from "../Modal/WaveModal";
 import TooltipWrapper from "./TooltipWrapper";
 import QRCode from 'react-qr-code';
@@ -138,7 +138,13 @@ const AccountModal: FC<Props> = (props: Props) => {
     useOutsideHandler(avatarSelectRef, closeAvatarSelection);
     useOutsideHandler(qrCodeViewRef, closeQrCodeview);
 
-    let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+    let clientType = "INJECTIVE" 
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+          }
+    }, [])
+    //@ts-ignore
     let scanDomain = ClientTransactionUrlByName[clientType]?.accountUrl
 
     return (

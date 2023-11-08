@@ -2,7 +2,7 @@ import { ClientTransactionUrlByName } from '@/constants/walletConstants';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { ClientEnum } from '@/types/types';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { ShapeNotification } from '../Icons/Icons'
 
 const VARIANTS: Record<Status, any> = {
@@ -26,7 +26,13 @@ const ModalNotification: FC = () => {
 
   const { notification } = useNotification();
 
-  let clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+  let clientType = "INJECTIVE" 
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            clientType = localStorage.getItem("selectedClientType") as ClientEnum;
+          }
+    }, [])
+    //@ts-ignore
   let scanDomain = ClientTransactionUrlByName[clientType]?.txDetailUrl
 
   return (
