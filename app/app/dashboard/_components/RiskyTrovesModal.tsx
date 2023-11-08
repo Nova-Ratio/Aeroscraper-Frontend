@@ -9,8 +9,8 @@ import { NumericFormat } from 'react-number-format';
 import { PageData } from '../_types/types';
 import useAppContract from '@/contracts/app/useAppContract';
 import { useNotification } from '@/contexts/NotificationProvider';
-import { requestRiskyTroves } from '@/services/graphql';
-import { RiskyTroves } from '@/types/types';
+import Deneme from '@/services/graphql';
+import { ClientEnum, RiskyTroves } from '@/types/types';
 import { convertAmount, getIsInjectiveResponse, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
@@ -56,7 +56,13 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
             setProcessLoading(false);
         }
     }
-
+    const [clientType, setClientType] = useState<ClientEnum>("INJECTIVE" as ClientEnum);
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setClientType(localStorage.getItem("selectedClientType") as ClientEnum);
+        }
+    }, [])
+    const {requestTotalTroves ,requestRiskyTroves } = Deneme({clientType});
     const getRiskyTroves = useCallback(async () => {
         try {
             setLoading(true);
