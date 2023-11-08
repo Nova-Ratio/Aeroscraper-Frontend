@@ -1,9 +1,9 @@
 import { ClientEnum, RiskyTrovesResponse, TotalTrovesResponse } from '@/types/types';
 import { request, gql } from 'graphql-request'
 
-const URL = (): string => {
-    let clientType = localStorage.getItem("selectedClientType");
+let clientType = localStorage.getItem("selectedClientType");
 
+const URL = (): string => {
     switch (clientType) {
         case ClientEnum.ARCHWAY:
             return process.env.NEXT_PUBLIC_INDEXER_ARCH as string;
@@ -19,16 +19,24 @@ const URL = (): string => {
 }
 
 
-const getRiskyTrovesQuery = gql`
-query {
+const getRiskyTrovesQuery = clientType === ClientEnum.INJECTIVE ?
+    gql`query {
+    troves {
+        nodes {
+            owner
+        }
+    }
+}`
+    :
+    gql`query {
     troves {
         nodes {
             owner
             liquidityThreshold
         }
     }
-}
-`
+}`
+
 
 const getTotalTrovesQuery = gql`
 query {

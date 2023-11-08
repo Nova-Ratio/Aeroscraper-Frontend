@@ -55,7 +55,8 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       setProcessLoading(false);
     }
   }
-
+  console.log(basePrice);
+  
   const getRiskyTroves = useCallback(async () => {
     try {
       setLoading(true);
@@ -63,12 +64,13 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {
         try {
           const troveRes = await contract.getTroveByAddress(item.owner);
+
           return {
             owner: item.owner,
-            liquidityThreshold: item.liquidityThreshold,
+            liquidityThreshold: item.liquidityThreshold ?? (isFinite(Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : 0),
             collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal),
             debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)
-          }
+          }          
         }
         catch (err) {
           return {
@@ -80,7 +82,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
         }
       })
       const data = await Promise.all(getTrovesPromises);
-      setRiskyTroves(data);
+      setRiskyTroves(data.sort(function(a, b){return a.liquidityThreshold - b.liquidityThreshold}));
     }
     catch (err) {
       console.error(err);
@@ -154,7 +156,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     decimalScale={2}
                     displayType="text"
                     renderText={(value) =>
-                      <Text size='sm' responsive={false} className='whitespace-nowrap text-end' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}%</Text>
+                      <Text size='sm' responsive={false} className='whitespace-nowrap text-end' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{item.liquidityThreshold}%</Text>
                     }
                   />}
                 />
