@@ -4,8 +4,8 @@ import { InjectiveStargate } from "@injectivelabs/sdk-ts";
 
 export enum ClientEnum {
     INJECTIVE = "INJECTIVE",
-    SEI = "SEI",
     ARCHWAY = "ARCHWAY",
+    SEI = "SEI",
     NEUTRON = "NEUTRON"
 }
 

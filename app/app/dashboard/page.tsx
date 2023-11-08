@@ -24,7 +24,8 @@ import InjectiveDashboard from "./_chain/InjectiveDashboard";
 export default function Dashboard() {
     const { balanceByDenom, baseCoin, walletType, clientType, refreshBalance } = useWallet();
 
-    if (!isNil(walletType) && !isNil(clientType)) {
+
+    if (!isNil(clientType)) {
         if (clientType === ClientEnum.SEI) {
             return <SeiDashboard />
         }
@@ -44,7 +45,8 @@ export default function Dashboard() {
 
     return (
         <div>
-            <div className="grid grid-cols-[1fr_439px] gap-6 overflow-hidden">
+            <InjectiveDashboard />
+            {/* <div className="grid grid-cols-[1fr_439px] gap-6 overflow-hidden">
                 <BorderedContainer containerClassName="w-full h-[122px]" className="px-8 py-6 flex justify-between items-center gap-2">
                     <div className="flex items-center gap-11">
                         <div className="flex flex-col items-center gap-2">
@@ -191,7 +193,7 @@ export default function Dashboard() {
                         <RightArrow width="24" height="24" />
                     </div>
                 </ShapeContainer>
-            </div>
+            </div> */}
         </div>
     )
 }

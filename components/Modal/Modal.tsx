@@ -84,9 +84,9 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
         }}
         className={`z-[70] ${SIZE_VARIANT[modalSize].width} bg-chinese-black rounded-[28px] relative`}
       >
-        <button onClick={closeModal} className="absolute top-8 right-8 z-[100]">
+        {props.onClose && <button onClick={closeModal} className="absolute top-8 right-8 z-[100]">
           <CloseIcon className="w-6 h-6" />
-        </button>
+        </button>}
         {props.children}
       </motion.div>
       <div className="bg-gray-900 bg-opacity-40 inset-0 fixed z-60 backdrop-blur-[1px]"></div>

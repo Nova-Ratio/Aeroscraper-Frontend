@@ -2,7 +2,7 @@
 
 import { useWallet } from "@/contexts/WalletProvider";
 import { ClientEnum } from "@/types/types";
-import { FC, ReactNode } from "react";
+import {  ReactNode } from "react";
 import InjeciveTheme from "./themes/InjectiveTheme";
 import { PrimaryTheme } from "./themes/PrimaryTheme";
 
@@ -16,7 +16,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
         [ClientEnum.INJECTIVE]: <InjeciveTheme />,
     }
 
-    const selectedTheme = chainTheme[clientType!] || <PrimaryTheme clientType={clientType} />;
+    const selectedTheme = chainTheme[clientType!] || <InjeciveTheme />;
 
     return (
         <>

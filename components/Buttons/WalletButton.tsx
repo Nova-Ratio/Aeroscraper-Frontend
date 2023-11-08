@@ -193,8 +193,6 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         )
     }
 
-    console.log(walletExtensions);
-
     return (
         <div className='relative'>
             <GradientButton className={className} onClick={toggleWallet}>

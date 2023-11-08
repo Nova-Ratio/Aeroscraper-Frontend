@@ -14,6 +14,7 @@ import { useLeap } from '@/services/leap';
 import InjectiveAccountModal from '@/components/AccountModal/InjectiveAccountModal';
 import { convertAmount } from '@/utils/contractUtils';
 import InjectiveNotification from '@/components/Modal/InjectiveNotification';
+import WalletButton from '@/components/Buttons/WalletButton';
 
 const InjeciveTheme = () => {
   const { balanceByDenom, baseCoin, walletType, refreshBalance } = useWallet();
@@ -85,26 +86,37 @@ const InjeciveTheme = () => {
               <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.image} />
             </div>
           }
-          <NotificationDropdown />
-          <button onClick={() => { setAccountModal(true); }} className='flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300'>
-            <img
-              alt="user-profile-image"
-              src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
-              className='rounded-sm bg-raisin-black w-12 h-12'
+          {wallet.initialized && !isNil(baseCoin) ?
+            <>
+              <NotificationDropdown />
+              <button onClick={() => { setAccountModal(true); }} className='flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300'>
+                <img
+                  alt="user-profile-image"
+                  src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
+                  className='rounded-sm bg-raisin-black w-12 h-12'
+                />
+                <div className='flex flex-col'>
+                  <div className='flex items-center ml-auto'>
+                    <img alt={wallet.walletType} className='w-4 h-4 object-contain rounded' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
+                    <Text size='lg' weight='font-regular' className='truncate ml-2'>{wallet.name}</Text>
+                  </div>
+                  <Text size='sm'>{wallet.address.slice(32)}...{wallet.address.slice(-5)}</Text>
+                  <div>
+                  </div>
+                </div>
+                <button className='w-12 h-12 flex items-center justify-center' onClick={(e)=>{e.stopPropagation(); disconnect();}}>
+                  <ExitIcon className='text-white' />
+                </button>
+              </button>
+            </>
+            :
+            <WalletButton
+              ausdBalance={0}
+              className="rounded-lg w-[287px] h-[48px]"
+              baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
+              basePrice={0}
             />
-            <div className='flex flex-col'>
-              <div className='flex items-center ml-auto'>
-                <img alt={wallet.walletType} className='w-4 h-4 object-contain rounded' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
-                <Text size='lg' weight='font-regular' className='truncate ml-2'>{wallet.name}</Text>
-              </div>
-              <Text size='sm'>{wallet.address.slice(32)}...{wallet.address.slice(-5)}</Text>
-              <div>
-              </div>
-            </div>
-            <button className='w-12 h-12 flex items-center justify-center' onClick={disconnect}>
-              <ExitIcon className='text-white' />
-            </button>
-          </button>
+          }
         </div>
         <InjectiveNotification />
 
