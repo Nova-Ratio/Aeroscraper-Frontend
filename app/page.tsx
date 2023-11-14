@@ -35,7 +35,7 @@ export default function Home() {
         <InjectiveBackgroundWave animate className="absolute -top-3 right-0 -z-10 w-[1200px]" />
 
       </main>
-      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 pr-16 mt-40 pb-24 bg-[#150A17] opacity-90 relative'>
+      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 pr-16 mt-40 pb-24 relative'>
         <div className='flex items-center gap-6 lg:mt-20'>
           <LogoSecondary />
           <Text size="2xl" textColor='text-white'>Aeroscraper</Text>

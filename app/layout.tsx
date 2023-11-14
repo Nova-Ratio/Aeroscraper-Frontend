@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${exo.className} relative min-h-screen flex flex-col`}>
+      <body className={`${exo.className} relative`}>
         <NotificationProvider>
           <WalletProvider>
             {children}

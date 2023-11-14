@@ -50,12 +50,6 @@ const InjeciveTheme = () => {
     }
 
     getPrice()
-
-    const bodyElement = document.querySelector('body');
-
-    if (bodyElement) {
-      bodyElement.className += " injective-background";
-    }
   }, []);
 
   const disconnect = () => {
@@ -82,7 +76,7 @@ const InjeciveTheme = () => {
           {
             !isNil(baseCoin) &&
             <div className="flex items-center gap-2 mr-12">
-              <Text size='base'>$ {basePrice.toFixed(3)}</Text>
+              <Text size='base'>$ {basePrice.toFixed(4)}</Text>
               <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.image} />
             </div>
           }
@@ -100,11 +94,11 @@ const InjeciveTheme = () => {
                     <img alt={wallet.walletType} className='w-4 h-4 object-contain rounded' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
                     <Text size='lg' weight='font-regular' className='truncate ml-2'>{wallet.name}</Text>
                   </div>
-                  <Text size='sm'>{wallet.address.slice(32)}...{wallet.address.slice(-5)}</Text>
+                  <Text size='sm'>{wallet.address.slice(0, 6)}...{wallet.address.slice(-6)}</Text>
                   <div>
                   </div>
                 </div>
-                <button className='w-12 h-12 flex items-center justify-center' onClick={(e)=>{e.stopPropagation(); disconnect();}}>
+                <button className='w-12 h-12 flex items-center justify-center' onClick={(e) => { e.stopPropagation(); disconnect(); }}>
                   <ExitIcon className='text-white' />
                 </button>
               </button>

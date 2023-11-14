@@ -263,7 +263,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       <div className='flex justify-between mt-6'>
                         <div className='flex'>
                           <label className="font-regular text-base text-white">In Wallet:</label>
-                          <p className='text-white font-regular text-base ml-3'>{!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)).toFixed(3) : 0} {baseCoin?.name}</p>
+                          <p className='text-white font-regular text-base ml-3'>{!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)).toFixed(6) : 0} {baseCoin?.name}</p>
                         </div>
                         <div className='flex'>
                           <label className="font-regular text-base text-white">In Trove Balance:</label>
@@ -274,7 +274,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     <div className='grid grid-cols-4 gap-6 gap-y-4 p-4'>
                       <InjectiveStatisticCard
                         title='Management Fee'
-                        description={`${Number(collateralAmount * 0.005).toFixed(3)} ${baseCoin?.name} (0.5%)`}
+                        description={`${Number(collateralAmount * 0.005).toFixed(6)} ${baseCoin?.name} (0.5%)`}
                         tooltip='This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free.'
                       />
                       <InjectiveStatisticCard
@@ -284,7 +284,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       />
                       <InjectiveStatisticCard
                         title='Liquidation Price'
-                        description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
+                        description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(6).toString()}
                         tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                       />
                       <InjectiveStatisticCard
@@ -340,11 +340,11 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       <div className='flex justify-between mt-6'>
                         <div className='flex'>
                           <label className="font-regular text-base text-white">Borrowing Capacity:</label>
-                          <p className='text-white font-regular text-base ml-3'>{(((pageData.collateralAmount * basePrice * 100) / 115) - (pageData.debtAmount)).toFixed(3)} AUSD</p>
+                          <p className='text-white font-regular text-base ml-3'>{(((pageData.collateralAmount * basePrice * 100) / 115) - (pageData.debtAmount)).toFixed(6)} AUSD</p>
                         </div>
                         <div className='flex'>
                           <label className="font-regular text-base text-white">Debt:</label>
-                          <p className='text-white font-regular text-base ml-3'>{`${pageData.debtAmount.toFixed(3)} AUSD`}</p>
+                          <p className='text-white font-regular text-base ml-3'>{`${pageData.debtAmount.toFixed(6)} AUSD`}</p>
                         </div>
                       </div>
                     </div>
@@ -352,13 +352,13 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       <div className='col-start-3'>
                         <InjectiveStatisticCard
                           title='Liquidation Price'
-                          description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(3).toString()}
+                          description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(6).toString()}
                           tooltip='The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.'
                         />
                       </div>
                       <InjectiveStatisticCard
                         title='Collateral Ratio'
-                        description={`${(pageData.minCollateralRatio * 100).toFixed(3)} %`}
+                        description={`${(pageData.minCollateralRatio * 100).toFixed(6)} %`}
                         tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                       />
                     </div>
@@ -442,7 +442,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
               className="grid grid-cols-4 content-center gap-16 mt-8">
               <InjectiveStatisticCard
                 title="Management Fee"
-                description={`${Number(openTroveAmount * 0.005).toFixed(3)} ${baseCoin?.name} (0.5%)`}
+                description={`${Number(openTroveAmount * 0.005).toFixed(6)} ${baseCoin?.name} (0.5%)`}
                 className="w-full h-14"
                 tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
               />
@@ -454,13 +454,13 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
               />
               <InjectiveStatisticCard
                 title="Liquidation Price"
-                description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(3).toString()}
+                description={Number((borrowAmount * 115) / ((openTroveAmount || 1) * 100)).toFixed(6).toString()}
                 className="w-full h-14"
                 tooltip="The dollar value per unit of collateral at which your Trove will drop below a 115% Collateral Ratio and be liquidated. You should ensure you are comfortable with managing your position so that the price of your collateral never reaches this level.."
               />
               <InjectiveStatisticCard
                 title="Collateral Ratio"
-                description={`${(collacteralRatio * 100).toFixed(3)} %`}
+                description={`${(collacteralRatio * 100).toFixed(6)} %`}
                 descriptionColor={collacteralRatio > 0 ? getRatioColor(collacteralRatio * 100) : undefined}
                 className="w-full h-14"
                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."

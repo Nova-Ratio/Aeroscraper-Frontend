@@ -37,6 +37,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
         }
     }, [])
     const {requestTotalTroves ,requestRiskyTroves } = Deneme({clientType});
+
   const liquidateTroves = async () => {
     try {
       setProcessLoading(true);
@@ -62,11 +63,11 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       setProcessLoading(false);
     }
   }
-  console.log(basePrice);
   
   const getRiskyTroves = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
+
       const res = await requestRiskyTroves();
       const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {
         try {
@@ -117,7 +118,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
           </div>}
           bodyCss='space-y-1 max-h-[350px] overflow-auto'
           renderItem={(item: RiskyTroves) => {
-            return loading ?
+            return (loading || riskyTroves.length === 0) ?
               <>
                 {
                   Array.from(Array(2).keys()).map(

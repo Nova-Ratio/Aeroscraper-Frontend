@@ -47,7 +47,7 @@ const InjectiveStatisticSide:FC<Props> = ({basePrice}) => {
           />
           <InjectiveStatisticCard
             title="Total Value Locked"
-            description={isNil(baseCoin) ? '-' : `${Number(pageData.totalCollateralAmount).toFixed(3)} ${baseCoin.name}`}
+            description={isNil(baseCoin) ? '-' : `${Number(pageData.totalCollateralAmount).toFixed(6)} ${baseCoin.name}`}
             className="w-[191px] h-14"
             tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
             tooltipPlacement="top"

@@ -172,7 +172,7 @@ const AccountModal: FC<Props> = (props: Props) => {
             </button>
           )}
           {selectedTab === null && (
-            <div className="px-28">
+            <div className="px-40 w-full">
               <div className="space-y-8">
                 <div onClick={openAvatarSelection} className="secondary-gradient w-[148px] h-[148px] p-0.5 rounded-lg gap-2 mx-auto cursor-pointer">
                   <img
@@ -183,8 +183,8 @@ const AccountModal: FC<Props> = (props: Props) => {
                 </div>
                 <Text size='3xl' textColor='text-white'>{name}</Text>
               </div>
-              <div className='flex gap-4 mt-6'>
-                <Text size='xl'>{address.slice(12)}...{address.slice(-5)}</Text>
+              <div className='flex justify-center gap-4 mt-6'>
+                <Text size='xl'>{address.slice(0,24)}...{address.slice(-6)}</Text>
                 {isClipped === "WALLET" ?
                   <Text size='xs' textColor="text-[#37D489]">Copied!</Text>
                   :
@@ -227,7 +227,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                   renderText={(value) =>
                     <Text size='lg' className='mt-2 flex gap-2 items-center ml-6'>
                       {baseCoin && <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.image} />}
-                      <CounterUp from={"0"} to={value} duration={0.5} />
+                      <CounterUp from={"0"} fixed={6} to={value} duration={0.5} />
                       INJ
                     </Text>
                   }
@@ -303,7 +303,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                 <QRCode className='w-full h-full' value={address} />
               </div>
               <div className='flex gap-4 mt-6 justify-center'>
-                <Text size='xl'>{address.slice(12)}...{address.slice(-5)}</Text>
+                <Text size='xl'>{address.slice(0,24)}...{address.slice(-6)}</Text>
                 {isClipped === "WALLET" ?
                   <Text size='xs' textColor="text-[#37D489]">Copied!</Text>
                   :

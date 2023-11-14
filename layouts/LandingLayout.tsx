@@ -22,7 +22,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     <Text size='4xl'>Aeroscraper</Text>
                     <Logo className='lg:w-[96px] lg:h-[96px] w-[64px] h-[64px]' />
                 </div>
-                <Image src={PYTH} alt={"PYTH"} className="mr-48 mb-10"/>
+                <Image src={PYTH} alt={"PYTH"} className="mr-48 mb-10" />
                 <Link href={"/app/dashboard"}>
                     <GradientButton
                         className='w-full lg:w-[314px] self-end px-8 group'
@@ -35,7 +35,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
             <div className='container mx-auto px-8'>
                 {children}
             </div>
-            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 pt-6 pr-16 pb-24 bg-raisin-black mt-auto relative'>
+            <footer className='flex justify-center sm:justify-between gap-x-48 gap-y-16 items-top flex-wrap px-24 pt-6 pr-16 pb-24 mt-auto relative'>
                 <div className="flex-row flex gap-20 items-top">
                     <div className='flex flex-col items-center gap-6 lg:mt-20'>
                         <Logo />
@@ -43,9 +43,9 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     </div>
                     <div className='flex flex-col items-center lg:justify-normal justify-center gap-4'>
                         <Text size="2xl" textColor='text-white'>Product</Text>
-                        <button onClick={() => { setWhiteSpaceModal(true); }}>
-                            <Text textColor='text-ghost-white/75' className="cursor-pointer">Whitepaper</Text>
-                        </button>
+                        <Link href={'https://novaratio.gitbook.io/aeroscraper/'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+                            <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
+                        </Link>
                         <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <Text textColor='text-white'>Brand Identity</Text>
                         </Link>

@@ -102,7 +102,7 @@ export default function InjectiveDashboard() {
         <InjectiveStatisticSide basePrice={basePrice} />
         <InjectiveTabsSide setTabPosition={changeTabPosition} />
       </div>
-      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 -mx-20 pr-16 mt-40 pb-24 bg-[#150A17] opacity-90 relative'>
+      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 bg-transparent -mx-20 pr-16 mt-40 pb-24 relative'>
         <div className='flex items-center gap-6 lg:mt-20'>
           <LogoSecondary />
           <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
@@ -110,7 +110,9 @@ export default function InjectiveDashboard() {
         <div className='grid grid-cols-3 gap-40'>
           <div className='flex flex-col content-start justify-start gap-4'>
             <Text size="sm" textColor='text-white' weight="font-semibold">Product</Text>
-            <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
+            <Link href={'https://novaratio.gitbook.io/aeroscraper/'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+              <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
+            </Link>
             <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white'>Brand Identity</Text>
             </Link>
