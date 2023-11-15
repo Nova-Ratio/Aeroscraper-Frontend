@@ -164,7 +164,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     decimalScale={2}
                     displayType="text"
                     renderText={(value) =>
-                      <Text size='sm' responsive={false} className='whitespace-nowrap text-center pl-4' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{item.liquidityThreshold}%</Text>
+                      <Text size='sm' responsive={false} className='whitespace-nowrap text-center pl-4' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
                     }
                   />}
                 />
