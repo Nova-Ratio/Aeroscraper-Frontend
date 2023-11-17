@@ -16,7 +16,7 @@ import { convertAmount } from '@/utils/contractUtils';
 import InjectiveNotification from '@/components/Modal/InjectiveNotification';
 import WalletButton from '@/components/Buttons/WalletButton';
 
-const InjeciveTheme = () => {
+const ArchwayTheme = () => {
   const { balanceByDenom, baseCoin } = useWallet();
   const [basePrice, setBasePrice] = useState(0);
   const { pageData, getPageData } = usePageData({ basePrice });
@@ -40,7 +40,7 @@ const InjeciveTheme = () => {
         }
       )
 
-      const priceId = ["2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3"];
+      const priceId = ["b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819"];
 
       const currentPrices = await connection.getLatestPriceFeeds(priceId);
 
@@ -125,4 +125,4 @@ const InjeciveTheme = () => {
   )
 }
 
-export default InjeciveTheme;
+export default ArchwayTheme;

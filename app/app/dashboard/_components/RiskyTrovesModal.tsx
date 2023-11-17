@@ -63,6 +63,7 @@ const RiskyTrovesModal: FC<Props> = ({ open, onClose, pageData, getPageData, bas
         }
     }, [])
     const {requestTotalTroves ,requestRiskyTroves } = Deneme({clientType});
+    
     const getRiskyTroves = useCallback(async () => {
         try {
             setLoading(true);

@@ -41,7 +41,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   const fin = useFin();
   const compass = useCompass();
 
-  const { walletType, name, address, profileDetail, baseCoin, setProfileDetail } = useWallet();
+  const { walletType, name, address, profileDetail, baseCoin, setProfileDetail, clientType } = useWallet();
 
   const [selectedTab, setSelectedTab] = useState<Tabs | null>(null);
 
@@ -142,14 +142,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   useOutsideHandler(avatarSelectRef, closeAvatarSelection);
   useOutsideHandler(qrCodeViewRef, closeQrCodeview);
 
-  let clientType = "INJECTIVE" 
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            clientType = localStorage.getItem("selectedClientType") as ClientEnum;
-          }
-    }, [])
-    //@ts-ignore
-  let scanDomain = ClientTransactionUrlByName[clientType]?.accountUrl
+  let scanDomain = ClientTransactionUrlByName[clientType!]?.accountUrl
 
   return (
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
@@ -184,7 +177,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                 <Text size='3xl' textColor='text-white'>{name}</Text>
               </div>
               <div className='flex justify-center gap-4 mt-6'>
-                <Text size='xl'>{address.slice(0,24)}...{address.slice(-6)}</Text>
+                <Text size='xl'>{address.slice(0, 24)}...{address.slice(-6)}</Text>
                 {isClipped === "WALLET" ?
                   <Text size='xs' textColor="text-[#37D489]">Copied!</Text>
                   :
@@ -228,7 +221,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                     <Text size='lg' className='mt-2 flex gap-2 items-center ml-6'>
                       {baseCoin && <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.image} />}
                       <CounterUp from={"0"} fixed={6} to={value} duration={0.5} />
-                      INJ
+                      {baseCoin?.name}
                     </Text>
                   }
                 />
@@ -275,20 +268,18 @@ const AccountModal: FC<Props> = (props: Props) => {
           {selectedTab === "wallet-details" && (
             <div className='px-8 w-full'>
               <div className="flex items-center mb-16 mt-12">
-                <div >
+                {clientType && <div>
                   <Text size='sm' className="text-start mb-3" textColor='text-dark-silver'>Selected chain</Text>
                   <Button
-                    startIcon={<img alt={clientType} src={
-                      //@ts-ignore
-                      BaseCoinByClient[clientType].image} className='w-6 h-6' />}
+                    startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
                   >
                     {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
                   </Button>
-                </div>
+                </div>}
                 <div className="ml-14">
                   <Text size='sm' className="text-start mb-3" textColor='text-dark-silver'>Selected wallet</Text>
                   <Button
-                    startIcon={<img alt={walletType} src={WalletImagesByName[walletType!].image} className='w-6 h-6' />}
+                    startIcon={<img alt={walletType} src={WalletImagesByName[walletType!].thumbnail} className='w-6 h-6' />}
                   >
                     {capitalizeFirstLetter(walletType?.toLocaleLowerCase() ?? "")}
                   </Button>
@@ -303,7 +294,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                 <QRCode className='w-full h-full' value={address} />
               </div>
               <div className='flex gap-4 mt-6 justify-center'>
-                <Text size='xl'>{address.slice(0,24)}...{address.slice(-6)}</Text>
+                <Text size='xl'>{address.slice(0, 24)}...{address.slice(-6)}</Text>
                 {isClipped === "WALLET" ?
                   <Text size='xs' textColor="text-[#37D489]">Copied!</Text>
                   :

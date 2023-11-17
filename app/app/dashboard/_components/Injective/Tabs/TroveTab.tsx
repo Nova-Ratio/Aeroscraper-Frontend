@@ -274,7 +274,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     <div className='grid grid-cols-4 gap-6 gap-y-4 p-4'>
                       <InjectiveStatisticCard
                         title='Management Fee'
-                        description={`${Number(collateralAmount * 0.005).toFixed(6)} ${baseCoin?.name} (0.5%)`}
+                        description={`${Number(collateralAmount * 0.005).toFixed(6)} ${baseCoin?.name ?? ""} (0.5%)`}
                         tooltip='This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free.'
                       />
                       <InjectiveStatisticCard
@@ -442,7 +442,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
               className="grid grid-cols-4 content-center gap-16 mt-8">
               <InjectiveStatisticCard
                 title="Management Fee"
-                description={`${Number(openTroveAmount * 0.005).toFixed(6)} ${baseCoin?.name} (0.5%)`}
+                description={`${Number(openTroveAmount * 0.005).toFixed(6)} ${baseCoin?.name ?? ""} (0.5%)`}
                 className="w-full h-14"
                 tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
               />

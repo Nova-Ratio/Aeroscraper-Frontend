@@ -23,20 +23,15 @@ type Props = {
   basePrice: number;
 }
 
-const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
+const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
 
-  const { baseCoin } = useWallet();
+  const { baseCoin, clientType = ClientEnum.INJECTIVE } = useWallet();
   const contract = useAppContract();
   const [loading, setLoading] = useState(false);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTroves[]>([]);
   const { addNotification, setProcessLoading, processLoading } = useNotification();
-  const [clientType, setClientType] = useState<ClientEnum>("INJECTIVE" as ClientEnum);
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setClientType(localStorage.getItem("selectedClientType") as ClientEnum);
-        }
-    }, [])
-    const {requestTotalTroves ,requestRiskyTroves } = Deneme({clientType});
+
+  const { requestRiskyTroves } = Deneme({ clientType });
 
   const liquidateTroves = async () => {
     try {
@@ -63,7 +58,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       setProcessLoading(false);
     }
   }
-  
+
   const getRiskyTroves = useCallback(async () => {
     setLoading(true);
     try {
@@ -75,10 +70,10 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
 
           return {
             owner: item.owner,
-            liquidityThreshold: item.liquidityThreshold ?? (isFinite(Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : 0),
+            liquidityThreshold: item.liquidityThreshold || Number(isFinite(Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : 0),
             collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal),
             debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)
-          }          
+          }
         }
         catch (err) {
           return {
@@ -90,7 +85,7 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
         }
       })
       const data = await Promise.all(getTrovesPromises);
-      setRiskyTroves(data.sort(function(a, b){return a.liquidityThreshold - b.liquidityThreshold}));
+      setRiskyTroves(data.sort(function (a, b) { return a.liquidityThreshold - b.liquidityThreshold }));
     }
     catch (err) {
       console.error(err);
@@ -101,8 +96,8 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   }, [contract, baseCoin])
 
   useEffect(() => {
-    getRiskyTroves();
-  }, [getRiskyTroves])
+    clientType && getRiskyTroves();
+  }, [getRiskyTroves, clientType])
 
   return (
     <div>
@@ -113,8 +108,8 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
           header={<div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4">
             <TableHeaderCol col={3} text="Owner" />
             <TableHeaderCol col={1} text="Collateral" textCenter />
-            <TableHeaderCol col={1} text="Debt" textCenter/>
-            <TableHeaderCol col={1} text="Coll. Ratio" textEnd/>
+            <TableHeaderCol col={1} text="Debt" textCenter />
+            <TableHeaderCol col={1} text="Coll. Ratio" textEnd />
           </div>}
           bodyCss='space-y-1 max-h-[350px] overflow-auto'
           renderItem={(item: RiskyTroves) => {
@@ -164,7 +159,10 @@ const RiskyTrovesTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     decimalScale={2}
                     displayType="text"
                     renderText={(value) =>
-                      <Text size='sm' responsive={false} className='whitespace-nowrap text-center pl-4' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
+                      clientType === ClientEnum.INJECTIVE ?
+                        <Text size='sm' responsive={false} className='whitespace-nowrap text-center pl-4' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
+                        :
+                        <Text size='base' responsive={false} className='whitespace-nowrap' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}%</Text>
                     }
                   />}
                 />

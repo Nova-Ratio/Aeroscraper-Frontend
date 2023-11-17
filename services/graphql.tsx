@@ -7,11 +7,9 @@ import {
 import { request, gql } from "graphql-request";
 import { useEffect } from "react";
 
-export default function graphql({clientType = "INJECTIVE"} : {clientType: string}) {
+export default function graphql({clientType} : {clientType: string}) {
 
   
-  
-
   const URL = (): string => {
     switch (clientType) {
       case ClientEnum.ARCHWAY:
