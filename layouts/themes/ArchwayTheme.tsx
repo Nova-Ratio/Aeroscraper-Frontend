@@ -32,7 +32,7 @@ const ArchwayTheme = () => {
   useEffect(() => {
     const getPrice = async () => {
       const connection = new PriceServiceConnection(
-        "https://hermes-beta.pyth.network/",
+        "https://xc-mainnet.pyth.network/",
         {
           priceFeedRequestConfig: {
             binary: true,
