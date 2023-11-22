@@ -322,6 +322,7 @@ export const WalletIconMap: Record<WalletType, string> = {
   [WalletType.LEAP]: '/images/wallet-images/leap-icon.png',
   [WalletType.FIN]: '/images/wallet-images/fin-icon.png',
   [WalletType.COMPASS]: '/images/wallet-images/compass-icon.png',
+  [WalletType.METAMASK]: '/images/wallet-images/metamask-icon.png',
   [WalletType.NOT_SELECTED]: ''
 }
 

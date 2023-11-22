@@ -84,6 +84,12 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
 
             compass.connect();
         }
+        else if (walletType === WalletType.METAMASK) {
+            if (!anyWindow.compass?.getOfflineSigner) { return window.open("https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1", '_blank', 'noopener,noreferrer'); }
+
+            compass.connect();
+        }
+        
 
         setWalletSelectionOpen(false);
     }
@@ -97,6 +103,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         anyWindow.leap?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.LEAP }) : walletExtensions.otherWallets.push({ name: WalletType.LEAP, downloadLink: "https://www.leapwallet.io/" });
         anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
         anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
+        anyWindow.metamask?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.METAMASK }) : walletExtensions.otherWallets.push({ name: WalletType.METAMASK, downloadLink: "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1" });
 
         setWalletExtensions(walletExtensions);
     }
@@ -234,7 +241,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                         {isNil(clientType) &&
                             <div className={`gap-y-4 flex flex-col mt-10 opacity-25`}>
                                 {
-                                    [WalletType.KEPLR, WalletType.LEAP, WalletType.FIN, WalletType.COMPASS].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
                                         <div key={idx} className='inline-block mr-auto'>
                                             {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
                                             <Button
@@ -248,7 +255,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     ))
                                 }
                                 {
-                                    [WalletType.KEPLR, WalletType.LEAP, WalletType.FIN, WalletType.COMPASS].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
                                         <div key={idx} className='inline-block mr-auto'>
                                             {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
                                             <Button
