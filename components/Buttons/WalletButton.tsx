@@ -87,7 +87,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         else if (walletType === WalletType.METAMASK) {
             if (!anyWindow.compass?.getOfflineSigner) { return window.open("https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1", '_blank', 'noopener,noreferrer'); }
 
-            compass.connect();
+            wallet.connectEth()
         }
         
 

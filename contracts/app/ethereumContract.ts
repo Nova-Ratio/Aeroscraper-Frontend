@@ -762,26 +762,7 @@ export const getAppContract = (
     }
 
     const withdrawLiquidationGains = async (senderAddress: string) => {
-        if (clientType === ClientEnum.INJECTIVE) {
-            const msg = MsgExecuteContract.fromJSON({
-                contractAddress,
-                sender: senderAddress,
-                msg: { withdraw_liquidation_gains: {} }
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: msg,
-                injectiveAddress: senderAddress
-            })
-        }
-
-        return await client.execute(
-            senderAddress,
-            contractAddress,
-            { withdraw_liquidation_gains: {} },
-            "auto",
-            "Withdraw Liquidation Gains"
-        )
+        
     }
 
     return {

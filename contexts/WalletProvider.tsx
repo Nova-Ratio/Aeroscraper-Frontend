@@ -24,6 +24,7 @@ const SideEffects = () => {
     const keplr = useKeplr();
     const fin = useFin();
     const compass = useCompass();
+    const metamask = useMetamask();
 
     useEffect(() => {
         const listenKeplrKeystoreChange = () => keplr.connect(true);
@@ -58,8 +59,11 @@ const SideEffects = () => {
             else if (selectedWalletType === WalletType.COMPASS) {
                 compass.connect();
             }
+            else if (selectedWalletType === WalletType.METAMASK){
+                metamask.connect();
+            }
         }
-    }, [leap, keplr, fin, compass]);
+    }, [leap, keplr, fin, compass, metamask]);
 
     return null;
 };
@@ -183,6 +187,7 @@ export function WalletProvider({
     const [walletType, setWalletType] = useState<WalletType | undefined>(undefined);
     const [clientType, setClientType] = useState<ClientEnum | undefined>(undefined);
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
+    const [ethAddress, setEthAddress] = useState<string | undefined>(undefined);
 
     const config = getConfig(network, clientType);
 
@@ -202,6 +207,15 @@ export function WalletProvider({
         setSigner(signer);
         setWalletType(walletType)
         localStorage.setItem("selectedWalletType", walletType);
+    }, [])
+
+    const initEth = React.useCallback((address: string) => {
+        setEthAddress(address);
+        setWalletType(WalletType.METAMASK)
+        localStorage.setItem("selectedWalletType", WalletType.METAMASK);
+
+        setSigner(undefined);
+        setClient(undefined);
     }, [])
 
     const contextWithInit: WalletContextType = {
@@ -248,6 +262,10 @@ export function WalletProvider({
     const updateSigner = (signer: OfflineSigner) => {
         setSigner(signer);
     };
+
+    const connectEth = async () => {
+        const address = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    }
 
     useEffect(() => {
         const getProfileDetail = async () => {
@@ -394,8 +412,10 @@ export function WalletProvider({
         profileDetail,
         clientType,
         selectClientType,
-        baseCoin
-    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin])
+        baseCoin,
+        address: walletType === WalletType.METAMASK ? ethAddress : value.address,
+        balance: walletType === WalletType.METAMASK ? [] : value.balance,
+    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin, ethAddress])
 
     return (
         <WalletContext.Provider value={providedValue}>
