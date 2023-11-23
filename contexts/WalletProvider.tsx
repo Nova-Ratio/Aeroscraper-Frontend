@@ -18,6 +18,7 @@ import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { getBaseCoinByClient } from "@/constants/walletConstants";
+import useMetamask, { SigningMetamaskClient } from "@/services/metamask";
 
 const SideEffects = () => {
     const leap = useLeap();
@@ -41,7 +42,7 @@ const SideEffects = () => {
             window.removeEventListener("fin_keystorechange", listenFinKeystoreChange);
             window.removeEventListener("compass_keystorechange", listenCompassKeystoreChange);
         };
-    }, [leap, keplr, fin, compass]);
+    }, [leap, keplr, fin, compass, metamask]);
 
     useEffect(() => {
         const walletAddress = localStorage.getItem("wallet_address");
@@ -59,7 +60,7 @@ const SideEffects = () => {
             else if (selectedWalletType === WalletType.COMPASS) {
                 compass.connect();
             }
-            else if (selectedWalletType === WalletType.METAMASK){
+            else if (selectedWalletType === WalletType.METAMASK) {
                 metamask.connect();
             }
         }
@@ -104,12 +105,13 @@ export async function createClient(
 export interface WalletContextType {
     readonly initialized: boolean;
     readonly init: (signer: OfflineSigner, walletType: WalletType) => void;
+    readonly initMetamask: (address: string, walletType: WalletType) => void;
     readonly clear: () => void;
     readonly address: string;
     readonly name: string;
     readonly balance: readonly Coin[];
     readonly refreshBalance: () => Promise<void>;
-    readonly getClient: () => SigningArchwayClient | SigningCosmWasmClient | InjectiveStargate.InjectiveSigningStargateClient;
+    readonly getClient: () => SigningArchwayClient | SigningCosmWasmClient | InjectiveStargate.InjectiveSigningStargateClient | SigningMetamaskClient;
     readonly getSigner: () => OfflineSigner;
     readonly updateSigner: (singer: OfflineSigner) => void;
     readonly network: string;
@@ -135,6 +137,7 @@ function throwNotInitialized(): any {
 const defaultContext: WalletContextType = {
     initialized: false,
     init: throwNotInitialized,
+    initMetamask: throwNotInitialized,
     clear: throwNotInitialized,
     address: "",
     name: "",
@@ -183,11 +186,11 @@ export function WalletProvider({
     const [walletLoading, setWalletLoading] = useState(false);
     const [processLoader, setProcessLoader] = useState(false);
     const [signer, setSigner] = useState<OfflineSigner>();
-    const [client, setClient] = useState<SigningArchwayClient | SigningCosmWasmClient | InjectiveStargate.InjectiveSigningStargateClient>();
+    const [client, setClient] = useState<SigningArchwayClient | SigningCosmWasmClient | InjectiveStargate.InjectiveSigningStargateClient | SigningMetamaskClient>();
     const [walletType, setWalletType] = useState<WalletType | undefined>(undefined);
     const [clientType, setClientType] = useState<ClientEnum | undefined>(undefined);
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
-    const [ethAddress, setEthAddress] = useState<string | undefined>(undefined);
+    const [metamaskAddress, setMetamaskAddress] = useState<string>("");
 
     const config = getConfig(network, clientType);
 
@@ -209,18 +212,19 @@ export function WalletProvider({
         localStorage.setItem("selectedWalletType", walletType);
     }, [])
 
-    const initEth = React.useCallback((address: string) => {
-        setEthAddress(address);
+    const initMetamask = React.useCallback((address: string) => {
+        setMetamaskAddress(address);
         setWalletType(WalletType.METAMASK)
         localStorage.setItem("selectedWalletType", WalletType.METAMASK);
 
         setSigner(undefined);
-        setClient(undefined);
+        setClient({});
     }, [])
 
     const contextWithInit: WalletContextType = {
         ...defaultContext,
         init,
+        initMetamask,
         network,
         setNetwork,
         walletLoading,
@@ -262,10 +266,6 @@ export function WalletProvider({
     const updateSigner = (signer: OfflineSigner) => {
         setSigner(signer);
     };
-
-    const connectEth = async () => {
-        const address = await window.ethereum.request({ method: 'eth_requestAccounts' })
-    }
 
     useEffect(() => {
         const getProfileDetail = async () => {
@@ -354,6 +354,7 @@ export function WalletProvider({
                 setValue({
                     initialized: true,
                     init: () => { },
+                    initMetamask: () => { },
                     clear,
                     address,
                     name: walletName,
@@ -413,9 +414,9 @@ export function WalletProvider({
         clientType,
         selectClientType,
         baseCoin,
-        address: walletType === WalletType.METAMASK ? ethAddress : value.address,
+        address: walletType === WalletType.METAMASK ? metamaskAddress : value.address,
         balance: walletType === WalletType.METAMASK ? [] : value.balance,
-    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin, ethAddress])
+    }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin, metamaskAddress])
 
     return (
         <WalletContext.Provider value={providedValue}>

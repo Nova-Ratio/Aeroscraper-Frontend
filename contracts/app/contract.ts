@@ -78,12 +78,6 @@ export const getAppContract = (
     }
 
     const getTotalDebtAmount = async (): Promise<string> => {
-        if (walletType === WalletType.METAMASK) {
-            const data = {
-                address: ethContractAddress
-            }
-            return await window.ethereum.request({ method: "eth_sendTransaction", data })
-        }
 
         if (clientType === ClientEnum.INJECTIVE) {
             const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_debt_amount: {} }))

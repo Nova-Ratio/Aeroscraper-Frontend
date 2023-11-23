@@ -22,6 +22,7 @@ import { ChangeIcon } from '../Icons/Icons'
 import Button from './Button'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import TransactionButton from './TransactionButton'
+import useMetamask from '@/services/metamask'
 
 type Props = {
     ausdBalance?: number;
@@ -39,6 +40,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     const keplr = useKeplr();
     const fin = useFin();
     const compass = useCompass();
+    const metamask = useMetamask();
     const wallet = useWallet();
 
     const [accountModal, setAccountModal] = useState(false);
@@ -63,7 +65,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     }
 
     const connectWallet = async (walletType: WalletType) => {
-        const anyWindow: any = window;
+        const anyWindow: any = window;        
 
         if (walletType === WalletType.KEPLR) {
             if (!anyWindow.keplr?.getOfflineSigner) { return window.open("https://www.keplr.app/", '_blank', 'noopener,noreferrer'); }
@@ -85,11 +87,11 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
             compass.connect();
         }
         else if (walletType === WalletType.METAMASK) {
-            if (!anyWindow.compass?.getOfflineSigner) { return window.open("https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1", '_blank', 'noopener,noreferrer'); }
-
-            wallet.connectEth()
+            if (!anyWindow.ethereum) { return window.open("https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1", '_blank', 'noopener,noreferrer'); }
+            
+            metamask.connect();
         }
-        
+
 
         setWalletSelectionOpen(false);
     }
@@ -103,7 +105,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         anyWindow.leap?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.LEAP }) : walletExtensions.otherWallets.push({ name: WalletType.LEAP, downloadLink: "https://www.leapwallet.io/" });
         anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
         anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
-        anyWindow.metamask?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.METAMASK }) : walletExtensions.otherWallets.push({ name: WalletType.METAMASK, downloadLink: "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1" });
+        anyWindow.ethereum ? walletExtensions.installed.push({ name: WalletType.METAMASK }) : walletExtensions.otherWallets.push({ name: WalletType.METAMASK, downloadLink: "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1" });
 
         setWalletExtensions(walletExtensions);
     }
