@@ -1,39 +1,52 @@
 import { getConfig } from '@/config/network';
 import { useWallet } from '@/contexts/WalletProvider'
 import { WalletType } from '@/enums/WalletType';
-import { BaseAccount, ChainRestAuthApi, getInjectiveAddress } from '@injectivelabs/sdk-ts';
+import {  getInjectiveAddress } from '@injectivelabs/sdk-ts';
 import { useEffect, useMemo, useState } from 'react'
+import { ethers } from 'ethers';
+import { AppConfig } from '@/config';
 
 export type SigningMetamaskClient = {}
 
+export async function loadMetamaskWallet(
+  config: AppConfig
+): Promise<any> {
+  const { ethereum }: any = window;
+
+  if (!ethereum) {
+    throw new Error("Metamask extension is not available");
+  }
+
+  const provider = new ethers.BrowserProvider(ethereum);
+
+  const signer = await provider.getSigner();
+
+  return Promise.resolve({
+    getAccounts: function () {
+      return [{ address: getInjectiveAddress(signer.address) }]
+    }
+  });
+}
+
 const useMetamask = () => {
-  const { initMetamask, initialized, clear, clientType, network } = useWallet();
+  const { init, initialized, clear, clientType, walletLoading, network } = useWallet();
   const [initializing, setInitializing] = useState(false);
   const config = getConfig(network, clientType);
 
-  const connect = async () => {
-    let anyWindow: any = window;
+  const connect = async (walletChange = false) => {
+    if (initialized || walletLoading) return;
 
-    if (!clientType) return
+    setInitializing(true);
 
-    try {
-      const addresses = await anyWindow.ethereum.request({ method: 'eth_requestAccounts' });
-      const injectiveAddresses = addresses.map(getInjectiveAddress);
-
-      const chainRestAuthApi = new ChainRestAuthApi(config.httpUrl ?? "")
-      const accountDetailsResponse = await chainRestAuthApi.fetchAccount(
-        injectiveAddresses
-      )
-      const baseAccount = BaseAccount.fromRestApi(accountDetailsResponse)
-      const accountDetails = baseAccount.toAccountDetails();
-      
-      console.log(accountDetails);
-
-      initMetamask(injectiveAddresses, WalletType.METAMASK);
-    }
-    catch (err) {
-
-    }
+    loadMetamaskWallet(config)
+      .then((signer) => {
+        init(signer, WalletType.METAMASK);
+        if (walletChange) setInitializing(false);
+      })
+      .catch((err) => {
+        setInitializing(false);
+        console.log(err)
+      });
   }
 
   const disconnect = () => {
@@ -41,7 +54,6 @@ const useMetamask = () => {
     localStorage.removeItem("selectedWalletType");
     clear();
   };
-
 
   useEffect(() => {
     if (!initialized) return;
