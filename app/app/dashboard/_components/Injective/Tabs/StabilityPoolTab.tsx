@@ -47,31 +47,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${stakeAmount} AUSD Staked to Stability Pool`
-      })
-      getPageData();
-      refreshBalance();
-    }
-    catch (err) {
-      console.log(err);
-      addNotification({
-        message: "",
-        status: 'error',
-        directLink: ""
-      })
-    }
-    setProcessLoading(false);
-  }
-
-  const rewardClaim = async () => {
-    setProcessLoading(true);
-
-    try {
-      const res = await contract.withdrawLiquidationGains();
-      addNotification({
-        status: 'success',
-        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${stakeAmount} AUSD Reward Received from Stability Pool`
+        message: `${stakeAmount} Staked to Stability Pool`
       })
       getPageData();
       refreshBalance();
@@ -97,7 +73,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${stakeAmount} AUSD Unstaked from Stability Pool`
+        message: `${stakeAmount} Unstaked from Stability Pool`
       })
       getPageData();
       refreshBalance();

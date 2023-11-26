@@ -41,7 +41,7 @@ const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: 'Risky Troves Successfully Liquidated.'
+        message: 'Risky Troves Liquidated'
       });
       getPageData();
       getRiskyTroves();

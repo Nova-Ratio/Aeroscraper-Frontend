@@ -73,7 +73,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
       notifications.addNotification({
         status: 'success',
         directLink: transactionHash,
-        message: `${redeemAmount} AUSD has Redeemed, Received ${Number(redeemAmount * basePrice).toFixed(6)} of ${baseCoin?.name}`
+        message: `${redeemAmount} AUSD has Redeemed, Received ${Number(redeemAmount * basePrice).toFixed(6)} ${baseCoin?.name}`
       });
 
       getPageData();

@@ -85,7 +85,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${collateralAmount} ${baseCoin?.name} Collateral Added Successfully`
+        message: `${collateralAmount} ${baseCoin?.name} Collateral Added`
       });
       getPageData();
       refreshBalance();
@@ -103,7 +103,6 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
     setProcessLoading(false);
   }
 
-
   const queryWithdraw = async () => {
     setProcessLoading(true);
 
@@ -113,7 +112,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${collateralAmount} ${baseCoin?.name} Collateral Removed Successfully`
+        message: `${collateralAmount} ${baseCoin?.name} Collateral Removed`
       });
       getPageData();
       refreshBalance();
@@ -140,7 +139,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${borrowingAmount} AUSD Loan Borrowed`
+        message: `${borrowingAmount} AUSD Borrowed`
       });
       getPageData();
       refreshBalance();
@@ -167,14 +166,14 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: `${borrowingAmount} AUSD Loan Repayed`
+        message: `${borrowingAmount} AUSD Repayed`
       });
 
       if (borrowingAmount >= pageData.debtAmount) {
         setTimeout(() => {
           addNotification({
             status: 'success',
-            message: `Trove Closed Successfully`
+            message: `Trove Closed`
           });
         }, 1000);
       }
@@ -204,7 +203,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: "Trove Opened Successfully"
+        message: "Trove Opened"
       });
       getPageData();
       refreshBalance();

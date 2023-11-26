@@ -31,6 +31,7 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
+        message:`${pageData.rewardAmount} ${baseCoin?.name} Reward Received`
       })
       getPageData();
       refreshBalance();
@@ -47,7 +48,7 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
   }
   return (
     <section>
-      <Text size='3xl'>Claim your rewards in INJ</Text>
+      <Text size='3xl'>Claim your rewards in {baseCoin?.name ?? ""}</Text>
       <div className='mt-6'>
         <div className="w-full bg-cetacean-dark-blue border border-white/10 rounded-2xl px-6 py-9 flex items-end justify-between mt-6">
           <div>

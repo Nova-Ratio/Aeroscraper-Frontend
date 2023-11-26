@@ -73,7 +73,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
       addNotification({
         status: 'success',
         directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message:`${stakeAmount} AUSD Reward Received from Stability Pool`
+        message:`${stakeAmount} AUSD Reward Received`
       })
       getPageData();
       refreshBalance();
