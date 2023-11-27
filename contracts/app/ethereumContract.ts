@@ -26,13 +26,12 @@ const msgBroadcastClient = new MsgBroadcaster({
     network: NETWORK,
 });
 
-export const getAppContract = (
-    client: SigningArchwayClient | SigningCosmWasmClient,
+export const getAppEthContract = (
+    client: any,
     baseCoin: BaseCoin,
     clientType?: ClientEnum,
     walletType?: WalletType
 ) => {
-    const ethContractAddress = "";
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
 
     //GET QUERIES
@@ -78,13 +77,6 @@ export const getAppContract = (
     }
 
     const getTotalDebtAmount = async (): Promise<string> => {
-        if (walletType === WalletType.METAMASK) {
-            const data = {
-                address: ethContractAddress
-            }
-            return await window.ethereum.request({ method: "eth_sendTransaction", data })
-        }
-
         if (clientType === ClientEnum.INJECTIVE) {
             const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_debt_amount: {} }))
             const data: any = fromBase64(res.data as any);
@@ -166,61 +158,6 @@ export const getAppContract = (
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
-
-        if (clientType === ClientEnum.INJECTIVE) {
-            const vaa = await getVAA();
-
-            const msg = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
-
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: contractAddress,
-                sender: senderAddress,
-                msg: {
-                    open_trove: {
-                        loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal)
-                    }
-                },
-                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msg, msg1],
-                injectiveAddress: senderAddress
-            })
-        }
-
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
-                "auto",
-                "Open Trove",
-                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
-                "auto",
-                "Open Trove",
-                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-            )
-        }
 
         const vaa = await getVAA();
 

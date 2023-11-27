@@ -5,7 +5,7 @@ import { useFin } from "@/services/fin";
 import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { motion } from "framer-motion";
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import QRCode from 'react-qr-code';
 import { WalletType } from "@/enums/WalletType";
 import { NumericFormat } from "react-number-format";
@@ -16,12 +16,12 @@ import Loading from "../Loading/Loading";
 import GradientButton from "../Buttons/GradientButton";
 import ProfilePhotoSlider from "./ProfilePhotosSlider";
 import { AUSD_PRICE } from "@/utils/contractUtils";
-import { ClientEnum } from "@/types/types";
 import { BaseCoinByClient, ClientTransactionUrlByName, WalletImagesByName } from "@/constants/walletConstants";
 import { Modal } from "../Modal/Modal";
 import Button from "../Buttons/Button";
 import { ArrowLeftIcon, ExitIcon } from "../Icons/Icons";
 import { capitalizeFirstLetter } from "@/utils/stringUtils";
+import { isNil } from "lodash";
 
 interface Props {
   showModal: boolean,
@@ -269,7 +269,7 @@ const AccountModal: FC<Props> = (props: Props) => {
             <div className='px-8 w-full'>
               <div className="flex items-center mb-16 mt-12">
                 {clientType && <div>
-                  <Text size='sm' className="text-start mb-3" textColor='text-dark-silver'>Selected chain</Text>
+                  <Text size='sm' className="text-center mb-3" textColor='text-dark-silver'>Selected chain</Text>
                   <Button
                     startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
                   >
@@ -277,9 +277,9 @@ const AccountModal: FC<Props> = (props: Props) => {
                   </Button>
                 </div>}
                 <div className="ml-14">
-                  <Text size='sm' className="text-start mb-3" textColor='text-dark-silver'>Selected wallet</Text>
+                  <Text size='sm' className="text-center mb-3" textColor='text-dark-silver'>Selected wallet</Text>
                   <Button
-                    startIcon={<img alt={walletType} src={WalletImagesByName[walletType!].thumbnail} className='w-6 h-6' />}
+                    startIcon={!isNil(walletType) && <img alt={walletType} src={WalletImagesByName[walletType].thumbnail} className='w-6 h-6' />}
                   >
                     {capitalizeFirstLetter(walletType?.toLocaleLowerCase() ?? "")}
                   </Button>

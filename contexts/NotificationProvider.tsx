@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, FC, PropsWithChildren, useContext, useRef, useState } from 'react';
+import React, { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 
 export type NotificationType = "Reedem"
 
@@ -18,6 +18,7 @@ interface INotificationContext {
   clearNotification: () => void;
   processLoading: boolean;
   setProcessLoading: (arg: boolean) => void;
+  setOnHover: (arg: boolean) => void;
 }
 
 const NotificationContext = createContext<INotificationContext>({
@@ -25,15 +26,18 @@ const NotificationContext = createContext<INotificationContext>({
   addNotification: () => { },
   clearNotification: () => { },
   processLoading: false,
-  setProcessLoading: () => { }
+  setProcessLoading: () => { },
+  setOnHover: () => { }
 });
 
 const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
 
   const [processLoading, setProcessLoading] = useState(false);
+  const [onHover, setOnHover] = useState(false);
 
   const addNotification = (notification: INotification) => {
+    setOnHover(false);
     setNotification(notification);
 
     let notiElement = {
@@ -56,16 +60,40 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     setTimeout(() => {
-      clearNotification();
-    }, 3000);
+      !onHover && clearNotification();
+    }, 4000);
   }
-  const clearNotification = () => {
-    setNotification(null);
-  };
+  const clearNotification = useCallback(
+    () => {
+      if (!onHover) {
+        setNotification(null);
+      }
+    },
+    [onHover, notification,processLoading]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearNotification();
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [onHover]);
+
+  const providedValue = React.useMemo(() => ({
+    notification,
+    addNotification,
+    clearNotification,
+    processLoading,
+    setProcessLoading,
+    setOnHover
+  }), [notification, processLoading, onHover]);
+  
 
   return (
     <NotificationContext.Provider
-      value={{ notification, addNotification, clearNotification,processLoading,setProcessLoading }}
+      value={providedValue}
     >
       {children}
     </NotificationContext.Provider>

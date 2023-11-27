@@ -67,7 +67,7 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
             thousandsGroupStyle="thousand"
             thousandSeparator=","
             fixedDecimalScale
-            decimalScale={2}
+            decimalScale={6}
             displayType="text"
             renderText={(value) =>
               <Text size="5xl" textColor='text-gradient' weight='font-normal'>

@@ -82,8 +82,8 @@ export const ClientTransactionUrlByName: Record<ClientEnum, { accountUrl: string
         accountUrl: "https://neutron.celat.one/account/"
     },
     [ClientEnum.INJECTIVE]: {
-        txDetailUrl: "https://explorer.injective.network/transaction/",
-        accountUrl: "https://explorer.injective.network/account/"
+        txDetailUrl: "https://testnet.explorer.injective.network/transaction/",
+        accountUrl: "https://testnet.explorer.injective.network/account/"
     }
 }
 

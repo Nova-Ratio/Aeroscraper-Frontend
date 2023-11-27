@@ -65,7 +65,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     }
 
     const connectWallet = async (walletType: WalletType) => {
-        const anyWindow: any = window;        
+        const anyWindow: any = window;
 
         if (walletType === WalletType.KEPLR) {
             if (!anyWindow.keplr?.getOfflineSigner) { return window.open("https://www.keplr.app/", '_blank', 'noopener,noreferrer'); }
@@ -88,7 +88,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         }
         else if (walletType === WalletType.METAMASK) {
             if (!anyWindow.ethereum) { return window.open("https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1", '_blank', 'noopener,noreferrer'); }
-            
+
             metamask.connect();
         }
 
@@ -205,12 +205,12 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     return (
         <div className='relative'>
             <GradientButton className={className} onClick={toggleWallet}>
-                {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text>Connect Wallet</Text>}
+                {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text size='base'>Select Chain & Connect Wallet</Text>}
             </GradientButton>
             <Modal modalSize='lg' showModal={walletSelectionOpen}>
                 <div ref={ref} className='flex h-[644px]'>
                     <div className='pt-10 pl-8 w-[300px] border-r border-white/10 relative'>
-                        <h2 className='text-[#F7F7FF] text-2xl font-medium'>Connect Wallet</h2>
+                        <h2 className='text-[#F7F7FF] text-2xl font-medium'>{!isNil(clientType) ? "Connect Wallet" : "Select Chain"}</h2>
                         {!isNil(clientType) &&
                             <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
                                 {
@@ -281,7 +281,6 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 >
                                     {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
                                 </Button>
-                                <ChangeIcon className='w-5 h-5' />
                             </div>
                         )}
                     </div>
@@ -312,10 +311,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     <Text size='4xl' textColor='text-white' className='mb-10'>How do I connect my wallet?</Text>
                                     <div className='flex justify-center items-center gap-16 mb-8'>
                                         {
-                                            Object.values(WalletInfoMap).map((walletType, idx) => {
-                                                if (walletType.name) {
-                                                    return <img alt={walletType.name} key={idx} className="w-6 h-6 object-contain" src={walletType.thumbnailURL} />
-                                                }
+                                            WalletByClient[clientType].map((walletType, idx) => {
+                                                return <img alt={WalletImagesByName[walletType].image} key={idx} className="w-6 h-6 object-contain" src={WalletImagesByName[walletType].thumbnail} />
                                             })
                                         }
                                     </div>

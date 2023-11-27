@@ -88,7 +88,7 @@ export default function InjectiveDashboard() {
           <InjectiveBackgroundWave animate={processLoading} className="absolute -top-[240px] left-80 -z-10 h-[664px] rotate-[300deg]" />
         </motion.div>
       )}
-      {tabPosition === "claimRewards" && (
+      {tabPosition === "rewards" && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

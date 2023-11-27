@@ -32,7 +32,6 @@ export const getAppContract = (
     clientType?: ClientEnum,
     walletType?: WalletType
 ) => {
-    const ethContractAddress = "";
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
 
     //GET QUERIES

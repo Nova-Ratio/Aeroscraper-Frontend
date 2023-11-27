@@ -46,7 +46,7 @@ const NotificationDropdown: FC = () => {
         <Dropdown
             onOpen={allReadNotifications}
             toggleButton={
-                clientType === ClientEnum.INJECTIVE ?
+                (clientType === ClientEnum.INJECTIVE || clientType === ClientEnum.ARCHWAY )?
                     <div
                         className='w-full h-full flex justify-center items-center'
                     >
