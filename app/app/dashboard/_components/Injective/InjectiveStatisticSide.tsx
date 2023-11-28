@@ -23,13 +23,6 @@ const content:
       desc: "Get a right to earn rewards from liquid troves by staking your AUSD to the stability pool."
     },
     {
-      title: "Redeem your AUSD to INJ",
-      desc: "Get INJ using your AUSD. Within Aeroscraper, 1 AUSD always equals 1 USD!"
-    }, {
-      title: "Liquidate Risky Troves",
-      desc: "Liquidate troves with a Collateral Ratio below 115% and get rewards!"
-    },
-    {
       title: "Rewards!",
       desc: "Collect the rewards you earned from liquid troves."
     },

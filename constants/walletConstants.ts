@@ -98,7 +98,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
     [ClientEnum.ARCHWAY]: {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-        image: "/images/token-images/archway-coin.png",
+        image: "/images/token-images/atom.svg",
         decimal: 6,
         ausdDecimal: 6
     },
