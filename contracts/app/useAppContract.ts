@@ -12,10 +12,10 @@ const useAppContract = () => {
 
     //TODO: Remove client type convertion after adding all transaction methods
     const contract = useMemo(() => (wallet.initialized && !isNil(wallet.baseCoin))
-        ? (wallet.name === WalletType.METAMASK
+        ? (wallet.walletType === WalletType.METAMASK
             ? getAppEthContract(wallet.getClient(), wallet.baseCoin, wallet.clientType)
             : getAppContract(wallet.getClient() as SigningArchwayClient | SigningCosmWasmClient, wallet.baseCoin, wallet.clientType))
-        : undefined, [wallet]);
+        : undefined, [wallet]);        
 
     const getTotalCollateralAmount = useCallback(async () => {
         if (isNil(contract)) return;

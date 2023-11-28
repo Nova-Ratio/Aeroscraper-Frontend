@@ -1,17 +1,16 @@
 import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponse } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
-import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
-import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract, MsgExecuteContractCompat } from "@injectivelabs/sdk-ts";
+import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getAddressFromInjectiveAddress, recoverTypedSignaturePubKey, hexToBase64, TxGrpcClient, createTransaction, createWeb3Extension, createTxRawEIP712, DEFAULT_STD_FEE, SIGN_AMINO, TxRestClient, getEip712TypedData, hexToBuff, getEthereumAddress } from "@injectivelabs/sdk-ts";
 import { Network, getNetworkEndpoints } from "@injectivelabs/networks";
 import { MsgBroadcaster, WalletStrategy } from '@injectivelabs/wallet-ts'
-import { ChainId } from '@injectivelabs/ts-types';
+import { ChainId, EthereumChainId, CosmosChainId } from '@injectivelabs/ts-types';
 import { isNil } from "lodash";
 import { WalletType } from "@/enums/WalletType";
+import { DEFAULT_BLOCK_TIMEOUT_HEIGHT, BigNumberInBase } from '@injectivelabs/utils'
 
 const walletStrategy = new WalletStrategy({
     chainId: ChainId.Testnet
@@ -158,14 +157,16 @@ export const getAppEthContract = (
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
+        let anyWindow: any = window;
 
-        const vaa = await getVAA();
+        try {
+            if (clientType === ClientEnum.INJECTIVE && anyWindow.ethereum!) {
 
-        return await client.executeMultiple(
-            senderAddress,
-            [
-                {
+                const vaa = await getVAA();
+
+                const msg = MsgExecuteContract.fromJSON({
                     contractAddress: oraclecontractAddress,
+                    sender: senderAddress,
                     msg: {
                         update_price_feeds: {
                             data: [
@@ -173,17 +174,88 @@ export const getAppEthContract = (
                             ]
                         }
                     },
-                    funds: [{ amount: "1", denom: "usei" }],
-                },
-                {
-                    contractAddress,
-                    msg: { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
-                    funds: [coin(getRequestAmount(amount, baseCoin.decimal), "usei")]
-                }
-            ],
-            "auto",
-            "Open Trove",
-        )
+                    funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                })
+
+                const msg1 = MsgExecuteContract.fromJSON({
+                    contractAddress: contractAddress,
+                    sender: senderAddress,
+                    msg: {
+                        open_trove: {
+                            loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal)
+                        }
+                    },
+                    funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
+                })
+
+                const chainRestAuthApi = new ChainRestAuthApi(
+                    "https://injective-testnet-rest.publicnode.com",
+                )
+                const accountDetailsResponse = await chainRestAuthApi.fetchAccount(
+                    senderAddress,
+                )
+                const baseAccount = BaseAccount.fromRestApi(accountDetailsResponse)
+                const accountDetails = baseAccount.toAccountDetails()
+                console.log(accountDetails);
+
+                const chainRestTendermintApi = new ChainRestTendermintApi(
+                    "https://injective-testnet-rest.publicnode.com",
+                )
+                const latestBlock = await chainRestTendermintApi.fetchLatestBlock()
+                const latestHeight = latestBlock.header.height
+                const timeoutHeight = new BigNumberInBase(latestHeight).plus(
+                    DEFAULT_BLOCK_TIMEOUT_HEIGHT,
+                )
+
+                const eip712TypedData = getEip712TypedData({
+                    msgs: [msg, msg1],
+                    tx: {
+                        accountNumber: accountDetails.accountNumber.toString(),
+                        sequence: accountDetails.sequence.toString(),
+                        timeoutHeight: timeoutHeight.toFixed(),
+                        chainId: "injective-888",
+                    },
+                    ethereumChainId: EthereumChainId.Goerli,
+                });
+
+                const signature = await anyWindow.ethereum.request({
+                    method: 'eth_signTypedData_v4',
+                    params: [getEthereumAddress(senderAddress), JSON.stringify(eip712TypedData)],
+                });
+
+                const publicKeyHex = recoverTypedSignaturePubKey(eip712TypedData, signature);
+                const publicKeyBase64 = hexToBase64(publicKeyHex);
+
+                const { txRaw } = createTransaction({
+                    message: [msg, msg1],
+                    memo: '',
+                    signMode: SIGN_AMINO,
+                    fee: DEFAULT_STD_FEE,
+                    pubKey: publicKeyBase64,
+                    sequence: baseAccount.sequence,
+                    timeoutHeight: timeoutHeight.toNumber(),
+                    accountNumber: baseAccount.accountNumber,
+                    chainId: "injective-888",
+                })
+
+                const web3Extension = createWeb3Extension({
+                    ethereumChainId: EthereumChainId.Goerli,
+                })
+                const txRawEip712 = createTxRawEIP712(txRaw, web3Extension);
+
+                const signatureBuff = hexToBuff(signature);
+                txRawEip712.signatures = [signatureBuff];
+
+                const txRestClient = new TxRestClient("https://injective-testnet-rest.publicnode.com");
+
+                const response = txRestClient.broadcast(txRawEip712);
+
+                return await response
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
@@ -552,27 +624,6 @@ export const getAppEthContract = (
                 msg: jsonToBinary({ redeem: {} })
             }
         }
-
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                ausdContractAddress,
-                msg,
-                "auto",
-                "Redeem"
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                ausdContractAddress,
-                msg,
-                "auto",
-                "Redeem"
-            )
-        }
-
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
@@ -699,7 +750,26 @@ export const getAppEthContract = (
     }
 
     const withdrawLiquidationGains = async (senderAddress: string) => {
-        
+        if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContract.fromJSON({
+                contractAddress,
+                sender: senderAddress,
+                msg: { withdraw_liquidation_gains: {} }
+            })
+
+            return await msgBroadcastClient.broadcast({
+                msgs: msg,
+                injectiveAddress: senderAddress
+            })
+        }
+
+        return await client.execute(
+            senderAddress,
+            contractAddress,
+            { withdraw_liquidation_gains: {} },
+            "auto",
+            "Withdraw Liquidation Gains"
+        )
     }
 
     return {
@@ -724,3 +794,7 @@ export const getAppEthContract = (
         withdrawLiquidationGains
     }
 }
+function getEip712Tx(arg0: { msgs: MsgExecuteContract[]; tx: { accountNumber: string; sequence: string; timeoutHeight: any; chainId: any; }; ethereumChainId: any; }) {
+    throw new Error("Function not implemented.");
+}
+
