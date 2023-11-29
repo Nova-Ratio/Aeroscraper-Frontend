@@ -4,34 +4,83 @@ import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveR
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
-import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getAddressFromInjectiveAddress, recoverTypedSignaturePubKey, hexToBase64, TxGrpcClient, createTransaction, createWeb3Extension, createTxRawEIP712, DEFAULT_STD_FEE, SIGN_AMINO, TxRestClient, getEip712TypedData, hexToBuff, getEthereumAddress } from "@injectivelabs/sdk-ts";
-import { Network, getNetworkEndpoints } from "@injectivelabs/networks";
-import { MsgBroadcaster, WalletStrategy } from '@injectivelabs/wallet-ts'
-import { ChainId, EthereumChainId, CosmosChainId } from '@injectivelabs/ts-types';
+import { MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getAddressFromInjectiveAddress, recoverTypedSignaturePubKey, hexToBase64, TxGrpcClient, createTransaction, createWeb3Extension, createTxRawEIP712, DEFAULT_STD_FEE, SIGN_AMINO, TxRestClient, getEip712TypedData, hexToBuff, getEthereumAddress } from "@injectivelabs/sdk-ts";
+
+import { EthereumChainId } from '@injectivelabs/ts-types';
 import { isNil } from "lodash";
-import { WalletType } from "@/enums/WalletType";
-import { DEFAULT_BLOCK_TIMEOUT_HEIGHT, BigNumberInBase } from '@injectivelabs/utils'
 
-const walletStrategy = new WalletStrategy({
-    chainId: ChainId.Testnet
-});
-
-const NETWORK = Network.Testnet;
-const ENDPOINTS = getNetworkEndpoints(NETWORK);
-
-const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
-const msgBroadcastClient = new MsgBroadcaster({
-    walletStrategy,
-    network: NETWORK,
-});
+import { DEFAULT_BLOCK_TIMEOUT_HEIGHT, BigNumberInBase, getStdFee } from '@injectivelabs/utils'
+import { getConfig } from "@/config";
 
 export const getAppEthContract = (
     client: any,
     baseCoin: BaseCoin,
     clientType?: ClientEnum,
-    walletType?: WalletType
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
+
+    const createEthSignature = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[]) => {
+        let anyWindow: any = window;
+
+        const chainConfig = getConfig("", clientType);
+
+        if (!anyWindow.ethereum) return;
+
+        const chainRestAuthApi = new ChainRestAuthApi(chainConfig.httpUrl!);
+        const accountDetailsResponse = await chainRestAuthApi.fetchAccount(senderAddress);
+        const baseAccount = BaseAccount.fromRestApi(accountDetailsResponse);
+        const accountDetails = baseAccount.toAccountDetails();
+        const chainRestTendermintApi = new ChainRestTendermintApi(chainConfig.httpUrl!);
+        const latestBlock = await chainRestTendermintApi.fetchLatestBlock();
+        const latestHeight = latestBlock.header.height;
+        const timeoutHeight = new BigNumberInBase(latestHeight).plus(DEFAULT_BLOCK_TIMEOUT_HEIGHT);
+
+        const eip712TypedData = getEip712TypedData({
+            msgs: msg,
+            fee: getStdFee({ gasPrice: chainConfig.gasPrice }),
+            tx: {
+                memo: '',
+                accountNumber: accountDetails.accountNumber.toString(),
+                sequence: accountDetails.sequence.toString(),
+                timeoutHeight: timeoutHeight.toFixed(),
+                chainId: chainConfig.chainId,
+            },
+            ethereumChainId: EthereumChainId.Goerli,
+        });
+
+        const signature = await anyWindow.ethereum.request({
+            method: 'eth_signTypedData_v4',
+            params: [getEthereumAddress(senderAddress), JSON.stringify(eip712TypedData)],
+        });
+        const signatureBuff = hexToBuff(signature)
+
+        const publicKeyHex = recoverTypedSignaturePubKey(eip712TypedData, signature);
+        const publicKeyBase64 = hexToBase64(publicKeyHex);
+
+        const { txRaw } = createTransaction({
+            message: msg,
+            memo: '',
+            signMode: SIGN_AMINO,
+            fee: DEFAULT_STD_FEE,
+            pubKey: publicKeyBase64,
+            sequence: baseAccount.sequence,
+            timeoutHeight: timeoutHeight.toNumber(),
+            accountNumber: baseAccount.accountNumber,
+            chainId: chainConfig.chainId,
+        })
+
+        const web3Extension = createWeb3Extension({ ethereumChainId: EthereumChainId.Goerli });
+
+        const txRawEip712 = createTxRawEIP712(txRaw, web3Extension);
+
+        txRawEip712.signatures = [signatureBuff];
+
+        const txRestClient = new TxRestClient(chainConfig.httpUrl!);
+
+        const { txHash } = await txRestClient.broadcast(txRawEip712);
+
+        return await txRestClient.fetchTxPoll(txHash);
+    }
 
     //GET QUERIES
 
@@ -67,9 +116,7 @@ export const getAppEthContract = (
 
     const getTotalCollateralAmount = async (): Promise<string> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_collateral_amount: {} }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { total_collateral_amount: {} });
@@ -77,9 +124,7 @@ export const getAppEthContract = (
 
     const getTotalDebtAmount = async (): Promise<string> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_debt_amount: {} }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { total_debt_amount: {} });
@@ -87,9 +132,7 @@ export const getAppEthContract = (
 
     const getTrove = async (user_addr: string): Promise<GetTroveResponse> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ trove: { user_addr } }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { trove: { user_addr } });
@@ -97,9 +140,7 @@ export const getAppEthContract = (
 
     const getStake = async (user_addr: string): Promise<GetStakeResponse> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ stake: { user_addr } }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { stake: { user_addr } });
@@ -107,9 +148,7 @@ export const getAppEthContract = (
 
     const getTotalStake = async (): Promise<string> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_stake_amount: {} }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { total_stake_amount: {} });
@@ -117,9 +156,7 @@ export const getAppEthContract = (
 
     const getCollateralPrice = async () => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ collateral_price: {} }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { collateral_price: {} });
@@ -127,9 +164,7 @@ export const getAppEthContract = (
 
     const getAusdBalance = async (address: string): Promise<CW20BalanceResponse> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(ausdContractAddress, toBase64({ balance: { address } }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(ausdContractAddress, { balance: { address } })
@@ -137,9 +172,7 @@ export const getAppEthContract = (
 
     const getAusdInfo = async (): Promise<CW20TokenInfoResponse> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(ausdContractAddress, toBase64({ token_info: {} }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(ausdContractAddress, { token_info: {} })
@@ -147,9 +180,7 @@ export const getAppEthContract = (
 
     const getReward = async (user_addr: string): Promise<string> => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ liquidation_gains: { user_addr } }))
-            const data: any = fromBase64(res.data as any);
-            return data;
+
         }
 
         return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
@@ -157,10 +188,9 @@ export const getAppEthContract = (
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
-        let anyWindow: any = window;
 
         try {
-            if (clientType === ClientEnum.INJECTIVE && anyWindow.ethereum!) {
+            if (clientType === ClientEnum.INJECTIVE) {
 
                 const vaa = await getVAA();
 
@@ -188,69 +218,10 @@ export const getAppEthContract = (
                     funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
                 })
 
-                const chainRestAuthApi = new ChainRestAuthApi(
-                    "https://injective-testnet-rest.publicnode.com",
-                )
-                const accountDetailsResponse = await chainRestAuthApi.fetchAccount(
-                    senderAddress,
-                )
-                const baseAccount = BaseAccount.fromRestApi(accountDetailsResponse)
-                const accountDetails = baseAccount.toAccountDetails()
-                console.log(accountDetails);
+                const broadcast = createEthSignature(senderAddress, [msg, msg1]);
+                console.log(await broadcast);
 
-                const chainRestTendermintApi = new ChainRestTendermintApi(
-                    "https://injective-testnet-rest.publicnode.com",
-                )
-                const latestBlock = await chainRestTendermintApi.fetchLatestBlock()
-                const latestHeight = latestBlock.header.height
-                const timeoutHeight = new BigNumberInBase(latestHeight).plus(
-                    DEFAULT_BLOCK_TIMEOUT_HEIGHT,
-                )
-
-                const eip712TypedData = getEip712TypedData({
-                    msgs: [msg, msg1],
-                    tx: {
-                        accountNumber: accountDetails.accountNumber.toString(),
-                        sequence: accountDetails.sequence.toString(),
-                        timeoutHeight: timeoutHeight.toFixed(),
-                        chainId: "injective-888",
-                    },
-                    ethereumChainId: EthereumChainId.Goerli,
-                });
-
-                const signature = await anyWindow.ethereum.request({
-                    method: 'eth_signTypedData_v4',
-                    params: [getEthereumAddress(senderAddress), JSON.stringify(eip712TypedData)],
-                });
-
-                const publicKeyHex = recoverTypedSignaturePubKey(eip712TypedData, signature);
-                const publicKeyBase64 = hexToBase64(publicKeyHex);
-
-                const { txRaw } = createTransaction({
-                    message: [msg, msg1],
-                    memo: '',
-                    signMode: SIGN_AMINO,
-                    fee: DEFAULT_STD_FEE,
-                    pubKey: publicKeyBase64,
-                    sequence: baseAccount.sequence,
-                    timeoutHeight: timeoutHeight.toNumber(),
-                    accountNumber: baseAccount.accountNumber,
-                    chainId: "injective-888",
-                })
-
-                const web3Extension = createWeb3Extension({
-                    ethereumChainId: EthereumChainId.Goerli,
-                })
-                const txRawEip712 = createTxRawEIP712(txRaw, web3Extension);
-
-                const signatureBuff = hexToBuff(signature);
-                txRawEip712.signatures = [signatureBuff];
-
-                const txRestClient = new TxRestClient("https://injective-testnet-rest.publicnode.com");
-
-                const response = txRestClient.broadcast(txRawEip712);
-
-                return await response
+                return await broadcast;
             }
         } catch (error) {
             console.log(error);
@@ -284,30 +255,7 @@ export const getAppEthContract = (
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
 
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: contractAddress,
-                sender: senderAddress,
-                msg: { add_collateral: {} },
-                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msg, msg1],
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.executeMultiple(
@@ -359,29 +307,7 @@ export const getAppEthContract = (
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
 
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: contractAddress,
-                sender: senderAddress,
-                msg: { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } }
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msg, msg1],
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.executeMultiple(
@@ -432,29 +358,7 @@ export const getAppEthContract = (
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
 
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: contractAddress,
-                sender: senderAddress,
-                msg: { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msg, msg1],
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.executeMultiple(
@@ -513,29 +417,7 @@ export const getAppEthContract = (
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msgVAA = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
 
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: ausdContractAddress,
-                sender: senderAddress,
-                msg
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msgVAA, msg1],
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.executeMultiple(
@@ -572,16 +454,7 @@ export const getAppEthContract = (
         }
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: ausdContractAddress,
-                sender: senderAddress,
-                msg
-            })
 
-            return await msgBroadcastClient.broadcast({
-                msgs: msg1,
-                injectiveAddress: senderAddress
-            })
         }
 
         return client.execute(
@@ -595,16 +468,7 @@ export const getAppEthContract = (
 
     const unstake = async (senderAddress: string, amount: number) => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: contractAddress,
-                sender: senderAddress,
-                msg: { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
-            })
 
-            return await msgBroadcastClient.broadcast({
-                msgs: msg1,
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.execute(
@@ -627,29 +491,7 @@ export const getAppEthContract = (
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg0 = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
 
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress: ausdContractAddress,
-                sender: senderAddress,
-                msg
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msg0, msg1],
-                injectiveAddress: senderAddress
-            })
         }
 
         return client.executeMultiple(
@@ -700,29 +542,7 @@ export const getAppEthContract = (
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg0 = MsgExecuteContract.fromJSON({
-                contractAddress: oraclecontractAddress,
-                sender: senderAddress,
-                msg: {
-                    update_price_feeds: {
-                        data: [
-                            vaa
-                        ]
-                    }
-                },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
-            })
 
-            const msg1 = MsgExecuteContract.fromJSON({
-                contractAddress,
-                sender: senderAddress,
-                msg: { liquidate_troves: {} }
-            })
-
-            return await msgBroadcastClient.broadcast({
-                msgs: [msg0, msg1],
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.executeMultiple(
@@ -751,16 +571,7 @@ export const getAppEthContract = (
 
     const withdrawLiquidationGains = async (senderAddress: string) => {
         if (clientType === ClientEnum.INJECTIVE) {
-            const msg = MsgExecuteContract.fromJSON({
-                contractAddress,
-                sender: senderAddress,
-                msg: { withdraw_liquidation_gains: {} }
-            })
 
-            return await msgBroadcastClient.broadcast({
-                msgs: msg,
-                injectiveAddress: senderAddress
-            })
         }
 
         return await client.execute(
