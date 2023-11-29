@@ -59,22 +59,24 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
       localStorage.setItem("notifications", JSON.stringify([notiElement]));
     }
 
-    setTimeout(() => {
-      !onHover && clearNotification();
-    }, 4000);
+    if (!onHover) {
+      setTimeout(() => { clearNotification() }, 4000);
+    }
   }
   const clearNotification = useCallback(
     () => {
       if (!onHover) {
+        console.log(onHover);
+        
         setNotification(null);
       }
     },
-    [onHover, notification,processLoading]);
+    [onHover, notification, processLoading]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       clearNotification();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearTimeout(timer);
@@ -89,7 +91,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
     setProcessLoading,
     setOnHover
   }), [notification, processLoading, onHover]);
-  
+
 
   return (
     <NotificationContext.Provider

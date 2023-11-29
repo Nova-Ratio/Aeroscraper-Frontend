@@ -35,6 +35,7 @@ export type BaseCoin = {
     name: string,
     denom: string,
     image: string,
+    tokenImage:string,
     decimal:number,
     ausdDecimal:number
 }

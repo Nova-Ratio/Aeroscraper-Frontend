@@ -175,7 +175,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     </Text>
                                 }
                             />
-                            <img alt="sei" className="w-6 h-6 ml-4" src={baseCoin.image} />
+                            <img alt={baseCoin.name} className="w-6 h-6 ml-4" src={baseCoin.tokenImage} />
                             <NumericFormat
                                 value={baseCoinBalance}
                                 thousandsGroupStyle="thousand"

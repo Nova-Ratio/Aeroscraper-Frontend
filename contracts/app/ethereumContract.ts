@@ -4,7 +4,7 @@ import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveR
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
-import { MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getAddressFromInjectiveAddress, recoverTypedSignaturePubKey, hexToBase64, TxGrpcClient, createTransaction, createWeb3Extension, createTxRawEIP712, DEFAULT_STD_FEE, SIGN_AMINO, TxRestClient, getEip712TypedData, hexToBuff, getEthereumAddress } from "@injectivelabs/sdk-ts";
+import { MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getAddressFromInjectiveAddress, recoverTypedSignaturePubKey, hexToBase64, TxGrpcClient, createTransaction, createWeb3Extension, createTxRawEIP712, DEFAULT_STD_FEE, SIGN_AMINO, TxRestClient, getEip712TypedData, hexToBuff, getEthereumAddress, MsgExecuteContractCompat } from "@injectivelabs/sdk-ts";
 
 import { EthereumChainId } from '@injectivelabs/ts-types';
 import { isNil } from "lodash";
@@ -19,7 +19,7 @@ export const getAppEthContract = (
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
 
-    const createEthSignature = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[]) => {
+    const createEthSignature = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[] | MsgExecuteContractCompat[]) => {
         let anyWindow: any = window;
 
         const chainConfig = getConfig("", clientType);
@@ -61,7 +61,7 @@ export const getAppEthContract = (
             message: msg,
             memo: '',
             signMode: SIGN_AMINO,
-            fee: DEFAULT_STD_FEE,
+            fee: getStdFee({ gasPrice: chainConfig.gasPrice }),
             pubKey: publicKeyBase64,
             sequence: baseAccount.sequence,
             timeoutHeight: timeoutHeight.toNumber(),
@@ -194,7 +194,7 @@ export const getAppEthContract = (
 
                 const vaa = await getVAA();
 
-                const msg = MsgExecuteContract.fromJSON({
+                const msg = MsgExecuteContractCompat.fromJSON({
                     contractAddress: oraclecontractAddress,
                     sender: senderAddress,
                     msg: {
@@ -207,7 +207,7 @@ export const getAppEthContract = (
                     funds: [coin("1", BaseCoinByClient[clientType].denom)]
                 })
 
-                const msg1 = MsgExecuteContract.fromJSON({
+                const msg1 = MsgExecuteContractCompat.fromJSON({
                     contractAddress: contractAddress,
                     sender: senderAddress,
                     msg: {
@@ -219,13 +219,11 @@ export const getAppEthContract = (
                 })
 
                 const broadcast = createEthSignature(senderAddress, [msg, msg1]);
-                console.log(await broadcast);
 
                 return await broadcast;
             }
         } catch (error) {
             console.log(error);
-
         }
     }
 
