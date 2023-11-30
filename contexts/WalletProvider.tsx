@@ -32,15 +32,18 @@ const SideEffects = () => {
         const listenLeapKeystoreChange = () => leap.connect(true);
         const listenFinKeystoreChange = () => fin.connect(true);
         const listenCompassKeystoreChange = () => compass.connect(true);
+        const listenMetamaskKeystoreChange = () => compass.connect(true);
         window.addEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
         window.addEventListener("leap_keystorechange", listenLeapKeystoreChange);
         window.addEventListener("fin_keystorechange", listenFinKeystoreChange);
         window.addEventListener("compass_keystorechange", listenCompassKeystoreChange);
+        window.addEventListener("metamask_keystorechange", listenMetamaskKeystoreChange);
         return () => {
             window.removeEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
             window.removeEventListener("leap_keystorechange", listenLeapKeystoreChange);
             window.removeEventListener("fin_keystorechange", listenFinKeystoreChange);
             window.removeEventListener("compass_keystorechange", listenCompassKeystoreChange);
+            window.removeEventListener("metamask_keystorechange", listenMetamaskKeystoreChange);
         };
     }, [leap, keplr, fin, compass, metamask]);
 

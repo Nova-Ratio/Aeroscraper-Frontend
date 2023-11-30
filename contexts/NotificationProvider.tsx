@@ -34,10 +34,9 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
 
   const [processLoading, setProcessLoading] = useState(false);
-  const [onHover, setOnHover] = useState(false);
+  const [onHover, setOnHover] = useState<boolean | null>(false);
 
   const addNotification = (notification: INotification) => {
-    setOnHover(false);
     setNotification(notification);
 
     let notiElement = {
@@ -59,16 +58,19 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
       localStorage.setItem("notifications", JSON.stringify([notiElement]));
     }
 
-    if (!onHover) {
-      setTimeout(() => { clearNotification() }, 4000);
-    }
+    clearNotification();
   }
+
   const clearNotification = useCallback(
     () => {
-      if (!onHover) {
-        console.log(onHover);
-        
-        setNotification(null);
+      let timer;
+      if (onHover === false) {
+        timer = setTimeout(() => {
+          setNotification(null);
+          setOnHover(null);
+        }, 3000);
+      } else {
+        clearTimeout(timer);
       }
     },
     [onHover, notification, processLoading]);
