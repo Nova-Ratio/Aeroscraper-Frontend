@@ -34,10 +34,10 @@ export const getAppEthContract = (
         const latestBlock = await chainRestTendermintApi.fetchLatestBlock();
         const latestHeight = latestBlock.header.height;
         const timeoutHeight = new BigNumberInBase(latestHeight).plus(DEFAULT_BLOCK_TIMEOUT_HEIGHT);
-
+        const gas = getStdFee({ gasPrice: chainConfig.gasPrice });
         const eip712TypedData = getEip712TypedData({
             msgs: msg,
-            fee: getStdFee({ gasPrice: chainConfig.gasPrice }),
+            fee: gas,
             tx: {
                 memo: '',
                 accountNumber: accountDetails.accountNumber.toString(),
@@ -61,7 +61,7 @@ export const getAppEthContract = (
             message: msg,
             memo: '',
             signMode: SIGN_AMINO,
-            fee: getStdFee({ gasPrice: chainConfig.gasPrice }),
+            fee: gas,
             pubKey: publicKeyBase64,
             sequence: baseAccount.sequence,
             timeoutHeight: timeoutHeight.toNumber(),

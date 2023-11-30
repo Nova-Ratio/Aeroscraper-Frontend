@@ -36,7 +36,7 @@ export const testnetInjectiveConfig: AppConfig = {
     fees: {
         upload: 1500000,
         init: 500000,
-        exec: 200000,
+        exec: 2000000,
     },
 }
 
