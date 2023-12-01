@@ -147,7 +147,7 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance, basePric
         {
           !isNil(baseCoin) ?
             <div className="flex items-center gap-2">
-              <img alt="sei" src={baseCoin.image} className="w-10 h-10" />
+              <img alt="sei" src={baseCoin.tokenImage} className="w-10 h-10" />
               <Text size="2xl" weight="font-medium">{baseCoin.name}</Text>
             </div>
             :

@@ -4,30 +4,102 @@ import { useWallet } from '@/contexts/WalletProvider';
 import usePageData from '@/contracts/app/usePageData';
 import { motion } from 'framer-motion';
 import { isNil } from 'lodash';
-import React, { FC, useState } from 'react'
+import Link from 'next/link';
+import React, { FC, useEffect, useState } from 'react'
 
 interface Props {
-  basePrice:number
+  basePrice: number
 }
 
-const InjectiveStatisticSide:FC<Props> = ({basePrice}) => {
+const INTERVAL_TIME = 6000;
+const content:
+  { title: string, desc: string, linkStr?: string, linkUrl?: string }[] = [
+    {
+      title: "Open your Trove and Mint AUSD",
+      desc: "Open your first trove using INJ and mint AUSD. You can add or remove collaterals to your Trove later, mint more AUSD, or pay off your debt."
+    },
+    {
+      title: "Stake your AUSD to Stability Pool",
+      desc: "Get a right to earn rewards from liquid troves by staking your AUSD to the stability pool."
+    },
+    {
+      title: "Rewards!",
+      desc: "Collect the rewards you earned from liquid troves."
+    },
+    {
+      title: "Don't miss our latest Galxe campaign",
+      desc: "Get a chance to win exclusive rewards by participating in our current Galxe campaign.",
+      linkStr: "participating",
+      linkUrl: "https://galxe.com/aeroscraper/campaign/GCfPktUfsC"
+    }
+  ]
 
-  const { baseCoin,walletType } = useWallet();
+const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
+
+  const { baseCoin, walletType } = useWallet();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
 
   const { pageData } = usePageData({ basePrice });
 
-  return (
-    <div className="max-w-[400px] w-[379px]">
-      <h1 className="text-white text-[42px] leading-[54px] font-semibold">Your decentralised lending-borrowing protocol</h1>
-      <h2 className="text-base text-ghost-white font-medium mt-4">Welcome to the Aeroscraper app. Here you can open a trove to borrow AUSD, earn AUSD rewards by depositing AUSD to the Stability pool, or Liquidate Risky Troves.</h2>
+  const [showContentIdx, setShowContentIdx] = useState(0);
 
-      <button onClick={() => { setShowStatistic(prev => !prev); }} className='text-base font-medium text-[#E4462D] hover:text-[#F8B810] transition-colors duration-300 flex gap-1 mt-8 mb-4'>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setShowContentIdx(prev => (prev + 1) === content.length ? 0 : (prev + 1));
+    }, INTERVAL_TIME);
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, []);
+
+  const renderDescription = () => {
+    const item = content[showContentIdx];
+    if (item.linkStr && item.linkUrl) {
+      const parts = item.desc.split(item.linkStr);
+      return (
+        <>
+          {parts[0]}
+          <Link target={"_blank"} href={item.linkUrl} className="text-[#F8B810] animate-pulse">
+            {item.linkStr}
+          </Link>
+          {parts[1]}
+        </>
+      );
+    }
+    return item.desc;
+  };
+
+  return (
+    <div className="max-w-[400px] w-[379px] group">
+      <motion.div
+        key={showContentIdx}
+        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, scale: 0.98 }}
+        transition={{ ease: "easeInOut", duration: 1.2 }}
+        layout
+        className="min-h-[200px]"
+      >
+        <h1 className="text-white text-[39px] leading-[50px] font-semibold">{content[showContentIdx].title}</h1>
+        <h2 className="text-base text-ghost-white font-medium mt-4">
+          {renderDescription()}
+        </h2>
+      </motion.div>
+      <div className='space-x-1 group-hover:opacity-100 opacity-0 transition-opacity my-2'>
+        {
+          content.map((i, idx) => {
+            return <button key={idx} onClick={() => { setShowContentIdx(idx); }} className={`w-2 h-2 rounded-sm ${showContentIdx === idx ? "bg-[#E4462D]" : "bg-ghost-white"}`} />
+          })
+        }
+      </div>
+
+      <button onClick={() => { setShowStatistic(prev => !prev); }} className='text-base font-medium text-[#E4462D] hover:text-[#F8B810] transition-colors duration-300 flex gap-1 mb-4'>
         Protocol statistics
         <ChevronUpIcon className={`w-5 h-5 mt-0.5 transition-all duration-300 ${showStatistic ? "rotate-180" : ""}`} />
       </button>
       {showStatistic && (
         <motion.div
+          layout
           initial={{ opacity: 0, translateY: -10 }}
           animate={{ opacity: 1, translateY: 0 }}
           className="grid grid-cols-2 justify-center gap-x-16 gap-y-4 mt-6">

@@ -56,7 +56,7 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
             {
               !isNil(baseCoin) ?
                 <div className="flex items-center gap-2">
-                  <img alt="token" src={baseCoin.image} className="w-6 h-6" />
+                  <img alt="token" src={baseCoin.tokenImage} className="w-6 h-6" />
                   <Text size="base" weight="font-medium">{baseCoin.name}</Text>
                 </div>
                 :
@@ -68,7 +68,7 @@ const ClaimRewardTab: FC<Props> = ({ pageData, getPageData, refreshBalance, base
             thousandsGroupStyle="thousand"
             thousandSeparator=","
             fixedDecimalScale
-            decimalScale={2}
+            decimalScale={6}
             displayType="text"
             renderText={(value) =>
               <Text size="5xl" textColor='text-gradient' weight='font-normal'>

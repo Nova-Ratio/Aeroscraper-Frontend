@@ -1,15 +1,10 @@
 import GradientButton from '@/components/Buttons/GradientButton';
-import StatisticCard from '@/components/Cards/StatisticCard';
-import InputLayout from '@/components/Input/InputLayout';
-import { WaveModal } from '@/components/Modal/WaveModal';
 import Text from '@/components/Texts/Text';
-import Info from '@/components/Tooltip/Info';
 import useAppContract from '@/contracts/app/useAppContract';
 import { motion } from 'framer-motion';
 import React, { FC, useMemo, useState } from 'react'
 import { NumberFormatValues } from 'react-number-format/types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
-import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
 import { convertAmount, getIsInjectiveResponse, getRatioColor, getRatioText } from '@/utils/contractUtils';
@@ -32,7 +27,7 @@ type Props = {
 
 const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   const contract = useAppContract();
-  const { balanceByDenom, baseCoin, refreshBalance, clientType } = useWallet();
+  const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
   const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
   const [borrowAmount, setBorrowAmount] = useState<number>(0);
   const [collateralAmount, setCollateralAmount] = useState<number>(0);
@@ -244,7 +239,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                           {
                             !isNil(baseCoin) ?
                               <div className="flex items-center gap-2">
-                                <img alt="token" src={baseCoin.image} className="w-6 h-6" />
+                                <img alt="token" src={baseCoin.tokenImage} className="w-6 h-6" />
                                 <Text size="base" weight="font-medium">{baseCoin.name}</Text>
                               </div>
                               :
@@ -395,7 +390,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                   {
                     !isNil(baseCoin) ?
                       <div className="flex items-center gap-2">
-                        <img alt="token" src={baseCoin.image} className="w-6 h-6" />
+                        <img alt="token" src={baseCoin.tokenImage} className="w-6 h-6" />
                         <Text size="base" weight="font-medium">{baseCoin.name}</Text>
                       </div>
                       :

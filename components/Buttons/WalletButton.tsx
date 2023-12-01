@@ -22,6 +22,7 @@ import { ChangeIcon } from '../Icons/Icons'
 import Button from './Button'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import TransactionButton from './TransactionButton'
+import useMetamask from '@/services/metamask'
 
 type Props = {
     ausdBalance?: number;
@@ -39,6 +40,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     const keplr = useKeplr();
     const fin = useFin();
     const compass = useCompass();
+    const metamask = useMetamask();
     const wallet = useWallet();
 
     const [accountModal, setAccountModal] = useState(false);
@@ -84,6 +86,12 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
 
             compass.connect();
         }
+        else if (walletType === WalletType.METAMASK) {
+            if (!anyWindow.ethereum) { return window.open("https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1", '_blank', 'noopener,noreferrer'); }
+
+            metamask.connect();
+        }
+
 
         setWalletSelectionOpen(false);
     }
@@ -97,6 +105,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         anyWindow.leap?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.LEAP }) : walletExtensions.otherWallets.push({ name: WalletType.LEAP, downloadLink: "https://www.leapwallet.io/" });
         anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
         anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
+        anyWindow.ethereum ? walletExtensions.installed.push({ name: WalletType.METAMASK }) : walletExtensions.otherWallets.push({ name: WalletType.METAMASK, downloadLink: "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1" });
 
         setWalletExtensions(walletExtensions);
     }
@@ -166,7 +175,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     </Text>
                                 }
                             />
-                            <img alt="sei" className="w-6 h-6 ml-4" src={baseCoin.image} />
+                            <img alt={baseCoin.name} className="w-6 h-6 ml-4" src={baseCoin.tokenImage} />
                             <NumericFormat
                                 value={baseCoinBalance}
                                 thousandsGroupStyle="thousand"
@@ -196,12 +205,12 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     return (
         <div className='relative'>
             <GradientButton className={className} onClick={toggleWallet}>
-                {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text>Connect Wallet</Text>}
+                {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text size='base'>Select Chain & Connect Wallet</Text>}
             </GradientButton>
             <Modal modalSize='lg' showModal={walletSelectionOpen}>
                 <div ref={ref} className='flex h-[644px]'>
                     <div className='pt-10 pl-8 w-[300px] border-r border-white/10 relative'>
-                        <h2 className='text-[#F7F7FF] text-2xl font-medium'>Connect Wallet</h2>
+                        <h2 className='text-[#F7F7FF] text-2xl font-medium'>{!isNil(clientType) ? "Connect Wallet" : "Select Chain"}</h2>
                         {!isNil(clientType) &&
                             <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
                                 {
@@ -234,7 +243,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                         {isNil(clientType) &&
                             <div className={`gap-y-4 flex flex-col mt-10 opacity-25`}>
                                 {
-                                    [WalletType.KEPLR, WalletType.LEAP, WalletType.FIN, WalletType.COMPASS].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
                                         <div key={idx} className='inline-block mr-auto'>
                                             {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
                                             <Button
@@ -248,7 +257,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     ))
                                 }
                                 {
-                                    [WalletType.KEPLR, WalletType.LEAP, WalletType.FIN, WalletType.COMPASS].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
+                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
                                         <div key={idx} className='inline-block mr-auto'>
                                             {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
                                             <Button
@@ -272,7 +281,6 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 >
                                     {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
                                 </Button>
-                                <ChangeIcon className='w-5 h-5' />
                             </div>
                         )}
                     </div>
@@ -303,10 +311,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     <Text size='4xl' textColor='text-white' className='mb-10'>How do I connect my wallet?</Text>
                                     <div className='flex justify-center items-center gap-16 mb-8'>
                                         {
-                                            Object.values(WalletInfoMap).map((walletType, idx) => {
-                                                if (walletType.name) {
-                                                    return <img alt={walletType.name} key={idx} className="w-6 h-6 object-contain" src={walletType.thumbnailURL} />
-                                                }
+                                            WalletByClient[clientType].map((walletType, idx) => {
+                                                return <img alt={WalletImagesByName[walletType].image} key={idx} className="w-6 h-6 object-contain" src={WalletImagesByName[walletType].thumbnail} />
                                             })
                                         }
                                     </div>

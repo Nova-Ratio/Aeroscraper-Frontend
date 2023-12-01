@@ -88,7 +88,7 @@ export default function InjectiveDashboard() {
           <InjectiveBackgroundWave animate={processLoading} className="absolute -top-[240px] left-80 -z-10 h-[664px] rotate-[300deg]" />
         </motion.div>
       )}
-      {tabPosition === "claimRewards" && (
+      {tabPosition === "rewards" && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -98,7 +98,7 @@ export default function InjectiveDashboard() {
           <InjectiveBackgroundWave animate={processLoading} className="absolute -bottom-[200px] -left-20 -z-10 h-[584px] rotate-[180deg]" />
         </motion.div>
       )}
-      <div className="flex gap-32 z-10 relative">
+      <div className="flex gap-32 z-10 relative min-h-[720px]">
         <InjectiveStatisticSide basePrice={basePrice} />
         <InjectiveTabsSide setTabPosition={changeTabPosition} />
       </div>
@@ -110,7 +110,7 @@ export default function InjectiveDashboard() {
         <div className='grid grid-cols-3 gap-40'>
           <div className='flex flex-col content-start justify-start gap-4'>
             <Text size="sm" textColor='text-white' weight="font-semibold">Product</Text>
-            <Link href={'https://novaratio.gitbook.io/aeroscraper/'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+            <Link href={'https://novaratio.gitbook.io/aeroscraper/aeroscraper/whitepaper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
             </Link>
             <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>

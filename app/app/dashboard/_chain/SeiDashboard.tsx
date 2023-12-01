@@ -71,7 +71,7 @@ export default function SeiDashboard() {
               !isNil(baseCoin) &&
               <div className="flex flex-col items-center gap-2">
                 <div className="flex items-center gap-2">
-                  <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.image} />
+                  <img alt={baseCoin.name} className="w-10 h-10" src={baseCoin.tokenImage} />
                   <Text size="2xl">{baseCoin.name}</Text>
                 </div>
                 <Text>$ {basePrice.toFixed(3)}</Text>

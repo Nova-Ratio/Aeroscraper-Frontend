@@ -18,6 +18,7 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     ],
     [ClientEnum.INJECTIVE]: [
         WalletType.KEPLR,
+        WalletType.METAMASK
     ]
 }
 
@@ -37,6 +38,10 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
     [WalletType.COMPASS]: {
         image: "/images/wallet-images/compass.png",
         thumbnail: "/images/wallet-images/compass-icon.png"
+    },
+    [WalletType.METAMASK]: {
+        image: "/images/wallet-images/metamask.png",
+        thumbnail: "/images/wallet-images/metamask-icon.png"
     },
     [WalletType.NOT_SELECTED]: {
         image: "",
@@ -77,8 +82,8 @@ export const ClientTransactionUrlByName: Record<ClientEnum, { accountUrl: string
         accountUrl: "https://neutron.celat.one/account/"
     },
     [ClientEnum.INJECTIVE]: {
-        txDetailUrl: "https://explorer.injective.network/transaction/",
-        accountUrl: "https://explorer.injective.network/account/"
+        txDetailUrl: "https://testnet.explorer.injective.network/transaction/",
+        accountUrl: "https://testnet.explorer.injective.network/account/"
     }
 }
 
@@ -87,6 +92,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "SEI",
         denom: "usei",
         image: "/images/token-images/sei.png",
+        tokenImage:"/images/token-images/sei.png",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -94,6 +100,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
         image: "/images/token-images/archway-coin.png",
+        tokenImage:"/images/token-images/atom.svg",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -101,6 +108,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "NTRN",
         denom: "untrn",
         image: "/images/token-images/neutron.svg",
+        tokenImage:"/images/token-images/neutron.svg",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -108,6 +116,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "INJ",
         denom: "inj",
         image: "/images/token-images/inj.svg",
+        tokenImage:"/images/token-images/inj.svg",
         decimal: 18,
         ausdDecimal: 18
     }

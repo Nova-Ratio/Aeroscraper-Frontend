@@ -77,7 +77,7 @@ const ArchwayTheme = () => {
             !isNil(baseCoin) &&
             <div className="flex items-center gap-2 mr-12">
               <Text size='base'>$ {basePrice.toFixed(4)}</Text>
-              <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.image} />
+              <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.tokenImage} />
             </div>
           }
           {wallet.initialized && !isNil(baseCoin) ?

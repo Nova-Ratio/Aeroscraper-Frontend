@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, FC, PropsWithChildren, useContext, useRef, useState } from 'react';
+import React, { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 
 export type NotificationType = "Reedem"
 
@@ -18,6 +18,7 @@ interface INotificationContext {
   clearNotification: () => void;
   processLoading: boolean;
   setProcessLoading: (arg: boolean) => void;
+  setOnHover: (arg: boolean) => void;
 }
 
 const NotificationContext = createContext<INotificationContext>({
@@ -25,13 +26,15 @@ const NotificationContext = createContext<INotificationContext>({
   addNotification: () => { },
   clearNotification: () => { },
   processLoading: false,
-  setProcessLoading: () => { }
+  setProcessLoading: () => { },
+  setOnHover: () => { }
 });
 
 const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
 
   const [processLoading, setProcessLoading] = useState(false);
+  const [onHover, setOnHover] = useState<boolean>(false);
 
   const addNotification = (notification: INotification) => {
     setNotification(notification);
@@ -55,17 +58,45 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
       localStorage.setItem("notifications", JSON.stringify([notiElement]));
     }
 
-    setTimeout(() => {
-      clearNotification();
-    }, 3000);
+    clearNotification();
   }
-  const clearNotification = () => {
-    setNotification(null);
-  };
+
+  const clearNotification = useCallback(
+    () => {
+      let timer;
+      if (onHover === false) {
+        timer = setTimeout(() => {
+          setNotification(null);
+        }, 4000);
+      } else {
+        clearTimeout(timer);
+      }
+    },
+    [onHover, notification, processLoading]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearNotification();
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [onHover]);
+
+  const providedValue = React.useMemo(() => ({
+    notification,
+    addNotification,
+    clearNotification,
+    processLoading,
+    setProcessLoading,
+    setOnHover
+  }), [notification, processLoading, onHover]);
+
 
   return (
     <NotificationContext.Provider
-      value={{ notification, addNotification, clearNotification,processLoading,setProcessLoading }}
+      value={providedValue}
     >
       {children}
     </NotificationContext.Provider>

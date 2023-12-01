@@ -18,29 +18,34 @@ import { useKeplr } from "@/services/keplr";
 import { useLeap } from "@/services/leap";
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { getBaseCoinByClient } from "@/constants/walletConstants";
+import useMetamask from "@/services/metamask";
 
 const SideEffects = () => {
     const leap = useLeap();
     const keplr = useKeplr();
     const fin = useFin();
     const compass = useCompass();
+    const metamask = useMetamask();
 
     useEffect(() => {
         const listenKeplrKeystoreChange = () => keplr.connect(true);
         const listenLeapKeystoreChange = () => leap.connect(true);
         const listenFinKeystoreChange = () => fin.connect(true);
         const listenCompassKeystoreChange = () => compass.connect(true);
+        const listenMetamaskKeystoreChange = () => compass.connect(true);
         window.addEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
         window.addEventListener("leap_keystorechange", listenLeapKeystoreChange);
         window.addEventListener("fin_keystorechange", listenFinKeystoreChange);
         window.addEventListener("compass_keystorechange", listenCompassKeystoreChange);
+        window.addEventListener("metamask_keystorechange", listenMetamaskKeystoreChange);
         return () => {
             window.removeEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
             window.removeEventListener("leap_keystorechange", listenLeapKeystoreChange);
             window.removeEventListener("fin_keystorechange", listenFinKeystoreChange);
             window.removeEventListener("compass_keystorechange", listenCompassKeystoreChange);
+            window.removeEventListener("metamask_keystorechange", listenMetamaskKeystoreChange);
         };
-    }, [leap, keplr, fin, compass]);
+    }, [leap, keplr, fin, compass, metamask]);
 
     useEffect(() => {
         const walletAddress = localStorage.getItem("wallet_address");
@@ -58,8 +63,11 @@ const SideEffects = () => {
             else if (selectedWalletType === WalletType.COMPASS) {
                 compass.connect();
             }
+            else if (selectedWalletType === WalletType.METAMASK) {
+                metamask.connect();
+            }
         }
-    }, [leap, keplr, fin, compass]);
+    }, [leap, keplr, fin, compass, metamask]);
 
     return null;
 };
@@ -117,7 +125,6 @@ export interface WalletContextType {
     readonly setProfileDetail: (profile: ProfileDetailModel | undefined) => void;
     readonly processLoader: boolean;
     readonly setProcessLoader: (arg: boolean) => void;
-    // readonly accountNumber: number;
     readonly clientType: ClientEnum | undefined;
     readonly selectClientType: (value: ClientEnum | undefined) => void;
     readonly baseCoin: BaseCoin | undefined;
@@ -125,7 +132,7 @@ export interface WalletContextType {
 
 function throwNotInitialized(): any {
     console.log("Wallet not initialized.")
-    //throw new Error("Not yet initialized");
+    throw new Error("Not yet initialized");
 }
 
 const defaultContext: WalletContextType = {
@@ -151,7 +158,6 @@ const defaultContext: WalletContextType = {
     clientType: undefined,
     selectClientType: () => { },
     baseCoin: undefined
-    // accountNumber: 0,
 };
 
 const groupBalanceByDenom = (balances: Coin[]): Dictionary<Coin> => {
@@ -203,6 +209,7 @@ export function WalletProvider({
         setWalletType(walletType)
         localStorage.setItem("selectedWalletType", walletType);
     }, [])
+
 
     const contextWithInit: WalletContextType = {
         ...defaultContext,
@@ -314,6 +321,7 @@ export function WalletProvider({
 
                 if (selectedWalletType === WalletType.KEPLR) {
                     const keplrKey = await anyWindow.keplr.getKey(config.chainId)
+                    
                     walletName = keplrKey.name;
                 }
                 else if (selectedWalletType === WalletType.LEAP) {
@@ -327,6 +335,9 @@ export function WalletProvider({
                 else if (selectedWalletType === WalletType.FIN) {
                     const finKey = await anyWindow.fin.getKey(config.chainId)
                     walletName = finKey.name;
+                }
+                else if (selectedWalletType === WalletType.METAMASK) {
+                    walletName = "Account";
                 }
 
                 await refreshBalance(address, balance)
@@ -394,7 +405,9 @@ export function WalletProvider({
         profileDetail,
         clientType,
         selectClientType,
-        baseCoin
+        baseCoin,
+        address: value.address,
+        balance: value.balance,
     }), [value, walletLoading, walletType, processLoader, profileDetail, clientType, selectClientType, baseCoin])
 
     return (
