@@ -70,7 +70,7 @@ export const getAppEthContract = (
             const response = await msgBroadcastClient.broadcast({
                 msgs: msg,
                 injectiveAddress: senderAddress,
-                gas: { gas: 1000000, gasPrice: String(chainConfig.gasPrice) }
+                gas: { gas: 10000000, gasPrice: String(chainConfig.gasPrice) }
             })
 
             return response
@@ -218,7 +218,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -251,7 +251,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -279,7 +279,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -307,7 +307,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -342,7 +342,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -411,7 +411,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -439,7 +439,7 @@ export const getAppEthContract = (
                         ]
                     }
                 },
-                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+                funds: [coin("14", BaseCoinByClient[clientType].denom)]
             })
 
             const msg1 = MsgExecuteContractCompat.fromJSON({
