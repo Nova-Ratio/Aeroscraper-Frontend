@@ -4,82 +4,79 @@ import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveR
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
-import { MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getAddressFromInjectiveAddress, recoverTypedSignaturePubKey, hexToBase64, TxGrpcClient, createTransaction, createWeb3Extension, createTxRawEIP712, DEFAULT_STD_FEE, SIGN_AMINO, TxRestClient, getEip712TypedData, hexToBuff, getEthereumAddress, MsgExecuteContractCompat } from "@injectivelabs/sdk-ts";
-
-import { EthereumChainId } from '@injectivelabs/ts-types';
+import { MsgExecuteContract, ChainRestAuthApi, BaseAccount, ChainRestTendermintApi, getEip712TypedData, getEthereumAddress, MsgExecuteContractCompat, ChainGrpcWasmApi, toBase64, fromBase64 } from "@injectivelabs/sdk-ts";
+import { Network, getNetworkEndpoints } from "@injectivelabs/networks";
+import { EthereumChainId, ChainId } from '@injectivelabs/ts-types';
 import { isNil } from "lodash";
-
-import { DEFAULT_BLOCK_TIMEOUT_HEIGHT, BigNumberInBase, getStdFee } from '@injectivelabs/utils'
+import { DEFAULT_BLOCK_TIMEOUT_HEIGHT, BigNumberInBase } from '@injectivelabs/utils'
 import { getConfig } from "@/config";
+import { MsgBroadcaster, Wallet, WalletStrategy } from "@injectivelabs/wallet-ts";
+import { WalletType } from "@/enums/WalletType";
 
 export const getAppEthContract = (
     client: any,
     baseCoin: BaseCoin,
     clientType?: ClientEnum,
+    walletType?:WalletType
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
+    const chainConfig = getConfig("", clientType);
+    const ENDPOINTS = getNetworkEndpoints(Network.Testnet);
+    const walletStrategy = new WalletStrategy({
+        chainId: chainConfig.chainId as ChainId,
+        ethereumOptions: {
+            ethereumChainId: EthereumChainId.Goerli,
+            rpcUrl: chainConfig.rpcUrl
+        }
+    });
+    const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
 
-    const createEthSignature = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[] | MsgExecuteContractCompat[]) => {
+    walletStrategy.setWallet(Wallet.Metamask); // This will become dynamic for more than one Wallet with eth
+
+    const msgBroadcastClient = new MsgBroadcaster({
+        walletStrategy,
+        network: Network.Testnet,
+    });
+
+    const msgBroadcastClientWithEth = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[] | MsgExecuteContractCompat | MsgExecuteContractCompat[]) => {
         let anyWindow: any = window;
 
-        const chainConfig = getConfig("", clientType);
+        try {
+            if (!anyWindow.ethereum) return;
 
-        if (!anyWindow.ethereum) return;
+            const chainRestAuthApi = new ChainRestAuthApi(chainConfig.httpUrl!);
+            const accountDetailsResponse = await chainRestAuthApi.fetchAccount(senderAddress);
+            const baseAccount = BaseAccount.fromRestApi(accountDetailsResponse);
+            const accountDetails = baseAccount.toAccountDetails();
+            const chainRestTendermintApi = new ChainRestTendermintApi(chainConfig.httpUrl!);
+            const latestBlock = await chainRestTendermintApi.fetchLatestBlock();
+            const latestHeight = latestBlock.header.height;
+            const timeoutHeight = new BigNumberInBase(latestHeight).plus(DEFAULT_BLOCK_TIMEOUT_HEIGHT);
 
-        const chainRestAuthApi = new ChainRestAuthApi(chainConfig.httpUrl!);
-        const accountDetailsResponse = await chainRestAuthApi.fetchAccount(senderAddress);
-        const baseAccount = BaseAccount.fromRestApi(accountDetailsResponse);
-        const accountDetails = baseAccount.toAccountDetails();
-        const chainRestTendermintApi = new ChainRestTendermintApi(chainConfig.httpUrl!);
-        const latestBlock = await chainRestTendermintApi.fetchLatestBlock();
-        const latestHeight = latestBlock.header.height;
-        const timeoutHeight = new BigNumberInBase(latestHeight).plus(DEFAULT_BLOCK_TIMEOUT_HEIGHT);
-        const gas = getStdFee({ gasPrice: chainConfig.gasPrice });
-        const eip712TypedData = getEip712TypedData({
-            msgs: msg,
-            fee: gas,
-            tx: {
-                memo: '',
-                accountNumber: accountDetails.accountNumber.toString(),
-                sequence: accountDetails.sequence.toString(),
-                timeoutHeight: timeoutHeight.toFixed(),
-                chainId: chainConfig.chainId,
-            },
-            ethereumChainId: EthereumChainId.Goerli,
-        });
+            const eip712TypedData = getEip712TypedData({
+                msgs: msg,
+                tx: {
+                    memo: '',
+                    accountNumber: accountDetails.accountNumber.toString(),
+                    sequence: accountDetails.sequence.toString(),
+                    timeoutHeight: timeoutHeight.toFixed(),
+                    chainId: chainConfig.chainId,
+                },
+                ethereumChainId: EthereumChainId.Goerli,
+            });
 
-        const signature = await anyWindow.ethereum.request({
-            method: 'eth_signTypedData_v4',
-            params: [getEthereumAddress(senderAddress), JSON.stringify(eip712TypedData)],
-        });
-        const signatureBuff = hexToBuff(signature)
+            await walletStrategy.signEip712TypedData(JSON.stringify(eip712TypedData), getEthereumAddress(senderAddress));
 
-        const publicKeyHex = recoverTypedSignaturePubKey(eip712TypedData, signature);
-        const publicKeyBase64 = hexToBase64(publicKeyHex);
+            const response = await msgBroadcastClient.broadcast({
+                msgs: msg,
+                injectiveAddress: senderAddress,
+                gas: { gas: 1000000, gasPrice: String(chainConfig.gasPrice) }
+            })
 
-        const { txRaw } = createTransaction({
-            message: msg,
-            memo: '',
-            signMode: SIGN_AMINO,
-            fee: gas,
-            pubKey: publicKeyBase64,
-            sequence: baseAccount.sequence,
-            timeoutHeight: timeoutHeight.toNumber(),
-            accountNumber: baseAccount.accountNumber,
-            chainId: chainConfig.chainId,
-        })
-
-        const web3Extension = createWeb3Extension({ ethereumChainId: EthereumChainId.Goerli });
-
-        const txRawEip712 = createTxRawEIP712(txRaw, web3Extension);
-
-        txRawEip712.signatures = [signatureBuff];
-
-        const txRestClient = new TxRestClient(chainConfig.httpUrl!);
-
-        const { txHash } = await txRestClient.broadcast(txRawEip712);
-
-        return await txRestClient.fetchTxPoll(txHash);
+            return response
+        } catch (error) {
+            return undefined;
+        }
     }
 
     //GET QUERIES
@@ -91,7 +88,7 @@ export const getAppEthContract = (
 
         const priceIdByCLient: Record<ClientEnum, { priceId: string, serviceUrl: string }> = {
             [ClientEnum.SEI]: { priceId: "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb", serviceUrl: "https://xc-mainnet.pyth.network/" },
-            [ClientEnum.ARCHWAY]: { priceId: "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb", serviceUrl: "https://xc-mainnet.pyth.network/" },
+            [ClientEnum.ARCHWAY]: { priceId: "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819", serviceUrl: "https://xc-mainnet.pyth.network/" },
             [ClientEnum.NEUTRON]: { priceId: "8112fed370f3d9751e513f7696472eab61b7f4e2487fd9f46c93de00a338631c", serviceUrl: "https://hermes-beta.pyth.network/" },
             [ClientEnum.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" },
         }
@@ -114,273 +111,213 @@ export const getAppEthContract = (
         }
     }
 
-    const getTotalCollateralAmount = async (): Promise<string> => {
+    const getTotalCollateralAmount = async (): Promise<string | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_collateral_amount: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { total_collateral_amount: {} });
+        return;
     }
 
-    const getTotalDebtAmount = async (): Promise<string> => {
-        if (clientType === ClientEnum.INJECTIVE) {
+    const getTotalDebtAmount = async (): Promise<string | undefined> => {
 
+        if (clientType === ClientEnum.INJECTIVE) {
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_debt_amount: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { total_debt_amount: {} });
+        return;
     }
 
-    const getTrove = async (user_addr: string): Promise<GetTroveResponse> => {
+    const getTrove = async (user_addr: string): Promise<GetTroveResponse | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ trove: { user_addr } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { trove: { user_addr } });
+        return;
     }
 
-    const getStake = async (user_addr: string): Promise<GetStakeResponse> => {
+    const getStake = async (user_addr: string): Promise<GetStakeResponse | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ stake: { user_addr } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { stake: { user_addr } });
+        return;
     }
 
-    const getTotalStake = async (): Promise<string> => {
+    const getTotalStake = async (): Promise<string | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ total_stake_amount: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { total_stake_amount: {} });
+        return;
     }
 
     const getCollateralPrice = async () => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ collateral_price: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { collateral_price: {} });
+        return;
     }
 
-    const getAusdBalance = async (address: string): Promise<CW20BalanceResponse> => {
+    const getAusdBalance = async (address: string): Promise<CW20BalanceResponse | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(ausdContractAddress, toBase64({ balance: { address } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(ausdContractAddress, { balance: { address } })
+        return;
     }
 
-    const getAusdInfo = async (): Promise<CW20TokenInfoResponse> => {
+    const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(ausdContractAddress, toBase64({ token_info: {} }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(ausdContractAddress, { token_info: {} })
+        return;
     }
 
-    const getReward = async (user_addr: string): Promise<string> => {
+    const getReward = async (user_addr: string): Promise<string | undefined> => {
         if (clientType === ClientEnum.INJECTIVE) {
-
+            const res = await chainGrpcWasmApi.fetchSmartContractState(contractAddress, toBase64({ liquidation_gains: { user_addr } }))
+            const data: any = fromBase64(res.data as any);
+            return data;
         }
 
-        return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
+        return;
     }
 
     //EXECUTE QUERIES
     const openTrove = async (senderAddress: string, amount: number, loanAmount: number) => {
 
-        try {
-            if (clientType === ClientEnum.INJECTIVE) {
+        if (clientType === ClientEnum.INJECTIVE) {
+            const vaa = await getVAA();
 
-                const vaa = await getVAA();
+            const msg = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
 
-                const msg = MsgExecuteContractCompat.fromJSON({
-                    contractAddress: oraclecontractAddress,
-                    sender: senderAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [coin("1", BaseCoinByClient[clientType].denom)]
-                })
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: {
+                    open_trove: {
+                        loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal)
+                    }
+                },
+                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
+            })
 
-                const msg1 = MsgExecuteContractCompat.fromJSON({
-                    contractAddress: contractAddress,
-                    sender: senderAddress,
-                    msg: {
-                        open_trove: {
-                            loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal)
-                        }
-                    },
-                    funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-                })
-
-                const broadcast = createEthSignature(senderAddress, [msg, msg1]);
-
-                return await broadcast;
-            }
-        } catch (error) {
-            console.log(error);
+            return await  msgBroadcastClientWithEth(senderAddress, [msg, msg1])
         }
     }
 
     const addCollateral = async (senderAddress: string, amount: number) => {
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { add_collateral: {} },
-                "auto",
-                "Add Collateral",
-                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { add_collateral: {} },
-                "auto",
-                "Add Collateral",
-                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
-            )
-        }
 
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-
-        }
-
-        return await client.executeMultiple(
-            senderAddress,
-            [
-                {
-                    contractAddress: oraclecontractAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [{ amount: "1", denom: "usei" }],
+            const msg = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
                 },
-                {
-                    contractAddress,
-                    msg: { add_collateral: {} },
-                    funds: [coin(getRequestAmount(amount, baseCoin.decimal), "usei")]
-                }
-            ],
-            "auto",
-            "Add Collateral",
-        )
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { add_collateral: {} },
+                funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
+            })
+
+            return await msgBroadcastClientWithEth(senderAddress, [msg, msg1])
+        }
     }
 
     const removeCollateral = async (senderAddress: string, amount: number) => {
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } },
-                "auto",
-                "Remove Collateral"
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } },
-                "auto",
-                "Remove Collateral"
-            )
-        }
-
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-
-        }
-
-        return await client.executeMultiple(
-            senderAddress,
-            [
-                {
-                    contractAddress: oraclecontractAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [{ amount: "1", denom: "usei" }],
+            const msg = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
                 },
-                {
-                    contractAddress,
-                    msg: { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } }
-                }
-            ],
-            "auto",
-            "Remove Collateral",
-        )
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { remove_collateral: { collateral_amount: getRequestAmount(amount, baseCoin.decimal) } }
+            })
+
+            return await msgBroadcastClientWithEth(senderAddress, [msg, msg1]);
+        }
     }
 
     const borrowLoan = async (senderAddress: string, amount: number) => {
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
-                "auto",
-                "Borrow Loan"
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
-                "auto",
-                "Borrow Loan"
-            )
-        }
 
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-
-        }
-
-        return await client.executeMultiple(
-            senderAddress,
-            [
-                {
-                    contractAddress: oraclecontractAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [{ amount: "1", denom: "usei" }],
+            const msg = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
                 },
-                {
-                    contractAddress,
-                    msg: { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
-                }
-            ],
-            "auto",
-            "Borrow Loan",
-        )
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
+            })
+
+            return await msgBroadcastClientWithEth(senderAddress, msg1);
+        }
     }
 
     const repayLoan = async (senderAddress: string, amount: number) => {
@@ -392,54 +329,32 @@ export const getAppEthContract = (
             }
         }
 
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                ausdContractAddress,
-                msg,
-                "auto",
-                "Repay Loan"
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                ausdContractAddress,
-                msg,
-                "auto",
-                "Repay Loan"
-            )
-        }
-
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
+            const msgVAA = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: ausdContractAddress,
+                sender: senderAddress,
+                msg
+            })
+
+            return await msgBroadcastClientWithEth(senderAddress, [msgVAA, msg1])
 
         }
 
-        return await client.executeMultiple(
-            senderAddress,
-            [
-                {
-                    contractAddress: oraclecontractAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [{ amount: "1", denom: "usei" }],
-                },
-                {
-                    msg,
-                    contractAddress: ausdContractAddress,
-                }
-            ],
-            "auto",
-            "Repay Loan",
-        )
     }
 
     const stake = async (senderAddress: string, amount: number) => {
@@ -452,30 +367,26 @@ export const getAppEthContract = (
         }
 
         if (clientType === ClientEnum.INJECTIVE) {
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: ausdContractAddress,
+                sender: senderAddress,
+                msg
+            })
 
+            return await msgBroadcastClientWithEth(senderAddress, msg1)
         }
-
-        return client.execute(
-            senderAddress,
-            ausdContractAddress,
-            msg,
-            "auto",
-            "Stake"
-        )
     }
 
     const unstake = async (senderAddress: string, amount: number) => {
         if (clientType === ClientEnum.INJECTIVE) {
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: contractAddress,
+                sender: senderAddress,
+                msg: { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
+            })
 
+            return await msgBroadcastClientWithEth(senderAddress, msg1)
         }
-
-        return await client.execute(
-            senderAddress,
-            contractAddress,
-            { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
-            "auto",
-            "Unstake"
-        )
     }
 
     const redeem = async (senderAddress: string, amount: number) => {
@@ -486,99 +397,73 @@ export const getAppEthContract = (
                 msg: jsonToBinary({ redeem: {} })
             }
         }
+
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
-
-        }
-
-        return client.executeMultiple(
-            senderAddress,
-            [
-                {
-                    contractAddress: oraclecontractAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [{ amount: "1", denom: "usei" }],
+            const msg0 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
                 },
-                {
-                    msg,
-                    contractAddress: ausdContractAddress
-                }
-            ],
-            "auto",
-            "Redeem"
-        )
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
+
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: ausdContractAddress,
+                sender: senderAddress,
+                msg
+            })
+
+            return await msgBroadcastClientWithEth(senderAddress, [msg0, msg1])
+        }
     }
 
     const liquidateTroves = async (senderAddress: string) => {
-        if (clientType === ClientEnum.ARCHWAY) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { liquidate_troves: {} },
-                "auto",
-                "Liquidate Troves"
-            )
-        }
-
-        if (clientType === ClientEnum.NEUTRON) {
-            return await client.execute(
-                senderAddress,
-                contractAddress,
-                { liquidate_troves: {} },
-                "auto",
-                "Liquidate Troves"
-            )
-        }
 
         const vaa = await getVAA();
 
         if (clientType === ClientEnum.INJECTIVE) {
+            const msg0 = MsgExecuteContractCompat.fromJSON({
+                contractAddress: oraclecontractAddress,
+                sender: senderAddress,
+                msg: {
+                    update_price_feeds: {
+                        data: [
+                            vaa
+                        ]
+                    }
+                },
+                funds: [coin("1", BaseCoinByClient[clientType].denom)]
+            })
 
+            const msg1 = MsgExecuteContractCompat.fromJSON({
+                contractAddress,
+                sender: senderAddress,
+                msg: { liquidate_troves: {} }
+            })
+
+            return await msgBroadcastClientWithEth(senderAddress, [msg0, msg1])
         }
 
-        return await client.executeMultiple(
-            senderAddress,
-            [
-                {
-                    contractAddress: oraclecontractAddress,
-                    msg: {
-                        update_price_feeds: {
-                            data: [
-                                vaa
-                            ]
-                        }
-                    },
-                    funds: [{ amount: "1", denom: "usei" }],
-                },
-                {
-                    contractAddress,
-                    msg: { liquidate_troves: {} }
-                }
-            ],
-            "auto",
-            "Liquidate Troves",
-        )
     }
 
     const withdrawLiquidationGains = async (senderAddress: string) => {
         if (clientType === ClientEnum.INJECTIVE) {
+            const msg = MsgExecuteContractCompat.fromJSON({
+                contractAddress,
+                sender: senderAddress,
+                msg: { withdraw_liquidation_gains: {} }
+            })
 
+            return await msgBroadcastClientWithEth(senderAddress, msg)
         }
 
-        return await client.execute(
-            senderAddress,
-            contractAddress,
-            { withdraw_liquidation_gains: {} },
-            "auto",
-            "Withdraw Liquidation Gains"
-        )
     }
 
     return {
@@ -603,7 +488,3 @@ export const getAppEthContract = (
         withdrawLiquidationGains
     }
 }
-function getEip712Tx(arg0: { msgs: MsgExecuteContract[]; tx: { accountNumber: string; sequence: string; timeoutHeight: any; chainId: any; }; ethereumChainId: any; }) {
-    throw new Error("Function not implemented.");
-}
-

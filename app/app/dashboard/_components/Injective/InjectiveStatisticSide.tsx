@@ -78,7 +78,7 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
         initial={{ opacity: 0, scale: 0.98 }}
         transition={{ ease: "easeInOut", duration: 1.2 }}
         layout
-        className="min-h-[170px]"
+        className="min-h-[200px]"
       >
         <h1 className="text-white text-[39px] leading-[50px] font-semibold">{content[showContentIdx].title}</h1>
         <h2 className="text-base text-ghost-white font-medium mt-4">

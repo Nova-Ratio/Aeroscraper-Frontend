@@ -321,7 +321,6 @@ export function WalletProvider({
 
                 if (selectedWalletType === WalletType.KEPLR) {
                     const keplrKey = await anyWindow.keplr.getKey(config.chainId)
-                    console.log("inj",anyWindow.keplr);
                     
                     walletName = keplrKey.name;
                 }

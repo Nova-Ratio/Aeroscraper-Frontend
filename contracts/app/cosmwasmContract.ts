@@ -6,7 +6,7 @@ import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { SigningArchwayClient } from "@archwayhq/arch3.js/build";
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { BaseCoinByClient, getContractAddressesByClient } from "@/constants/walletConstants";
-import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract, MsgExecuteContractCompat } from "@injectivelabs/sdk-ts";
+import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract } from "@injectivelabs/sdk-ts";
 import { Network, getNetworkEndpoints } from "@injectivelabs/networks";
 import { MsgBroadcaster, WalletStrategy } from '@injectivelabs/wallet-ts'
 import { ChainId } from '@injectivelabs/ts-types';

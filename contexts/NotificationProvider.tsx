@@ -34,7 +34,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [notification, setNotification] = useState<INotification | null>(null);
 
   const [processLoading, setProcessLoading] = useState(false);
-  const [onHover, setOnHover] = useState<boolean | null>(false);
+  const [onHover, setOnHover] = useState<boolean>(false);
 
   const addNotification = (notification: INotification) => {
     setNotification(notification);
@@ -67,8 +67,7 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
       if (onHover === false) {
         timer = setTimeout(() => {
           setNotification(null);
-          setOnHover(null);
-        }, 3000);
+        }, 4000);
       } else {
         clearTimeout(timer);
       }

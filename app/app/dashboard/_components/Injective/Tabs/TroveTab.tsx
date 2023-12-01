@@ -1,15 +1,10 @@
 import GradientButton from '@/components/Buttons/GradientButton';
-import StatisticCard from '@/components/Cards/StatisticCard';
-import InputLayout from '@/components/Input/InputLayout';
-import { WaveModal } from '@/components/Modal/WaveModal';
 import Text from '@/components/Texts/Text';
-import Info from '@/components/Tooltip/Info';
 import useAppContract from '@/contracts/app/useAppContract';
 import { motion } from 'framer-motion';
 import React, { FC, useMemo, useState } from 'react'
 import { NumberFormatValues } from 'react-number-format/types/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
-import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { useNotification } from '@/contexts/NotificationProvider';
 import { useWallet } from '@/contexts/WalletProvider';
 import { convertAmount, getIsInjectiveResponse, getRatioColor, getRatioText } from '@/utils/contractUtils';
@@ -32,7 +27,7 @@ type Props = {
 
 const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   const contract = useAppContract();
-  const { balanceByDenom, baseCoin, refreshBalance, clientType } = useWallet();
+  const { balanceByDenom, baseCoin, refreshBalance } = useWallet();
   const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
   const [borrowAmount, setBorrowAmount] = useState<number>(0);
   const [collateralAmount, setCollateralAmount] = useState<number>(0);
@@ -102,7 +97,6 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
 
     setProcessLoading(false);
   }
-
 
   const queryWithdraw = async () => {
     setProcessLoading(true);
