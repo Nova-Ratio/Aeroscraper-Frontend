@@ -110,7 +110,7 @@ export default function ArchwayDashboard() {
         <div className='grid grid-cols-3 gap-40'>
           <div className='flex flex-col content-start justify-start gap-4'>
             <Text size="sm" textColor='text-white' weight="font-semibold">Product</Text>
-            <Link href={'https://novaratio.gitbook.io/aeroscraper/'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+            <Link href={'https://novaratio.gitbook.io/aeroscraper/aeroscraper/whitepaper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
             </Link>
             <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
