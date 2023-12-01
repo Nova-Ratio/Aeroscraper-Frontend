@@ -15,6 +15,10 @@ const INTERVAL_TIME = 6000;
 const content:
   { title: string, desc: string, linkStr?: string, linkUrl?: string }[] = [
     {
+      title: "Your decentralised lending-borrowing protocol",
+      desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow AUSD, earn AUSD rewards by depositing AUSD to the Stability pool, or Liquidate Risky Troves."
+    },
+    {
       title: "Open your Trove and Mint AUSD",
       desc: "Open your first trove using INJ and mint AUSD. You can add or remove collaterals to your Trove later, mint more AUSD, or pay off your debt."
     },
