@@ -63,10 +63,12 @@ const InjectiveNotification: FC = () => {
                   {VARIANTS[notification.status].title}
                 </span>
               </div>
-              <a href={notification.directLink ? `${scanDomain}${notification.directLink}` : undefined} target="_blank" rel="noreferrer" className="flex justify-end items-center gap-2 mt-1.5 cursor-pointer">
-                <span className="text-white underline font-medium text-lg">View Explorer</span>
-                <img alt='external-link' src='/images/external-link.svg' className='w-[18px] h-[18px]' />
-              </a>
+              {notification.directLink &&
+                <a href={notification.directLink ? `${scanDomain}${notification.directLink}` : undefined} target="_blank" rel="noreferrer" className="flex justify-end items-center gap-2 mt-1.5 cursor-pointer">
+                  <span className="text-white underline font-medium text-lg">View Explorer</span>
+                  <img alt='external-link' src='/images/external-link.svg' className='w-[18px] h-[18px]' />
+                </a>
+              }
             </div>
           </motion.div>}
       </AnimatePresence>

@@ -179,6 +179,7 @@ export default function SeiDashboard() {
               onClick={() => { setTroveModal(true); }}
               className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto 2xl:mx-auto"
               rounded="rounded-lg"
+              disabledText="please choose chain and wallet first"
               disabled={isNil(baseCoin) || isNil(walletType)}
             >
               <Text>
@@ -218,6 +219,7 @@ export default function SeiDashboard() {
               onClick={() => { setStabilityModal(true); }}
               className="w-full max-w-[192px] 2xl:max-w-[221px] h-11 mt-6 2xl:mt-10 ml-auto"
               rounded="rounded-lg"
+              disabledText="please choose chain and wallet first"
               disabled={isNil(baseCoin) || isNil(walletType)}
             >
               <Text>Enter</Text>

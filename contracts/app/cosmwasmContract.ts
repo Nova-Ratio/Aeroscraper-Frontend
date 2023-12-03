@@ -13,19 +13,6 @@ import { ChainId } from '@injectivelabs/ts-types';
 import { isNil } from "lodash";
 import { WalletType } from "@/enums/WalletType";
 
-const walletStrategy = new WalletStrategy({
-    chainId: ChainId.Testnet
-});
-
-const NETWORK = Network.Testnet;
-const ENDPOINTS = getNetworkEndpoints(NETWORK);
-
-const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
-const msgBroadcastClient = new MsgBroadcaster({
-    walletStrategy,
-    network: NETWORK,
-});
-
 export const getAppContract = (
     client: SigningArchwayClient | SigningCosmWasmClient,
     baseCoin: BaseCoin,
@@ -33,6 +20,14 @@ export const getAppContract = (
     walletType?: WalletType
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
+
+    const walletStrategy = new WalletStrategy({ chainId: ChainId.Testnet, wallet: walletType as any });
+
+    const NETWORK = Network.Testnet;
+    const ENDPOINTS = getNetworkEndpoints(NETWORK);
+
+    const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
+    const msgBroadcastClient = new MsgBroadcaster({ walletStrategy, network: NETWORK });
 
     //GET QUERIES
 
@@ -190,7 +185,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg, msg1],
                 injectiveAddress: senderAddress
-            })
+            });
         }
 
         if (clientType === ClientEnum.ARCHWAY) {

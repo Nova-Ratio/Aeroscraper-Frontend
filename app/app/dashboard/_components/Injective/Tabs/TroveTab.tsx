@@ -290,6 +290,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     <div className="flex items-center justify-end pr-4 gap-4 mt-4">
                       <OutlinedButton
                         disabled={withdrawDepositDisabled}
+                        disabledText={"Enter the AUSD amount."}
                         loading={processLoading}
                         onClick={queryWithdraw}
                         className="min-w-[201px] h-11"
@@ -298,6 +299,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       </OutlinedButton>
                       <GradientButton
                         disabled={withdrawDepositDisabled}
+                        disabledText={"Enter the AUSD amount."}
                         loading={processLoading}
                         onClick={queryAddColletral}
                         className="min-w-[374px] h-11"
@@ -359,6 +361,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     <div className="flex items-center justify-end pr-4 gap-4 mt-6">
                       <OutlinedButton
                         disabled={repayBorrowDisabled}
+                        disabledText={"Enter the AUSD amount."}
                         loading={processLoading}
                         onClick={queryRepay}
                         className="min-w-[201px] h-11"
@@ -367,6 +370,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       </OutlinedButton>
                       <GradientButton
                         disabled={repayBorrowDisabled}
+                        disabledText={"Enter the AUSD amount."}
                         loading={processLoading}
                         onClick={queryBorrow}
                         className="min-w-[375px] h-11"
@@ -467,6 +471,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                 className="min-w-[375px] h-11 mt-4 ml-auto"
                 rounded="rounded-lg"
                 disabled={confirmDisabled}
+                disabledText={"Fill in both INJ and AUSD amounts. 999 INJ is the upper limit, and 1 AUSD is the lower limit for now."}
               >
                 <Text>Confirm</Text>
               </GradientButton>

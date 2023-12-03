@@ -23,6 +23,7 @@ import Button from './Button'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import TransactionButton from './TransactionButton'
 import useMetamask from '@/services/metamask'
+import { useNinji } from '@/services/ninji'
 
 type Props = {
     ausdBalance?: number;
@@ -41,6 +42,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     const fin = useFin();
     const compass = useCompass();
     const metamask = useMetamask();
+    const ninji = useNinji();
     const wallet = useWallet();
 
     const [accountModal, setAccountModal] = useState(false);
@@ -91,6 +93,11 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
 
             metamask.connect();
         }
+        else if (walletType === WalletType.NINJI) {
+            if (!anyWindow.ethereum) { return window.open("https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm", '_blank', 'noopener,noreferrer'); }
+
+            ninji.connect();
+        }
 
 
         setWalletSelectionOpen(false);
@@ -106,6 +113,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
         anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
         anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
         anyWindow.ethereum ? walletExtensions.installed.push({ name: WalletType.METAMASK }) : walletExtensions.otherWallets.push({ name: WalletType.METAMASK, downloadLink: "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1" });
+        anyWindow.ninji ? walletExtensions.installed.push({ name: WalletType.NINJI }) : walletExtensions.otherWallets.push({ name: WalletType.NINJI, downloadLink: "https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm" });
 
         setWalletExtensions(walletExtensions);
     }

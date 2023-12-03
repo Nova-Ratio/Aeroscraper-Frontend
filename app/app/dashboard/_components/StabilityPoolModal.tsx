@@ -189,6 +189,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
             }
             <GradientButton
               disabled={stakeDisabled}
+              disabledText={"Enter the AUSD amount."}
               loading={processLoading}
               onClick={stakePool}
               className="min-w-[221px] h-11 mt-6 ml-auto"
@@ -226,6 +227,7 @@ const StabilityPoolModal: FC<Props> = ({ open, onClose, pageData, getPageData })
             {pageData.poolShare > 0 && <InputLayout disabled label="Pool Share" hintTitle="%" value={pageData.poolShare} />}
             <GradientButton
               disabled={unstakeDisabled}
+              disabledText={"Enter the AUSD amount."}
               loading={processLoading}
               onClick={unStakePool}
               className="min-w-[221px] h-11 mt-6 ml-auto"

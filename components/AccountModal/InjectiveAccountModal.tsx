@@ -22,6 +22,8 @@ import Button from "../Buttons/Button";
 import { ArrowLeftIcon, ExitIcon } from "../Icons/Icons";
 import { capitalizeFirstLetter } from "@/utils/stringUtils";
 import { isNil } from "lodash";
+import { useNinji } from "@/services/ninji";
+import useMetamask from "@/services/metamask";
 
 interface Props {
   showModal: boolean,
@@ -40,6 +42,8 @@ const AccountModal: FC<Props> = (props: Props) => {
   const leap = useLeap();
   const fin = useFin();
   const compass = useCompass();
+  const ninji = useNinji();
+  const metamask = useMetamask();
 
   const { walletType, name, address, profileDetail, baseCoin, setProfileDetail, clientType } = useWallet();
 
@@ -81,6 +85,8 @@ const AccountModal: FC<Props> = (props: Props) => {
     leap.disconnect();
     fin.disconnect();
     compass.disconnect();
+    ninji.disconnect();
+    metamask.disconnect();
     setProfileDetail(undefined);
     localStorage.removeItem("profile-detail");
     closeModal();
@@ -267,7 +273,7 @@ const AccountModal: FC<Props> = (props: Props) => {
           )}
           {selectedTab === "wallet-details" && (
             <div className='px-8 w-full'>
-              <div className="flex items-center mb-16 mt-12">
+              <div className="flex items-center ml-[10%] mb-16 mt-12">
                 {clientType && <div>
                   <Text size='sm' className="text-center mb-3" textColor='text-dark-silver'>Selected chain</Text>
                   <Button
@@ -323,6 +329,7 @@ export const WalletIconMap: Record<WalletType, string> = {
   [WalletType.FIN]: '/images/wallet-images/fin-icon.png',
   [WalletType.COMPASS]: '/images/wallet-images/compass-icon.png',
   [WalletType.METAMASK]: '/images/wallet-images/metamask-icon.png',
+  [WalletType.NINJI]: '/images/wallet-images/ninji-icon.png',
   [WalletType.NOT_SELECTED]: ''
 }
 

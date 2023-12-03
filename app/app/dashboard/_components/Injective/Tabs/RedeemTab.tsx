@@ -162,6 +162,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
           onClick={redeem}
           text='Redeem'
           disabled={redeemDisabled}
+          disabledText={"Enter the AUSD amount."}
         />
       </div>
     </section>

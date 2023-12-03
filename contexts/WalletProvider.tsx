@@ -19,12 +19,19 @@ import { useLeap } from "@/services/leap";
 import { BaseCoin, ClientEnum } from "@/types/types";
 import { getBaseCoinByClient } from "@/constants/walletConstants";
 import useMetamask from "@/services/metamask";
+import { useNinji } from "@/services/ninji";
 
 const SideEffects = () => {
+
+    if (typeof window !== "undefined" && window.location.pathname == "/") {
+     return null;
+    }
+
     const leap = useLeap();
     const keplr = useKeplr();
     const fin = useFin();
     const compass = useCompass();
+    const ninji = useNinji();
     const metamask = useMetamask();
 
     useEffect(() => {
@@ -32,20 +39,24 @@ const SideEffects = () => {
         const listenLeapKeystoreChange = () => leap.connect(true);
         const listenFinKeystoreChange = () => fin.connect(true);
         const listenCompassKeystoreChange = () => compass.connect(true);
-        const listenMetamaskKeystoreChange = () => compass.connect(true);
+        const listenMetamaskKeystoreChange = () => metamask.connect(true);
+        const listenNinjaKeystoreChange = () => ninji.connect(true);
         window.addEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
         window.addEventListener("leap_keystorechange", listenLeapKeystoreChange);
         window.addEventListener("fin_keystorechange", listenFinKeystoreChange);
         window.addEventListener("compass_keystorechange", listenCompassKeystoreChange);
         window.addEventListener("metamask_keystorechange", listenMetamaskKeystoreChange);
+        window.addEventListener("ninji_keystorechange", listenNinjaKeystoreChange);
+
         return () => {
             window.removeEventListener("keplr_keystorechange", listenKeplrKeystoreChange);
             window.removeEventListener("leap_keystorechange", listenLeapKeystoreChange);
             window.removeEventListener("fin_keystorechange", listenFinKeystoreChange);
             window.removeEventListener("compass_keystorechange", listenCompassKeystoreChange);
             window.removeEventListener("metamask_keystorechange", listenMetamaskKeystoreChange);
+            window.removeEventListener("ninji_keystorechange", listenNinjaKeystoreChange);
         };
-    }, [leap, keplr, fin, compass, metamask]);
+    }, [leap, keplr, fin, compass, metamask, ninji]);
 
     useEffect(() => {
         const walletAddress = localStorage.getItem("wallet_address");
@@ -66,8 +77,11 @@ const SideEffects = () => {
             else if (selectedWalletType === WalletType.METAMASK) {
                 metamask.connect();
             }
+            else if (selectedWalletType === WalletType.NINJI) {
+                ninji.connect();
+            }
         }
-    }, [leap, keplr, fin, compass, metamask]);
+    }, [leap, keplr, fin, compass, metamask, ninji]);
 
     return null;
 };
@@ -321,7 +335,7 @@ export function WalletProvider({
 
                 if (selectedWalletType === WalletType.KEPLR) {
                     const keplrKey = await anyWindow.keplr.getKey(config.chainId)
-                    
+
                     walletName = keplrKey.name;
                 }
                 else if (selectedWalletType === WalletType.LEAP) {
@@ -339,6 +353,11 @@ export function WalletProvider({
                 else if (selectedWalletType === WalletType.METAMASK) {
                     walletName = "Account";
                 }
+                else if (selectedWalletType === WalletType.NINJI) {
+                    const ninjiKey = await anyWindow.ninji.getKey(config.chainId)
+                    walletName = ninjiKey.name;
+                }
+
 
                 await refreshBalance(address, balance)
 
@@ -381,7 +400,6 @@ export function WalletProvider({
 
     useEffect(() => {
         const savedClientType = localStorage.getItem("selectedClientType");
-        console.log(savedClientType)
         setClientType(savedClientType as (ClientEnum | undefined));
     }, [])
 

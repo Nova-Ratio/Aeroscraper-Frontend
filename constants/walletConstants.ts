@@ -18,7 +18,9 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     ],
     [ClientEnum.INJECTIVE]: [
         WalletType.KEPLR,
-        WalletType.METAMASK
+        WalletType.METAMASK,
+        WalletType.LEAP,
+        WalletType.NINJI
     ]
 }
 
@@ -42,6 +44,10 @@ export const WalletImagesByName: Record<WalletType, { image: string, thumbnail: 
     [WalletType.METAMASK]: {
         image: "/images/wallet-images/metamask.png",
         thumbnail: "/images/wallet-images/metamask-icon.png"
+    },
+    [WalletType.NINJI]: {
+        image: "/images/wallet-images/ninji.png",
+        thumbnail: "/images/wallet-images/ninji-icon.png"
     },
     [WalletType.NOT_SELECTED]: {
         image: "",

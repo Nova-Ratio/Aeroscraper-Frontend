@@ -17,7 +17,7 @@ export const getAppEthContract = (
     client: any,
     baseCoin: BaseCoin,
     clientType?: ClientEnum,
-    walletType?:WalletType
+    walletType?: WalletType
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
     const chainConfig = getConfig("", clientType);
@@ -27,11 +27,10 @@ export const getAppEthContract = (
         ethereumOptions: {
             ethereumChainId: EthereumChainId.Goerli,
             rpcUrl: chainConfig.rpcUrl
-        }
+        },
+        wallet: walletType as any
     });
     const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
-
-    walletStrategy.setWallet(Wallet.Metamask); // This will become dynamic for more than one Wallet with eth
 
     const msgBroadcastClient = new MsgBroadcaster({
         walletStrategy,
@@ -75,7 +74,8 @@ export const getAppEthContract = (
 
             return response
         } catch (error) {
-            return undefined;
+            throw new Error("Transaction Failed");
+            
         }
     }
 
@@ -232,7 +232,7 @@ export const getAppEthContract = (
                 funds: [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByClient[clientType].denom)]
             })
 
-            return await  msgBroadcastClientWithEth(senderAddress, [msg, msg1])
+            return await msgBroadcastClientWithEth(senderAddress, [msg, msg1])
         }
     }
 

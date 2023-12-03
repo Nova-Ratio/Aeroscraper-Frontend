@@ -282,7 +282,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                                         </div>
                                         <div className="flex items-center justify-end pr-4 gap-4">
                                             <OutlinedButton
-                                                disabled={withdrawDepositDisabled}
+                                                disabled={repayBorrowDisabled}
+                                                disabledText={"Enter the AUSD amount."}
                                                 loading={processLoading}
                                                 onClick={queryWithdraw}
                                                 className="min-w-[201px] h-11"
@@ -290,7 +291,8 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                                                 <Text>Withdraw</Text>
                                             </OutlinedButton>
                                             <GradientButton
-                                                disabled={withdrawDepositDisabled}
+                                                disabled={repayBorrowDisabled}
+                                                disabledText={"Enter the AUSD amount."}
                                                 loading={processLoading}
                                                 onClick={queryAddColletral}
                                                 className="min-w-[201px] h-11"
@@ -340,11 +342,13 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                                                 disabled={repayBorrowDisabled}
                                                 loading={processLoading}
                                                 onClick={queryRepay}
+                                                disabledText='Enter the AUSD amount.'
                                                 className="min-w-[201px] h-11"
                                             >
                                                 <Text>Repay</Text>
                                             </OutlinedButton>
                                             <GradientButton
+                                                disabledText='Enter the AUSD amount.'
                                                 disabled={repayBorrowDisabled}
                                                 loading={processLoading}
                                                 onClick={queryBorrow}
@@ -412,6 +416,7 @@ const TroveModal: FC<Props> = ({ open, pageData, onClose, getPageData, basePrice
                                 onClick={openTrove}
                                 className="min-w-[221px] h-11 mt-4 ml-auto"
                                 rounded="rounded-lg"
+                                disabledText='Enter the AUSD amount.'
                                 disabled={confirmDisabled}
                             >
                                 <Text>Confirm</Text>

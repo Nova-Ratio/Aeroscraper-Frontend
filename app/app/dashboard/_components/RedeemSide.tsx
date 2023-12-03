@@ -167,6 +167,8 @@ const RedeemSide: FC<Props> = ({ pageData, getPageData, refreshBalance, basePric
         onClick={redeem}
         text='Redeem'
         disabled={redeemDisabled}
+        tooltipPlacement={"top"}
+        disabledText={"Enter the AUSD amount."}
       />
     </BorderedContainer>
   )
