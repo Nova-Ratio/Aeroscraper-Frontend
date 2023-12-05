@@ -15,6 +15,8 @@ import InjectiveAccountModal from '@/components/AccountModal/InjectiveAccountMod
 import { convertAmount } from '@/utils/contractUtils';
 import InjectiveNotification from '@/components/Modal/InjectiveNotification';
 import WalletButton from '@/components/Buttons/WalletButton';
+import useMetamask from '@/services/metamask';
+import { useNinji } from '@/services/ninji';
 
 const InjeciveTheme = () => {
   const { balanceByDenom, baseCoin } = useWallet();
@@ -26,6 +28,8 @@ const InjeciveTheme = () => {
   const leap = useLeap();
   const fin = useFin();
   const compass = useCompass();
+  const metamask = useMetamask();
+  const ninji = useNinji();
 
   const [accountModal, setAccountModal] = useState(false);
 
@@ -57,6 +61,9 @@ const InjeciveTheme = () => {
     leap.disconnect();
     fin.disconnect();
     compass.disconnect();
+    metamask.disconnect();
+    ninji.disconnect();
+
     localStorage.removeItem("profile-detail");
   }
 

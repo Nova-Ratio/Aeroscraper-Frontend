@@ -45,9 +45,7 @@ const
       }
     }, []);
 
-    const getPageData = useCallback(async () => {
-      setLoading(true);
-
+    const getPageData = useCallback(async () => {      
       try {
         const [
           troveRes,
@@ -115,7 +113,7 @@ const
     }, [contract, basePrice, baseCoin])
 
     useEffect(() => {
-     getPageData();
+      getPageData();
     }, [contract]);
 
     return {

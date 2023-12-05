@@ -61,12 +61,22 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   return (
     <div className='flex-1 max-w-[784px] mt-16 ml-auto'>
       <Tabs tabs={TabList} dots={pageData.rewardAmount > 0 ? ["rewards"] : undefined} selectedTab={selectedTab} onTabSelected={(e) => { setSelectedTab(e); setTabPosition(e); }} loading={loading} />
-      {loading ? <div className='space-y-4 mt-16'>
-        <SkeletonLoading height={'h-10'} width={"w-[50%]"} noPadding noMargin />
-        <SkeletonLoading height={'h-6'} width={"w-1/3"} noPadding noMargin />
-        <SkeletonLoading height={'h-4'} width={"w-1/3"} noPadding noMargin />
-        <SkeletonLoading height={'h-40'} width={"w-full"} noPadding noMargin />
-      </div>
+      {loading ? <>
+        <div className='mt-16'>
+          <SkeletonLoading height={'h-10'} width={"w-1/2"} noPadding noMargin />
+          <SkeletonLoading height={'h-6'} width={"w-1/3 mt-1"} noPadding />
+          <SkeletonLoading height={'h-8'} width={"w-1/4 mt-8"} noPadding noMargin />
+          <SkeletonLoading height={'h-36'} width={"w-full mt-4"} noPadding noMargin />
+        </div>
+        <div className='grid grid-cols-4 gap-20 mt-10'>
+          <SkeletonLoading height={'h-10'} noPadding />
+          <SkeletonLoading height={'h-10'} noPadding />
+          <SkeletonLoading height={'h-10'} noPadding />
+          <SkeletonLoading height={'h-10'} noPadding />
+        </div>
+        <SkeletonLoading height={'h-10'} width="mt-4" noPadding />
+        <SkeletonLoading height={'h-8'} width="mt-4 w-1/4" noPadding />
+      </>
         :
         <motion.main
           key={selectedTab}

@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react'
-import { PageData } from '../_types/types';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import BorderedContainer from '@/components/Containers/BorderedContainer';
 import Text from '@/components/Texts/Text';
@@ -7,7 +6,6 @@ import { BellIcon, RedDotIcon } from '@/components/Icons/Icons';
 import { INotification, useNotification } from '@/contexts/NotificationProvider';
 import Link from 'next/link';
 import { ClientEnum } from '@/types/types';
-import { motion } from 'framer-motion';
 import { ClientTransactionUrlByName } from '@/constants/walletConstants';
 import { useWallet } from '@/contexts/WalletProvider';
 
@@ -33,20 +31,21 @@ const NotificationDropdown: FC = () => {
         } catch (error) { }
     }, [listenNotification.notification]);
 
-    const allReadNotifications = () => {
+    const handleReadNotification = (index: number) => {
         try {
-            localStorage.setItem("notifications", JSON.stringify(notifications.map(item => {
-                return { ...item, isRead: true };
-            })));
+            let tempNotifications = [...notifications]
+            tempNotifications[index].isRead = true;
+
+            localStorage.setItem("notifications", JSON.stringify(tempNotifications));
+
+            setNotifications(tempNotifications)
         } catch (error) { }
     }
 
-
     return (
         <Dropdown
-            onOpen={allReadNotifications}
             toggleButton={
-                (clientType === ClientEnum.INJECTIVE || clientType === ClientEnum.ARCHWAY )?
+                (clientType === ClientEnum.INJECTIVE || clientType === ClientEnum.ARCHWAY) ?
                     <div
                         className='w-full h-full flex justify-center items-center'
                     >
@@ -63,18 +62,34 @@ const NotificationDropdown: FC = () => {
                     </BorderedContainer>
             }
         >
-            <BorderedContainer containerClassName='w-[406px] h-[226px]' className='relative flex flex-col gap-2 p-4 overflow-auto scrollbar-hidden backdrop-blur-[25px]'>
-                <div className='absolute inset-10 top-20 bg-white -z-10 blur-3xl opacity-[0.15]' />
-                <Text>Notifications</Text>
-                {notifications.reverse().map((item, index) => {
-                    return clientType && <NotificationItem clientType={clientType} key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
-                })}
-                {notifications.filter(item => item.status === "success").length === 0 && (
-                    <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'>
-                        <Text size='sm'>Your notifications are empty</Text>
-                    </div>
-                )}
-            </BorderedContainer>
+            {(clientType === ClientEnum.INJECTIVE || clientType === ClientEnum.ARCHWAY) ?
+                <BorderedContainer containerClassName='w-[406px] h-[226px] notification-dropdown-gradient p-[1.5px]' className='relative flex flex-col-reverse gap-2 p-4 overflow-auto scrollbar-hidden'>
+                    {notifications.map((item, index) => {
+                        return clientType && <button onClick={() => { handleReadNotification(index); }}>
+                            <NotificationItem clientType={clientType} key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
+                        </button>
+                    })}
+                    {notifications.filter(item => item.status === "success").length === 0 && (
+                        <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'>
+                            <Text size='sm'>Your notifications are empty</Text>
+                        </div>
+                    )}
+                </BorderedContainer>
+                :
+                <BorderedContainer containerClassName='w-[406px] h-[226px]' className='relative flex flex-col-reverse gap-2 p-4 overflow-auto scrollbar-hidden backdrop-blur-[25px]'>
+                    <div className='absolute inset-10 top-20 bg-white -z-10 blur-3xl opacity-[0.15]' />
+                    <Text>Notifications</Text>
+                    {notifications.map((item, index) => {
+                        return clientType && <button onClick={() => { handleReadNotification(index); }}>
+                            <NotificationItem clientType={clientType} key={index} text={item.message ?? ""} isRead={item.isRead} directLink={item.directLink} />
+                        </button>
+                    })}
+                    {notifications.filter(item => item.status === "success").length === 0 && (
+                        <div className='flex flex-col h-full gap-4 -mt-4 items-center justify-center'>
+                            <Text size='sm'>Your notifications are empty</Text>
+                        </div>
+                    )}
+                </BorderedContainer>}
         </Dropdown>
     )
 }
@@ -90,21 +105,17 @@ const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider 
     }
 
     if (directLink) {
-        return <Link className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-2 flex hover:opacity-30 duration-500 transition-opacity`} href={`${scanDomain}${directLink}`} target="_blank">
+        return <Link className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-3 flex items-center hover:opacity-30 duration-500 transition-opacity`} href={`${scanDomain}${directLink}`} target="_blank">
+            {isRead === false && <RedDotIcon className='mr-2' />}
             <Text size='base'>{text}</Text>
-            <motion.img
-                initial={{ marginLeft: 0 }}
-                animate={{ marginLeft: 16 }}
-                transition={{ stiffness: 50 }}
-                layout alt='external-link' src='/images/external-link.svg' className='w-4 h-4 ml-1 mt-0.5' />
-            {isRead === false && <RedDotIcon className=' ml-auto' />}
+            {isRead === false && <Text size='xs' textColor='text-[#6F6F73]' className='ml-auto'>Mark as Read</Text>}
         </Link>
     }
 
     return (
-        <div className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-2 flex`}>
+        <div className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-3 flex`}>
+            {isRead === false && <RedDotIcon className='mr-2' />}
             <Text size='base'>{text}</Text>
-            {isRead === false && <RedDotIcon className=' ml-auto' />}
         </div>
     )
 }

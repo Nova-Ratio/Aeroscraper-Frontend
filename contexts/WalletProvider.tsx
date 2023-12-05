@@ -244,6 +244,7 @@ export function WalletProvider({
         setWalletType(undefined);
         setClientType(undefined);
         localStorage.removeItem("selectedClientType");
+        localStorage.removeItem("notifications");
         localStorage.setItem("selectedWalletType", WalletType.NOT_SELECTED);
     }, []);
     // Get balance for each coin specified in config.coinMap
