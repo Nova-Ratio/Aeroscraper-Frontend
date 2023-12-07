@@ -4,7 +4,8 @@ import { useWallet } from '@/contexts/WalletProvider';
 import usePageData from '@/contracts/app/usePageData';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { motion } from 'framer-motion';
-import React, { Dispatch, FC, useEffect, useMemo, useState } from 'react'
+import { debounce } from 'lodash';
+import React, { Dispatch, FC, useEffect, useState } from 'react'
 import ClaimRewardTab from './Tabs/ClaimRewardTab';
 import RedeemTab from './Tabs/RedeemTab';
 import RiskyTrovesTab from './Tabs/RiskyTrovesTab';
@@ -52,11 +53,11 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   }, [])
 
   useEffect(() => {
-    if (!loading && pageData) {
+    debounce(() => {
       setIsTroveOpened(pageData.collateralAmount > 0);
-      setSelectedTab(pageData.collateralAmount > 0 ? "trove" : "createTrove")
-    }
-  }, [loading]);
+      setSelectedTab(pageData.collateralAmount > 0 ? "trove" : "createTrove");
+    }, 500)
+  }, [pageData]);
 
   return (
     <div className='flex-1 max-w-[784px] mt-16 ml-auto'>

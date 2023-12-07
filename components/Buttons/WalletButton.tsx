@@ -50,6 +50,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
     const [walletExtensions, setWalletExtensions] = useState<{ installed: { name: WalletType }[], otherWallets: { name: WalletType, downloadLink: string }[] } | undefined>();
     const [showDownloadExtension, setShowDownloadExtension] = useState<{ name: WalletType, downloadLink: string } | undefined>();
 
+    const [onHoverChain, setOnHoverChain] = useState<ClientEnum | null>();
+
     useEffect(() => {
         checkWalletExtensions();
     }, []);
@@ -222,8 +224,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                         {!isNil(clientType) &&
                             <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
                                 {
-                                    WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                        <div key={idx} className='inline-block mr-auto'>
+                                    WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => {
+                                        return <div key={idx} className='inline-block mr-auto' >
                                             {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
                                             <Button
                                                 onClick={() => { connectWallet(walletType); }}
@@ -232,7 +234,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                                 <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
                                             </Button>
                                         </div>
-                                    ))
+                                    })
                                 }
                                 {
                                     WalletByClient[clientType].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
@@ -249,11 +251,13 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 }
                             </div>}
                         {isNil(clientType) &&
-                            <div className={`gap-y-4 flex flex-col mt-10 opacity-25`}>
+                            <div className={`gap-y-4 flex flex-col mt-10`}>
                                 {
-                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                        <div key={idx} className='inline-block mr-auto'>
-                                            {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
+                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => {
+                                        const isWalletByClient = onHoverChain && WalletByClient[onHoverChain].includes(walletType);
+
+                                        return <div key={idx} className={`inline-block mr-auto ${isWalletByClient ? "" : "opacity-25"} duration-300 transition-opacity`}>
+                                            {idx === 0 && <Text size='base' className='mb-4 opacity-25'>Installed Wallets</Text>}
                                             <Button
                                                 disabled
                                                 onClick={() => { connectWallet(walletType); }}
@@ -262,12 +266,15 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                                 <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
                                             </Button>
                                         </div>
-                                    ))
+
+                                    })
                                 }
                                 {
-                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                        <div key={idx} className='inline-block mr-auto'>
-                                            {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
+                                    Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => {
+                                        const isWalletByClient = onHoverChain && WalletByClient[onHoverChain].includes(walletType);
+
+                                        return <div key={idx} className={`inline-block mr-auto ${isWalletByClient ? "" : "opacity-25"} duration-300 transition-opacity`}>
+                                            {idx === 0 && <Text size='base' className='mb-4 opacity-25'>Other Wallets</Text>}
                                             <Button
                                                 disabled
                                                 onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
@@ -276,7 +283,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                                 <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
                                             </Button>
                                         </div>
-                                    ))
+                                    })
                                 }
                             </div>
                         }
@@ -342,6 +349,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                                 return <Button
                                                     key={idx}
                                                     onClick={() => { selectClient(clientType); }}
+                                                    onMouseEnter={() => setOnHoverChain(clientType)}
+                                                    onMouseLeave={() => setOnHoverChain(null)}
                                                     startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-8 h-8' />}
                                                 >
                                                     <span className='text-[18px] font-medium text-ghost-white'>{clientType}</span>
@@ -354,8 +363,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                         }
                     </div>
                 </div>
-            </Modal>
-        </div>
+            </Modal >
+        </div >
     )
 }
 
