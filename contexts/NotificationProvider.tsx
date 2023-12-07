@@ -1,5 +1,6 @@
 'use client';
 
+import { delay } from 'lodash';
 import React, { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 
 export type NotificationType = "Reedem"
@@ -57,32 +58,22 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
     } catch (error) {
       localStorage.setItem("notifications", JSON.stringify([notiElement]));
     }
-
-    clearNotification();
   }
 
-  const clearNotification = useCallback(
-    () => {
-      let timer;
-      if (onHover === false) {
-        timer = setTimeout(() => {
-          setNotification(null);
-        }, 4000);
-      } else {
-        clearTimeout(timer);
+  const clearNotification = () => {
+    const timeout = setTimeout(() => {
+      if (!onHover) {
+        setNotification(null);
       }
-    },
-    [onHover, notification, processLoading]);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      clearNotification();
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-    }
-  }, [onHover]);
+    const cleanup = clearNotification();
+    return () => cleanup();
+  }, [onHover, notification]);
 
   const providedValue = React.useMemo(() => ({
     notification,
