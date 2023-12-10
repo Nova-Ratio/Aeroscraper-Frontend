@@ -256,16 +256,23 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => {
                                         const isWalletByClient = onHoverChain && WalletByClient[onHoverChain].includes(walletType);
 
-                                        return <div key={idx} className={`inline-block mr-auto ${isWalletByClient ? "" : "opacity-25"} duration-300 transition-opacity`}>
-                                            {idx === 0 && <Text size='base' className='mb-4 opacity-25'>Installed Wallets</Text>}
-                                            <Button
-                                                disabled
-                                                onClick={() => { connectWallet(walletType); }}
-                                                startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                        return isWalletByClient &&
+                                            <motion.div
+                                                key={idx}
+                                                className={`inline-block mr-auto duration-300 transition-all`}
+                                                initial={{ opacity: 0.0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 1 }}
                                             >
-                                                <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
-                                            </Button>
-                                        </div>
+                                                {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
+                                                <Button
+                                                    disabled
+                                                    onClick={() => { connectWallet(walletType); }}
+                                                    startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                                >
+                                                    <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                                </Button>
+                                            </motion.div>
 
                                     })
                                 }
@@ -273,16 +280,23 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => {
                                         const isWalletByClient = onHoverChain && WalletByClient[onHoverChain].includes(walletType);
 
-                                        return <div key={idx} className={`inline-block mr-auto ${isWalletByClient ? "" : "opacity-25"} duration-300 transition-opacity`}>
-                                            {idx === 0 && <Text size='base' className='mb-4 opacity-25'>Other Wallets</Text>}
-                                            <Button
-                                                disabled
-                                                onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
-                                                startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                        return isWalletByClient &&
+                                            <motion.div
+                                                key={idx}
+                                                initial={{ opacity: 0.0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 1 }}
+                                                className={`inline-block mr-auto`}
                                             >
-                                                <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
-                                            </Button>
-                                        </div>
+                                                {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
+                                                <Button
+                                                    disabled
+                                                    onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
+                                                    startIcon={<img className='w-6 h-6 object-contain' alt={walletType} src={WalletImagesByName[walletType].thumbnail} />}
+                                                >
+                                                    <span className='text-[18px] font-medium text-ghost-white'>{capitalizeFirstLetter(walletType)}</span>
+                                                </Button>
+                                            </motion.div>
                                     })
                                 }
                             </div>
