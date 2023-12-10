@@ -1,9 +1,9 @@
 export enum WalletType {
+    METAMASK = "metamask",
     LEAP = "leap",
     KEPLR = "keplr",
     FIN = "fin",
     COMPASS = "compass",
-    METAMASK = "metamask",
     NINJI = "ninji",
     NOT_SELECTED = "not_selected"
 }

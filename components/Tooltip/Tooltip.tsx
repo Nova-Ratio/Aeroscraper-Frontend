@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 export const PLACEMENT_CLASSES = {
     "bottom": "top-full left-1/2 -translate-x-1/2 translate-y-4",
+    "bottom-center": "top-full left-1/2 translate-x-[20%] translate-y-4",
     "top": "bottom-full left-1/2 -translate-x-1/2 -translate-y-4",
     "left": "top-1/2 right-full -translate-x-4 -translate-y-1/2",
     "right": "top-1/2 left-full translate-x-4 -translate-y-1/2",
