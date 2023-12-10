@@ -143,9 +143,10 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             <GradientButton
               disabled={stakeDisabled}
               disabledText={"Enter the INJ amount. 999 INJ is the upper limit for now."}
+              tooltipPlacement="bottom-center"
               loading={processLoading}
               onClick={stakePool}
-              className="min-w-[374px] h-11 mt-6 ml-auto"
+              className="w-[374px] h-11 mt-6 ml-auto"
               rounded="rounded-lg"
             >
               <Text>Deposit</Text>
@@ -195,6 +196,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             </div>
             <GradientButton
               disabled={unstakeDisabled}
+              tooltipPlacement="bottom-center"
               disabledText={"Enter the AUSD amount."}
               loading={processLoading}
               onClick={unStakePool}
