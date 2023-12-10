@@ -15,7 +15,7 @@ const INTERVAL_TIME = 6000;
 const content:
   { title: string, desc: string, linkStr?: string, linkUrl?: string }[] = [
     {
-      title: "Your decentralised lending-borrowing protocol",
+      title: "Your decentralized lending-borrowing protocol",
       desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow AUSD, earn AUSD rewards by depositing AUSD to the Stability pool, or Liquidate Risky Troves."
     },
     {
