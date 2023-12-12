@@ -109,12 +109,14 @@ const NotificationItem: FC<ItemProps> = ({ text, isRead, directLink, hasDivider 
     }
 
     if (directLink) {
-        return <button onClick={handleReadNotification}>
-            <Link className={`border-0 border-dark-silver border-opacity-40 ${hasDivider ? "border-b" : "border-b-0"} pb-3 flex items-center hover:opacity-30 duration-500 transition-opacity`} href={`${scanDomain}${directLink}`} target="_blank">
-                {isRead === false && <RedDotIcon className='mr-2' />}
+        return <button onClick={handleReadNotification} className={`border-0 border-dark-silver border-opacity-40  ${hasDivider ? "border-b" : "border-b-0"} flex items-center`}>
+            <Link className={`pb-3 flex items-center hover:opacity-30 duration-500 transition-opacity`} href={`${scanDomain}${directLink}`} target="_blank">
+                {isRead === false && <RedDotIcon className='mr-0' />}
                 <Text size='base'>{text}</Text>
-                {isRead === false && <Text size='xs' textColor='text-[#6F6F73]' className='ml-auto'>Mark as Read</Text>}
             </Link>
+            {isRead === false &&
+                <Text size='xs' textColor='text-[#6F6F73]' className='ml-auto'>Mark as Read</Text>
+            }
         </button>
     }
 
