@@ -156,7 +156,6 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
           />
         </div>
         <TransactionButton
-          status={notification}
           loading={processLoading}
           className="w-[375px] h-11 mt-7 ml-auto"
           onClick={redeem}
