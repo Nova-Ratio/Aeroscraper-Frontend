@@ -11,7 +11,7 @@ interface Props {
   basePrice: number
 }
 
-const INTERVAL_TIME = 6000;
+const INTERVAL_TIME = 8000;
 const content:
   { title: string, desc: string, linkStr?: string, linkUrl?: string }[] = [
     {
@@ -43,8 +43,8 @@ const content:
       linkUrl: "https://zealy.io/c/aeroscraper/questboard"
     },
     {
-      title: "Testnet Faucet",
-      desc: "Get your Testnet tokens here.",
+      title: "Injective Faucet",
+      desc: "Get your Injective(Testnet) tokens here.",
       linkStr: "here",
       linkUrl: "https://testnet.faucet.injective.network/"
     }
