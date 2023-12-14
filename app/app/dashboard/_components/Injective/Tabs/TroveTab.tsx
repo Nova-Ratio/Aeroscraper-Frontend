@@ -84,6 +84,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       });
       getPageData();
       refreshBalance();
+      setCollateralAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -111,6 +112,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       });
       getPageData();
       refreshBalance();
+      setCollateralAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -138,6 +140,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       });
       getPageData();
       refreshBalance();
+      setBorrowingAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -175,6 +178,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
 
       getPageData();
       refreshBalance();
+      setBorrowAmount(0);
     }
     catch (err) {
       console.error(err);
