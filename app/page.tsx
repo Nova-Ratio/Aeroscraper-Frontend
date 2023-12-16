@@ -13,12 +13,12 @@ export default function Home() {
   return (
     <div>
       <main>
-        <div className='max-w-[626px] ml-[200px]'>
+        <div className='max-w-[626px] md:ml-[200px] p-6 md:p-0'>
           <div className='flex items-center gap-6 lg:mt-20'>
             <LogoSecondary />
             <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
           </div>
-          <h1 className="text-white text-[64px] leading-[72px] font-semibold mt-10">Your decentralized lending-borrowing protocol</h1>
+          <h1 className="text-white text-[36px] md:text-[64px] leading-[46px] md:leading-[72px] font-semibold mt-32 md:mt-10">Your decentralized lending-borrowing protocol</h1>
           <h2 className="text-base text-ghost-white font-medium mt-10">
             Empowering you with autonomy and direct transactions. Interest-free, over-collateralized stablecoin and DeFi loans. Fully automated and governance-free, which enables unauthorized lending and borrowing.
             <br /><br />
@@ -32,15 +32,14 @@ export default function Home() {
             </GradientButton>
           </Link>
         </div>
-        <InjectiveBackgroundWave animate className="absolute -top-3 right-0 -z-10 w-[1200px]" />
-
+        <InjectiveBackgroundWave animate className="absolute top-40 md:-top-3 right-0 -z-10 md:w-[1200px] w-[300px]" />
       </main>
-      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 pr-16 mt-40 pb-24 relative'>
+      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-6 md:px-20 pr-16 mt-40 pb-24 relative'>
         <div className='flex items-center gap-6 lg:mt-20'>
           <LogoSecondary />
           <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
         </div>
-        <div className='grid grid-cols-3 gap-40'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-40'>
           <div className='flex flex-col content-start justify-start gap-4'>
             <Text size="sm" textColor='text-white' weight="font-semibold">Product</Text>
             <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
@@ -88,64 +87,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-    // <LandingLayout>
-    //   <main className='flex flex-col'>
-    //     <div className='flex flex-col gap-4 lg:pr-[50%] mt-11'>
-    //       <Text size='4xl'>What is Aeroscraper?</Text>
-    //       <Text size='2xl'>
-    //         Aeroscraper is a user-centric decentralized lending-borrowing protocol that revolutionizes the DeFi space with its interest-free, over-collateralized stablecoin and DeFi loans.
-    //       </Text>
-    //       <Text size='2xl'>
-    //         This fully automated and governance-free protocol enables unauthorized lending and borrowing, empowering users with autonomy and direct transactions.
-    //       </Text>
-    //       <Text size='2xl'>
-    //         By depositing collateral, users can access loans in stablecoins pegged to the US dollar, all without incurring any interest.
-    //       </Text>
-    //       <Text size='2xl'>
-    //         Instead, Aeroscraper charges a one-time fee, eliminating the complexities of variable interest rates. With its innovative approach, Aeroscraper enhances the user experience, promotes financial inclusion, and represents the future of decentralized finance.
-    //       </Text>
-    //     </div>
-    //     <div className='flex flex-col gap-8 mt-16 mb-20'>
-    //       <Text size='4xl'>What’s the main benefits of Aeroscraper?</Text>
-    //       <div className='relative flex flex-wrap'>
-    //         <ShapeContainer hasAnimation width='w-full lg:w-[300px]'>
-    //           <div className='flex items-end h-1/2'>
-    //             <Text size='lg'>
-    //               0% interest rate
-    //             </Text>
-    //           </div>
-    //         </ShapeContainer>
-    //         <ShapeContainer width='w-full lg:w-[399px]' height='h-[343px]'>
-    //           <div className='flex items-center h-1/2 lg:h-full'>
-    //             <Text size='lg'>
-    //               Only a 115% coverage rate
-    //             </Text>
-    //           </div>
-    //         </ShapeContainer>
-    //         <ShapeContainer hasAnimation width='w-full lg:w-[323px]' height='h-[303px]' className='lg:mt-40'>
-    //           <div className='flex items-center h-full'>
-    //             <Text size='lg'>
-    //               Censorship resistant - protocol not controlled by anyone
-    //             </Text>
-    //           </div>
-    //         </ShapeContainer>
-    //         <ShapeContainer width='w-full lg:w-[363px]' height='h-[323px]' className='lg:ml-40 lg:-mt-20'>
-    //           <div className='flex items-center h-full'>
-    //             <Text size='lg'>
-    //               No management is required - all operations are algorithmic and fully automated
-    //             </Text>
-    //           </div>
-    //         </ShapeContainer>
-    //         <ShapeContainer width='w-full lg:w-[405px]' height='h-[361px]'>
-    //           <div className='flex items-center h-1/2 lg:h-full'>
-    //             <Text size='lg'>
-    //               Direct redeemable – stablecoin can be redeemed at face value for underlying collateral anytime and anywhere
-    //             </Text>
-    //           </div>
-    //         </ShapeContainer>
-    //       </div>
-    //     </div>
-    //   </main>
-    // </LandingLayout>
   )
 }
