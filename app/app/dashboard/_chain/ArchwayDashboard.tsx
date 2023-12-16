@@ -141,7 +141,7 @@ export default function ArchwayDashboard() {
             <Text size="sm" weight="font-semibold">Social</Text>
             <div className='flex flex-col content-start gap-4'>
               <Link href={'https://twitter.com/aeroscraper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-                <Text size="sm" textColor='text-white'>Twitter</Text>
+                <Text size="sm" textColor='text-white'>X</Text>
                 <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
               </Link>
               <Link href={'https://discord.gg/3R6yTqB8hC'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>

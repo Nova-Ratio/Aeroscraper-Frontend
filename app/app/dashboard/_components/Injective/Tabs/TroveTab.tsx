@@ -84,6 +84,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       });
       getPageData();
       refreshBalance();
+      setCollateralAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -111,6 +112,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       });
       getPageData();
       refreshBalance();
+      setCollateralAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -138,6 +140,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
       });
       getPageData();
       refreshBalance();
+      setBorrowingAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -175,6 +178,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
 
       getPageData();
       refreshBalance();
+      setBorrowAmount(0);
     }
     catch (err) {
       console.error(err);
@@ -290,7 +294,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     <div className="flex items-center justify-end pr-4 gap-4 mt-4">
                       <OutlinedButton
                         disabled={withdrawDepositDisabled}
-                        disabledText={"Enter the AUSD amount."}
+                        disabledText={"Enter the INJ amount. 999 INJ is the upper limit for now."}
                         loading={processLoading}
                         onClick={queryWithdraw}
                         className="min-w-[201px] h-11"
@@ -299,7 +303,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       </OutlinedButton>
                       <GradientButton
                         disabled={withdrawDepositDisabled}
-                        disabledText={"Enter the AUSD amount."}
+                        disabledText={"Enter the INJ amount. 999 INJ is the upper limit for now."}
                         loading={processLoading}
                         onClick={queryAddColletral}
                         className="min-w-[374px] h-11"

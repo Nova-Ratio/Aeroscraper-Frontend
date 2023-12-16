@@ -80,7 +80,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
                     <div className='flex flex-col items-center gap-4'>
                         <Link href={'https://twitter.com/aeroscraper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <TwitterLogo />
-                            <Text textColor='text-white'>Twitter</Text>
+                            <Text textColor='text-white'>X</Text>
                         </Link>
                         <Link href={'https://discord.gg/3R6yTqB8hC'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                             <DiscordLogo />

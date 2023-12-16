@@ -78,6 +78,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
 
       getPageData();
       refreshBalance();
+      setRedeemAmount(0);
     }
     catch (err) {
       setNotification(

@@ -18,7 +18,7 @@ export default function Home() {
             <LogoSecondary />
             <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
           </div>
-          <h1 className="text-white text-[64px] leading-[72px] font-semibold mt-10">Your decentralised lending-borrowing protocol</h1>
+          <h1 className="text-white text-[64px] leading-[72px] font-semibold mt-10">Your decentralized lending-borrowing protocol</h1>
           <h2 className="text-base text-ghost-white font-medium mt-10">
             Empowering you with autonomy and direct transactions. Interest-free, over-collateralized stablecoin and DeFi loans. Fully automated and governance-free, which enables unauthorized lending and borrowing.
             <br /><br />
@@ -72,11 +72,15 @@ export default function Home() {
             <Text size="sm" weight="font-semibold">Social</Text>
             <div className='flex flex-col content-start gap-4'>
               <Link href={'https://twitter.com/aeroscraper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-                <Text size="sm" textColor='text-white'>Twitter</Text>
+                <Text size="sm" textColor='text-white'>X</Text>
                 <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
               </Link>
               <Link href={'https://discord.gg/3R6yTqB8hC'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
                 <Text size="sm" textColor='text-white'>Discord</Text>
+                <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
+              </Link>
+              <Link href={'https://zealy.io/c/aeroscraper/questboard'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+                <Text size="sm" textColor='text-white'>Zealy</Text>
                 <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
               </Link>
             </div>

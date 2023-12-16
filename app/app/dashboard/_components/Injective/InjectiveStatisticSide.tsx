@@ -11,11 +11,11 @@ interface Props {
   basePrice: number
 }
 
-const INTERVAL_TIME = 6000;
+const INTERVAL_TIME = 8000;
 const content:
   { title: string, desc: string, linkStr?: string, linkUrl?: string }[] = [
     {
-      title: "Your decentralised lending-borrowing protocol",
+      title: "Your decentralized lending-borrowing protocol",
       desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow AUSD, earn AUSD rewards by depositing AUSD to the Stability pool, or Liquidate Risky Troves."
     },
     {
@@ -35,6 +35,18 @@ const content:
       desc: "Get a chance to win exclusive rewards by participating in our current Galxe campaign.",
       linkStr: "participating",
       linkUrl: "https://galxe.com/aeroscraper/campaign/GCfPktUfsC"
+    },
+    {
+      title: "Check out the Zealy missions!",
+      desc: "Complete Zealy missions to raise your ranks in the leaderboard!",
+      linkStr: "Zealy",
+      linkUrl: "https://zealy.io/c/aeroscraper/questboard"
+    },
+    {
+      title: "Injective Faucet",
+      desc: "Get your Injective(Testnet) tokens here.",
+      linkStr: "here",
+      linkUrl: "https://testnet.faucet.injective.network/"
     }
   ]
 
@@ -46,16 +58,25 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
   const { pageData } = usePageData({ basePrice });
 
   const [showContentIdx, setShowContentIdx] = useState(0);
+  const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setShowContentIdx(prev => (prev + 1) === content.length ? 0 : (prev + 1));
-    }, INTERVAL_TIME);
+    let timer: NodeJS.Timeout;
+
+    if (!hovering) {
+      timer = setInterval(() => {
+        setShowContentIdx(prev => (prev + 1) === content.length ? 0 : (prev + 1));
+      }, INTERVAL_TIME);
+    }
 
     return () => {
-      clearInterval(timer)
-    }
-  }, []);
+      clearInterval(timer);
+    };
+  }, [hovering]);
+
+  const handleHover = (isHovering: boolean) => {
+    setHovering(isHovering);
+  };
 
   const renderDescription = () => {
     const item = content[showContentIdx];
@@ -75,7 +96,11 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
   };
 
   return (
-    <div className="max-w-[400px] w-[379px] group">
+    <div 
+    className="max-w-[400px] w-[379px] group"
+    onMouseEnter={() => handleHover(true)}
+    onMouseLeave={() => handleHover(false)}
+    >
       <motion.div
         key={showContentIdx}
         animate={{ opacity: 1, scale: 1 }}
