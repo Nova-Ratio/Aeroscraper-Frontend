@@ -4,9 +4,9 @@ import { BaseCoin, ClientEnum } from "@/types/types";
 export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     [ClientEnum.SEI]: [
         WalletType.LEAP,
+        WalletType.KEPLR,
         WalletType.COMPASS,
-        WalletType.FIN,
-        WalletType.KEPLR
+        WalletType.FIN
     ],
     [ClientEnum.ARCHWAY]: [
         WalletType.LEAP,
@@ -17,10 +17,10 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
         WalletType.KEPLR,
     ],
     [ClientEnum.INJECTIVE]: [
+        WalletType.METAMASK,
+        WalletType.LEAP,
         WalletType.KEPLR,
-        // WalletType.METAMASK,
-        // WalletType.LEAP,
-        // WalletType.NINJI
+        WalletType.NINJI
     ]
 }
 

@@ -18,7 +18,6 @@ import { BaseCoinByClient, WalletByClient, WalletImagesByName } from '@/constant
 import { isNil } from 'lodash'
 import { ClientEnum } from '@/types/types'
 import { Modal } from '../Modal/Modal'
-import { ChangeIcon } from '../Icons/Icons'
 import Button from './Button'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
 import TransactionButton from './TransactionButton'

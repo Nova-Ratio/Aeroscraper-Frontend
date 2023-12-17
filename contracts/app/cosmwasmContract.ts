@@ -23,10 +23,10 @@ export const getAppContract = (
 
     const walletStrategy = new WalletStrategy({ chainId: ChainId.Testnet, wallet: walletType as any });
 
-    const NETWORK = Network.Testnet;
+    const NETWORK = Network.TestnetSentry;
     const ENDPOINTS = getNetworkEndpoints(NETWORK);
 
-    const chainGrpcWasmApi = new ChainGrpcWasmApi("https://testnet.sentry.chain.grpc-web.injective.network");//todo
+    const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
     const msgBroadcastClient = new MsgBroadcaster({ walletStrategy, network: NETWORK });
 
     //GET QUERIES
