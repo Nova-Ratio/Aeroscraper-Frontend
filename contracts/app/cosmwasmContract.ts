@@ -26,7 +26,7 @@ export const getAppContract = (
     const NETWORK = Network.Testnet;
     const ENDPOINTS = getNetworkEndpoints(NETWORK);
 
-    const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
+    const chainGrpcWasmApi = new ChainGrpcWasmApi("https://testnet.sentry.chain.grpc-web.injective.network");//todo
     const msgBroadcastClient = new MsgBroadcaster({ walletStrategy, network: NETWORK });
 
     //GET QUERIES
