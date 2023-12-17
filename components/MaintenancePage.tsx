@@ -22,7 +22,7 @@ const MaintenancePage = () => {
           <Text size='lg' >Our site is undergoing maintenance for an important update. We're working to provide you with a better experience. Thank you for your patience and support.</Text>
         </div>
       </div>
-      <InjectiveBackgroundWave animate className="absolute bottom-20 left-0 rotate-90 -z-10 md:w-[500px] w-[300px]" />
+      <InjectiveBackgroundWave animate className="absolute bottom-0 left-0 rotate-180 -z-10 md:w-[500px] w-[300px]" />
       <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 bg-transparent -mx-20 pr-16 mt-60 pb-24 relative'>
         <div className='flex items-center gap-6 lg:mt-20'>
           <LogoSecondary />
