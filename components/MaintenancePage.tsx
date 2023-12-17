@@ -14,20 +14,16 @@ const MaintenancePage = () => {
         </div>
       </header>
 
-      <div className='flex justify-between'>
-        <InjectiveStatisticSide basePrice={0} disabledStats />
+      <div className='flex justify-center'>
+        {/* <InjectiveStatisticSide basePrice={0} disabledStats /> */}
 
-        <div className='w-1/3 flex justify-end flex-col gap-4'>
-          <Text size='5xl' textColor='text-[#E4462D]'>Under Maintenance! Your Site is Getting Updated, Will Be Back Shortly.</Text>
-          <Text size='lg' >Our site is undergoing maintenance for an important update. We're working to provide you with a better experience. Thank you for your patience and support.</Text>
+        <div className='w-1/3 flex justify-end flex-col ml-80 gap-4'>
+          <Text size='5xl' textColor='text-[#E4462D]'>Under Maintenance! Aeroscraper is Getting Updated, Will Be Back Shortly.</Text>
+          <Text size='lg' >Aeroscraper is undergoing maintenance for an important update. We're working to provide you with a better experience. Thank you for your patience and support.</Text>
         </div>
       </div>
       <InjectiveBackgroundWave animate className="absolute bottom-0 left-0 rotate-180 -z-10 md:w-[500px] w-[300px]" />
-      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 bg-transparent -mx-20 pr-16 mt-60 pb-24 relative'>
-        <div className='flex items-center gap-6 lg:mt-20'>
-          <LogoSecondary />
-          <Text size="2xl" textColor='text-white'>Aeroscraper</Text>
-        </div>
+      <footer className='flex flex-col gap-x-48 gap-y-16 items-top flex-wrap px-20 bg-transparent -mx-20 pr-16 mt-80 pb-24 relative'>
         <div className='grid grid-cols-3 gap-40'>
           <div className='flex flex-col content-start justify-start gap-4'>
             <Text size="sm" textColor='text-white' weight="font-semibold">Product</Text>
