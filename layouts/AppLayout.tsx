@@ -1,8 +1,9 @@
 'use client'
 
+import MaintenancePage from "@/components/MaintenancePage";
 import { useWallet } from "@/contexts/WalletProvider";
 import { ClientEnum } from "@/types/types";
-import {  ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import ArchwayTheme from "./themes/ArchwayTheme";
 import InjeciveTheme from "./themes/InjectiveTheme";
 import { PrimaryTheme } from "./themes/PrimaryTheme";
@@ -18,6 +19,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     }
 
     const selectedTheme = chainTheme[clientType!] || <InjeciveTheme />;
+
+    const [isProjectMaintenance] = useState(true); // manage the project's maintenance status here
+
+    if(isProjectMaintenance){
+        return <MaintenancePage />
+    }
 
     return (
         <>

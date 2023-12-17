@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from "react";
 import useAppContract from "./useAppContract";
 import { ClientEnum } from "@/types/types";
 import graphql from "@/services/graphql";
-import { isNil } from "lodash";
 
 interface Props {
   basePrice: number
@@ -16,7 +15,7 @@ const
   usePageData = ({ basePrice }: Props) => {
     const [clientType, setClientType] = useState<ClientEnum>("INJECTIVE" as ClientEnum);
 
-    const { requestTotalTroves, requestRiskyTroves } = graphql({ clientType });
+    const { requestTotalTroves } = graphql({ clientType });
     const contract = useAppContract();
 
     const { baseCoin } = useWallet();
