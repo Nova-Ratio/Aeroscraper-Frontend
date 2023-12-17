@@ -20,7 +20,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
 
     const selectedTheme = chainTheme[clientType!] || <InjeciveTheme />;
 
-    const [isProjectMaintenance] = useState(true); // manage the project's maintenance status here
+    const [isProjectMaintenance] = useState(false); // manage the project's maintenance status here
 
     if(isProjectMaintenance){
         return <MaintenancePage />

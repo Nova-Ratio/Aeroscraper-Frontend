@@ -1,7 +1,6 @@
 import React from 'react'
 import { InjectiveBackgroundWave, LogoSecondary } from './Icons/Icons'
 import Text from "@/components/Texts/Text"
-import InjectiveStatisticSide from '@/app/app/dashboard/_components/Injective/InjectiveStatisticSide'
 import Link from 'next/link'
 
 const MaintenancePage = () => {
@@ -15,8 +14,6 @@ const MaintenancePage = () => {
       </header>
 
       <div className='flex justify-center'>
-        {/* <InjectiveStatisticSide basePrice={0} disabledStats /> */}
-
         <div className='w-1/3 flex justify-end flex-col ml-80 gap-4'>
           <Text size='5xl' textColor='text-[#E4462D]'>Under Maintenance! Aeroscraper is Getting Updated, Will Be Back Shortly.</Text>
           <Text size='lg' >Aeroscraper is undergoing maintenance for an important update. We're working to provide you with a better experience. Thank you for your patience and support.</Text>

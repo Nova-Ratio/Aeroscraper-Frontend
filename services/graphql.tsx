@@ -5,7 +5,6 @@ import {
   TotalTrovesResponse,
 } from "@/types/types";
 import { request, gql } from "graphql-request";
-import { useEffect } from "react";
 
 export default function graphql({clientType} : {clientType: string}) {
 
