@@ -16,7 +16,7 @@ const MaintenancePage = () => {
       <div className='flex justify-center'>
         <div className='w-1/3 flex justify-end flex-col ml-80 gap-4'>
           <Text size='5xl' textColor='text-[#E4462D]'>Under Maintenance! Aeroscraper is Getting Updated, Will Be Back Shortly.</Text>
-          <Text size='lg' >Aeroscraper is undergoing maintenance for an important update. We're working to provide you with a better experience. Thank you for your patience and support.</Text>
+          <Text size='lg' >Aeroscraper is undergoing maintenance for an important update. We are working to provide you with a better experience. Thank you for your patience and support.</Text>
         </div>
       </div>
       <InjectiveBackgroundWave animate className="absolute bottom-0 left-0 rotate-180 -z-10 md:w-[500px] w-[300px]" />

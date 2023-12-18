@@ -46,6 +46,17 @@ const usePageData = ({ basePrice }: Props) => {
 
   const getPageData = useCallback(async () => {
     try {
+
+      const [
+        ausdInfoRes,
+        rewardRes,
+        totalTrovesRes
+      ] = await Promise.allSettled([
+        contract.getAusdInfo(),
+        contract.getReward(),
+        requestTotalTroves()
+      ])
+
       const [
         troveRes,
         ausdBalanceRes,
@@ -69,16 +80,6 @@ const usePageData = ({ basePrice }: Props) => {
       ]);
 
       await delay(500);
-
-      const [
-        ausdInfoRes,
-        rewardRes,
-        totalTrovesRes
-      ] = await Promise.allSettled([
-        contract.getAusdInfo(),
-        contract.getReward(),
-        requestTotalTroves()
-      ])
 
       const collateralAmount = convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0, baseCoin?.decimal)
       const debtAmount = convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0, baseCoin?.ausdDecimal)
