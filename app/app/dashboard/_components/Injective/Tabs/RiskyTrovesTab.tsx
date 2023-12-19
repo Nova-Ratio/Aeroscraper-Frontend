@@ -15,7 +15,8 @@ import { NumericFormat } from 'react-number-format';
 import { PageData } from '../../../_types/types';
 import Text from '@/components/Texts/Text';
 import { RocketIcon } from '@/components/Icons/Icons';
-import Deneme from '@/services/graphql';
+import graphql from '@/services/graphql';
+import { delay } from '@/utils/promiseUtils';
 
 type Props = {
   pageData: PageData;
@@ -27,11 +28,11 @@ const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
 
   const { baseCoin, clientType = ClientEnum.INJECTIVE } = useWallet();
   const contract = useAppContract();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTroves[]>([]);
   const { addNotification, setProcessLoading, processLoading } = useNotification();
 
-  const { requestRiskyTroves } = Deneme({ clientType });
+  const { requestRiskyTroves } = graphql({ clientType });
 
   const liquidateTroves = async () => {
     try {
@@ -62,38 +63,51 @@ const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
   const getRiskyTroves = useCallback(async () => {
     setLoading(true);
     try {
-
       const res = await requestRiskyTroves();
-      const getTrovesPromises = res.troves.nodes.map<Promise<RiskyTroves>>(async item => {
-        try {
-          const troveRes = await contract.getTroveByAddress(item.owner);
 
-          return {
-            owner: item.owner,
-            liquidityThreshold: item.liquidityThreshold || Number(isFinite(Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : 0),
-            collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal),
-            debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)
+      const batchSize = 10;
+      const batches = Math.ceil(res.troves.nodes.length / batchSize);
+
+      const getTrovesPromises = [];
+
+      for (let i = 0; i < batches; i++) {
+        const batchStart = i * batchSize;
+        const batchEnd = (i + 1) * batchSize;
+        const batchItems = res.troves.nodes.slice(batchStart, batchEnd);
+
+        const batchPromises = batchItems.map(async (item) => {
+          try {
+            const troveRes = await contract.getTroveByAddress(item.owner);
+
+            return {
+              owner: item.owner,
+              liquidityThreshold: item.liquidityThreshold || Number(isFinite(Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number(((convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal) * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : 0),
+              collateralAmount: convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal),
+              debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal),
+            };
+          } catch (err) {
+            return {
+              owner: item.owner,
+              liquidityThreshold: item.liquidityThreshold,
+              collateralAmount: 0,
+              debtAmount: 0,
+            };
           }
-        }
-        catch (err) {
-          return {
-            owner: item.owner,
-            liquidityThreshold: item.liquidityThreshold,
-            collateralAmount: 0,
-            debtAmount: 0
-          }
-        }
-      })
+        });
+
+        getTrovesPromises.push(...batchPromises);
+
+        await delay(1000);
+      }
+
       const data = await Promise.all(getTrovesPromises);
-      setRiskyTroves(data.sort(function (a, b) { return a.liquidityThreshold - b.liquidityThreshold }));
-    }
-    catch (err) {
+      setRiskyTroves(data.sort((a, b) => a.liquidityThreshold - b.liquidityThreshold));
+    } catch (err) {
       console.error(err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }, [contract, baseCoin])
+  }, [contract, baseCoin]);
 
   useEffect(() => {
     clientType && getRiskyTroves();
@@ -112,17 +126,9 @@ const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
             <TableHeaderCol col={1} text="Coll. Ratio" textEnd />
           </div>}
           bodyCss='space-y-1 max-h-[350px] overflow-auto'
+          loading={loading}
           renderItem={(item: RiskyTroves) => {
-            return (loading || riskyTroves.length === 0) ?
-              <>
-                {
-                  Array.from(Array(2).keys()).map(
-                    item => <SkeletonLoading key={item} height='h-5' />
-                  )
-                }
-              </>
-              :
-              <div className="grid grid-cols-6 border-b border-white/10">
+            return <div className="grid grid-cols-6 border-b border-white/10">
                 <TableBodyCol col={3} text="XXXXXX" value={
                   <Text size='sm' className='whitespace-nowrap text-start ml-4'>{getCroppedString(item.owner, 6, 8)}</Text>
                 } />
@@ -169,7 +175,7 @@ const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
               </div>
           }} />
       </div>
-      {riskyTroves.length === 0 && (
+      {(riskyTroves.length === 0 && !loading) && (
         <div className='my-10'>
           <RocketIcon className='w-5 h-5 text-red-500 mx-auto' />
           <Text size='base' className='whitespace-nowrap text-center mt-6'>Risky troves list is empty</Text>

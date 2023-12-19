@@ -28,6 +28,7 @@ const useAppContract = () => {
     }, [contract])
 
     const getTrove = useCallback(async () => {
+        
         if (isNil(contract)) return;
         return await contract.getTrove(wallet.address);
     }, [wallet, contract])

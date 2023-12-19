@@ -96,10 +96,10 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
   };
 
   return (
-    <div 
-    className="max-w-[400px] w-[379px] group"
-    onMouseEnter={() => handleHover(true)}
-    onMouseLeave={() => handleHover(false)}
+    <div
+      className="max-w-[400px] w-[379px] group"
+      onMouseEnter={() => handleHover(true)}
+      onMouseLeave={() => handleHover(false)}
     >
       <motion.div
         key={showContentIdx}
@@ -183,6 +183,7 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
           />
         </motion.div>
       )}
+
     </div>
   )
 }

@@ -23,7 +23,7 @@ export const getAppContract = (
 
     const walletStrategy = new WalletStrategy({ chainId: ChainId.Testnet, wallet: walletType as any });
 
-    const NETWORK = Network.Testnet;
+    const NETWORK = Network.TestnetSentry;
     const ENDPOINTS = getNetworkEndpoints(NETWORK);
 
     const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
