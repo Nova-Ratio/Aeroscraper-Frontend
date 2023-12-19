@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { debounce } from 'lodash';
 import React, { Dispatch, FC, useEffect, useState } from 'react'
 import ClaimRewardTab from './Tabs/ClaimRewardTab';
+import LeaderboardTab from './Tabs/LeaderboardTab';
 import RedeemTab from './Tabs/RedeemTab';
 import RiskyTrovesTab from './Tabs/RiskyTrovesTab';
 import StabilityPoolTab from './Tabs/StabilityPoolTab';
@@ -16,7 +17,7 @@ interface Props {
   setTabPosition: Dispatch<InjectiveTabs>
 }
 
-export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards";
+export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards" | "leaderboard";
 
 const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   const [basePrice, setBasePrice] = useState(0);
@@ -25,7 +26,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const [isTroveOpened, setIsTroveOpened] = useState(true);
 
-  let TabList: InjectiveTabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "rewards"];
+  let TabList: InjectiveTabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "rewards", "leaderboard"];
 
   const [selectedTab, setSelectedTab] = useState<InjectiveTabs>("trove");
 
@@ -60,7 +61,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   }, [pageData]);
 
   return (
-    <div className='flex-1 max-w-[784px] mt-16 ml-auto'>
+    <div className='flex-1 max-w-[828px] mt-16 ml-auto'>
       <Tabs tabs={TabList} dots={pageData.rewardAmount > 0 ? ["rewards"] : undefined} selectedTab={selectedTab} onTabSelected={(e) => { setSelectedTab(e); setTabPosition(e); }} loading={loading} />
       {loading ? <>
         <div className='mt-16'>
@@ -90,6 +91,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
           {selectedTab === "riskyTroves" && <RiskyTrovesTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
           {selectedTab === "rewards" && <ClaimRewardTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
+          {selectedTab === "leaderboard" && <LeaderboardTab />}
         </motion.main>
       }
 
