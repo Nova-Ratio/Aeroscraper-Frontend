@@ -31,10 +31,10 @@ const content:
       desc: "Collect the rewards you earned from liquid troves."
     },
     {
-      title: "Don't miss our latest Galxe campaign",
-      desc: "Get a chance to win exclusive rewards by participating in our current Galxe campaign.",
-      linkStr: "participating",
-      linkUrl: "https://galxe.com/aeroscraper/campaign/GCfPktUfsC"
+      title: "Follow Aeroscraper's Galxe Space",
+      desc: "Stay informed about the latest campaigns by following the Aeroscraper's Galxe Space.",
+      linkStr: "Aeroscraper's Galxe Space.",
+      linkUrl: "https://galxe.com/aeroscraper"
     },
     {
       title: "Check out the Zealy missions!",
