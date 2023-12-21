@@ -21,7 +21,7 @@ export const getAppEthContract = (
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
     const chainConfig = getConfig("", clientType);
-    const ENDPOINTS = getNetworkEndpoints(Network.Testnet);
+    const ENDPOINTS = getNetworkEndpoints(Network.TestnetSentry);
     const walletStrategy = new WalletStrategy({
         chainId: chainConfig.chainId as ChainId,
         ethereumOptions: {
@@ -34,7 +34,7 @@ export const getAppEthContract = (
 
     const msgBroadcastClient = new MsgBroadcaster({
         walletStrategy,
-        network: Network.Testnet,
+        network: Network.TestnetSentry,
     });
 
     const msgBroadcastClientWithEth = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[] | MsgExecuteContractCompat | MsgExecuteContractCompat[]) => {
@@ -69,11 +69,12 @@ export const getAppEthContract = (
             const response = await msgBroadcastClient.broadcast({
                 msgs: msg,
                 injectiveAddress: senderAddress,
-                gas: { gas: 20000000, gasPrice: String(chainConfig.gasPrice) }
+                gas: { gas: 30000000, gasPrice: String(chainConfig.gasPrice) }
             })
 
             return response
         } catch (error) {
+            console.log(error)
             throw new Error("Transaction Failed");
             
         }

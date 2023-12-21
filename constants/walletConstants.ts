@@ -18,7 +18,7 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
     ],
     [ClientEnum.INJECTIVE]: [
         WalletType.METAMASK,
-        // WalletType.LEAP,
+        WalletType.LEAP,
         WalletType.KEPLR,
         // WalletType.NINJI
     ]

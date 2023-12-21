@@ -176,7 +176,7 @@ const LeaderboardTab = () => {
                 decimalScale={2}
                 displayType="text"
                 renderText={(value) =>
-                  <Text size='sm' responsive={false} className='whitespace-nowrap'>{value}</Text>
+                  <Text size='sm' responsive={false} className='whitespace-nowrap'>{Number(value).toFixed(0)} xp</Text>
                 }
               />} />
 
