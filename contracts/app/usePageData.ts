@@ -67,8 +67,6 @@ const usePageData = ({ basePrice }: Props) => {
         contract.getStake(),
       ])
 
-      await delay(500);
-
       const [
         totalStakeRes,
         totalCollateralRes,
@@ -78,8 +76,6 @@ const usePageData = ({ basePrice }: Props) => {
         contract.getTotalCollateralAmount(),
         contract.getTotalDebtAmount(),
       ]);
-
-      await delay(500);
 
       const collateralAmount = convertAmount(getSettledValue(troveRes)?.collateral_amount ?? 0, baseCoin?.decimal)
       const debtAmount = convertAmount(getSettledValue(troveRes)?.debt_amount ?? 0, baseCoin?.ausdDecimal)
@@ -100,7 +96,6 @@ const usePageData = ({ basePrice }: Props) => {
         totalTrovesAmount: getSettledValue(totalTrovesRes)?.troves.totalCount ?? 0
       });
 
-      setLoading(false);
     }
     catch (err) {
       console.error(err);
@@ -122,12 +117,13 @@ const usePageData = ({ basePrice }: Props) => {
       })
     }
 
+    setLoading(false);
   }, [contract, basePrice, baseCoin])
 
   const debouncedEffect = useCallback(
     debounce(() => {
       getPageData();      
-    }, 1200),
+    }, 2000),
     [contract]
   );
 

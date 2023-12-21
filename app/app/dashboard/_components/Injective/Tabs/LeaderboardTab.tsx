@@ -82,7 +82,14 @@ const LeaderboardTab = () => {
 
   const fetchZealyData = async () => {
     try {
-      const result: any = await fetch("/api/zealy/leaderboard");
+      const result: any = await fetch("/api/zealy/leaderboard",
+        {
+          next: {
+            revalidate: 0
+          },
+          cache: 'no-store'
+        });
+
       if (!result.ok) {
         throw new Error('Network response was not ok.');
       }
@@ -95,12 +102,12 @@ const LeaderboardTab = () => {
 
       const getIdByAddress = data.leaderboard.find(item => item.address == address)?.userId;
 
-      if (getIdByAddress) {
-        const resultUserInfo = await fetch(`/api/zealy/userInformation/${getIdByAddress}`, { method: "GET" });
+      if (getIdByAddress && address) {
+        const resultUserInfo = await fetch(`/api/zealy/userInformation/${getIdByAddress}`, { method: "GET", next: { revalidate: 0 },cache: 'no-store' });
 
         const data = await resultUserInfo.json();
 
-        if (data) {          
+        if (data) {
           setUserInformation(data);
           setInformationLoading(false)
         }
