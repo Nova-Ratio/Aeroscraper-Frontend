@@ -6,7 +6,8 @@ export async function GET(req: NextRequest) {
     headers: {
       "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`
     },
-    method: req.method
+    method: req.method,
+    cache: "no-cache"
   });
 
   const data = await result.json()
