@@ -21,7 +21,7 @@ export const getAppEthContract = (
 ) => {
     const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByClient(clientType);
     const chainConfig = getConfig("", clientType);
-    const ENDPOINTS = getNetworkEndpoints(Network.TestnetSentry);
+    const ENDPOINTS = getNetworkEndpoints(Network.Testnet);
     const walletStrategy = new WalletStrategy({
         chainId: chainConfig.chainId as ChainId,
         ethereumOptions: {
@@ -34,7 +34,7 @@ export const getAppEthContract = (
 
     const msgBroadcastClient = new MsgBroadcaster({
         walletStrategy,
-        network: Network.TestnetSentry,
+        network: Network.Testnet,
     });
 
     const msgBroadcastClientWithEth = async (senderAddress: string, msg: MsgExecuteContract | MsgExecuteContract[] | MsgExecuteContractCompat | MsgExecuteContractCompat[]) => {
@@ -69,7 +69,7 @@ export const getAppEthContract = (
             const response = await msgBroadcastClient.broadcast({
                 msgs: msg,
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000, gasPrice: String(chainConfig.gasPrice) }
+                gas: { gas: 600000000, gasPrice: String(chainConfig.gasPrice) }
             })
 
             return response

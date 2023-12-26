@@ -81,7 +81,8 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
       setRedeemAmount(0);
     }
     catch (err) {
-      setNotification(
+      console.log(err)
+      notifications.addNotification(
         {
           status: 'error',
           directLink: transactionHash

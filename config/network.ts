@@ -25,7 +25,7 @@ export const testnetInjectiveConfig: AppConfig = {
     chainId: 'injective-888',
     chainName: 'Injective (Testnet)',
     addressPrefix: 'inj',
-    rpcUrl: 'https://testnet.sentry.tm.injective.network/',
+    rpcUrl: 'https://testnet.tm.injective.network/',
     httpUrl: 'https://injective-testnet-rest.publicnode.com',
     feeToken: 'inj',
     stakingToken: 'inj',
@@ -36,7 +36,7 @@ export const testnetInjectiveConfig: AppConfig = {
     fees: {
         upload: 1500000,
         init: 500000,
-        exec: 2000000,
+        exec: 200000000,
     },
 }
 

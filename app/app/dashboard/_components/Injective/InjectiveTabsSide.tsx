@@ -17,7 +17,7 @@ interface Props {
   setTabPosition: Dispatch<InjectiveTabs>
 }
 
-export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards" | "leaderboard";
+export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards";
 
 const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   const [basePrice, setBasePrice] = useState(0);
@@ -26,7 +26,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const [isTroveOpened, setIsTroveOpened] = useState(true);
 
-  let TabList: InjectiveTabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "rewards", "leaderboard"];
+  let TabList: InjectiveTabs[] = [isTroveOpened ? "trove" : "createTrove", "stabilityPool", "redeem", "riskyTroves", "rewards"];
 
   const [selectedTab, setSelectedTab] = useState<InjectiveTabs>("trove");
 
@@ -91,7 +91,6 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
           {selectedTab === "riskyTroves" && <RiskyTrovesTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
           {selectedTab === "rewards" && <ClaimRewardTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
-          {selectedTab === "leaderboard" && <LeaderboardTab />}
         </motion.main>
       }
 

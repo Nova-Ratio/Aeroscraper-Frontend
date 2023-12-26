@@ -23,7 +23,7 @@ export const getAppContract = (
 
     const walletStrategy = new WalletStrategy({ chainId: ChainId.Testnet, wallet: walletType as any });
 
-    const NETWORK = Network.TestnetSentry;
+    const NETWORK = Network.Testnet;
     const ENDPOINTS = getNetworkEndpoints(NETWORK);
 
     const chainGrpcWasmApi = new ChainGrpcWasmApi(ENDPOINTS.grpc);
@@ -185,7 +185,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             });
         }
 
@@ -287,7 +287,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -362,7 +362,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -436,7 +436,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -518,7 +518,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msgVAA, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -565,7 +565,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: msg1,
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -589,7 +589,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: msg1,
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -656,7 +656,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg0, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -730,7 +730,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: [msg0, msg1],
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
@@ -769,7 +769,7 @@ export const getAppContract = (
             return await msgBroadcastClient.broadcast({
                 msgs: msg,
                 injectiveAddress: senderAddress,
-                gas: { gas: 30000000}
+                gas: { gas: 35000000}
             })
         }
 
