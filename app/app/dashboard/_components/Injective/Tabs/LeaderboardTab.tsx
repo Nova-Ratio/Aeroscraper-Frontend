@@ -87,6 +87,8 @@ const LeaderboardTab = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [zealyId, setZealyId] = useState<string | null>("97e5485c-aa4d-4390-878f-7e714d1e52ab");
+
   useEffect(() => {
     fetchZealyData();
   }, []);
@@ -96,7 +98,6 @@ const LeaderboardTab = () => {
       fetchZealyMissionData();
     }
   }, [selectedTab])
-  console.log(missionList);
 
   const fetchZealyData = async () => {
     try {
@@ -121,6 +122,8 @@ const LeaderboardTab = () => {
       const getIdByAddress = data.leaderboard.find(item => item.address == address)?.userId;
 
       if (getIdByAddress && address) {
+        setZealyId(getIdByAddress);
+
         const resultUserInfo = await fetch(`/api/zealy/userInformation/${getIdByAddress}`, { method: "GET", next: { revalidate: 0 }, cache: 'no-store' });
 
         const data = await resultUserInfo.json();
@@ -142,13 +145,16 @@ const LeaderboardTab = () => {
   };
 
   const fetchZealyMissionData = async () => {
+    // if (!zealyId) return
+    
     try {
-      const result: any = await fetch("/api/zealy/missions",
+      const result: any = await fetch(`/api/zealy/missions?userId=${zealyId}`,
         {
           next: {
             revalidate: 0
           },
-          cache: 'no-store'
+          cache: 'no-store',
+          method:"GET"
         });
 
       if (!result.ok) {
@@ -167,7 +173,6 @@ const LeaderboardTab = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-
   };
 
 
@@ -205,7 +210,7 @@ const LeaderboardTab = () => {
               </div>
               <Table
                 listData={leaderboard}
-                header={<div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4">
+                header={<div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4 md:mr-0 mr-6">
                   <TableHeaderCol col={1} text="Rank" />
                   <TableHeaderCol col={4} text="Address" />
                   <TableHeaderCol col={1} text="Points" textCenter />
@@ -244,7 +249,7 @@ const LeaderboardTab = () => {
           (
             missionList.length === 0 ?
               (
-                <div className='grid grid-cols-2 gap-4'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   {
                     new Array(6).fill({}).map((_item, idx) => {
                       return <div key={idx} className="w-full bg-cetacean-dark-blue border border-white/10 rounded-2xl px-4 pt-4 pb-4 items-end justify-between mt-6">

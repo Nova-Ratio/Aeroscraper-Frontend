@@ -97,7 +97,7 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
 
   return (
     <div
-      className="max-w-[400px] w-[379px] group"
+      className="md:max-w-[400px] w-full md:w-[379px] px-6 pt-6 md:p-0 group"
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
     >
@@ -107,17 +107,17 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
         initial={{ opacity: 0, scale: 0.98 }}
         transition={{ ease: "easeInOut", duration: 1.2 }}
         layout
-        className="min-h-[266px]"
+        className="min-h-[172px] md:min-h-[266px]"
       >
-        <h1 className="text-white text-[39px] leading-[50px] font-semibold">{content[showContentIdx].title}</h1>
-        <h2 className="text-base text-ghost-white font-medium mt-4">
+        <h1 className="text-white text-2xl md:text-[39px] md:leading-[50px] font-semibold">{content[showContentIdx].title}</h1>
+        <h2 className="text-sm md:text-base text-ghost-white leading-6 font-medium mt-2 md:mt-4">
           {renderDescription()}
         </h2>
       </motion.div>
-      <div className='space-x-1 group-hover:opacity-100 opacity-0 transition-opacity my-2'>
+      <div className='space-x-2 md:space-x-1 group-hover:opacity-100 md:opacity-0 transition-opacity my-2'>
         {
           content.map((i, idx) => {
-            return <button key={idx} onClick={() => { setShowContentIdx(idx); }} className={`w-2 h-2 rounded-sm ${showContentIdx === idx ? "bg-[#E4462D]" : "bg-ghost-white"}`} />
+            return <button key={idx} onClick={() => { setShowContentIdx(idx); }} className={`md:w-2 md:h-2 w-6 h-1 rounded-sm ${showContentIdx === idx ? "bg-[#E4462D]" : "bg-ghost-white"}`} />
           })
         }
       </div>
@@ -131,7 +131,7 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
           layout
           initial={{ opacity: 0, translateY: -10 }}
           animate={{ opacity: 1, translateY: 0 }}
-          className="grid grid-cols-2 justify-center gap-x-16 gap-y-4 mt-6">
+          className="grid grid-cols-2 justify-center overflow-hidden gap-x-16 gap-y-4 mt-6">
           <InjectiveStatisticCard
             title="Management Fee"
             description="0.5%"

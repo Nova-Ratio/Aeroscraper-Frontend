@@ -5,7 +5,7 @@ import usePageData from '@/contracts/app/usePageData';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { motion } from 'framer-motion';
 import { debounce } from 'lodash';
-import React, { Dispatch, FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, useEffect, useRef, useState } from 'react'
 import ClaimRewardTab from './Tabs/ClaimRewardTab';
 import LeaderboardTab from './Tabs/LeaderboardTab';
 import RedeemTab from './Tabs/RedeemTab';
@@ -20,6 +20,9 @@ interface Props {
 export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards" | "leaderboard";
 
 const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
+
+  const ref = useRef<HTMLDivElement>(null);
+
   const [basePrice, setBasePrice] = useState(0);
   const { pageData, getPageData, loading } = usePageData({ basePrice });
   const { refreshBalance } = useWallet();
@@ -60,8 +63,12 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
     }, 500)
   }, [pageData]);
 
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: 'smooth',block:"center" });
+  }, [selectedTab])
+
   return (
-    <div className='flex-1 max-w-[828px] mt-16 ml-auto'>
+    <div ref={ref} className='md:flex-1 md:max-w-[828px] px-4 md:px-0 md:mt-16 md:ml-auto'>
       <Tabs tabs={TabList} dots={pageData.rewardAmount > 0 ? ["rewards"] : undefined} selectedTab={selectedTab} onTabSelected={(e) => { setSelectedTab(e); setTabPosition(e); }} loading={loading} />
       {loading ? <>
         <div className='mt-16'>
@@ -85,7 +92,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className='mt-14'>
+          className='md:mt-14'>
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
           {selectedTab === "stabilityPool" && <StabilityPoolTab pageData={pageData} getPageData={getPageData} />}
           {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}

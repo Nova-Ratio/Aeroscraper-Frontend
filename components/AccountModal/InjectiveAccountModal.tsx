@@ -152,26 +152,26 @@ const AccountModal: FC<Props> = (props: Props) => {
 
   return (
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
-      <div className='flex h-[644px]'>
-        <div className='pt-10 pr-24 shrink-0 px-8 border-r border-white/10 h-full relative'>
+      <div className='flex md:flex-row flex-col md:h-[644px]'>
+        <div className='pt-10 pr-0 pb-6 md:pb-0 md:pr-24 shrink-0 px-8 border-b md:border-r border-white/10 h-full relative'>
           <h2 className='text-[#F7F7FF] text-2xl font-medium'>Profile</h2>
-          <div className="mt-6 space-y-6">
+          <div className="flex flex-row md:flex-col mt-6 gap-6">
             <Button active={selectedTab === "avatar-select"} onClick={() => { setSelectedTab("avatar-select"); }}>Set an avatar</Button>
             <Button active={selectedTab === "wallet-details"} onClick={() => { setSelectedTab("wallet-details"); }}>Wallet details</Button>
           </div>
-          <button className='flex items-center justify-center absolute bottom-10' onClick={disconnect}>
+          <button className='flex items-center justify-center absolute md:bottom-10' onClick={disconnect}>
             <span className="text-[#ED0E00] text-base font-medium mr-2">Log out</span>
             <ExitIcon className="text-[#ED0E00]" />
           </button>
         </div>
-        <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl relative`}>
+        <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl md:mt-0 mt-10 relative`}>
           {selectedTab !== null && (
             <button className="absolute left-8 top-8" onClick={() => { setSelectedTab(null); }}>
               <ArrowLeftIcon className="text-white" />
             </button>
           )}
           {selectedTab === null && (
-            <div className="px-40 w-full">
+            <div className="px-4 md:px-40 w-full">
               <div className="space-y-8">
                 <div onClick={openAvatarSelection} className="secondary-gradient w-[148px] h-[148px] p-0.5 rounded-lg gap-2 mx-auto cursor-pointer">
                   <img

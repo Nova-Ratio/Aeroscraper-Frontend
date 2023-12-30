@@ -217,8 +217,8 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                 {wallet.walletLoading ? <Loading width={36} height={36} /> : <Text size='base'>Select Chain & Connect Wallet</Text>}
             </GradientButton>
             <Modal modalSize='lg' showModal={walletSelectionOpen}>
-                <div ref={ref} className='flex h-[644px]'>
-                    <div className='pt-10 pl-8 w-[300px] border-r border-white/10 relative'>
+                <div ref={ref} className='md:flex md:h-[644px]'>
+                    <div className='pt-10 pl-8 w-[300px] md:border-r border-white/10 relative'>
                         <h2 className='text-[#F7F7FF] text-2xl font-medium'>{!isNil(clientType) ? "Connect Wallet" : "Select Chain"}</h2>
                         {!isNil(clientType) &&
                             <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
@@ -372,8 +372,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                         }
                                     </div>
                                 </>)
-                        )
-                        }
+                        )}
                     </div>
                 </div>
             </Modal >

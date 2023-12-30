@@ -1,8 +1,11 @@
+import { ZealyMission } from "@/components/MissionCard";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const zealyId: any = new URL(req.nextUrl)
 
-  const result = await fetch("https://api.zealy.io/communities/aeroscraper/quests", {
+
+  const missionDatas = await fetch("https://api.zealy.io/communities/aeroscraper/quests", {
     headers: {
       "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`
     },
@@ -10,14 +13,26 @@ export async function GET(req: NextRequest) {
     cache: "no-cache"
   });
 
-  const data = await result.json()
+  const missionsData: ZealyMission[] = await missionDatas.json();
 
-  if (result.status !== 200) {
+  const claimedMissionDatas = await fetch("https://api.zealy.io/communities/aeroscraper/quests", {
+    headers: {
+      "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`
+    },
+    method: req.method,
+    cache: "no-cache"
+  });
+
+
+
+
+
+  if (missionDatas.status !== 200) {
     return NextResponse.json({
-      status: result.status,
+      status: missionDatas.status,
       msg: "There was a problem",
     });
   } else {
-    return NextResponse.json(data);
+    return NextResponse.json(missionsData);
   }
 }
