@@ -224,7 +224,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                             <div className={`gap-y-4 flex flex-col mt-10 ${isNil(clientType) ? "hidden" : ""}`}>
                                 {
                                     WalletByClient[clientType].filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => {
-                                        return <div key={idx} className='inline-block mr-auto' >
+                                        return <div key={idx} className={`mr-auto ${walletType === WalletType.LEAP ? "" : "md:inline-block hidden"}`} >
                                             {idx === 0 && <Text size='base' className='mb-4'>Installed Wallets</Text>}
                                             <Button
                                                 onClick={() => { connectWallet(walletType); }}
@@ -237,7 +237,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 }
                                 {
                                     WalletByClient[clientType].filter(walletType => walletExtensions?.otherWallets.map(x => x.name).includes(walletType)).map((walletType, idx) => (
-                                        <div key={idx} className='inline-block mr-auto'>
+                                        <div key={idx} className={`mr-auto ${walletType === WalletType.LEAP ? "" : "md:inline-block hidden"}`}>
                                             {idx === 0 && <Text size='base' className='mb-4'>Other Wallets</Text>}
                                             <Button
                                                 onClick={() => { setShowDownloadExtension({ name: walletType, downloadLink: walletExtensions?.otherWallets.find(i => i.name === walletType)?.downloadLink! }); }}
@@ -250,7 +250,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 }
                             </div>}
                         {isNil(clientType) &&
-                            <div className={`gap-y-4 flex flex-col mt-10`}>
+                            <div className={`gap-y-4 flex-col mt-10 md:flex hidden`}>
                                 {
                                     Object.values(WalletType).filter(i => i != "not_selected").filter(walletType => walletExtensions?.installed.map(x => x.name).includes(walletType)).map((walletType, idx) => {
                                         const isWalletByClient = onHoverChain && WalletByClient[onHoverChain].includes(walletType);
@@ -301,7 +301,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                             </div>
                         }
                     </div>
-                    <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl`}>
+                    <div className={`flex-1 flex flex-col items-center justify-center text-center md:border-t-0 border-t border-white/20 mt-8 pt-8 md:pt-0`}>
                         {showDownloadExtension &&
                             <motion.div
                                 initial={{ opacity: 0.1 }}
@@ -329,7 +329,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                     <div className='flex justify-center items-center gap-16 mb-8'>
                                         {
                                             WalletByClient[clientType].map((walletType, idx) => {
-                                                return <img alt={WalletImagesByName[walletType].image} key={idx} className="w-6 h-6 object-contain" src={WalletImagesByName[walletType].thumbnail} />
+                                                return <img alt={WalletImagesByName[walletType].image} key={idx} className={`w-6 h-6 object-contain ${walletType === WalletType.LEAP ? "" : "md:inline-block hidden"}`} src={WalletImagesByName[walletType].thumbnail} />
                                             })
                                         }
                                     </div>

@@ -75,50 +75,23 @@ const InjeciveTheme = () => {
           <LogoSecondary className='w-6 md:w-10 h-6 md:h-10' />
           <Text size='2xl'>Aeroscraper</Text>
         </div>
-        {wallet.initialized && !isNil(baseCoin) ?
-          <div className='md:hidden block -mr-4'>
-            <button onClick={() => { setAccountModal(true); }} className='flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300'>
-              <img
-                alt="user-profile-image"
-                src={wallet.profileDetail?.photoUrl ?? "/images/profile-images/profile-i-1.jpg"}
-                className='rounded-sm bg-raisin-black w-12 h-12'
-              />
-              <div className='flex flex-col'>
-                <div className='flex items-center ml-auto'>
-                  <img alt={wallet.walletType} className='w-4 h-4 object-contain rounded' src={WalletInfoMap[wallet.walletType ?? WalletType.NOT_SELECTED].thumbnailURL} />
-                  <Text size='lg' weight='font-regular' className='truncate ml-2'>{wallet.name}</Text>
-                </div>
-                <Text size='sm'>{wallet.address.slice(0, 6)}...{wallet.address.slice(-6)}</Text>
-                <div>
-                </div>
-              </div>
-              <button className='w-10 h-10 flex items-center justify-center' onClick={(e) => { e.stopPropagation(); disconnect(); }}>
-                <ExitIcon className='text-white' />
-              </button>
-            </button>
-          </div>
-          :
-          <WalletButton
-            key={"mobile"}
-            className="rounded-lg w-[196px] md:hidden block h-[36px]"
-            baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
-          />
-        }
-        <div className='items-center md:flex hidden'>
-          <div className="flex items-center gap-2 mr-8">
+        <div className='flex items-center'>
+          <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size='base'>$1.00</Text>
             <img alt="ausd" className="w-5 h-5" src="/images/token-images/ausd-blue.svg" />
           </div>
           {
             !isNil(baseCoin) &&
-            <div className="flex items-center gap-2 mr-12">
+            <div className="items-center gap-2 mr-12 md:flex hidden">
               <Text size='base'>$ {basePrice.toFixed(4)}</Text>
               <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.tokenImage} />
             </div>
           }
           {wallet.initialized && !isNil(baseCoin) ?
             <>
-              <NotificationDropdown />
+              <div className='md:flex hidden'>
+                <NotificationDropdown />
+              </div>
               <button onClick={() => { setAccountModal(true); }} className='flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300'>
                 <img
                   alt="user-profile-image"
@@ -142,8 +115,7 @@ const InjeciveTheme = () => {
             :
             <WalletButton
               ausdBalance={0}
-              key={"web"}
-              className="rounded-lg w-[287px] h-[48px]"
+              className="rounded-lg w-[200px] md:w-[287px] h-[36px] md:h-[48px]"
               baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
               basePrice={0}
             />

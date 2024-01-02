@@ -153,7 +153,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   return (
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
       <div className='flex md:flex-row flex-col md:h-[644px]'>
-        <button className='flex items-center justify-center absolute bottom-6 md:bottom-10 left-6 md:left-12' onClick={disconnect}>
+        <button className='flex items-center justify-center absolute bottom-6 md:bottom-10 left-6 md:left-12 z-[999]' onClick={disconnect}>
           <span className="text-[#ED0E00] text-base font-medium mr-2">Log out</span>
           <ExitIcon className="text-[#ED0E00]" />
         </button>

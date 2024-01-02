@@ -25,7 +25,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const [basePrice, setBasePrice] = useState(0);
   const { pageData, getPageData, loading } = usePageData({ basePrice });
-  const { refreshBalance } = useWallet();
+  const { refreshBalance, address } = useWallet();
 
   const [isTroveOpened, setIsTroveOpened] = useState(true);
 
@@ -64,7 +64,9 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   }, [pageData]);
 
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: 'smooth',block:"center" });
+    if (typeof window !== "undefined" && window?.innerWidth <= 768) {
+      ref.current?.scrollIntoView({ behavior: 'smooth', block: "center" });
+    }
   }, [selectedTab])
 
   return (
@@ -92,7 +94,7 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className='md:mt-14'>
+          className={`md:mt-14 ${(!!address || selectedTab === "leaderboard") ? "" : "blur-[2px] cursor-not-allowed"}`}>
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
           {selectedTab === "stabilityPool" && <StabilityPoolTab pageData={pageData} getPageData={getPageData} />}
           {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
