@@ -300,17 +300,6 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 }
                             </div>
                         }
-                        {clientType && (
-                            <div className='flex gap-4 items-center mt-auto absolute bottom-6'>
-                                <Text size='base'>Chain</Text>
-                                <Button
-                                    onClick={resetChain}
-                                    startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
-                                >
-                                    {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
-                                </Button>
-                            </div>
-                        )}
                     </div>
                     <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl`}>
                         {showDownloadExtension &&
@@ -334,9 +323,9 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 (<motion.div
                                     initial={{ opacity: 0.1 }}
                                     animate={{ opacity: 1 }}
-                                    className="mx-[140px]"
+                                    className="mx-10 md:mx-[140px]"
                                 >
-                                    <Text size='4xl' textColor='text-white' className='mb-10'>How do I connect my wallet?</Text>
+                                    <Text size='4xl' textColor='text-white' className='mb-4 md:mb-10 mt-4'>How do I connect my wallet?</Text>
                                     <div className='flex justify-center items-center gap-16 mb-8'>
                                         {
                                             WalletByClient[clientType].map((walletType, idx) => {
@@ -349,7 +338,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                 </motion.div>
                                 )
                                 :
-                                (<>
+                                (<div className='p-10 mt-10 md:mt-0'>
                                     <p className='text-base font-medium text-[#989396]'>Before you start,</p>
                                     <h3 className='text-white text-3xl font-medium'>Please choose your chain</h3>
                                     <div className='space-y-6 mt-10'>
@@ -371,9 +360,20 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                             })
                                         }
                                     </div>
-                                </>)
+                                </div>)
                         )}
                     </div>
+                    {clientType && (
+                        <div className='flex gap-4 items-center mt-auto absolute bottom-8 left-8'>
+                            <Text size='base'>Chain</Text>
+                            <Button
+                                onClick={resetChain}
+                                startIcon={<img alt={clientType} src={BaseCoinByClient[clientType].image} className='w-6 h-6' />}
+                            >
+                                {capitalizeFirstLetter(clientType.toLocaleLowerCase())}
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </Modal >
         </div >

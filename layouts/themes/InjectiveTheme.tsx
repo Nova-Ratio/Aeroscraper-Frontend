@@ -75,7 +75,7 @@ const InjeciveTheme = () => {
           <LogoSecondary className='w-6 md:w-10 h-6 md:h-10' />
           <Text size='2xl'>Aeroscraper</Text>
         </div>
-        {/* {wallet.initialized && !isNil(baseCoin) ?
+        {wallet.initialized && !isNil(baseCoin) ?
           <div className='md:hidden block -mr-4'>
             <button onClick={() => { setAccountModal(true); }} className='flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300'>
               <img
@@ -99,12 +99,11 @@ const InjeciveTheme = () => {
           </div>
           :
           <WalletButton
-            ausdBalance={0}
+            key={"mobile"}
             className="rounded-lg w-[196px] md:hidden block h-[36px]"
             baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
-            basePrice={0}
           />
-        } */}
+        }
         <div className='items-center md:flex hidden'>
           <div className="flex items-center gap-2 mr-8">
             <Text size='base'>$1.00</Text>
@@ -143,6 +142,7 @@ const InjeciveTheme = () => {
             :
             <WalletButton
               ausdBalance={0}
+              key={"web"}
               className="rounded-lg w-[287px] h-[48px]"
               baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
               basePrice={0}
