@@ -221,9 +221,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   }
 
   return (
-    <>
+    <div className='overflow-hidden md:overflow-visible'>
       {
-        isTroveOpened ?
+        !isTroveOpened ?
           <>
             <Text size='3xl'>Manage your collateral</Text>
             <Text size='base' weight='font-regular' className='mt-1'>Mint AUSD or repay your debt.</Text>
@@ -237,8 +237,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     exit={{ opacity: 0, y: -100 }}
                     transition={{ duration: 0.3, ease: "easeIn" }}
                     className='flex flex-col mt-6'>
-                    <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
-                      <div className="flex items-end justify-between">
+                    <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4 md:mt-6">
+                      <div className="flex items-center md:items-end justify-between">
                         <div>
                           {
                             !isNil(baseCoin) ?
@@ -258,18 +258,18 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                           className="text-end"
                         />
                       </div>
-                      <div className='flex justify-between mt-6'>
+                      <div className='flex justify-between md:mt-6'>
                         <div className='flex'>
-                          <label className="font-regular text-base text-white">In Wallet:</label>
-                          <p className='text-white font-regular text-base ml-3'>{!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)).toFixed(6) : 0} {baseCoin?.name}</p>
+                          <label className="font-regular text-xs md:text-base text-gray-300">In Wallet:</label>
+                          <p className='text-white font-regular text-xs md:text-base ml-3'>{!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)).toFixed(6) : 0} {baseCoin?.name}</p>
                         </div>
                         <div className='flex'>
-                          <label className="font-regular text-base text-white">In Trove Balance:</label>
-                          <p className='text-white font-regular text-base ml-3'>{pageData.collateralAmount} {baseCoin?.name}</p>
+                          <label className="font-regular text-xs md:text-base text-gray-300">In Trove Balance:</label>
+                          <p className='text-white font-regular text-xs md:text-base ml-3'>{pageData.collateralAmount} {baseCoin?.name}</p>
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-4 gap-6 gap-y-4 p-4'>
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-20 md:gap-6 gap-y-4 mt-4 md:mt-0 md:p-4'>
                       <InjectiveStatisticCard
                         title='Management Fee'
                         description={`${Number(collateralAmount * 0.005).toFixed(6)} ${baseCoin?.name ?? ""} (0.5%)`}
@@ -291,13 +291,13 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         tooltip='The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing.'
                       />
                     </div>
-                    <div className="flex items-center justify-end pr-4 gap-4 mt-4">
+                    <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
                       <OutlinedButton
                         disabled={withdrawDepositDisabled}
                         disabledText={"Enter the INJ amount. 999 INJ is the upper limit for now."}
                         loading={processLoading}
                         onClick={queryWithdraw}
-                        className="min-w-[201px] h-11"
+                        className="min-w-[146px] md:min-w-[201px] h-11"
                       >
                         <Text>Withdraw</Text>
                       </OutlinedButton>
@@ -306,7 +306,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         disabledText={"Enter the INJ amount. 999 INJ is the upper limit for now."}
                         loading={processLoading}
                         onClick={queryAddColletral}
-                        className="min-w-[374px] h-11"
+                        className="min-w-[176px] md:min-w-[374px] h-11"
                         rounded="rounded-lg"
                       >
                         <Text>Deposit</Text>
@@ -323,7 +323,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     exit={{ opacity: 0, y: -100 }}
                     transition={{ duration: 0.3, ease: "easeIn" }}
                     className='flex flex-col'>
-                    <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
+                    <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4 mt-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd-blue.svg" />
@@ -337,19 +337,19 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                           className="text-end"
                         />
                       </div>
-                      <div className='flex justify-between mt-6'>
+                      <div className='flex justify-between md:mt-6'>
                         <div className='flex'>
-                          <label className="font-regular text-base text-white">Borrowing Capacity:</label>
-                          <p className='text-white font-regular text-base ml-3'>{(((pageData.collateralAmount * basePrice * 100) / 115) - (pageData.debtAmount)).toFixed(6)} AUSD</p>
+                          <label className="font-regular text-[10px] md:text-base text-gray-300">Borrowing Capacity:</label>
+                          <p className='text-white font-regular text-xs md:text-base ml-1 md:ml-3'>{(((pageData.collateralAmount * basePrice * 100) / 115) - (pageData.debtAmount)).toFixed(6)} AUSD</p>
                         </div>
                         <div className='flex'>
-                          <label className="font-regular text-base text-white">Debt:</label>
-                          <p className='text-white font-regular text-base ml-3'>{`${pageData.debtAmount.toFixed(6)} AUSD`}</p>
+                          <label className="font-regular text-[10px] md:text-base text-gray-300">Debt:</label>
+                          <p className='text-white font-regular text-xs md:text-base ml-1 md:ml-3'>{`${pageData.debtAmount.toFixed(6)} AUSD`}</p>
                         </div>
                       </div>
                     </div>
-                    <div className='grid grid-cols-4 gap-6 gap-y-4 p-4'>
-                      <div className='col-start-3'>
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-6 gap-y-4 p-4'>
+                      <div className='md:col-start-3'>
                         <InjectiveStatisticCard
                           title='Liquidation Price'
                           description={Number((pageData.debtAmount * 115) / ((pageData.collateralAmount || 1) * 100)).toFixed(6).toString()}
@@ -368,7 +368,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         disabledText={"Enter the AUSD amount."}
                         loading={processLoading}
                         onClick={queryRepay}
-                        className="min-w-[201px] h-11"
+                        className="min-w-[142px] md:min-w-[201px] h-11"
                       >
                         <Text>Repay</Text>
                       </OutlinedButton>
@@ -377,7 +377,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         disabledText={"Enter the AUSD amount."}
                         loading={processLoading}
                         onClick={queryBorrow}
-                        className="min-w-[375px] h-11"
+                        className="min-w-[176px] md:min-w-[375px] h-11"
                         rounded="rounded-lg"
                       >
                         <Text>Borrow</Text>
@@ -391,7 +391,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
           <div>
             <Text size='3xl'>Borrow AUSD</Text>
             <Text size='base' weight='font-regular' className='mt-1'>Open a trove to borrow AUSD, Aeroscraper’s native stable coin.</Text>
-            <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
+            <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4 mt-6">
               <div className="flex items-end justify-between">
                 <div>
                   <Text size="sm" weight="mb-2">Collateral</Text>
@@ -414,7 +414,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                 />
               </div>
             </div>
-            <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-2xl px-6 py-8 flex flex-col gap-4 mt-6">
+            <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4 mt-6">
               <div className="flex items-end justify-between">
                 <div>
                   <Text size="sm" weight="mb-2">Borrow</Text>
@@ -441,7 +441,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                 damping: 25,
                 delay: 0.1
               }}
-              className="grid grid-cols-4 content-center gap-16 mt-8">
+              className="grid grid-cols-2 md:grid-cols-4 content-center md:gap-16 mt-8">
               <InjectiveStatisticCard
                 title="Management Fee"
                 description={`${Number(openTroveAmount * 0.005).toFixed(6)} ${baseCoin?.name ?? ""} (0.5%)`}
@@ -468,21 +468,19 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                 tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
               />
             </motion.div>
-            <div className="flex flex-row ml-auto gap-3 mt-6 w-3/4">
-              <GradientButton
-                loading={processLoading}
-                onClick={openTrove}
-                className="min-w-[375px] h-11 mt-4 ml-auto"
-                rounded="rounded-lg"
-                disabled={confirmDisabled}
-                disabledText={"Fill in both INJ and AUSD amounts. 999 INJ is the upper limit, and 1 AUSD is the lower limit for now."}
-              >
-                <Text>Confirm</Text>
-              </GradientButton>
-            </div>
+            <GradientButton
+              loading={processLoading}
+              onClick={openTrove}
+              className="min-w-full md:min-w-[375px] h-11 md:mt-10 ml-auto"
+              rounded="rounded-lg"
+              disabled={confirmDisabled}
+              disabledText={"Fill in both INJ and AUSD amounts. 999 INJ is the upper limit, and 1 AUSD is the lower limit for now."}
+            >
+              <Text>Confirm</Text>
+            </GradientButton>
           </div>
       }
-    </>
+    </div>
   )
 }
 
