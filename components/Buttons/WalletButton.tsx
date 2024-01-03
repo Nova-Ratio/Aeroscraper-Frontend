@@ -334,7 +334,7 @@ const WalletButton: FC<Props> = ({ ausdBalance = 0, baseCoinBalance = 0, basePri
                                         }
                                     </div>
                                     <Text size='base' textColor='text-[#989396]'>If you want to connect an installed wallet, you can log in by selecting your wallet under &quot;Installed Wallets&quot; on the left side of the screen and using the browser extension.</Text>
-                                    <Text size='base' textColor='text-[#989396]' className='mt-10'>If you do not have an installed wallet, you can choose one of the wallet options on the left side of the screen and follow the instructions to set up your wallet.</Text>
+                                    <Text size='base' textColor='text-[#989396]' className='mt-2 md:mt-10'>If you do not have an installed wallet, you can choose one of the wallet options on the left side of the screen and follow the instructions to set up your wallet.</Text>
                                 </motion.div>
                                 )
                                 :

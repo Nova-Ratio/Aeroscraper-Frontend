@@ -94,7 +94,11 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className={`md:mt-14 ${(!!address || selectedTab === "leaderboard") ? "" : "blur-[2px] cursor-not-allowed"}`}>
+          className={`md:mt-14 ${(!!address || selectedTab === "leaderboard") ? "" : "blur-[2px]"} relative`}>
+          {(!address || selectedTab !== "leaderboard") &&
+            <div className='cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50'>
+            </div>
+          }
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
           {selectedTab === "stabilityPool" && <StabilityPoolTab pageData={pageData} getPageData={getPageData} />}
           {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}

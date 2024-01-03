@@ -154,19 +154,19 @@ const AccountModal: FC<Props> = (props: Props) => {
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
       <div className='flex md:flex-row flex-col md:h-[644px]'>
         <button className='flex items-center justify-center absolute bottom-6 md:bottom-10 left-6 md:left-12 z-[999]' onClick={disconnect}>
-          <span className="text-[#ED0E00] text-base font-medium mr-2">Log out</span>
+          <span className="text-[#ED0E00] text-sm md:text-base font-medium mr-2">Log out</span>
           <ExitIcon className="text-[#ED0E00]" />
         </button>
-        <div className='pt-10 pr-0 pb-6 md:pb-0 md:pr-24 shrink-0 px-8 border-b md:border-r border-white/10 h-full relative'>
+        <div className='pt-8 md:pt-10 pr-0 pb-6 md:pb-0 md:pr-24 shrink-0 px-8 border-b md:border-r border-white/10 h-full relative'>
           <h2 className='text-[#F7F7FF] text-2xl font-medium'>Profile</h2>
           <div className="flex flex-row md:flex-col mt-6 gap-0 -ml-8 md:ml-0 md:gap-6">
             <Button active={selectedTab === "avatar-select"} onClick={() => { setSelectedTab("avatar-select"); }}>Set an avatar</Button>
             <Button active={selectedTab === "wallet-details"} onClick={() => { setSelectedTab("wallet-details"); }}>Wallet details</Button>
           </div>
         </div>
-        <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl md:mt-0 mt-10 relative`}>
+        <div className={`flex-1 flex flex-col items-center justify-center text-center rounded-3xl md:mt-0 mt-6 relative`}>
           {selectedTab !== null && (
-            <button className="absolute left-2 md:left-8 -top-4 md:top-8" onClick={() => { setSelectedTab(null); }}>
+            <button className="absolute left-3 md:left-8 -top-4 md:top-8" onClick={() => { setSelectedTab(null); }}>
               <ArrowLeftIcon className="text-white" />
             </button>
           )}
@@ -236,9 +236,9 @@ const AccountModal: FC<Props> = (props: Props) => {
           )}
           {selectedTab === "avatar-select" && (
             <div className='md:px-24 px-6 mt-4 md:mt-0 w-full text-start'>
-              <Text size='lg' textColor="text-dark-silver" className="mb-6">Select an avatar</Text>
+              <Text size='lg' textColor="text-dark-silver" className="mb-2 md:mb-6">Select an avatar</Text>
               <ProfilePhotoSlider processLoading={processLoading} updateProfilePhoto={updateProfilePhoto} slider={profilePhotos} />
-              <div className="mt-6 pt-6 border-t-2 border-white/10">
+              <div className="md:mt-6 pt-2 md:pt-6 border-t-2 border-white/10">
                 <Text size='lg' textColor="text-dark-silver" className="mb-6">Uplod an Avatar</Text>
                 <div className="flex md:flex-row flex-col items-center gap-6">
                   <div className="w-2/3 md:w-[148px]">
@@ -296,7 +296,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                 </a>
               </div>
               <Text size='lg' textColor='text-white' className="mb-3 md:mt-0 mt-4">{name}</Text>
-              <div className='md:w-[309px] w-[240px] h-[240px] md:h-[309px] bg-white rounded-lg p-3 mx-auto'>
+              <div className='md:w-[309px] w-[220px] h-[220px] md:h-[309px] bg-white rounded-lg p-3 mx-auto'>
                 <QRCode className='w-full h-full' value={address} />
               </div>
               <div className='flex gap-4 mt-6 justify-center'>
