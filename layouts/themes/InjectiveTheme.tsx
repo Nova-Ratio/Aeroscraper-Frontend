@@ -131,7 +131,7 @@ const InjeciveTheme = () => {
         />
       </header>
       {wallet.initialized && !isNil(baseCoin) &&
-        <div className='items-center md:hidden flex border h-[50px] border-white/20 mx-6 rounded-lg mt-8 pl-4 z-50'>
+        <div className='items-center md:hidden flex border h-[50px] border-white/20 mx-4 rounded-lg mt-8 pl-4 z-50'>
           <div className="flex items-center gap-2 mr-8">
             <Text size='base'>$1.00</Text>
             <img alt="ausd" className="w-5 h-5" src="/images/token-images/ausd-blue.svg" />
