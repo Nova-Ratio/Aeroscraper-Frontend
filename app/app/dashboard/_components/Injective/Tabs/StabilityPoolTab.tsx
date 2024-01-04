@@ -35,8 +35,8 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
   const [stakeAmount, setStakeAmount] = useState<number>(0);
   const [unstakeAmount, setUnstakeAmount] = useState<number>(0);
 
-  const stakeDisabled = useMemo(() => stakeAmount <= 0, [stakeAmount]);
-  const unstakeDisabled = useMemo(() => unstakeAmount <= 0, [unstakeAmount]);
+  const stakeDisabled = useMemo(() => stakeAmount <= 0 || stakeAmount > 999, [stakeAmount]);
+  const unstakeDisabled = useMemo(() => unstakeAmount <= 0 || unstakeAmount > 999, [unstakeAmount]);
 
   const stakePool = async () => {
     setProcessLoading(true);
@@ -96,7 +96,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
   return (
     <div className="md:-ml-4 overflow-hidden md:overflow-visible">
       <Text size='3xl'>Add to stability pool to earn rewards</Text>
-      <Text size='base' weight='font-regular' className='mt-1 mb-8'>Deposit or Withdraw AUSD from your wallet to the Aeroscaper protocol to earn rewards. </Text>
+      <Text size='base' weight='font-regular' className='mt-1 mb-8'>Deposit or Withdraw AUSD from your wallet to the Aeroscraper protocol to earn rewards. </Text>
       <div className='flex flex-col'>
         {pageData.stakedAmount > 0 && <Checkbox label={'Deposit'} checked={selectedTab === TABS.DEPOSIT} onChange={() => { setSelectedTab(TABS.DEPOSIT); }} />}
         {selectedTab === TABS.DEPOSIT && (
@@ -142,7 +142,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             </div>
             <GradientButton
               disabled={stakeDisabled}
-              disabledText={"Enter the AUSD amount."}
+              disabledText={"Enter the AUSD amount. 999 AUSD is the upper limit for now."}
               tooltipPlacement="bottom-center"
               loading={processLoading}
               onClick={stakePool}
@@ -197,7 +197,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             <GradientButton
               disabled={unstakeDisabled}
               tooltipPlacement="bottom-center"
-              disabledText={"Enter the AUSD amount."}
+              disabledText={"Enter the AUSD amount. 999 AUSD is the upper limit for now."}
               loading={processLoading}
               onClick={unStakePool}
               className="min-w-[240px] md:w-[374px] h-11 mt-6 ml-auto"

@@ -47,13 +47,15 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
 
   const confirmDisabled = useMemo(() =>
     borrowAmount <= 0 ||
+    borrowAmount > 999 ||
     openTroveAmount <= 0 ||
+    openTroveAmount > 999 ||
     collacteralRatio < 1.15 ||
     collacteralRatio < (pageData.minCollateralRatio - 0.00001),
     [openTroveAmount, borrowAmount, collacteralRatio, pageData])
 
-  const withdrawDepositDisabled = useMemo(() => collateralAmount <= 0, [collateralAmount])
-  const repayBorrowDisabled = useMemo(() => borrowingAmount <= 0, [borrowingAmount])
+  const withdrawDepositDisabled = useMemo(() => collateralAmount <= 0 || collateralAmount > 999, [collateralAmount])
+  const repayBorrowDisabled = useMemo(() => borrowingAmount <= 0 || borrowingAmount > 999, [borrowingAmount])
 
   const changeOpenTroveAmount = (values: NumberFormatValues) => {
     setOpenTroveAmount(Number(values.value));
@@ -365,7 +367,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                     <div className="flex items-center justify-end pr-4 gap-4 mt-6">
                       <OutlinedButton
                         disabled={repayBorrowDisabled}
-                        disabledText={"Enter the AUSD amount."}
+                        disabledText={"Enter the AUSD amount. 999 AUSD is the upper limit for now."}
                         loading={processLoading}
                         onClick={queryRepay}
                         className="min-w-[142px] md:min-w-[201px] h-11"
@@ -374,7 +376,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                       </OutlinedButton>
                       <GradientButton
                         disabled={repayBorrowDisabled}
-                        disabledText={"Enter the AUSD amount."}
+                        disabledText={"Enter the AUSD amount. 999 AUSD is the upper limit for now."}
                         loading={processLoading}
                         onClick={queryBorrow}
                         className="min-w-[176px] md:min-w-[375px] h-11"

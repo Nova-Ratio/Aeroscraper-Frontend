@@ -41,6 +41,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
   const redeemDisabled = useMemo(() =>
     isNil(redeemAmount) ||
     redeemAmount <= 0 ||
+    redeemAmount > 999 ||
     redeemAmount > pageData.ausdBalance,
     [redeemAmount, pageData])
 
@@ -163,7 +164,7 @@ const RedeemTab: FC<Props> = ({ pageData, getPageData, refreshBalance, basePrice
           text='Redeem'
           disabled={redeemDisabled}
           tooltipPlacement="bottom-center"
-          disabledText={"Enter the AUSD amount."}
+          disabledText={"Enter the AUSD amount. 999 AUSD is the upper limit for now."}
         />
       </div>
     </section>

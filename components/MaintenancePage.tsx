@@ -73,6 +73,10 @@ const MaintenancePage = () => {
                 <Text size="sm" textColor='text-white'>Zealy</Text>
                 <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
               </Link>
+              <Link href={'https://medium.com/@aeroscraper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+                <Text size="sm" textColor='text-white'>Medium</Text>
+                <img alt='external-link' src='/images/external-link.svg' className='w-4 h-4' />
+              </Link>
             </div>
           </div>
         </div>
