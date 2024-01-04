@@ -71,7 +71,7 @@ const InjeciveTheme = () => {
     <>
       <div className='bg-[#5C5CFF] opacity-[0.09] h-[600px] w-full  md:w-[600px] absolute -top-60 -translate-x-1/3 left-1/3 rounded-full blur-3xl -z-10' />
       <header className='md:mb-[88px] mx-6 md:mx-[85px] mt-8 flex justify-between items-center'>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2 mr-2'>
           <LogoSecondary className='w-6 md:w-10 h-6 md:h-10' />
           <Text size='2xl'>Aeroscraper</Text>
         </div>
@@ -115,7 +115,7 @@ const InjeciveTheme = () => {
             :
             <WalletButton
               ausdBalance={0}
-              className="rounded-lg w-[200px] md:w-[287px] h-[36px] md:h-[48px]"
+              className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
               baseCoinBalance={!isNil(baseCoin) ? Number(convertAmount(balanceByDenom[baseCoin.denom]?.amount ?? 0, baseCoin.decimal)) : 0}
               basePrice={0}
             />

@@ -153,7 +153,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   return (
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
       <div className='flex md:flex-row flex-col md:h-[644px]'>
-        <button className='flex items-center justify-center absolute bottom-6 md:bottom-10 left-6 md:left-12 z-[999]' onClick={disconnect}>
+        <button className='flex items-center justify-center absolute bottom-6 md:bottom-10 left-6 md:left-12 z-[0]' onClick={disconnect}>
           <span className="text-[#ED0E00] text-sm md:text-base font-medium mr-2">Log out</span>
           <ExitIcon className="text-[#ED0E00]" />
         </button>
@@ -236,9 +236,9 @@ const AccountModal: FC<Props> = (props: Props) => {
           )}
           {selectedTab === "avatar-select" && (
             <div className='md:px-24 px-6 mt-4 md:mt-0 w-full text-start'>
-              <Text size='lg' textColor="text-dark-silver" className="mb-2 md:mb-6">Select an avatar</Text>
+              <Text size='lg' textColor="text-dark-silver" className="mb-6">Select an avatar</Text>
               <ProfilePhotoSlider processLoading={processLoading} updateProfilePhoto={updateProfilePhoto} slider={profilePhotos} />
-              <div className="md:mt-6 pt-2 md:pt-6 border-t-2 border-white/10">
+              <div className="mt-2 md:mt-6 pt-2 md:pt-6 border-t-2 border-white/10">
                 <Text size='lg' textColor="text-dark-silver" className="mb-6">Uplod an Avatar</Text>
                 <div className="flex md:flex-row flex-col items-center gap-6">
                   <div className="w-2/3 md:w-[148px]">
