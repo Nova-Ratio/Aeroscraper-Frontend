@@ -97,7 +97,7 @@ const InjectiveStatisticSide: FC<Props> = ({ basePrice }) => {
 
   return (
     <div
-      className="md:max-w-[400px] w-full md:w-[379px] px-6 pt-6 md:p-0 group"
+      className="md:max-w-[400px] w-full md:w-[379px] px-4 pt-6 md:p-0 group"
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
     >
