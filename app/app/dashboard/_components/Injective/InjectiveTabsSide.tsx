@@ -1,6 +1,5 @@
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import Tabs from '@/components/Tabs';
-import { useWallet } from '@/contexts/WalletProvider';
 import usePageData from '@/contracts/app/usePageData';
 import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { motion } from 'framer-motion';
@@ -12,6 +11,8 @@ import RedeemTab from './Tabs/RedeemTab';
 import RiskyTrovesTab from './Tabs/RiskyTrovesTab';
 import StabilityPoolTab from './Tabs/StabilityPoolTab';
 import TroveTab from './Tabs/TroveTab';
+import useChainAdapter from '@/hooks/useChainAdapter';
+import useBalances from '@/hooks/useBalances';
 
 interface Props {
   setTabPosition: Dispatch<InjectiveTabs>
@@ -25,7 +26,8 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const [basePrice, setBasePrice] = useState(0);
   const { pageData, getPageData, loading } = usePageData({ basePrice });
-  const { refreshBalance, walletType,} = useWallet();
+  const { refreshBalance } = useBalances();
+  const { wallet } = useChainAdapter();
 
   const [isTroveOpened, setIsTroveOpened] = useState(true);
 
@@ -94,8 +96,8 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className={`md:mt-14 ${(isNil(walletType) && selectedTab !== "leaderboard") ? "blur-[2px]" : ""} relative`}>
-          {(isNil(walletType) && selectedTab !== "leaderboard") &&
+          className={`md:mt-14 ${(isNil(wallet) && selectedTab !== "leaderboard") ? "blur-[2px]" : ""} relative`}>
+          {(isNil(wallet) && selectedTab !== "leaderboard") &&
             <div className='cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50'>
             </div>
           }
