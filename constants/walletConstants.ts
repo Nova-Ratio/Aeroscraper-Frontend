@@ -1,4 +1,6 @@
+import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
+import { WalletTypeV2 } from "@/enums/WalletTypeV2";
 import { BaseCoin, ClientEnum } from "@/types/types";
 
 export const WalletByClient: Record<ClientEnum, WalletType[]> = {
@@ -21,6 +23,27 @@ export const WalletByClient: Record<ClientEnum, WalletType[]> = {
         WalletType.LEAP,
         WalletType.KEPLR,
         // WalletType.NINJI
+    ]
+}
+
+export const WalletsByChainName: Record<ChainName, WalletTypeV2[]> = {
+    [ChainName.SEI]: [
+        WalletTypeV2.LEAP,
+        WalletTypeV2.KEPLR
+    ],
+    [ChainName.ARCHWAY]: [
+        WalletTypeV2.LEAP,
+        WalletTypeV2.KEPLR,
+    ],
+    [ChainName.NEUTRON]: [
+        WalletTypeV2.LEAP,
+        WalletTypeV2.KEPLR,
+    ],
+    [ChainName.INJECTIVE]: [
+        WalletTypeV2.METAMASK,
+        WalletTypeV2.LEAP,
+        WalletTypeV2.KEPLR,
+        // WalletTypeV2.NINJI
     ]
 }
 
@@ -98,7 +121,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "SEI",
         denom: "usei",
         image: "/images/token-images/sei.png",
-        tokenImage:"/images/token-images/sei.png",
+        tokenImage: "/images/token-images/sei.png",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -106,7 +129,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "ATOM",
         denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
         image: "/images/token-images/archway-coin.png",
-        tokenImage:"/images/token-images/atom.svg",
+        tokenImage: "/images/token-images/atom.svg",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -114,7 +137,7 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "NTRN",
         denom: "untrn",
         image: "/images/token-images/neutron.svg",
-        tokenImage:"/images/token-images/neutron.svg",
+        tokenImage: "/images/token-images/neutron.svg",
         decimal: 6,
         ausdDecimal: 6
     },
@@ -122,47 +145,8 @@ export const BaseCoinByClient: Record<ClientEnum, BaseCoin> = {
         name: "INJ",
         denom: "inj",
         image: "/images/token-images/inj.svg",
-        tokenImage:"/images/token-images/inj.svg",
+        tokenImage: "/images/token-images/inj.svg",
         decimal: 18,
         ausdDecimal: 18
-    }
-}
-
-export const getBaseCoinByClient = (clientType?: ClientEnum) => {
-    return clientType && BaseCoinByClient[clientType];
-}
-
-export const getContractAddressesByClient = (clientType?: ClientEnum) => {
-    if (clientType === ClientEnum.SEI) {
-        return {
-            contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_CONTRACT_ADDRESS as string
-        }
-    }
-    else if (clientType === ClientEnum.ARCHWAY) {
-        return {
-            contractAddress: process.env.NEXT_PUBLIC_ARCH_CONTRACT_ADDRESS as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_ARCH_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: ''
-        }
-    } else if (clientType === ClientEnum.NEUTRON) {
-        return {
-            contractAddress: process.env.NEXT_PUBLIC_NEUTRON_CONTRACT_ADDRESS as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_NEUTRON_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_NEUTRON_ORACLE_CONTRACT_ADDRESS as string
-        }
-    } else if (clientType === ClientEnum.INJECTIVE) {
-        return {
-            contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
-        }
-    }
-
-    return {
-        contractAddress: '',
-        ausdContractAddress: '',
-        oraclecontractAddress: '',
     }
 }
