@@ -24,8 +24,8 @@ const SIZE_VARIANT = {
     height: 'h-[65%]',
   },
   'lg': {
-    width: 'w-[95%] md:w-[65%]',
-    height: 'h-[95%] sm:h-[90%] md:h-auto',
+    width: 'w-[100%] sm:w-[95%] md:w-[65%]',
+    height: 'h-[98%] sm:h-[90%] md:h-auto',
   }
 }
 

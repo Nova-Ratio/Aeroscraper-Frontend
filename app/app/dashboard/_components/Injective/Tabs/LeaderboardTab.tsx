@@ -9,9 +9,10 @@ import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import { useWallet } from '@/contexts/WalletProvider';
 import Checkbox from '@/components/Checkbox';
 import MissionCard, { ZealyMission } from '@/components/MissionCard';
+import { isNil } from 'lodash';
 
 interface ZealyResponseModel {
-  leaderboard: ZealyUser[],
+  items: ZealyUser[],
   totalUsers: number,
   totalPages: number,
   page: number
@@ -79,29 +80,80 @@ const LeaderboardTab = () => {
 
   const [leaderboard, setLeaderboard] = useState<ZealyUser[]>([]);
   const [userInformation, setUserInformation] = useState<ZealyUserInformation | null>(null);
-  const [missionList, setMissionList] = useState<ZealyMission[]>([]);
+  const [missionList, setMissionList] = useState<Record<string, ZealyMission> | null>(null);
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.LEADERBOARD);
-  const [informationLoading, setInformationLoading] = useState(true);
+  const [informationLoading, setInformationLoading] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
-  const [zealyId, setZealyId] = useState<string | null>("97e5485c-aa4d-4390-878f-7e714d1e52ab");
+  const [zealyId, setZealyId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchZealyData();
+    getZealyUserId();
   }, []);
 
   useEffect(() => {
-    if (selectedTab === TABS.MISSIONS && missionList?.length == 0) {
+    if (zealyId) {
+      fetchZealyInformationData();
+    }
+  }, [zealyId]);
+
+  useEffect(() => {
+    if (selectedTab === TABS.MISSIONS) {
       fetchZealyMissionData();
     }
-  }, [selectedTab])
+  }, [selectedTab]);
 
   const fetchZealyData = async () => {
     try {
-      const result: any = await fetch("/api/zealy/leaderboard",
+      const result = await fetch("/api/zealy/leaderboard",
+        {
+          next: {
+            revalidate: false
+          },
+          cache: 'no-cache'
+        });
+
+      const data: ZealyResponseModel = await result.json();
+
+      setTotalUsers(data.totalUsers);
+      setLeaderboard(data.items);
+
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const getZealyUserId = async () => {
+    try {
+      const result = await fetch(`https://db.aeroscraper.io/api/collections/leaderboard/records?filter=address="${address}"`,
+        {
+          next: {
+            revalidate: false
+          },
+          cache: 'no-cache'
+        });
+
+      const data: ZealyResponseModel = await result.json();
+
+      if (data.items.length > 0) {
+        setZealyId(data.items[0].userId);
+      }
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchZealyInformationData = async () => {
+    setInformationLoading(true);
+
+    try {
+      const result = await fetch(`/api/zealy/userInformation/${zealyId}`,
         {
           next: {
             revalidate: 0
@@ -109,44 +161,18 @@ const LeaderboardTab = () => {
           cache: 'no-store'
         });
 
-      if (!result.ok) {
-        throw new Error('Network response was not ok.');
-      }
+      const data = await result.json();
 
-      const data: ZealyResponseModel = await result.json();
-
-      if (typeof data !== "object") {
-        throw new Error('Network response was not ok.');
-      }
-
-      const getIdByAddress = data.leaderboard.find(item => item.address == address)?.userId;
-
-      if (getIdByAddress && address) {
-        setZealyId(getIdByAddress);
-
-        const resultUserInfo = await fetch(`/api/zealy/userInformation/${getIdByAddress}`, { method: "GET", next: { revalidate: 0 }, cache: 'no-store' });
-
-        const data = await resultUserInfo.json();
-
-        if (data) {
-          setUserInformation(data);
-          setInformationLoading(false)
-        }
-      }
-
-      setTotalUsers(data.totalUsers);
-      setLeaderboard(data.leaderboard);
+      setUserInformation(data)
+      setInformationLoading(false);
 
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-
   };
 
   const fetchZealyMissionData = async () => {
-    // if (!zealyId) return
-    
     try {
       const result: any = await fetch(`/api/zealy/missions?userId=${zealyId}`,
         {
@@ -154,7 +180,7 @@ const LeaderboardTab = () => {
             revalidate: 0
           },
           cache: 'no-store',
-          method:"GET"
+          method: "GET"
         });
 
       if (!result.ok) {
@@ -166,10 +192,59 @@ const LeaderboardTab = () => {
       if (typeof data !== "object") {
         throw new Error('Network response was not ok.');
       }
-      console.log(data);
 
-      setMissionList(data);
+      const missionList = data.reduce((acc: Record<string, ZealyMission>, mission: ZealyMission) => {
+        return {
+          ...acc,
+          [mission.id]: {
+            ...mission,
+            currentXP: 0
+          }
+        };
+      }, {});
 
+      setMissionList(missionList);
+
+      fetchZealyMissionClaimedData(missionList);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchZealyMissionClaimedData = async (missionList: Record<string, ZealyMission>) => {
+    try {
+      const result: any = await fetch(`/api/zealy/claimedMissions/${zealyId}`,
+        {
+          next: {
+            revalidate: 0
+          },
+          cache: 'no-cache',
+          method: "GET"
+        });
+
+      if (!result.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      const data = await result.json();
+
+      if (typeof data !== "object") {
+        throw new Error('Network response was not ok.');
+      }
+
+      let tempMissionList = { ...missionList }
+
+      data.data.forEach((claim: any) => {
+        const { questId, xp } = claim;
+        console.log(questId, xp);
+
+        if (tempMissionList[questId]) {
+          tempMissionList[questId].currentXP = xp;
+        }
+      });
+
+      setMissionList(tempMissionList);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -189,7 +264,7 @@ const LeaderboardTab = () => {
                 <div className='w-full'>
                   <Text size="base" weight="font-bold">Your Rank</Text>
                   <div className='mt-6 flex justify-between w-full'>
-                    {loading ?
+                    {informationLoading ?
                       <SkeletonLoading height='h-4 mt-6' width='w-24' noPadding />
                       :
                       <div className='flex items-end'>
@@ -231,10 +306,10 @@ const LeaderboardTab = () => {
                         thousandsGroupStyle="thousand"
                         thousandSeparator=","
                         fixedDecimalScale
-                        decimalScale={2}
+                        decimalScale={0}
                         displayType="text"
                         renderText={(value) =>
-                          <Text size='sm' responsive={false} className='whitespace-nowrap'>{Number(value).toFixed(0)} xp</Text>
+                          <Text size='sm' responsive={false} className='whitespace-nowrap'>{value} xp</Text>
                         }
                       />} />
 
@@ -247,7 +322,7 @@ const LeaderboardTab = () => {
         {
           selectedTab === TABS.MISSIONS &&
           (
-            missionList.length === 0 ?
+            isNil(missionList) ?
               (
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   {
@@ -278,8 +353,8 @@ const LeaderboardTab = () => {
               )
               :
               (
-                <div className='grid grid-cols-2 gap-4'>
-                  {missionList?.map((mission, idx) => {
+                <div className='grid grid-cols-2 gap-4 mt-10'>
+                  {Object.values(missionList)?.map((mission, idx) => {
                     return <MissionCard key={idx} mission={mission} />
                   })}
                 </div>
