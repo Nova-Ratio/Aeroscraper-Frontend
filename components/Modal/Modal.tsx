@@ -25,7 +25,7 @@ const SIZE_VARIANT = {
   },
   'lg': {
     width: 'w-[100%] sm:w-[95%] md:w-[65%]',
-    height: 'h-[98%] sm:h-[90%] md:h-auto',
+    height: 'h-[95%] sm:h-[80%] md:h-auto',
   }
 }
 
@@ -82,7 +82,7 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
           stiffness: 200,
           damping: 25,
         }}
-        className={`z-[70] ${SIZE_VARIANT[modalSize].width} ${SIZE_VARIANT[modalSize].height} bg-chinese-black rounded-[28px] relative`}
+        className={`z-[70] ${SIZE_VARIANT[modalSize].width} ${SIZE_VARIANT[modalSize].height} bg-chinese-black rounded-[28px] relative overflow-y-auto`}
       >
         {props.onClose && <button onClick={closeModal} className="absolute top-8 right-8 z-[100]">
           <CloseIcon className="w-6 h-6" />

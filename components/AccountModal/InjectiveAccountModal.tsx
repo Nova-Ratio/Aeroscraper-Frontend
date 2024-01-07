@@ -153,7 +153,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   return (
     <Modal title="Profile" modalSize='lg' showModal={props.showModal} onClose={closeModal}>
       <div className='flex md:flex-row flex-col md:h-[644px]'>
-        <button className='flex items-center justify-center absolute bottom-6 md:bottom-10 left-6 md:left-12 z-[10]' onClick={disconnect}>
+        <button className='md:flex hidden items-center justify-center absolute bottom-10 left-12 z-[10]' onClick={disconnect}>
           <span className="text-[#ED0E00] text-sm md:text-base font-medium mr-2">Log out</span>
           <ExitIcon className="text-[#ED0E00]" />
         </button>
@@ -232,6 +232,10 @@ const AccountModal: FC<Props> = (props: Props) => {
                   }
                 />
               </div>
+              <button className='flex md:hidden my-6' onClick={disconnect}>
+                <span className="text-[#ED0E00] text-sm md:text-base font-medium mr-2">Log out</span>
+                <ExitIcon className="text-[#ED0E00]" />
+              </button>
             </div>
           )}
           {selectedTab === "avatar-select" && (
@@ -269,6 +273,10 @@ const AccountModal: FC<Props> = (props: Props) => {
                   </motion.div>
                 }
               </div>
+              <button className='flex md:hidden my-6' onClick={disconnect}>
+                <span className="text-[#ED0E00] text-sm md:text-base font-medium mr-2">Log out</span>
+                <ExitIcon className="text-[#ED0E00]" />
+              </button>
             </div>
           )}
           {selectedTab === "wallet-details" && (
@@ -313,6 +321,10 @@ const AccountModal: FC<Props> = (props: Props) => {
                   </button>
                 }
               </div>
+              <button className='flex md:hidden m-6' onClick={disconnect}>
+                <span className="text-[#ED0E00] text-sm md:text-base font-medium mr-2">Log out</span>
+                <ExitIcon className="text-[#ED0E00]" />
+              </button>
             </div>
           )}
         </div>
