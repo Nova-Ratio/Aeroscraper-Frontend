@@ -93,7 +93,7 @@ const MissionCard: FC<{ mission: ZealyMission }> = ({ mission }) => {
               <motion.div
               layout
                 style={{ width: `${((mission.currentXP ?? 0) / mission.reward[0].value) * 100}%` }}
-                className='tertiary-gradient border border-white/10 w-full h-7 rounded-md absolute left-0 top-0' />
+                className='tertiary-gradient w-full h-7 rounded-md absolute left-0 top-0' />
             </div>
 
             <Text size="lg" weight="font-regular" className='min-w-[40px]'>{mission.currentXP}</Text>

@@ -353,7 +353,7 @@ const LeaderboardTab = () => {
               )
               :
               (
-                <div className='grid grid-cols-2 gap-4 mt-10'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-10'>
                   {Object.values(missionList)?.map((mission, idx) => {
                     return <MissionCard key={idx} mission={mission} />
                   })}
