@@ -5,7 +5,16 @@ import Faq from '@/components/FAQ/Faq'
 import { InjectiveBackgroundWave, LogoSecondary, MedalIcon } from '@/components/Icons/Icons'
 import Text from '@/components/Texts/Text'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch('/app/dashboard');
+  }, [router])
+
   return (
     <div>
       <main>
@@ -29,41 +38,41 @@ export default function Home() {
               </GradientButton>
             </Link>
             <div className="mt-8 md:hidden block">
-            <Link target={"_blank"} className="border border-[#073DC8]/60 bg-[#0c0c2766] px-4 md:px-10 py-8 rounded-lg flex gap-6 backdrop-blur-2xl" href={'https://twitter.com/Injective_/status/1745933949132488934?s=20'}>
-              <div className='flex gap-4 items-center'>
-                <MedalIcon className="text-[#F8B810]" />
-                <Text size='3xl'>1st</Text>
-              </div>
-              <div>
-                <div className='flex gap-4'>
-                  <div className="flex items-center gap-2">
-                    <img alt="token" src="/images/token-images/inj.svg" className="w-6 h-6" />
-                    <Text size="base" weight="font-medium">Injective</Text>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <img alt="token" src="/images/google_cloud.png" className="w-6 h-6" />
-                    <Text size="base" weight="font-medium">Google Cloud</Text>
-                  </div>
+              <Link target={"_blank"} className="border border-[#073DC8]/60 bg-[#0c0c2766] px-4 md:px-10 py-8 rounded-lg flex gap-6 backdrop-blur-2xl" href={'https://twitter.com/Injective_/status/1745933949132488934?s=20'}>
+                <div className='flex gap-4 items-center'>
+                  <MedalIcon className="text-[#F8B810]" />
+                  <Text size='3xl'>1st</Text>
                 </div>
-                <Text size='xl' className='mt-4'>Injective Illuminate Hackathon</Text>
-              </div>
-            </Link>
-            <Link target={"_blank"} className="border border-[#073DC8]/60 bg-[#0c0c2766] p-4 md:p-6 rounded-lg w-2/3 flex gap-6 backdrop-blur-2xl mt-10 mr-auto" href={'https://x.com/SeiNetwork/status/1705128171534717322?s=20'}>
-              <div className='flex gap-4 items-center'>
-                <MedalIcon className="text-[#E4462D]" />
-                <Text size='xl'>2nd</Text>
-              </div>
-              <div>
-                <div className='flex gap-4'>
-                  <div className="flex items-center gap-2">
-                    <img alt="token" src="/images/token-images/sei.png" className="w-6 h-6" />
-                    <Text size="base" weight="font-medium">SEI</Text>
+                <div>
+                  <div className='flex gap-4'>
+                    <div className="flex items-center gap-2">
+                      <img alt="token" src="/images/token-images/inj.svg" className="w-6 h-6" />
+                      <Text size="base" weight="font-medium">Injective</Text>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <img alt="token" src="/images/google_cloud.png" className="w-6 h-6" />
+                      <Text size="base" weight="font-medium">Google Cloud</Text>
+                    </div>
                   </div>
+                  <Text size='xl' className='mt-4'>Injective Illuminate Hackathon</Text>
                 </div>
-                <Text size='base' className='mt-4'>Code Sei Hackathon</Text>
-              </div>
-            </Link>
-          </div>
+              </Link>
+              <Link target={"_blank"} className="border border-[#073DC8]/60 bg-[#0c0c2766] p-4 md:p-6 rounded-lg w-2/3 flex gap-6 backdrop-blur-2xl mt-10 mr-auto" href={'https://x.com/SeiNetwork/status/1705128171534717322?s=20'}>
+                <div className='flex gap-4 items-center'>
+                  <MedalIcon className="text-[#E4462D]" />
+                  <Text size='xl'>2nd</Text>
+                </div>
+                <div>
+                  <div className='flex gap-4'>
+                    <div className="flex items-center gap-2">
+                      <img alt="token" src="/images/token-images/sei.png" className="w-6 h-6" />
+                      <Text size="base" weight="font-medium">SEI</Text>
+                    </div>
+                  </div>
+                  <Text size='base' className='mt-4'>Code Sei Hackathon</Text>
+                </div>
+              </Link>
+            </div>
             <Faq />
           </div>
           <div className="md:mt-32 md:ml-20 p-4 md:block hidden">

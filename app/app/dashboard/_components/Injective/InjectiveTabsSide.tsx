@@ -1,25 +1,27 @@
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import Tabs from '@/components/Tabs';
 import usePageData from '@/contracts/app/usePageData';
-import { PriceServiceConnection } from '@pythnetwork/price-service-client';
 import { motion } from 'framer-motion';
 import { isNil } from 'lodash';
 import React, { Dispatch, FC, useEffect, useRef, useState } from 'react'
 import ClaimRewardTab from './Tabs/ClaimRewardTab';
 import LeaderboardTab from './Tabs/LeaderboardTab';
 import RedeemTab from './Tabs/RedeemTab';
-import RiskyTrovesTab from './Tabs/RiskyTrovesTab';
+import RiskyTrovesTabV1 from './Tabs/RiskyTrovesTabV1';
 import StabilityPoolTab from './Tabs/StabilityPoolTab';
 import TroveTab from './Tabs/TroveTab';
 import useChainAdapter from '@/hooks/useChainAdapter';
 import useBalances from '@/hooks/useBalances';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { AppVersion } from '@/types/types';
+import RiskyTrovesTabV2 from './Tabs/RiskyTrovesTabV2';
 
 interface Props {
   setTabPosition: Dispatch<InjectiveTabs>
 }
 
-export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards" | "leaderboard&missions";
+//export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards" | "leaderboard&missions";
+export type InjectiveTabs = "trove" | "createTrove" | "stabilityPool" | "redeem" | "riskyTroves" | "rewards";
 const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const router = useRouter();
@@ -27,10 +29,9 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const [basePrice, setBasePrice] = useState(0);
-  const { pageData, getPageData, loading } = usePageData({ basePrice });
+  const { basePrice, walletInfo, selectedAppVersion } = useChainAdapter();
+  const { pageData, getPageData, loading } = usePageData();
   const { refreshBalance } = useBalances();
-  const { walletInfo } = useChainAdapter();
 
   const [isTroveOpened, setIsTroveOpened] = useState(false);
 
@@ -39,32 +40,9 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
   const [selectedTab, setSelectedTab] = useState<InjectiveTabs>(isTroveOpened ? "trove" : "createTrove");
 
   useEffect(() => {
-    const getPrice = async () => {
-      const connection = new PriceServiceConnection(
-        "https://hermes-beta.pyth.network/",
-        {
-          priceFeedRequestConfig: {
-            binary: true,
-          },
-        }
-      )
-
-      const priceId = ["2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3"];
-
-      const currentPrices = await connection.getLatestPriceFeeds(priceId);
-
-      if (currentPrices) {
-        setBasePrice(Number(currentPrices[0].getPriceUnchecked().price) / 100000000);
-      }
-    }
-
-    getPrice()
-  }, [])
-
-  useEffect(() => {
     if (selectedTab === "trove" || selectedTab === "createTrove") {
-      setIsTroveOpened(pageData.collateralAmount > 0);
-      setSelectedTab(pageData.collateralAmount > 0 ? "trove" : "createTrove");
+      setIsTroveOpened(pageData.baseCollateralAmount > 0);
+      setSelectedTab(pageData.baseCollateralAmount > 0 ? "trove" : "createTrove");
     }
   }, [pageData]);
 
@@ -112,8 +90,8 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className={`md:mt-6 ${(isNil(walletInfo) && selectedTab !== "leaderboard&missions") ? "blur-[2px]" : ""} relative`}>
-          {(isNil(walletInfo) && selectedTab !== "leaderboard&missions") &&
+          className={`md:mt-6 ${(isNil(walletInfo)/*  && selectedTab !== "leaderboard&missions" */) ? "blur-[2px]" : ""} relative`}>
+          {(isNil(walletInfo) && selectedTab/*  !== "leaderboard&missions" */) &&
             <div className='cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50'>
             </div>
           }
@@ -121,9 +99,17 @@ const InjectiveTabsSide: FC<Props> = ({ setTabPosition }) => {
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
           {selectedTab === "stabilityPool" && <StabilityPoolTab pageData={pageData} getPageData={getPageData} />}
           {selectedTab === "redeem" && <RedeemTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
-          {selectedTab === "riskyTroves" && <RiskyTrovesTab pageData={pageData} getPageData={getPageData} basePrice={basePrice} />}
+          {
+            selectedTab === "riskyTroves" &&
+            (
+              selectedAppVersion === AppVersion.V1 ?
+                <RiskyTrovesTabV1 getPageData={getPageData} basePrice={basePrice} />
+                :
+                <RiskyTrovesTabV2 getPageData={getPageData} basePrice={basePrice} />
+            )
+          }
           {selectedTab === "rewards" && <ClaimRewardTab pageData={pageData} getPageData={getPageData} refreshBalance={refreshBalance} basePrice={basePrice} />}
-          {selectedTab === "leaderboard&missions" && <LeaderboardTab />}
+          {/* {selectedTab === "leaderboard&missions" && <LeaderboardTab />} */}
         </motion.main>
       }
     </div>

@@ -12,6 +12,8 @@ import { wallets as ledgerWallets } from '@cosmos-kit/ledger';
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { ChainName } from '@/enums/Chain';
 import { GasPrice } from '@cosmjs/stargate';
+import ProfileProvider from './ProfileProvider';
+import PriceProvider from './PriceProvider';
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
     return (
@@ -52,11 +54,15 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
                 }
             }}
         >
-            <AppProvider>
-                <NotificationProvider>
-                    {children}
-                </NotificationProvider>
-            </AppProvider>
+            <PriceProvider>
+                <AppProvider>
+                    <NotificationProvider>
+                        <ProfileProvider>
+                            {children}
+                        </ProfileProvider>
+                    </NotificationProvider>
+                </AppProvider>
+            </PriceProvider>
         </ChainProvider>
     )
 }

@@ -7,8 +7,8 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
     [ChainName.SEI]: [
         WalletType.LEAP,
         WalletType.KEPLR,
-        WalletType.LEDGER,
-        WalletType.COSMOSTATION
+        // WalletType.LEDGER,
+        // WalletType.COSMOSTATION
     ],
     [ChainName.ARCHWAY]: [
         WalletType.LEAP,
@@ -22,9 +22,9 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
         WalletType.METAMASK,
         WalletType.LEAP,
         WalletType.KEPLR,
-        WalletType.NINJI,
-        WalletType.LEDGER,
-        WalletType.COSMOSTATION
+        // WalletType.NINJI,
+        // WalletType.LEDGER,
+        // WalletType.COSMOSTATION
     ]
 }
 
