@@ -13,16 +13,11 @@ import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { ChainName } from "@/enums/Chain";
 import { GasPrice } from "@cosmjs/stargate";
 import { AbstraxionProvider } from "@burnt-labs/abstraxion";
+import { XionProviders } from "@/app/providers";
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <AbstraxionProvider
-      config={{
-        contracts: [
-          "xion1z70cvc08qv5764zeg3dykcyymj5z6nu4sqr7x8vl4zjef2gyp69s9mmdka",
-        ],
-      }}
-    >
+    <XionProviders>
       <ChainProvider
         chains={chains}
         assetLists={assets}
@@ -64,7 +59,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
           <NotificationProvider>{children}</NotificationProvider>
         </AppProvider>
       </ChainProvider>
-    </AbstraxionProvider>
+    </XionProviders>
   );
 };
 

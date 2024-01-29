@@ -4,10 +4,13 @@ import GradientButton from '@/components/Buttons/GradientButton'
 import Faq from '@/components/FAQ/Faq'
 import { InjectiveBackgroundWave, LogoSecondary, MedalIcon } from '@/components/Icons/Icons'
 import Text from '@/components/Texts/Text'
+import { AbstraxionAccount } from '@/hooks/xion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-
+export interface AccountWithAuthenticator extends AbstraxionAccount {
+  authenticators: Authenticators;
+}
 export default function Home() {
   const router = useRouter()
   useEffect(() => {

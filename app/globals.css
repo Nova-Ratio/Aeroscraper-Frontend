@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background-color: #1A0B1C;
-  --text-color: #F7F7FF;
+  --background-color: #1a0b1c;
+  --text-color: #f7f7ff;
 }
 
 body {
@@ -17,11 +17,11 @@ body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar {
-  width: .2em;
+  width: 0.2em;
 }
 
 ::-webkit-scrollbar-track {
-  background: #6F6F73;
+  background: #6f6f73;
   border-radius: 100vw;
 }
 
@@ -31,45 +31,52 @@ body::-webkit-scrollbar {
   margin-block: 0.2em;
 }
 
-@layer components{
+@layer components {
   .gradient-background {
-    @apply  tertiary-gradient transition-all delay-300
+    @apply tertiary-gradient transition-all delay-300;
+  }
+  .flex-2 {
+    flex: 2;
   }
   .xion .ui-backdrop-blur-lg {
-    
-    @apply  !bg-black/10 !backdrop-blur-sm
+    @apply !bg-black/10 !backdrop-blur-sm;
   }
   .xion .ui-bg-modal-overlay {
     background-image: none !important;
-    @apply  !bg-black/10 
+    @apply !bg-black/10;
   }
 }
 
 @keyframes gradient-animation {
   0% {
-    stop-color: #56235C;
+    stop-color: #56235c;
   }
   25% {
-    stop-color: #D43752;
+    stop-color: #d43752;
   }
   50% {
-    stop-color: #E4462D;
+    stop-color: #e4462d;
   }
   75% {
-    stop-color: #F8B810;
+    stop-color: #f8b810;
   }
   100% {
-    stop-color: #D43752;
+    stop-color: #d43752;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    --Gradient: linear-gradient(90deg, #D43752 0%, #E4462D 43.78%, #F8B810 150.15%);
+    --Gradient: linear-gradient(
+      90deg,
+      #d43752 0%,
+      #e4462d 43.78%,
+      #f8b810 150.15%
+    );
     background: var(--Gradient);
     background-clip: text;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;  
+    -webkit-text-fill-color: transparent;
   }
 }
 
@@ -94,39 +101,60 @@ body::-webkit-scrollbar {
 }
 
 .shape-animation stop:nth-child(6) {
-  animation-delay: 1.8s
+  animation-delay: 1.8s;
 }
 
-.shape-animation stop{
-  animation: gradient-animation 2.2s ease-in-out infinite alternate
+.shape-animation stop {
+  animation: gradient-animation 2.2s ease-in-out infinite alternate;
 }
 
 .main-gradient {
-  background: linear-gradient(90deg, #56235C 0%, #D43752 25.18%, #E4462D 75.44%, #F8B810 100%);
+  background: linear-gradient(
+    90deg,
+    #56235c 0%,
+    #d43752 25.18%,
+    #e4462d 75.44%,
+    #f8b810 100%
+  );
 }
 
 .success-gradient {
-  background: linear-gradient(90deg, #29499C 0%, #56235C 99.62%);
+  background: linear-gradient(90deg, #29499c 0%, #56235c 99.62%);
 }
 
 .error-gradient {
-  background: linear-gradient(90deg, #29499C 0%, #56235C 0%, #D43752 0%, #E4462D 100%);
+  background: linear-gradient(
+    90deg,
+    #29499c 0%,
+    #56235c 0%,
+    #d43752 0%,
+    #e4462d 100%
+  );
 }
 
 .secondary-gradient {
-  background: linear-gradient(90deg, #E85A29 0%, #F8B810 100%);
+  background: linear-gradient(90deg, #e85a29 0%, #f8b810 100%);
 }
 
 .tertiary-gradient {
-  background: linear-gradient(90deg, #D43752 0%, #E4462D 56.53%, #F8B810 181.25%);
+  background: linear-gradient(
+    90deg,
+    #d43752 0%,
+    #e4462d 56.53%,
+    #f8b810 181.25%
+  );
 }
 
 .notification-dropdown-gradient {
-  background: linear-gradient(90deg, #fff 0%, #ffffff33  90%);
+  background: linear-gradient(90deg, #fff 0%, #ffffff33 90%);
 }
 
 .loading-gradient {
-  background: linear-gradient(90deg, rgba(152, 147, 152, 0.75) 0%, rgba(255, 255, 255, 0.00) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(152, 147, 152, 0.75) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -172,8 +200,13 @@ body::-webkit-scrollbar {
 }
 
 .injective-background {
-background: radial-gradient(72.72% 72.72% at 38.3% 0%, rgba(92, 92, 255, 0.20) 0%, rgba(0, 0, 0, 0.00) 100%), #1A0B1C !important;
-background-blend-mode: multiply, normal, normal;
+  background: radial-gradient(
+      72.72% 72.72% at 38.3% 0%,
+      rgba(92, 92, 255, 0.2) 0%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    #1a0b1c !important;
+  background-blend-mode: multiply, normal, normal;
 }
 
 .gradient-checkbox {
@@ -183,15 +216,22 @@ background-blend-mode: multiply, normal, normal;
 }
 
 .gradient-checkbox input:checked + .checkbox-label::before {
-  content: '';
+  content: "";
   width: 1.5rem;
   height: 1.5rem;
-  background: linear-gradient(90deg, #D43752 0%, #E4462D 56.53%, #F8B810 181.25%);
+  background: linear-gradient(
+    90deg,
+    #d43752 0%,
+    #e4462d 56.53%,
+    #f8b810 181.25%
+  );
   border-radius: 0.375rem;
   margin-right: 0.5rem;
 }
 
 .confirmBtn {
-  background: var(--Gadient, linear-gradient(90deg, #D43752 0%, #E4462D 43.78%, #F8B810 150.15%)) !important;
-} 
-
+  background: var(
+    --Gadient,
+    linear-gradient(90deg, #d43752 0%, #e4462d 43.78%, #f8b810 150.15%)
+  ) !important;
+}
