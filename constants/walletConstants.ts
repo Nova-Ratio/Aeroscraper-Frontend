@@ -26,7 +26,9 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
     //     WalletType.LEDGER,
     //     WalletType.COSMOSTATION
     // 
-]
+],
+    [ChainName.XION]: [
+    ]
 }
 
 export const InjSdkWalletByCosmosWallet: Record<WalletType, Wallet> = {

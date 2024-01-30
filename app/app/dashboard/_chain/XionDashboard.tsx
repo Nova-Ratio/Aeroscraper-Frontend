@@ -14,6 +14,35 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import XionStatisticSide from "../_components/Injective/XionStatisticSide";
 import XionTabsSide, { XionTabs } from "../_components/Injective/XionTabsSide";
+import { useAbstraxionAccount, useAbstraxionSigningClient } from "@/hooks/xion";
+
+import type { ExecuteResult } from "@cosmjs/cosmwasm-stargate";
+import { BaseCoinByChainName } from "@/constants/chainConstants";
+import { coin } from "@cosmjs/proto-signing";
+import { getRequestAmount } from "@/utils/contractUtils";
+type ExecuteResultOrUndefined = ExecuteResult | undefined;
+/* const msg = {
+      sales: {
+        claim_item: {
+          token_id: String(getTimestampInSeconds(now)),
+          owner: account?.bech32Address,
+          token_uri: "",
+          extension: {},
+        },
+      },
+    }; */
+    /* if (chainName === ChainName.ARCHWAY) {
+            return await client.execute(
+                senderAddress,
+                contractAddress,
+                { open_trove: { loan_amount: getRequestAmount(loanAmount, baseCoin.ausdDecimal) } },
+                "auto",
+                "Open Trove",
+                [coin(getRequestAmount(amount, baseCoin.decimal), BaseCoinByChainName[chainName].denom)]
+            )
+        } */
+const contractAddress =
+  "xion1dc65trmzy9medu3zq3gzc37jgd594av8x78g37k08knka6ngts4q7kqh70";
 
 export default function XionDashboard() {
   const [basePrice, setBasePrice] = useState(1);
@@ -22,11 +51,99 @@ export default function XionDashboard() {
 
   const { processLoading } = useNotification();
 
-
-
   const changeTabPosition = useCallback((e: XionTabs) => {
     setTabPosition(e);
   }, []);
+  const { data: account } = useAbstraxionAccount();
+  const { client } = useAbstraxionSigningClient();
+  /* client?.sendTokens(
+
+  ) */
+  const [executeResult, setExecuteResult] =
+    useState<ExecuteResultOrUndefined>(undefined);
+
+  const blockExplorerUrl = `https://explorer.burnt.com/xion-testnet-1/tx/${executeResult?.transactionHash}`;
+  const [loading, setLoading] = useState(false);
+
+  const now = new Date();
+  now.setSeconds(now.getSeconds() + 15);
+  const oneYearFromNow = new Date();
+  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+
+  function getTimestampInSeconds(date: Date | null) {
+    if (!date) return 0;
+    const d = new Date(date);
+    return Math.floor(d.getTime() / 1000);
+  }
+
+  async function openTrove() {
+    setLoading(true);
+    
+    try {
+      const claimRes: any =
+        account?.bech32Address &&
+        (await client?.execute(
+          account?.bech32Address,
+          contractAddress,//xion1dc65trmzy9medu3zq3gzc37jgd594av8x78g37k08knka6ngts4q7kqh70
+          {
+            open_trove: {
+              loan_amount: getRequestAmount(10, 6),
+            },
+          }, //msg,
+          {
+            amount: [{ amount: "0", denom: "uxion" }],
+            gas: "500000",
+          },
+          "Open Trove",
+          [coin(getRequestAmount(10, 6), BaseCoinByChainName["xion"].denom)]
+        ));
+      console.log("claimRes", claimRes);
+
+      claimRes && setExecuteResult(claimRes);
+    } catch (error) {
+      // eslint-disable-next-line no-console -- No UI exists yet to display errors
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function claimSeat() {
+    setLoading(true);
+    const msg = {
+      sales: {
+        claim_item: {
+          token_id: String(getTimestampInSeconds(now)),
+          owner: account?.bech32Address,
+          token_uri: "",
+          extension: {},
+        },
+      },
+    };
+
+    try {
+      const claimRes:any = await client?.execute(
+        //@ts-ignore
+        account?.bech32Address,
+        "xion1z70cvc08qv5764zeg3dykcyymj5z6nu4sqr7x8vl4zjef2gyp69s9mmdka",
+        msg,
+        {
+          amount: [{ amount: "0", denom: "uxion" }],
+          gas: "500000",
+        },
+        "",
+        [],
+      );
+        console.log("claimRes", claimRes);
+        
+      setExecuteResult(claimRes);
+
+    } catch (error) {
+      // eslint-disable-next-line no-console -- No UI exists yet to display errors
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="h-screen">
@@ -116,6 +233,13 @@ export default function XionDashboard() {
         </motion.div>
       )}
       <div className="flex gap-4 flex-col md:flex-row md:gap-24 z-10 relative md:min-h-[720px] ">
+        <button onClick={openTrove}
+          className="
+        bg-white px-6 py-2 rounded-full text-black font-semibold text-sm md:text-base
+        "
+        >
+          Trove
+        </button>
         <XionStatisticSide basePrice={basePrice} />
         <XionTabsSide setTabPosition={changeTabPosition} />
       </div>

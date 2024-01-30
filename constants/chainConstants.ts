@@ -42,6 +42,14 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         decimal: 6,
         ausdDecimal: 6
     },
+    [ChainName.XION]:{
+        name: "Xion",
+        denom: "uxion",
+        image: "/images/token-images/xion.svg",
+        tokenImage: "/images/token-images/xion.svg",
+        decimal: 6,
+        ausdDecimal: 6,
+    }
 }
 
 export const TransactionDomainByChainName: Record<ChainName, { accountUrl: string, txDetailUrl: string }> = {
@@ -61,6 +69,10 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
         txDetailUrl: "https://neutron.celat.one/transactions/",
         accountUrl: "https://neutron.celat.one/account/"
     },
+    [ChainName.XION]: {
+        txDetailUrl: "https://explorer.burnt.com/xion-testnet-1/tx/",
+        accountUrl: "https://xion.explorers.guru/account/"
+    }
 }
 
 export const getContractAddressesByChain = (chainName?: ChainName) => {
@@ -103,4 +115,5 @@ export const ChainImagesByName: Record<ChainName, string> = {
     [ChainName.ARCHWAY]: "/images/token-images/archway-coin.png",
     [ChainName.INJECTIVE]: "/images/token-images/inj.svg",
     [ChainName.NEUTRON]: "/images/token-images/neutron.svg",
+    [ChainName.XION]: "/images/token-images/xion.svg"
 }
