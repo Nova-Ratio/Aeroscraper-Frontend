@@ -309,6 +309,8 @@ export const getAppContract = (
                 funds: [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
             })
 
+            console.log(msg, msg1)
+
             return await msgBroadcastClient.broadcast({
                 msgs: [msg, msg1],
                 injectiveAddress: senderAddress,
