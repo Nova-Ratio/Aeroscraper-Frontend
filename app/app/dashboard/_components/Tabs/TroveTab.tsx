@@ -85,8 +85,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
-      borrowAmount > 999 ||
-      openTroveAmount > 999 ||
+      borrowAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      openTroveAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
         convertAmount(
@@ -133,7 +133,6 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
           pageData.debtAmount,
     [borrowingAmount, selectedCollateral]
   );
-  console.log("pageData.debtAmount", pageData.debtAmount);
   
   const repayDisabled = useMemo(
     () =>

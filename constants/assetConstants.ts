@@ -50,11 +50,11 @@ const neutronAsset: CollateralAsset = {
 }
 
 const xionAsset: CollateralAsset = {
-    name: "Xion",
-    shortName: "XION",
+    name: "Aeroscraper Token",
+    shortName: "AST",
     denom: "uxion",
-    decimal: 6,
-    ausdDecimal: 6,
+    decimal: 18,
+    ausdDecimal: 18,
     imageURL: "/images/token-images/xion.png",
     priceId: "",
     priceServiceUrl: "",

@@ -1,6 +1,8 @@
+import useAppContract from '@/contracts/app/useAppContract';
 import { ChainName } from '@/enums/Chain';
 import useChainAdapter from '@/hooks/useChainAdapter';
 import { useAbstraxionSigningClient } from '@/hooks/xion';
+import { getRequestAmount } from '@/utils/contractUtils';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Coin } from '@cosmjs/proto-signing';
 import { Dictionary, isNil } from 'lodash';
@@ -21,7 +23,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
     const { chain, address, baseCoin, selectedChainName } = useChainAdapter();
     const { client: absraxionClient } = useAbstraxionSigningClient();
     const [balanceByDenom, setBalanceByDenom] = useState<Dictionary<Coin | undefined>>({});
-
+    const contract = useAppContract();
     const getBalances = useCallback(async () => {
         try {
             if (!address || !baseCoin) return;
@@ -29,7 +31,13 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
             if (selectedChainName === ChainName.XION) {
                 if (isNil(absraxionClient)) return;
 
-                const balance = await absraxionClient.getBalance(address, baseCoin.denom);
+                //const balance = await absraxionClient.getBalance(address, baseCoin.denom);
+                const getbalance = await contract.getCustomTokenBalance();
+                
+                const balance = {
+                    denom: baseCoin.denom,
+                    amount: getbalance?.balance || "0"
+                }
                 setBalanceByDenom({ [balance.denom]: balance });
             }
             else {

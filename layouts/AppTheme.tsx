@@ -4,7 +4,7 @@ import { ExitIcon, LogoSecondary } from "@/components/Icons/Icons";
 import NotificationDropdown from "@/app/app/dashboard/_components/NotificationDropdown";
 import { isNil } from "lodash";
 import AccountModal from "@/components/AccountModal/AccountModal";
-import { convertAmount } from "@/utils/contractUtils";
+import { convertAmount, getIsInjectiveResponse } from "@/utils/contractUtils";
 import NotificationModal from "@/components/Modal/NotificationModal";
 import WalletButton from "@/components/Buttons/WalletButton";
 import useChainAdapter from "@/hooks/useChainAdapter";
@@ -18,6 +18,7 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import Swal from "sweetalert2";
 import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
+import useAppContract from "@/contracts/app/useAppContract";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -33,15 +34,29 @@ const AppTheme = () => {
     disconnect,
     disconnectMetamask,
     disconnectXion,
+    basePrice
   } = useChainAdapter();
   const { addNotification } = useNotification();
   const { balanceByDenom } = useBalances();
-
-  const { basePrice } = useChainAdapter();
   const { pageData, getPageData } = usePageData();
-
+  const contract = useAppContract();
   const { profileDetail } = useProfile();
-
+  async function Mint() {
+    try {
+      const res: any = await contract.mint();
+      console.log(res);
+      
+      addNotification({
+        status: "success",
+        directLink: getIsInjectiveResponse(res)
+          ? res?.txHash
+          : res?.transactionHash,
+        message: `${pageData.rewardAmount} ${baseCoin?.name} Reward Received`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
@@ -60,7 +75,7 @@ const AppTheme = () => {
     if (
       window.ethereum &&
       typeof window !== "undefined" &&
-      selectedWallet === WalletType.METAMASK &&
+      selectedWallet === WalletType.METAMASK && selectedChainName === ChainName.INJECTIVE &&
       isWalletConnected
     ) {
       const getChainId = async () => {
@@ -115,7 +130,7 @@ const AppTheme = () => {
             color: "#fff",
             confirmButtonText: "Change Network",
             customClass: {
-              icon:"!bg-[#150A17] w-[150px] h-auto !border-0",
+              icon: "!bg-[#150A17] w-[150px] h-auto !border-0",
               confirmButton:
                 "w-full md:w-[350px] py-2 px-8 h-[50px] text-base font-normal confirmBtn md:mb-8",
               htmlContainer: "!text-white/50 !text-sm md:mb-3",
@@ -164,6 +179,12 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
+          <button
+            onClick={Mint}
+            className="bg-white border rounded-md py-2 px-4 flex justify-center mr-8"
+          >
+            MINT
+          </button>
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
             <img

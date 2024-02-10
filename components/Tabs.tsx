@@ -70,8 +70,6 @@ function Tabs({
     }
   };
 
-  console.log(scrollPosition);
-
   if (loading) {
     return (
       <nav>
