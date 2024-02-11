@@ -58,7 +58,7 @@ export const getEncodedExecuteJsonMsg = (sender: string, contract: string, msg: 
 }
 
 export const getRequestAmount = (value: string | number, decimal: number = DEFAULT_DECIMAL) => {
-    return Math.floor((Number(value) * Math.pow(10, decimal))).toString();
+    return Math.floor((Number(value) * Math.pow(10, decimal))).toLocaleString('fullwide', { useGrouping: false });
 }
 
 export const convertAmount = (value: string | number, decimal: number = DEFAULT_DECIMAL) => {
