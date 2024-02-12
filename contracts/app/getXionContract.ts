@@ -240,7 +240,7 @@ export const getXionContract = (
   
 
   const borrowLoan = async (senderAddress: string, amount: number) => {
-    /* return await client?.execute(
+    return await client?.execute(
       senderAddress,
       contractAddress,
       {
@@ -253,8 +253,8 @@ export const getXionContract = (
         gas: "500000",
       },
       "Borrow Loan"
-    ); */
-    const msg = getMsg(amount, defaultAsset, {
+    );
+    /* const msg = getMsg(amount, defaultAsset, {
       borrow_loan: {
         loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal),
       },
@@ -268,7 +268,7 @@ export const getXionContract = (
         gas: "500000",
       },
       "Borrow Loan"
-    );
+    ); */
   };
 
   const repayLoan = async (senderAddress: string, amount: number) => {

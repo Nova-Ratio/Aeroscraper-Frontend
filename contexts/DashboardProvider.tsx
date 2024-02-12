@@ -107,7 +107,6 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setTroveLoading(true);
             const troveRes = await contract.getTrove();
-            console.log("troveRes",troveRes);
             
             if (isNil(troveRes)) throw new Error('Trove is undefined');
 
@@ -126,7 +125,6 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     denom: baseCoin?.denom ?? ''
                 }]
             }
-            console.log("baseCoin?.denom",DefaultAssetByChainName[ChainName.XION].decimal,);
             
             const debtAmount = convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal);
 
@@ -145,8 +143,6 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                 }
             }, {});
             const baseCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? collateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount ?? 0 :   collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-
-            console.log("baseCollateralAmount",baseCollateralAmount);
             
 
             const minCollateralRatioByDenom = Object.entries(collateralAmountsByDenom).reduce<Record<string, number>>((acc, [denom, collateralInfo]) => {
