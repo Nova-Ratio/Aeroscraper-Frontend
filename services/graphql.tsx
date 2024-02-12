@@ -1,18 +1,15 @@
 "use client";
 import { ChainName } from "@/enums/Chain";
 import {
-  AppVersion,
   RiskyTrovesResponse,
   TotalTrovesResponse,
 } from "@/types/types";
 import { request, gql } from "graphql-request";
 
 export default function graphql({
-  selectedChainName = ChainName.INJECTIVE,
-  selectedAppVersion = AppVersion.V1,
+  selectedChainName = ChainName.INJECTIVE
 }: {
   selectedChainName?: ChainName;
-  selectedAppVersion: AppVersion;
 }) {
   const URL = (): string => {
     switch (selectedChainName) {
@@ -23,10 +20,7 @@ export default function graphql({
       case ChainName.NEUTRON:
         return process.env.NEXT_PUBLIC_INDEXER_NEUTRON as string;
       case ChainName.INJECTIVE:
-        if (selectedAppVersion === AppVersion.V1) {
-          return process.env.NEXT_PUBLIC_INDEXER_INJ_V1 as string;
-        }
-        return process.env.NEXT_PUBLIC_INDEXER_INJ_V2 as string;
+        return process.env.NEXT_PUBLIC_INDEXER_INJ as string;
       case ChainName.XION:
         return process.env.NEXT_PUBLIC_INDEXER_XION as string;
       default:
@@ -46,7 +40,7 @@ export default function graphql({
           }
         `
       : selectedChainName === ChainName.XION
-      ? gql`
+        ? gql`
           query {
             troves {
               nodes {
@@ -56,7 +50,7 @@ export default function graphql({
             }
           }
         `
-      : gql`
+        : gql`
           query {
             troves {
               nodes {

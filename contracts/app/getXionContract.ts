@@ -10,7 +10,6 @@ import {
 } from "./types";
 import {
   AbstractionClient,
-  AppVersion,
   BaseCoin,
   CollateralAsset,
 } from "@/types/types";
@@ -30,7 +29,7 @@ export const getXionContract = (
     customTokenMinter,
     ausdContractAddress,
     cw20CustomToken,
-  } = getContractAddressesByChain(AppVersion.V2, ChainName.XION);
+  } = getContractAddressesByChain(ChainName.XION);
 
   const getTotalCollateralAmounts = async (): Promise<
     TotalCollateralModel | undefined
@@ -75,7 +74,7 @@ export const getXionContract = (
   const getAusdBalance = async (
     address: string
   ): Promise<CW20BalanceResponse> => {
-    let balance =  await client?.queryContractSmart(ausdContractAddress, {
+    let balance = await client?.queryContractSmart(ausdContractAddress, {
       balance: { address },
     });
     return balance;
@@ -139,7 +138,7 @@ export const getXionContract = (
     asset: CollateralAsset = defaultAsset
   ) => {
     console.log("senderAddress", senderAddress);
-    
+
     console.log("amount", getRequestAmount(amount, asset.decimal));
     console.log("loanAmount", getRequestAmount(loanAmount, asset.ausdDecimal));
     /* const msg = {
@@ -159,7 +158,7 @@ export const getXionContract = (
       },
     });
     console.log("msg", msg);
-    
+
     return await client?.execute(
       senderAddress,
       cw20CustomToken as string,
@@ -220,24 +219,24 @@ export const getXionContract = (
         gas: "500000",
       },
       "Remove Collateral"
-      );
-   /*  const msg = getMsg(amount, asset, {
-      remove_collateral: {
-        collateral_amount: getRequestAmount(amount, asset.decimal),
-      },
-    });
-    return await client?.execute(
-      senderAddress,
-      cw20CustomToken as string,
-      msg,
-      {
-        amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
-      },
-      "Remove Collateral"
-    ); */
+    );
+    /*  const msg = getMsg(amount, asset, {
+       remove_collateral: {
+         collateral_amount: getRequestAmount(amount, asset.decimal),
+       },
+     });
+     return await client?.execute(
+       senderAddress,
+       cw20CustomToken as string,
+       msg,
+       {
+         amount: [{ amount: "0", denom: "uxion" }],
+         gas: "500000",
+       },
+       "Remove Collateral"
+     ); */
   };
-  
+
 
   const borrowLoan = async (senderAddress: string, amount: number) => {
     return await client?.execute(

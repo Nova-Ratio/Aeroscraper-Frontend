@@ -40,7 +40,7 @@ type Props = {
 const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmount }) => {
   const contract = useAppContract();
   const { balanceByDenom, refreshBalance } = useBalances();
-  const { selectedChainName, selectedAppVersion } = useChainAdapter();
+  const { selectedChainName } = useChainAdapter();
 
   const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
   const [borrowAmount, setBorrowAmount] = useState<number>(0);
@@ -333,7 +333,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
     if (selectedChainName) {
       setSelectedAsset(DefaultAssetByChainName[selectedChainName]);
     }
-  }, [selectedChainName, selectedTab, selectedAppVersion]);
+  }, [selectedChainName, selectedTab]);
 
   return (
     <div className="overflow-hidden md:overflow-visible">

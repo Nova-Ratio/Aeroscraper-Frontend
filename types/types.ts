@@ -11,14 +11,7 @@ export type RiskyTrovesResponse = {
     }
 }
 
-export type RiskyTrovesModelV1 = {
-    owner: string;
-    liquidityThreshold: number;
-    collateralAmount: number;
-    debtAmount: number;
-}
-
-export type RiskyTrovesModelV2 = {
+export type RiskyTrovesModel = {
     owner: string;
     liquidityThreshold: number;
     collateralAmounts: CollateralInfo[];
@@ -46,11 +39,6 @@ export type WalletInfo = {
     name: string;
     prettyName: string;
     logo: string;
-}
-
-export enum AppVersion {
-    V1 = "Version 1",
-    V2 = "Version 2"
 }
 
 export type CollateralAsset = {

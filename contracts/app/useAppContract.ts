@@ -12,7 +12,6 @@ import { getXionContract } from "./getXionContract";
 
 const useAppContract = () => {
   const {
-    selectedAppVersion,
     isWalletConnected,
     baseCoin,
     walletInfo,
@@ -39,7 +38,6 @@ const useAppContract = () => {
             ? getAppEthContract(
                 chain,
                 baseCoin,
-                selectedAppVersion,
                 selectedChainName ?? ChainName.INJECTIVE,
                 walletInfo.name as WalletType
               )
@@ -48,7 +46,6 @@ const useAppContract = () => {
           ? getAppContract(
               client,
               baseCoin,
-              selectedAppVersion,
               selectedChainName ?? ChainName.INJECTIVE,
               walletInfo.name as WalletType
             )
@@ -61,7 +58,6 @@ const useAppContract = () => {
       selectedChainName,
       chain,
       client,
-      selectedAppVersion,
       abstraxionClient,
     ]
   );

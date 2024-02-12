@@ -6,22 +6,15 @@ import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
 import ClaimRewardTab from "./Tabs/ClaimRewardTab";
 import LeaderboardTab from "./Tabs/LeaderboardTab";
 import RedeemTab from "./Tabs/RedeemTab";
-import RiskyTrovesTabV1 from "./Tabs/RiskyTrovesTabV1";
 import StabilityPoolTab from "./Tabs/StabilityPoolTab";
 import TroveTab from "./Tabs/TroveTab";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AppVersion } from "@/types/types";
-import RiskyTrovesTabV2 from "./Tabs/RiskyTrovesTabV2";
+import RiskyTrovesTab from "./Tabs/RiskyTrovesTab";
 import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { ChainName } from "@/enums/Chain";
-import useAppContract from "@/contracts/app/useAppContract";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
-import { useNotification } from "@/contexts/NotificationProvider";
-import GradientButton from "@/components/Buttons/GradientButton";
-import Text from "@/components/Texts/Text";
 import MintTap from "./Tabs/MintTab";
 
 interface Props {
@@ -45,7 +38,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { basePrice, walletInfo, selectedAppVersion, baseCoin } =
+  const { basePrice, walletInfo, baseCoin } =
     useChainAdapter();
   const { pageData, getPageData, loading } = usePageData();
   const { refreshBalance } = useBalances();
@@ -98,7 +91,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
       setSelectedTab(params.get("tab") as DashboardTabs);
     }
   }, []);
- 
+
   const handleChangeTab = (e: DashboardTabs) => {
     router.push(`/app/dashboard?tab=${e}`);
 
@@ -158,9 +151,8 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className={`md:mt-6 ${
-            isNil(walletInfo) ? "blur-[2px]" : ""
-          } relative`}
+          className={`md:mt-6 ${isNil(walletInfo) ? "blur-[2px]" : ""
+            } relative`}
         >
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
@@ -169,7 +161,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
           {selectedTab === "faucet" && (
-            <MintTap getPageData={getPageData} pageData={pageData} /> 
+            <MintTap getPageData={getPageData} pageData={pageData} />
           )}
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
             <TroveTab
@@ -191,17 +183,11 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
             />
           )}
           {selectedTab === "riskyTroves" &&
-            (selectedAppVersion === AppVersion.V1 ? (
-              <RiskyTrovesTabV1
-                getPageData={getPageData}
-                basePrice={basePrice}
-              />
-            ) : (
-              <RiskyTrovesTabV2
-                getPageData={getPageData}
-                basePrice={basePrice}
-              />
-            ))}
+            <RiskyTrovesTab
+              getPageData={getPageData}
+              basePrice={basePrice}
+            />
+          }
           {selectedTab === "rewards" && (
             <ClaimRewardTab
               pageData={pageData}

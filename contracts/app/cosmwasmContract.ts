@@ -3,7 +3,7 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponseV1, GetTroveResponseV2 } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
-import { AppVersion, BaseCoin, CollateralAsset } from "@/types/types";
+import { BaseCoin, CollateralAsset } from "@/types/types";
 import { BaseCoinByChainName, priceIdByChainName } from "@/constants/chainConstants";
 import { ChainGrpcWasmApi, fromBase64, toBase64, MsgExecuteContract } from "@injectivelabs/sdk-ts";
 import { Network } from "@injectivelabs/networks";
@@ -24,12 +24,11 @@ const injectivePrivRest = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_REST as string;
 export const getAppContract = (
     client: SigningCosmWasmClient,
     baseCoin: BaseCoin,
-    appVersion: AppVersion,
     chainName: ChainName,
     walletType?: WalletType
 ) => {
     const defaultAsset = DefaultAssetByChainName[chainName];
-    const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(appVersion, chainName);
+    const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
 
     const injSdkWallet = walletType ? InjSdkWalletByCosmosWallet[walletType as WalletType] : Wallet.Keplr;
     const walletStrategy = new WalletStrategy({
@@ -62,12 +61,8 @@ export const getAppContract = (
             throw new Error("Error getting client")
         }
 
-        const priceId = appVersion === AppVersion.V1 || isNil(asset) ?
-            priceIdByChainName[chainName].priceId :
-            asset.priceId;
-        const serviceUrl = appVersion === AppVersion.V1 || isNil(asset) ?
-            priceIdByChainName[chainName].serviceUrl :
-            asset.priceServiceUrl;
+        const priceId = isNil(asset) ? priceIdByChainName[chainName].priceId : asset.priceId;
+        const serviceUrl = isNil(asset) ? priceIdByChainName[chainName].serviceUrl : asset.priceServiceUrl;
 
         const connection = new PriceServiceConnection(serviceUrl,
             {

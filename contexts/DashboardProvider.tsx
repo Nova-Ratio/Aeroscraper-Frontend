@@ -9,11 +9,10 @@ import useAppContract from '@/contracts/app/useAppContract';
 import { ChainName } from '@/enums/Chain';
 import useChainAdapter from '@/hooks/useChainAdapter';
 import graphql from '@/services/graphql';
-import { AppVersion } from '@/types/types';
 import { convertAmount } from '@/utils/contractUtils';
 import axios from 'axios';
-import { chain, isNil } from 'lodash';
-import { DefaultAssetByChainName, assetByDenom } from '@/constants/assetConstants';
+import { isNil } from 'lodash';
+import { DefaultAssetByChainName } from '@/constants/assetConstants';
 
 const FilterParamByChainName: Record<ChainName, string> = {
     [ChainName.INJECTIVE]: 'INJECTIVE',
@@ -55,10 +54,10 @@ const DashboardContext = React.createContext<DashboardContextValue>({
 
 const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>();
-    const { selectedAppVersion, selectedChainName, baseCoin } = useChainAdapter();
+    const { selectedChainName, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
 
-    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE, selectedAppVersion }), [selectedChainName, selectedAppVersion]);
+    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
     const contract = useAppContract();
 
     const [pageData, setPageData] = useState<PageData>({
@@ -107,7 +106,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setTroveLoading(true);
             const troveRes = await contract.getTrove();
-            
+
             if (isNil(troveRes)) throw new Error('Trove is undefined');
 
             let collateralAmounts: CollateralAmount[] = [];
@@ -125,11 +124,11 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     denom: baseCoin?.denom ?? ''
                 }]
             }
-            
+
             const debtAmount = convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal);
 
             const collateralAmountsByDenom = collateralAmounts.reduce<Record<string, CollateralInfo>>((acc, item) => {
-               
+
                 const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : BaseCoinByDenom[item.denom]?.decimal ?? 0;
                 const amount = convertAmount(item.amount, decimal);
                 const denom = item.denom;
@@ -142,23 +141,23 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }
             }, {});
-            const baseCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? collateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount ?? 0 :   collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-            
+            const baseCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? collateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount ?? 0 : collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+
 
             const minCollateralRatioByDenom = Object.entries(collateralAmountsByDenom).reduce<Record<string, number>>((acc, [denom, collateralInfo]) => {
-                const basePrice =  coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
-                console.log("basePrice", basePrice,denom);
-                
+                const basePrice = coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
+                console.log("basePrice", basePrice, denom);
+
                 return {
                     ...acc,
                     [denom]: (collateralInfo.amount * basePrice) / (debtAmount || 1)
                 };
             }, {})
-            
+
             //const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.denom ?? ''] ?? 0;
             const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.cw20Denom ?? ''] ?? 0;
             console.log("baseMinCollateralRatio", baseMinCollateralRatio);
-            
+
 
             setPageData(prev => ({
                 ...prev,
@@ -216,7 +215,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
             setPageData(prev => ({
                 ...prev,
-                stakedAmount: convertAmount(stakeRes?.amount ?? 0,decimal),
+                stakedAmount: convertAmount(stakeRes?.amount ?? 0, decimal),
                 poolShare: Number(Number(stakeRes?.percentage).toFixed(6))
             }))
         }
@@ -279,7 +278,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             setTotalInfoLoading(true);
             let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
 
-            if (selectedChainName === ChainName.INJECTIVE && selectedAppVersion === AppVersion.V2) {
+            if (selectedChainName === ChainName.INJECTIVE) {
                 chainNameQuery = `${chainNameQuery}2`;
             }
 
@@ -304,10 +303,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
 
-            const baseTotalCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? totalCollateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount :  totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+            const baseTotalCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? totalCollateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount : totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
             console.log();
-            
-                
+
+
             setPageData(prev => ({
                 ...prev,
                 totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
@@ -329,7 +328,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         finally {
             setTotalInfoLoading(false);
         }
-    }, [selectedAppVersion, selectedChainName, baseCoin])
+    }, [selectedChainName, baseCoin])
 
     const getPageData = useCallback(() => {
         getTrove()

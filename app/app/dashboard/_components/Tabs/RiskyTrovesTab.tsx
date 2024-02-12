@@ -1,18 +1,16 @@
-import GradientButton from '@/components/Buttons/GradientButton';
-import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import { Table } from '@/components/Table/Table';
 import { TableBodyCol } from '@/components/Table/TableBodyCol';
 import { TableHeaderCol } from '@/components/Table/TableHeaderCol';
 import { useNotification } from '@/contexts/NotificationProvider';
 import useAppContract from '@/contracts/app/useAppContract';
 
-import { RiskyTrovesModelV2 } from '@/types/types';
+import { RiskyTrovesModel } from '@/types/types';
 import { getIsInjectiveResponse, convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NumericFormat } from 'react-number-format';
 import Text from '@/components/Texts/Text';
-import { ChevronUpIcon, RocketIcon } from '@/components/Icons/Icons';
+import { RocketIcon } from '@/components/Icons/Icons';
 import graphql from '@/services/graphql';
 import { delay } from '@/utils/promiseUtils';
 import useChainAdapter from '@/hooks/useChainAdapter';
@@ -21,31 +19,28 @@ import { CollateralInfo, isV2TroveResponse } from '@/contracts/app/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import { usePrice } from '@/contexts/PriceProvider';
 import { DefaultAssetByChainName, assetByDenom } from '@/constants/assetConstants';
-import Dropdown from '@/components/Dropdown/Dropdown';
-import BorderedContainer from '@/components/Containers/BorderedContainer';
-import { isNil } from 'lodash';
 
 type Props = {
     getPageData: () => void;
     basePrice: number;
 }
 
-const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
+const RiskyTrovesTab: FC<Props> = ({ getPageData, basePrice }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-    const { selectedChainName = ChainName.INJECTIVE, selectedAppVersion, baseCoin } = useChainAdapter();
+    const { selectedChainName = ChainName.INJECTIVE, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
     const contract = useAppContract();
     const [loading, setLoading] = useState(true);
-    const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV2[]>([]);
+    const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModel[]>([]);
     const { addNotification, setProcessLoading, processLoading } = useNotification();
 
-    const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName, selectedAppVersion }), [selectedChainName, selectedAppVersion]);
+    const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName }), [selectedChainName]);
 
     const liquidateTroves = async (address: string) => {
         try {
             setProcessLoading(true);
 
-            const res:any = await contract.liquidateTrovesV2(address);
+            const res: any = await contract.liquidateTrovesV2(address);
             addNotification({
                 status: 'success',
                 directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
@@ -160,7 +155,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                     </div>}
                     bodyCss='space-y-1 max-h-[350px] overflow-auto overflow-x-hidden'
                     loading={loading}
-                    renderItem={(item: RiskyTrovesModelV2) => {
+                    renderItem={(item: RiskyTrovesModel) => {
                         return <div className="grid grid-cols-6 gap-4 border-b border-white/10">
                             <TableBodyCol col={2} text="XXXXXX" value={
                                 <Text size='xs' className='whitespace-nowrap text-start ml-4'>{getCroppedString(item.owner, 6, 8)}</Text>
@@ -269,4 +264,4 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
     )
 }
 
-export default RiskyTrovesTabV2
+export default RiskyTrovesTab

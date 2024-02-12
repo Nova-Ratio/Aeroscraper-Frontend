@@ -2,7 +2,7 @@ import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponseV1, GetTroveResponseV2 } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
-import { AppVersion, BaseCoin, CollateralAsset } from "@/types/types";
+import { BaseCoin, CollateralAsset } from "@/types/types";
 import { MsgExecuteContractCompat, ChainGrpcWasmApi, toBase64, fromBase64 } from "@injectivelabs/sdk-ts";
 import { Network } from "@injectivelabs/networks";
 import { EthereumChainId, ChainId } from "@injectivelabs/ts-types";
@@ -27,13 +27,12 @@ const injectivePrivRest = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_REST as string;
 export const getAppEthContract = (
   chain: Chain,
   baseCoin: BaseCoin,
-  appVersion: AppVersion,
   chainName: ChainName,
   walletType?: WalletType
 ) => {
   const defaultAsset = DefaultAssetByChainName[chainName];
   const { contractAddress, oraclecontractAddress, ausdContractAddress } =
-    getContractAddressesByChain(appVersion, chainName);
+    getContractAddressesByChain(chainName);
   const rpcUrl = injectivePrivRpc;
   const injSdkWallet = walletType
     ? InjSdkWalletByCosmosWallet[walletType as WalletType]
@@ -69,12 +68,8 @@ export const getAppEthContract = (
       throw new Error("Error getting client")
     }
 
-    const priceId = appVersion === AppVersion.V1 || isNil(asset) ?
-      priceIdByChainName[chainName].priceId :
-      asset.priceId;
-    const serviceUrl = appVersion === AppVersion.V1 || isNil(asset) ?
-      priceIdByChainName[chainName].serviceUrl :
-      asset.priceServiceUrl;
+    const priceId = isNil(asset) ? priceIdByChainName[chainName].priceId : asset.priceId;
+    const serviceUrl = isNil(asset) ? priceIdByChainName[chainName].serviceUrl : asset.priceServiceUrl;
 
     const connection = new PriceServiceConnection(serviceUrl,
       {
