@@ -29,7 +29,7 @@ interface Props {
 }
 
 export type DashboardTabs =
-  | "mint"
+  | "faucet"
   | "trove"
   | "createTrove"
   | "stabilityPool"
@@ -70,7 +70,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
       (tab) => tab !== "missions" && tab !== "leaderboard"
     );
     //TabList ilk sıraya push
-    TabList.unshift("mint");
+    TabList.unshift("faucet");
   }
 
   const [selectedTab, setSelectedTab] = useState<DashboardTabs>(
@@ -168,7 +168,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
-          {selectedTab === "mint" && (
+          {selectedTab === "faucet" && (
             <MintTap getPageData={getPageData} pageData={pageData} /> 
           )}
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (

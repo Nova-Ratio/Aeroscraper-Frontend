@@ -63,7 +63,7 @@ export default function Home() {
                 alt="audit"
               />
               <h3 className="tertiary-gradient-text auditCard-text">
-                Audit is complete!
+                Audit is completed!
               </h3>
             </div>
             <p>

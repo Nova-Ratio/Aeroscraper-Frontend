@@ -296,15 +296,21 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                             denom
                         }
                     }
+<<<<<<< HEAD
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
 
             const baseTotalCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? totalCollateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount :  totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
             console.log();
             
                 
+=======
+                }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, baseCoin?.decimal) } };
+            const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+                const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
+>>>>>>> e64fc6ff3d187c03daed0533aac3be330bbf9d19
             setPageData(prev => ({
                 ...prev,
-                totalStakedAmount: convertAmount(res.totalStake ?? 0, baseCoin?.decimal),
+                totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
                 baseTotalCollateralAmount,
                 totalCollateralAmountsByDenom,
                 totalDebtAmount: convertAmount(res.totalDebtAmount ?? 0, baseCoin?.ausdDecimal),
