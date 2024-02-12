@@ -173,6 +173,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           )}
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
             <TroveTab
+              colleteralAmount={pageData.baseCollateralAmount}
               pageData={pageData}
               getPageData={getPageData}
               basePrice={basePrice}

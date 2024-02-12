@@ -53,9 +53,10 @@ const xionAsset: CollateralAsset = {
     name: "Aeroscraper Token",
     shortName: "AST",
     denom: "uxion",
+    cw20Denom: "AST",
     decimal: 18,
     ausdDecimal: 18,
-    imageURL: "/images/token-images/xion.png",
+    imageURL: "/images/token-images/ast.svg",
     priceId: "",
     priceServiceUrl: "",
     oracleContractAddress: ''

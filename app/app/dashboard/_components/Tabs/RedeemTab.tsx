@@ -21,6 +21,8 @@ import {
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import useChainAdapter from "@/hooks/useChainAdapter";
+import { DefaultAssetByChainName, assetByDenom } from "@/constants/assetConstants";
+import { ChainName } from "@/enums/Chain";
 
 interface Props {
   pageData: PageData;
@@ -35,16 +37,13 @@ const RedeemTab: FC<Props> = ({
   refreshBalance,
   basePrice,
 }) => {
-  const { baseCoin } = useChainAdapter();
+  const { baseCoin, selectedChainName } = useChainAdapter();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
-  const [processLoading, setProcessLoading] = useState<boolean>(false);
+  
 
-  const [notification, setNotification] = useState<INotification | undefined>(
-    undefined
-  );
 
-  const notifications = useNotification();
+  const {addNotification,setProcessLoading,processLoading} = useNotification();
 
   const contract = useAppContract();
 
@@ -65,32 +64,24 @@ const RedeemTab: FC<Props> = ({
     [redeemAmount, pageData]
   );
 
-  useEffect(() => {
-    if (notification) {
-      setTimeout(() => {
-        setNotification(undefined);
-      }, 2000);
-    }
-  }, [notification]);
+
 
   const redeem = async () => {
     let transactionHash;
-
     try {
       setProcessLoading(true);
-      notifications.setProcessLoading(true);
-
+      
+      console.log("redeemAmount", redeemAmount);
       const res: any = await contract.redeem(redeemAmount);
+      console.log("res", res);
+      
 
       transactionHash = getIsInjectiveResponse(res)
         ? res?.txHash
         : res?.transactionHash;
-
-      setNotification({
-        status: "success",
-        directLink: transactionHash,
-      });
-      notifications.addNotification({
+      console.log("transactionHash", transactionHash);
+      
+      addNotification({
         status: "success",
         directLink: transactionHash,
         message: `${redeemAmount} AUSD has Redeemed, Received ${injAmount.toFixed(
@@ -102,14 +93,15 @@ const RedeemTab: FC<Props> = ({
       refreshBalance();
       setRedeemAmount(0);
     } catch (err) {
-      setNotification({
+      console.log("err", err);
+      
+      addNotification({
         status: "error",
         directLink: transactionHash,
       });
     }
 
     setProcessLoading(false);
-    notifications.setProcessLoading(false);
   };
 
   return (
@@ -163,7 +155,7 @@ const RedeemTab: FC<Props> = ({
             <div className="flex items-center gap-2">
               <img alt="token" src={baseCoin.tokenImage} className="w-6 h-6" />
               <Text size="base" weight="font-medium">
-                {baseCoin.name}
+                {selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName: baseCoin.name}
               </Text>
             </div>
           ) : (

@@ -32,6 +32,10 @@ export default function MintTap({
       });
     } catch (error) {
       console.log(error);
+      addNotification({
+        status: "error",
+        message: "Already minted today",
+      });
     } finally {
       setProcessLoading(false);
     }

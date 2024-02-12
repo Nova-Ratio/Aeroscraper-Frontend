@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react'
 import Text from '@/components/Texts/Text';
 import Loading from '../Loading/Loading';
 import Tooltip, { PLACEMENT_CLASSES } from '../Tooltip/Tooltip';
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 type Props = {
     startIcon?: React.ReactNode;
@@ -27,7 +27,7 @@ const GradientButton: React.FC<PropsWithChildren<Props>> = ({
 ) => {
 
     return (
-        <Tooltip placement={tooltipPlacement} active={!!rest.disabled && !isNil(disabledText)} title={<Text size='base'>{disabledText}</Text>} >
+        <Tooltip placement={tooltipPlacement} active={!!rest.disabled && !isNil(disabledText) && !isEmpty(disabledText)} title={<Text size='base'>{disabledText}</Text>} >
             <button
                 disabled={loading}
                 className={`py-5 ${className} main-gradient flex justify-between gap-2 items-center ${rounded} active:scale-95 transition-all disabled:opacity-60 disabled:active:scale-100 disabled:cursor-not-allowed`}

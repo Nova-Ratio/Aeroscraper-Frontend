@@ -45,10 +45,11 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
     [ChainName.XION]: {
         name: "XION",
         denom: "uxion",
+        cw20Denom: "AST",
         image: "/images/token-images/xion.png",
-        tokenImage: "/images/token-images/xion.png",
+        tokenImage: "/images/token-images/ast.svg",
         decimal: 6,
-        ausdDecimal: 6
+        ausdDecimal: 18
     }
 }
 

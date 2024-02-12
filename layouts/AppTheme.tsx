@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
 import useAppContract from "@/contracts/app/useAppContract";
+import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -264,7 +265,7 @@ const AppTheme = () => {
               ? Number(
                   convertAmount(
                     balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    baseCoin.decimal
+                    (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
                   )
                 )
               : 0,

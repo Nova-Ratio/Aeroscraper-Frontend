@@ -39,6 +39,7 @@ export type BaseCoin = {
     tokenImage: string,
     decimal: number,
     ausdDecimal: number
+    cw20Denom?: string
 }
 
 export type WalletInfo = {
@@ -62,6 +63,7 @@ export type CollateralAsset = {
     priceId: string;
     priceServiceUrl: string;
     oracleContractAddress: string;
+    cw20Denom?: string;
 }
 
 export type ChainInfo = {

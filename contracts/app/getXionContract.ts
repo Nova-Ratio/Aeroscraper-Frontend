@@ -75,9 +75,10 @@ export const getXionContract = (
   const getAusdBalance = async (
     address: string
   ): Promise<CW20BalanceResponse> => {
-    return await client?.queryContractSmart(ausdContractAddress, {
+    let balance =  await client?.queryContractSmart(ausdContractAddress, {
       balance: { address },
     });
+    return balance;
   };
   const getCustomTokenBalance = async (
     address: string
@@ -205,12 +206,13 @@ export const getXionContract = (
     amount: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    /* return await client?.execute(
+    return await client?.execute(
       senderAddress,
       contractAddress,
       {
         remove_collateral: {
           collateral_amount: getRequestAmount(amount, asset.decimal),
+          collateral_denom: asset.cw20Denom,
         },
       },
       {
@@ -218,8 +220,8 @@ export const getXionContract = (
         gas: "500000",
       },
       "Remove Collateral"
-      ); */
-    const msg = getMsg(amount, asset, {
+      );
+   /*  const msg = getMsg(amount, asset, {
       remove_collateral: {
         collateral_amount: getRequestAmount(amount, asset.decimal),
       },
@@ -233,7 +235,7 @@ export const getXionContract = (
         gas: "500000",
       },
       "Remove Collateral"
-    );
+    ); */
   };
   
 
@@ -337,7 +339,10 @@ export const getXionContract = (
       senderAddress,
       ausdContractAddress,
       msg,
-      "auto",
+      {
+        amount: [{ amount: "0", denom: "uxion" }],
+        gas: "600000",
+      },
       "Redeem"
     );
   };

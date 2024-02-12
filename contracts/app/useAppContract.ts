@@ -177,6 +177,8 @@ const useAppContract = () => {
 
   const redeem = useCallback(
     async (amount: number) => {
+      console.log("contract", contract, address, amount);
+      
       if (isNil(contract) || isNil(address)) return;
       return await contract.redeem(address, amount);
     },
