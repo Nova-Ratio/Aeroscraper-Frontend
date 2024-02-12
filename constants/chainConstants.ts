@@ -45,10 +45,11 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
     [ChainName.XION]: {
         name: "XION",
         denom: "uxion",
+        cw20Denom: "AST",
         image: "/images/token-images/xion.png",
-        tokenImage: "/images/token-images/xion.png",
+        tokenImage: "/images/token-images/ast.svg",
         decimal: 6,
-        ausdDecimal: 6
+        ausdDecimal: 18
     }
 }
 
@@ -119,6 +120,8 @@ export const getContractAddressesByChain = (appVersion: AppVersion, chainName?: 
             contractAddress: process.env.NEXT_PUBLIC_AERO_XION as string,
             ausdContractAddress: process.env.NEXT_PUBLIC_CW20_AUSD_XION as string,
             oraclecontractAddress: process.env.NEXT_PUBLIC_ORACLE_HELPER_XION as string,
+            cw20CustomToken: process.env.NEXT_PUBLIC_CW20_CUSTOM_TOKEN_XION as string,
+            customTokenMinter: process.env.NEXT_PUBLIC_CW20_MINTER_XION as string
         }
     }
 

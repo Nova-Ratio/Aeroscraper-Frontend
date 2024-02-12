@@ -34,9 +34,10 @@ type Props = {
   pageData: PageData;
   getPageData: () => void;
   basePrice: number;
+  colleteralAmount: number;
 };
 
-const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
+const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmount }) => {
   const contract = useAppContract();
   const { balanceByDenom, refreshBalance } = useBalances();
   const { selectedChainName, selectedAppVersion } = useChainAdapter();
@@ -55,15 +56,29 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
     useNotification();
 
   const selectedCollateral = useMemo(
-    () =>
-      pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
+    () =>{
+      if (ChainName.XION === selectedChainName) {
+        return pageData.collateralAmountsByDenom[selectedAsset?.cw20Denom || selectedAsset.denom] ?? {
+          denom: selectedAsset.cw20Denom,
+          amount: 0,
+        }
+      } else {
+        return pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
         denom: selectedAsset.denom,
         amount: 0,
-      },
+      }
+    }},
     [selectedAsset, pageData.collateralAmountsByDenom]
   );
+  
   const selectedMinCollateral = useMemo(
-    () => pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0,
+    () => {
+      if (ChainName.XION === selectedChainName) {
+        return pageData.minCollateralRatioByDenom[selectedAsset?.cw20Denom || selectedAsset.denom] ?? 0
+      } else {
+        return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0
+      }
+    },
     [selectedAsset, pageData.minCollateralRatioByDenom]
   );
 
@@ -85,8 +100,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
-      borrowAmount > 999 ||
-      openTroveAmount > 999 ||
+      borrowAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      openTroveAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
         convertAmount(
@@ -108,14 +123,14 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   const withdrawDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
-      collateralAmount > 999 ||
+      collateralAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       selectedCollateral.amount < collateralAmount,
     [collateralAmount, selectedCollateral]
   );
   const depositDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
-      collateralAmount > 999 ||
+      collateralAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       Number(
         convertAmount(
           balanceByDenom[selectedAsset.denom]?.amount ?? 0,
@@ -127,18 +142,17 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
   const borrowDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
-      borrowingAmount > 999 ||
+      borrowingAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       borrowingAmount >
         (selectedCollateral.amount * basePrice * 100) / 115 -
           pageData.debtAmount,
     [borrowingAmount, selectedCollateral]
   );
-  console.log("pageData.debtAmount", pageData.debtAmount);
   
   const repayDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
-      borrowingAmount > 999 ||
+      borrowingAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       borrowingAmount > pageData.debtAmount ||
       borrowingAmount > pageData.ausdBalance,
     [borrowingAmount]
@@ -551,11 +565,12 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                         fixedDecimalScale
                         decimalScale={2}
                         displayType="text"
-                        renderText={(value) => (
+                        renderText={(value) => {
+                          return(
                           <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
                             {value} AUSD
                           </p>
-                        )}
+                        )}}
                       />
                     </div>
 
@@ -757,11 +772,13 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice }) => {
                 fixedDecimalScale
                 decimalScale={2}
                 displayType="text"
-                renderText={(value) => (
+                renderText={(value) => {
+                  console.log("pageData.ausdBalance", pageData.ausdBalance);
+                  return(
                   <p className="text-white font-regular text-xs md:text-base ml-3">
                     {value} AUSD
                   </p>
-                )}
+                )}}
               />
             </div>
           </div>

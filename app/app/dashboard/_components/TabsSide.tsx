@@ -17,12 +17,19 @@ import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { ChainName } from "@/enums/Chain";
+import useAppContract from "@/contracts/app/useAppContract";
+import { getIsInjectiveResponse } from "@/utils/contractUtils";
+import { useNotification } from "@/contexts/NotificationProvider";
+import GradientButton from "@/components/Buttons/GradientButton";
+import Text from "@/components/Texts/Text";
+import MintTap from "./Tabs/MintTab";
 
 interface Props {
   setTabPosition: Dispatch<DashboardTabs>;
 }
 
 export type DashboardTabs =
+  | "mint"
   | "trove"
   | "createTrove"
   | "stabilityPool"
@@ -38,7 +45,8 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { basePrice, walletInfo, selectedAppVersion } = useChainAdapter();
+  const { basePrice, walletInfo, selectedAppVersion, baseCoin } =
+    useChainAdapter();
   const { pageData, getPageData, loading } = usePageData();
   const { refreshBalance } = useBalances();
 
@@ -54,10 +62,15 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
     "missions",
   ];
 
-  if (selectedChainName === ChainName.XION || selectedChainName === ChainName.SEI) {
+  if (
+    selectedChainName === ChainName.XION ||
+    selectedChainName === ChainName.SEI
+  ) {
     TabList = TabList.filter(
       (tab) => tab !== "missions" && tab !== "leaderboard"
     );
+    //TabList ilk sıraya push
+    TabList.unshift("mint");
   }
 
   const [selectedTab, setSelectedTab] = useState<DashboardTabs>(
@@ -85,14 +98,13 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
       setSelectedTab(params.get("tab") as DashboardTabs);
     }
   }, []);
-
+ 
   const handleChangeTab = (e: DashboardTabs) => {
     router.push(`/app/dashboard?tab=${e}`);
 
     setSelectedTab(e);
     setTabPosition(e);
   };
- 
 
   return (
     <div
@@ -156,8 +168,12 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
+          {selectedTab === "mint" && (
+            <MintTap getPageData={getPageData} pageData={pageData} /> 
+          )}
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
             <TroveTab
+              colleteralAmount={pageData.baseCollateralAmount}
               pageData={pageData}
               getPageData={getPageData}
               basePrice={basePrice}

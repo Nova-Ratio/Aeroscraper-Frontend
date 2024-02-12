@@ -54,11 +54,6 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
     setHovering(isHovering);
   };
 
-  console.log(
-    "Coin Name",
-    baseCoin?.name,
-    Number(pageData.baseTotalCollateralAmount).toFixed(6) + " " + baseCoin?.name
-  );
 
   return (
     <div

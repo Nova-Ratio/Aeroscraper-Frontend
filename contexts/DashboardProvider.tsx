@@ -12,7 +12,8 @@ import graphql from '@/services/graphql';
 import { AppVersion } from '@/types/types';
 import { convertAmount } from '@/utils/contractUtils';
 import axios from 'axios';
-import { isNil } from 'lodash';
+import { chain, isNil } from 'lodash';
+import { DefaultAssetByChainName, assetByDenom } from '@/constants/assetConstants';
 
 const FilterParamByChainName: Record<ChainName, string> = {
     [ChainName.INJECTIVE]: 'INJECTIVE',
@@ -106,23 +107,30 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setTroveLoading(true);
             const troveRes = await contract.getTrove();
+            
             if (isNil(troveRes)) throw new Error('Trove is undefined');
 
             let collateralAmounts: CollateralAmount[] = [];
             if (isV2TroveResponse(troveRes)) {
                 collateralAmounts = troveRes.collateral_amounts;
             }
-            else {
+            else if (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom) {
+                collateralAmounts = [{
+                    amount: troveRes.collateral_amount,
+                    denom: baseCoin?.cw20Denom ?? ''
+                }]
+            } else {
                 collateralAmounts = [{
                     amount: troveRes.collateral_amount,
                     denom: baseCoin?.denom ?? ''
                 }]
             }
-
+            
             const debtAmount = convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal);
 
             const collateralAmountsByDenom = collateralAmounts.reduce<Record<string, CollateralInfo>>((acc, item) => {
-                const decimal = BaseCoinByDenom[item.denom]?.decimal ?? 0;
+               
+                const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : BaseCoinByDenom[item.denom]?.decimal ?? 0;
                 const amount = convertAmount(item.amount, decimal);
                 const denom = item.denom;
 
@@ -134,7 +142,8 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }
             }, {});
-            const baseCollateralAmount = collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+            const baseCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? collateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount ?? 0 :   collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+            
 
             const minCollateralRatioByDenom = Object.entries(collateralAmountsByDenom).reduce<Record<string, number>>((acc, [denom, collateralInfo]) => {
                 const basePrice = coinPricesByDenom[denom] ?? 0;
@@ -177,10 +186,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setAusdBalanceLoading(true);
             const ausdBalanceRes = await contract.getAusdBalance();
-
+            const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].ausdDecimal : baseCoin?.ausdDecimal;
             setPageData(prev => ({
                 ...prev,
-                ausdBalance: convertAmount(ausdBalanceRes?.balance ?? 0, baseCoin?.ausdDecimal)
+                ausdBalance: convertAmount(ausdBalanceRes?.balance ?? 0, decimal)
             }))
         }
         catch (err) {
@@ -198,10 +207,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setStakeLoading(true);
             const stakeRes = await contract.getStake();
-
+            const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
             setPageData(prev => ({
                 ...prev,
-                stakedAmount: convertAmount(stakeRes?.amount ?? 0, baseCoin?.decimal),
+                stakedAmount: convertAmount(stakeRes?.amount ?? 0,decimal),
                 poolShare: Number(Number(stakeRes?.percentage).toFixed(6))
             }))
         }
@@ -221,10 +230,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setRewardLoading(true);
             const rewardRes = await contract.getReward();
-
+            const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
             setPageData(prev => ({
                 ...prev,
-                rewardAmount: convertAmount(rewardRes ?? 0, baseCoin?.decimal)
+                rewardAmount: convertAmount(rewardRes ?? 0, decimal)
             }))
         }
         catch (err) {
