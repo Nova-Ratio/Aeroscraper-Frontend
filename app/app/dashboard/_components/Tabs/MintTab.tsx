@@ -43,7 +43,7 @@ export default function MintTap({
   return (
     <div className="overflow-hidden md:overflow-visible w-full h-full justify-between text-white flex flex-col items-center gap-32 ">
       <div className="w-full gap-1 flex flex-col">
-        <h2 className="text-3xl font-medium">Mint AST</h2>
+        <h2 className="text-3xl font-medium">Faucet AST</h2>
         <p className="text-base">
           Mint AST and use your minted token on the Xion chain
         </p>
@@ -56,7 +56,7 @@ export default function MintTap({
         disabled={processLoading}
         disabledText={""}
       >
-        <Text>Mint</Text>
+        <Text>Faucet</Text>
       </GradientButton>
     </div>
   );
