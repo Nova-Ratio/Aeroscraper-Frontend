@@ -146,13 +146,19 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             
 
             const minCollateralRatioByDenom = Object.entries(collateralAmountsByDenom).reduce<Record<string, number>>((acc, [denom, collateralInfo]) => {
-                const basePrice = coinPricesByDenom[denom] ?? 0;
+                const basePrice =  coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
+                console.log("basePrice", basePrice,denom);
+                
                 return {
                     ...acc,
                     [denom]: (collateralInfo.amount * basePrice) / (debtAmount || 1)
                 };
             }, {})
-            const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.denom ?? ''] ?? 0;
+            
+            //const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.denom ?? ''] ?? 0;
+            const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.cw20Denom ?? ''] ?? 0;
+            console.log("baseMinCollateralRatio", baseMinCollateralRatio);
+            
 
             setPageData(prev => ({
                 ...prev,
@@ -296,18 +302,12 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                             denom
                         }
                     }
-<<<<<<< HEAD
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
 
             const baseTotalCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? totalCollateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount :  totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
             console.log();
             
                 
-=======
-                }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, baseCoin?.decimal) } };
-            const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-                const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
->>>>>>> e64fc6ff3d187c03daed0533aac3be330bbf9d19
             setPageData(prev => ({
                 ...prev,
                 totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
