@@ -1,6 +1,6 @@
 import { useNotification } from '@/contexts/NotificationProvider';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { CloseIcon } from '../Icons/Icons'
 import { TransactionDomainByChainName } from '@/constants/chainConstants';
 import useChainAdapter from '@/hooks/useChainAdapter';
@@ -23,7 +23,7 @@ const VARIANTS: Record<Status, any> = {
     borderColor: "border-[#ED0E00]/70",
     backgroundColor: "bg-[#2E030066]/40"
   },
-  networkchange:{
+  networkchange: {
     icon: (
       <img alt='transaction-success' src='/images/transaction-success.svg' />
     ),
@@ -39,13 +39,21 @@ const NotificationModal: FC = () => {
   const { selectedChainName } = useChainAdapter();
   const { notification, setOnHover } = useNotification();
 
-  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.INJECTIVE]?.txDetailUrl
+  const [moreInfo, setMoreInfo] = useState(false);
+
+  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.INJECTIVE]?.txDetailUrl;
+
+  useEffect(() => {
+    setMoreInfo(false);
+  }, [notification])
+
 
   return (
     <>
       <AnimatePresence>
         {notification &&
           <motion.div
+            layout
             onMouseEnter={() => { setOnHover(true); }}
             onMouseLeave={() => { setOnHover(false); }}
             initial={{ x: 100, opacity: 0 }}
@@ -65,9 +73,15 @@ const NotificationModal: FC = () => {
                   {VARIANTS[notification.status].title}
                 </span>
               </div>
+              {notification.status === "error" && (
+                moreInfo
+                  ? <div className='max-w-[450px] max-h-[400px] mt-4 pr-10 overflow-x-hidden'><p className="text-sm font-medium text-white flex-1">{notification.message}</p></div>
+                  : <button onClick={() => { setMoreInfo(true); }} className="text-sm font-medium text-white flex-1 underline mt-2">More Details</button>
+              )
+              }
               {notification.directLink &&
                 <a href={notification.directLink ? `${scanDomain}${notification.directLink}` : undefined} target="_blank" rel="noreferrer" className="flex justify-end items-center gap-2 mt-1.5 cursor-pointer">
-                  <span className="text-white underline font-medium text-lg">View Explorer</span>
+                  <span className="text-white underline font-medium text-sm">View Explorer</span>
                   <img alt='external-link' src='/images/external-link.svg' className='w-[18px] h-[18px]' />
                 </a>
               }

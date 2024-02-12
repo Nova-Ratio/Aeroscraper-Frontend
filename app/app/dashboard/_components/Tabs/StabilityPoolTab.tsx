@@ -62,10 +62,9 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       });
       getPageData();
       refreshBalance();
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -93,10 +92,9 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       if (unstakeAmount >= pageData.stakedAmount) {
         setSelectedTab(TABS.DEPOSIT);
       }
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
