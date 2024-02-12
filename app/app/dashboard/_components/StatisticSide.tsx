@@ -10,6 +10,9 @@ import { usePageData } from "@/contexts/DashboardProvider";
 import { ChainName } from "@/enums/Chain";
 import RenderContent from "./renderContent";
 import { defaultContent, injContent } from "@/data/injContent";
+import { WalletsByChainName } from "@/constants/walletConstants";
+import { BaseCoinByChainName } from "@/constants/chainConstants";
+import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 interface Props {
   basePrice: number;
@@ -131,7 +134,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
             className="w-[191px] h-14"
             tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
             tooltipPlacement="bottom"
-            coinName={baseCoin?.name}
+            coinName={ selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name}
             isNumeric
           />
           <StatisticCard

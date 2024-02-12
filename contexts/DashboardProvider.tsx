@@ -297,10 +297,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, baseCoin?.decimal) } };
             const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-
+                const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
             setPageData(prev => ({
                 ...prev,
-                totalStakedAmount: convertAmount(res.totalStake ?? 0, baseCoin?.decimal),
+                totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
                 baseTotalCollateralAmount,
                 totalCollateralAmountsByDenom,
                 totalDebtAmount: convertAmount(res.totalDebtAmount ?? 0, baseCoin?.ausdDecimal),
