@@ -39,24 +39,8 @@ const AppTheme = () => {
   const { addNotification } = useNotification();
   const { balanceByDenom } = useBalances();
   const { pageData, getPageData } = usePageData();
-  const contract = useAppContract();
   const { profileDetail } = useProfile();
-  async function Mint() {
-    try {
-      const res: any = await contract.mint();
-      console.log(res);
-      
-      addNotification({
-        status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
-        message: `${pageData.rewardAmount} ${baseCoin?.name} Reward Received`,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
@@ -179,12 +163,7 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
-          <button
-            onClick={Mint}
-            className="bg-white border rounded-md py-2 px-4 flex justify-center mr-8"
-          >
-            MINT
-          </button>
+          
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
             <img
