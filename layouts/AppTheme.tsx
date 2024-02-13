@@ -185,11 +185,11 @@ const AppTheme = () => {
           )}
           {isWalletConnected && !isNil(baseCoin) ? (
             <>
-              <div className="md:flex hidden mr-4">
+              {/* <div className="md:flex hidden mr-4">
                 {selectedChainName === ChainName.INJECTIVE && (
                   <VersionSelector />
                 )}
-              </div>
+              </div> */}
               <div className="md:flex hidden">
                 <NotificationDropdown />
               </div>
