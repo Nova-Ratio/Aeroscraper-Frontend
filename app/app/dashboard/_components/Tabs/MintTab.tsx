@@ -40,6 +40,7 @@ export default function MintTap({
       setProcessLoading(false);
     }
   }
+  
   return (
     <div className="overflow-hidden md:overflow-visible w-full h-full justify-between text-white flex flex-col items-center gap-32 ">
       <div className="w-full gap-1 flex flex-col">

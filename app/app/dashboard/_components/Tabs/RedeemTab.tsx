@@ -86,7 +86,7 @@ const RedeemTab: FC<Props> = ({
         directLink: transactionHash,
         message: `${redeemAmount} AUSD has Redeemed, Received ${injAmount.toFixed(
           6
-        )} ${baseCoin?.name}`,
+        )} ${coinName}`,
       });
 
       getPageData();
@@ -103,7 +103,7 @@ const RedeemTab: FC<Props> = ({
 
     setProcessLoading(false);
   };
-
+  const coinName = selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name
   return (
     <section>
       <Text size="3xl">Convert your AUSD directly to INJ</Text>
@@ -155,7 +155,7 @@ const RedeemTab: FC<Props> = ({
             <div className="flex items-center gap-2">
               <img alt="token" src={baseCoin.tokenImage} className="w-6 h-6" />
               <Text size="base" weight="font-medium">
-                {selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName: baseCoin.name}
+                {coinName}
               </Text>
             </div>
           ) : (
