@@ -24,6 +24,7 @@ export type RiskyTrovesModelV2 = {
     collateralAmounts: CollateralInfo[];
     debtAmount: number;
     totalDollarValue: number;
+    baseCollateralAmount: number;
 }
 
 export type TotalTrovesResponse = {
