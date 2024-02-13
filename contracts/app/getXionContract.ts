@@ -30,7 +30,7 @@ export const getXionContract = (
     customTokenMinter,
     ausdContractAddress,
     cw20CustomToken,
-  } = getContractAddressesByChain(AppVersion.V2, ChainName.XION);
+  } = getContractAddressesByChain(ChainName.XION, AppVersion.V2);
 
   const getTotalCollateralAmounts = async (): Promise<
     TotalCollateralModel | undefined
@@ -75,7 +75,7 @@ export const getXionContract = (
   const getAusdBalance = async (
     address: string
   ): Promise<CW20BalanceResponse> => {
-    let balance =  await client?.queryContractSmart(ausdContractAddress, {
+    let balance = await client?.queryContractSmart(ausdContractAddress, {
       balance: { address },
     });
     return balance;
@@ -149,7 +149,7 @@ export const getXionContract = (
         loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
       },
     });
-    
+
     return await client?.execute(
       senderAddress,
       cw20CustomToken as string,
@@ -199,9 +199,9 @@ export const getXionContract = (
         gas: "1200000",
       },
       "Remove Collateral"
-      );
+    );
   };
-  
+
 
   const borrowLoan = async (senderAddress: string, amount: number) => {
     return await client?.execute(

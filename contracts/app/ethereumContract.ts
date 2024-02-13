@@ -33,7 +33,7 @@ export const getAppEthContract = (
 ) => {
   const defaultAsset = DefaultAssetByChainName[chainName];
   const { contractAddress, oraclecontractAddress, ausdContractAddress } =
-    getContractAddressesByChain(appVersion, chainName);
+    getContractAddressesByChain(chainName, appVersion);
   const rpcUrl = injectivePrivRpc;
   const injSdkWallet = walletType
     ? InjSdkWalletByCosmosWallet[walletType as WalletType]
@@ -69,12 +69,8 @@ export const getAppEthContract = (
       throw new Error("Error getting client")
     }
 
-    const priceId = appVersion === AppVersion.V1 || isNil(asset) ?
-      priceIdByChainName[chainName].priceId :
-      asset.priceId;
-    const serviceUrl = appVersion === AppVersion.V1 || isNil(asset) ?
-      priceIdByChainName[chainName].serviceUrl :
-      asset.priceServiceUrl;
+    const priceId = isNil(asset) ? priceIdByChainName[chainName].priceId : asset.priceId;
+    const serviceUrl = isNil(asset) ? priceIdByChainName[chainName].serviceUrl : asset.priceServiceUrl;
 
     const connection = new PriceServiceConnection(serviceUrl,
       {

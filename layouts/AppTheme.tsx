@@ -4,12 +4,11 @@ import { ExitIcon, LogoSecondary } from "@/components/Icons/Icons";
 import NotificationDropdown from "@/app/app/dashboard/_components/NotificationDropdown";
 import { isNil } from "lodash";
 import AccountModal from "@/components/AccountModal/AccountModal";
-import { convertAmount, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 import NotificationModal from "@/components/Modal/NotificationModal";
 import WalletButton from "@/components/Buttons/WalletButton";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
-import VersionSelector from "@/components/VersionSelector/VersionSelector";
 import { useProfile } from "@/contexts/ProfileProvider";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
@@ -18,7 +17,6 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import Swal from "sweetalert2";
 import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
-import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
@@ -188,7 +186,7 @@ const AppTheme = () => {
 
           <div className="flex md:hidden items-center gap-4">
             {selectedChainName &&
-               <img alt={selectedChainName} src={baseCoin?.image} className='w-5 h-5 rounded-full' />
+              <img alt={selectedChainName} src={baseCoin?.image} className='w-5 h-5 rounded-full' />
             }
 
             <MobileHamburgerMenu setAccountModal={setAccountModal} disconnectWallet={disconnectWallet} />

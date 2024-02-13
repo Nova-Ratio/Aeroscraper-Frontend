@@ -279,7 +279,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             setTotalInfoLoading(true);
             let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
 
-            if (selectedChainName === ChainName.INJECTIVE && selectedAppVersion === AppVersion.V2) {
+            if (selectedChainName === ChainName.INJECTIVE) {
                 chainNameQuery = `${chainNameQuery}2`;
             }
 
@@ -329,7 +329,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         finally {
             setTotalInfoLoading(false);
         }
-    }, [selectedAppVersion, selectedChainName, baseCoin])
+    }, [selectedChainName, baseCoin])
 
     const getPageData = useCallback(() => {
         getTrove()

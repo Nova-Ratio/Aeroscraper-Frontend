@@ -11,19 +11,15 @@ import StabilityPoolTab from "./Tabs/StabilityPoolTab";
 import TroveTab from "./Tabs/TroveTab";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AppVersion } from "@/types/types";
 import RiskyTrovesTabV2 from "./Tabs/RiskyTrovesTabV2";
 import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { ChainName } from "@/enums/Chain";
-import useAppContract from "@/contracts/app/useAppContract";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
-import { useNotification } from "@/contexts/NotificationProvider";
-import GradientButton from "@/components/Buttons/GradientButton";
-import Text from "@/components/Texts/Text";
 import MintTap from "./Tabs/MintTab";
 import { DashboardTabs, useTabs } from "@/contexts/TabsProvider";
+
+const riskyTrovesV2Chains = [ChainName.INJECTIVE, ChainName.XION];
 
 interface Props {
   setTabPosition: Dispatch<DashboardTabs>;
@@ -36,7 +32,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { basePrice, walletInfo, selectedAppVersion, baseCoin } = useChainAdapter();
+  const { basePrice, walletInfo, selectedChainName } = useChainAdapter();
 
   const { selectedTab, setSelectedTab, isTroveOpened, tabList } = useTabs();
 
@@ -147,17 +143,17 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
             />
           )}
           {selectedTab === "riskyTroves" &&
-            (selectedAppVersion === AppVersion.V1 ? (
-              <RiskyTrovesTabV1
-                getPageData={getPageData}
-                basePrice={basePrice}
-              />
-            ) : (
+            (riskyTrovesV2Chains.includes(selectedChainName ?? ChainName.INJECTIVE) ?
               <RiskyTrovesTabV2
                 getPageData={getPageData}
                 basePrice={basePrice}
               />
-            ))}
+              :
+              <RiskyTrovesTabV1
+                getPageData={getPageData}
+                basePrice={basePrice}
+              />
+            )}
           {selectedTab === "rewards" && (
             <ClaimRewardTab
               pageData={pageData}
