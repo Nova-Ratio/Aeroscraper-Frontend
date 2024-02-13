@@ -81,7 +81,7 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
     }
 }
 
-export const getContractAddressesByChain = (appVersion: AppVersion, chainName?: ChainName) => {
+export const getContractAddressesByChain = (chainName?: ChainName, appVersion?: AppVersion) => {
     if (chainName === ChainName.SEI) {
         return {
             contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string,
@@ -102,18 +102,10 @@ export const getContractAddressesByChain = (appVersion: AppVersion, chainName?: 
             oraclecontractAddress: process.env.NEXT_PUBLIC_NEUTRON_ORACLE_CONTRACT_ADDRESS as string
         }
     } else if (chainName === ChainName.INJECTIVE) {
-        if (appVersion === AppVersion.V1) {
-            return {
-                contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS_V1 as string,
-                ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS_V1 as string,
-                oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS_V1 as string
-            }
-        }
-
         return {
-            contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS_V2 as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS_V2 as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS_V2 as string
+            contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS as string,
+            ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS as string,
+            oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
         }
     } else if (chainName === ChainName.XION) {
         return {

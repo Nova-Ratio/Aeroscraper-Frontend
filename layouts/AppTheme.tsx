@@ -4,12 +4,11 @@ import { ExitIcon, LogoSecondary } from "@/components/Icons/Icons";
 import NotificationDropdown from "@/app/app/dashboard/_components/NotificationDropdown";
 import { isNil } from "lodash";
 import AccountModal from "@/components/AccountModal/AccountModal";
-import { convertAmount, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 import NotificationModal from "@/components/Modal/NotificationModal";
 import WalletButton from "@/components/Buttons/WalletButton";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
-import VersionSelector from "@/components/VersionSelector/VersionSelector";
 import { useProfile } from "@/contexts/ProfileProvider";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
@@ -18,7 +17,6 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import Swal from "sweetalert2";
 import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
-import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 const chainID = EthereumChainId.Goerli;
@@ -41,7 +39,7 @@ const AppTheme = () => {
   const { balanceByDenom } = useBalances();
   const { pageData, getPageData } = usePageData();
   const { profileDetail } = useProfile();
-  
+
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
@@ -164,7 +162,7 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
-          
+
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
             <img
@@ -185,11 +183,6 @@ const AppTheme = () => {
           )}
           {isWalletConnected && !isNil(baseCoin) ? (
             <>
-              {/* <div className="md:flex hidden mr-4">
-                {selectedChainName === ChainName.INJECTIVE && (
-                  <VersionSelector />
-                )}
-              </div> */}
               <div className="md:flex hidden">
                 <NotificationDropdown />
               </div>
@@ -245,11 +238,11 @@ const AppTheme = () => {
               baseCoinBalance={
                 !isNil(baseCoin)
                   ? Number(
-                      convertAmount(
-                        balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                        baseCoin.decimal
-                      )
+                    convertAmount(
+                      balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                      baseCoin.decimal
                     )
+                  )
                   : 0
               }
               basePrice={0}
@@ -263,11 +256,11 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                  convertAmount(
-                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
-                  )
+                convertAmount(
+                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                  (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
                 )
+              )
               : 0,
           }}
           basePrice={basePrice}

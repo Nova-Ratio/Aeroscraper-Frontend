@@ -29,7 +29,7 @@ export const getAppContract = (
     walletType?: WalletType
 ) => {
     const defaultAsset = DefaultAssetByChainName[chainName];
-    const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(appVersion, chainName);
+    const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName, appVersion);
 
     const injSdkWallet = walletType ? InjSdkWalletByCosmosWallet[walletType as WalletType] : Wallet.Keplr;
     const walletStrategy = new WalletStrategy({
@@ -62,12 +62,8 @@ export const getAppContract = (
             throw new Error("Error getting client")
         }
 
-        const priceId = appVersion === AppVersion.V1 || isNil(asset) ?
-            priceIdByChainName[chainName].priceId :
-            asset.priceId;
-        const serviceUrl = appVersion === AppVersion.V1 || isNil(asset) ?
-            priceIdByChainName[chainName].serviceUrl :
-            asset.priceServiceUrl;
+        const priceId = isNil(asset) ? priceIdByChainName[chainName].priceId : asset.priceId;
+        const serviceUrl = isNil(asset) ? priceIdByChainName[chainName].serviceUrl : asset.priceServiceUrl;
 
         const connection = new PriceServiceConnection(serviceUrl,
             {

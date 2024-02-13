@@ -2,12 +2,10 @@ import { LogoSecondary } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
 import { useAppContext } from "@/contexts/AppProvider";
 import { ChainName } from "@/enums/Chain";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export default function Footer({}) {
-  const { selectedChainName, selectedAppVersion } = useAppContext();
+  const { selectedChainName } = useAppContext();
 
   return (
     <footer className="flex flex-col md:gap-x-48 md:gap-y-16 items-top flex-wrap px-6 md:px-20 bg-transparent md:-mx-20 md:pr-16 mt-40 pb-24 relative">
