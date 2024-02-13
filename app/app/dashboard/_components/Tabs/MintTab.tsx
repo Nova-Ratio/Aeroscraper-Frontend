@@ -4,6 +4,7 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
 import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import { PageData } from "../../_types/types";
+import { useBalances } from "@/contexts/BalanceProvider";
 type Props = {
     pageData?: PageData;
     getPageData?: () => void;
@@ -16,6 +17,7 @@ export default function MintTap({
 }:Props) {
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();
+    const {refreshBalance} = useBalances();
   const contract = useAppContract();
   async function Mint() {
     try {
@@ -30,6 +32,7 @@ export default function MintTap({
           : res?.transactionHash,
         message: `Mint Success`,
       });
+      refreshBalance();
     } catch (error) {
       console.log(error);
       addNotification({

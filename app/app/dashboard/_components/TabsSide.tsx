@@ -91,6 +91,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
     if (typeof window !== "undefined" && window?.innerWidth <= 768) {
       ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
+    refreshBalance()
   }, [selectedTab]);
 
   useEffect(() => {
