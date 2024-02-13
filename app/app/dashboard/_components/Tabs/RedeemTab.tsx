@@ -106,7 +106,7 @@ const RedeemTab: FC<Props> = ({
   const coinName = selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name
   return (
     <section>
-      <Text size="3xl">Convert your AUSD directly to INJ</Text>
+      <Text size="3xl">Convert your AUSD directly to {coinName}</Text>
       <div className="mt-6">
         <div className="relative w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4">
           <div className="flex items-center justify-between">
