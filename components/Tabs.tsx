@@ -88,8 +88,8 @@ function Tabs({
   }
 
   return (
-    <nav className="relative px-6 border border-white/10 rounded-lg">
-      {/*  <ul className="grid grid-cols-6 gap-2 py-4 left-0 bottom-0 fixed shadow shadow-white/10 w-full bg-chinese-black md:hidden z-[999]">
+    <nav className="relative px-8 border border-white/10 rounded-lg">
+       <ul className="grid grid-cols-6 gap-2 py-4 left-0 bottom-0 fixed shadow shadow-white/10 w-full bg-chinese-black md:hidden z-[999]">
         {tabs.map((tab) => (
           <motion.li
             key={tab}
@@ -102,7 +102,7 @@ function Tabs({
             )}
           </motion.li>
         ))}
-      </ul> */}
+      </ul>
       {tabs.length > 5 && (
         <motion.button
           onClick={() => scrollTabs("left")}
@@ -117,14 +117,14 @@ function Tabs({
       )}
       <ul
         ref={tabsRef}
-        className=" gap-6  md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
+        className=" gap-6 pl-3 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
         onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
       >
         {tabs.map((tab, _index) => (
           <motion.li
             key={tab}
             onClick={() => onTabSelected?.(tab)}
-            className={`px-4 py-3 m-1 text-base first:ml-3 last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
+            className={`px-4 py-3 m-1 text-base first:ml-6 last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
           >
             {camelCaseToTitleCase(tab)}
             {dots?.includes(tab) && (
