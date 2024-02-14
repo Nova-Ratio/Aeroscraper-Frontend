@@ -100,6 +100,12 @@ export const getXionContract = (
     });
   };
 
+  const getPrice = async (): Promise<any> => {
+    return await client?.queryContractSmart(oraclecontractAddress, {
+      prices: {},
+    })
+  }
+
   //EXECUTE QUERIES
   // bu hariç
   const mint = async (senderAddress: string, amount?: number) => {
@@ -138,27 +144,11 @@ export const getXionContract = (
     loanAmount: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    console.log("senderAddress", senderAddress);
-    
-    console.log("amount", getRequestAmount(amount, asset.decimal));
-    console.log("loanAmount", getRequestAmount(loanAmount, asset.ausdDecimal));
-    /* const msg = {
-      send: {
-        contract: contractAddress,
-        amount: getRequestAmount(amount, asset.decimal),
-        msg: jsonToBinary({
-          open_trove: {
-            loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
-          },
-        }),
-      },
-    }; */
     const msg = getMsg(amount, asset, {
       open_trove: {
         loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
       },
     });
-    console.log("msg", msg);
     
     return await client?.execute(
       senderAddress,
@@ -177,17 +167,6 @@ export const getXionContract = (
     amount: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    /* return await client?.execute(
-      senderAddress,
-      contractAddress,
-      { add_collateral: {} },
-      {
-        amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
-      },
-      "Add Collateral",
-      [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
-    ); */
     const msg = getMsg(amount, asset, { add_collateral: {} });
     return await client?.execute(
       senderAddress,
@@ -221,21 +200,6 @@ export const getXionContract = (
       },
       "Remove Collateral"
       );
-   /*  const msg = getMsg(amount, asset, {
-      remove_collateral: {
-        collateral_amount: getRequestAmount(amount, asset.decimal),
-      },
-    });
-    return await client?.execute(
-      senderAddress,
-      cw20CustomToken as string,
-      msg,
-      {
-        amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
-      },
-      "Remove Collateral"
-    ); */
   };
   
 
@@ -254,21 +218,6 @@ export const getXionContract = (
       },
       "Borrow Loan"
     );
-    /* const msg = getMsg(amount, defaultAsset, {
-      borrow_loan: {
-        loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-      },
-    });
-    return await client?.execute(
-      senderAddress,
-      cw20CustomToken as string,
-      msg,
-      {
-        amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
-      },
-      "Borrow Loan"
-    ); */
   };
 
   const repayLoan = async (senderAddress: string, amount: number) => {
@@ -409,5 +358,6 @@ export const getXionContract = (
     withdrawLiquidationGains,
     mint,
     getCustomTokenBalance,
+    getPrice,
   };
 };

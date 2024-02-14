@@ -214,6 +214,16 @@ const useAppContract = () => {
     },
     [address, contract]
   )
+
+  const getPrice = useCallback(async () => {
+    if (isNil(contract)) return;
+    if ("getPrice" in contract) {
+    return await contract.getPrice();
+    }else{
+      return
+    }
+  }, [contract]);
+
   const getCustomTokenBalance = useCallback(
     async () => {
       if (isNil(contract) || isNil(address)) return;
@@ -250,7 +260,8 @@ const useAppContract = () => {
       liquidateTrovesV2,
       withdrawLiquidationGains,
       mint,
-      getCustomTokenBalance
+      getCustomTokenBalance,
+      getPrice
     }),
     [
       getTotalCollateralAmounts,
@@ -275,7 +286,8 @@ const useAppContract = () => {
       liquidateTrovesV2,
       withdrawLiquidationGains,
       mint,
-      getCustomTokenBalance
+      getCustomTokenBalance,
+      getPrice
     ]
   );
 
