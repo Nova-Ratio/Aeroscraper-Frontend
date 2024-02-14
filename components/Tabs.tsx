@@ -88,10 +88,37 @@ function Tabs({
   }
 
   return (
-    <nav className="relative">
+
+    <nav className="relative px-8 border border-white/10 rounded-lg">
+       <ul className="grid grid-cols-6 gap-2 py-4 left-0 bottom-0 fixed shadow shadow-white/10 w-full bg-chinese-black md:hidden z-[999]">
+        {tabs.map((tab) => (
+          <motion.li
+            key={tab}
+            onClick={() => onTabSelected?.(tab)}
+            className={`m-1 text-[8px] font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-wrap items-center justify-center flex text-center`}
+          >
+            {camelCaseToTitleCase(tab)}
+            {dots?.includes(tab) && (
+              <div className="h-2 w-2 absolute bg-red-500 right-3 -top-2.5 md:top-2 animate-pulse rounded-full" />
+            )}
+          </motion.li>
+        ))}
+      </ul>
+      {tabs.length > 5 && (
+        <motion.button
+          onClick={() => scrollTabs("left")}
+          className="absolute -left-2 top-0 h-full py-0 px-4 z-[999] active:scale-90"
+        >
+          {scrollPosition <= 0 ? (
+            <ChevronLeftIcon />
+          ) : (
+            <ActiveChevronLeftIcon />
+          )}
+        </motion.button>
+      )}
       <ul
         ref={tabsRef}
-        className="gap-3 border border-white/10 rounded-lg md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
+        className=" gap-6 pl-3 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
         onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
       >
         {tabs.length > 5 && (
@@ -112,7 +139,8 @@ function Tabs({
           <motion.li
             key={tab}
             onClick={() => onTabSelected?.(tab)}
-            className={`px-6 py-3 m-1 text-base font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
+
+            className={`px-4 py-3 m-1 text-base first:ml-6 last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
           >
             {camelCaseToTitleCase(tab)}
             {dots?.includes(tab) && (

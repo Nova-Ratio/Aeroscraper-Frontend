@@ -330,7 +330,7 @@ export const getXionContract = (
     const msg = {
       send: {
         contract: contractAddress,
-        amount: getRequestAmount(amount, baseCoin.decimal),
+        amount: getRequestAmount(amount, baseCoin.ausdDecimal),
         msg: jsonToBinary({ redeem: {} }),
       },
     };
@@ -341,7 +341,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "600000",
+        gas: "800000",
       },
       "Redeem"
     );

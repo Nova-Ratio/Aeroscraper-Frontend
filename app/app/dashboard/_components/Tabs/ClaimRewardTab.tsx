@@ -8,6 +8,8 @@ import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
 import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
+import { ChainName } from "@/enums/Chain";
+import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 interface Props {
   pageData: PageData;
@@ -22,12 +24,16 @@ const ClaimRewardTab: FC<Props> = ({
   refreshBalance,
   basePrice,
 }) => {
-  const { baseCoin } = useChainAdapter();
+  const { baseCoin, selectedChainName } = useChainAdapter();
 
   const contract = useAppContract();
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();
 
+  const coinName =
+    selectedChainName === ChainName.XION
+      ? DefaultAssetByChainName[ChainName.XION].shortName
+      : baseCoin?.name;
   const rewardClaim = async () => {
     setProcessLoading(true);
 
@@ -38,7 +44,7 @@ const ClaimRewardTab: FC<Props> = ({
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${pageData.rewardAmount} ${baseCoin?.name} Reward Received`,
+        message: `${pageData.rewardAmount} ${coinName} Reward Received`,
       });
       getPageData();
       refreshBalance();
@@ -54,7 +60,7 @@ const ClaimRewardTab: FC<Props> = ({
   };
   return (
     <section>
-      <Text size="3xl">Claim your rewards in {baseCoin?.name ?? ""}</Text>
+      <Text size="3xl">Claim your rewards in {coinName ?? ""}</Text>
       <div className="mt-6">
         <div className="w-full bg-cetacean-dark-blue border border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex items-end justify-between mt-6">
           <div>
@@ -69,7 +75,7 @@ const ClaimRewardTab: FC<Props> = ({
                   className="w-6 h-6"
                 />
                 <Text size="base" weight="font-medium">
-                  {baseCoin.name}
+                  {coinName}
                 </Text>
               </div>
             ) : (

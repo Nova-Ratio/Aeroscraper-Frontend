@@ -184,11 +184,14 @@ const WalletButton: FC<Props> = ({
 
   return (
     <div className="relative">
-      <GradientButton className={className} onClick={toggleWallet}>
+      <GradientButton className={className} onClick={()=>{
+        //toggleWallet()
+        openXionChainModal() 
+        }}>
         {isWalletConnecting ? (
           <Loading width={36} height={36} />
         ) : (
-          <Text size="base">Select Chain & Connect Wallet</Text>
+          <Text size="base">Connect Wallet</Text>
         )}
       </GradientButton>
       <Modal modalSize="lg" showModal={walletSelectionOpen}>
