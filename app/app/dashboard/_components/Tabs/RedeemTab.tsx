@@ -41,13 +41,9 @@ const RedeemTab: FC<Props> = ({
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
 
-
-
   const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const contract = useAppContract();
-
-contract.getPrice().then(e=>{console.log(e)});
 
   const changeRedeemAmount = useCallback(
     (values: NumberFormatValues) => {
@@ -65,8 +61,6 @@ contract.getPrice().then(e=>{console.log(e)});
       redeemAmount > pageData.ausdBalance,
     [redeemAmount, pageData]
   );
-
-
 
   const redeem = async () => {
     let transactionHash;
