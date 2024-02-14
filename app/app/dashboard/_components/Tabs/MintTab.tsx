@@ -34,10 +34,10 @@ export default function MintTap({
       });
 
       refreshBalance();
-    } catch (error) {
+    } catch (error:any) {
       console.log(error);
       addNotification({
-        message: JSON.stringify(err.message),
+        message: JSON.stringify(error?.message),
         status: "error",
         directLink: "",
       });
