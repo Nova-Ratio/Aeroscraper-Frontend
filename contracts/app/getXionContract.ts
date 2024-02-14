@@ -345,6 +345,8 @@ export const getXionContract = (
     getAusdBalance,
     getAusdInfo,
     getReward,
+    getCustomTokenBalance,
+    getPrice,
     openTrove,
     addCollateral,
     removeCollateral,
@@ -356,8 +358,6 @@ export const getXionContract = (
     liquidateTroves,
     liquidateTrovesV2,
     withdrawLiquidationGains,
-    mint,
-    getCustomTokenBalance,
-    getPrice,
+    mint
   };
 };

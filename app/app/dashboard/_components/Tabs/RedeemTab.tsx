@@ -40,12 +40,14 @@ const RedeemTab: FC<Props> = ({
   const { baseCoin, selectedChainName } = useChainAdapter();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
-  
 
 
-  const {addNotification,setProcessLoading,processLoading} = useNotification();
+
+  const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const contract = useAppContract();
+
+contract.getPrice().then(e=>{console.log(e)});
 
   const changeRedeemAmount = useCallback(
     (values: NumberFormatValues) => {
@@ -70,17 +72,17 @@ const RedeemTab: FC<Props> = ({
     let transactionHash;
     try {
       setProcessLoading(true);
-      
+
       console.log("redeemAmount", redeemAmount);
       const res: any = await contract.redeem(redeemAmount);
       console.log("res", res);
-      
+
 
       transactionHash = getIsInjectiveResponse(res)
         ? res?.txHash
         : res?.transactionHash;
       console.log("transactionHash", transactionHash);
-      
+
       addNotification({
         status: "success",
         directLink: transactionHash,
@@ -92,7 +94,7 @@ const RedeemTab: FC<Props> = ({
       getPageData();
       refreshBalance();
       setRedeemAmount(0);
-    }catch (err: any) {
+    } catch (err: any) {
       addNotification({
         message: JSON.stringify(err.message),
         status: "error",

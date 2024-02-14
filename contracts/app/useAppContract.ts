@@ -27,32 +27,32 @@ const useAppContract = () => {
   const contract = useMemo(
     () =>
       isWalletConnected &&
-      !isNil(baseCoin) &&
-      !isNil(walletInfo) &&
-      !isNil(selectedChainName)
+        !isNil(baseCoin) &&
+        !isNil(walletInfo) &&
+        !isNil(selectedChainName)
         ? selectedChainName === ChainName.XION
           ? !isNil(abstraxionClient)
             ? getXionContract(abstraxionClient, baseCoin)
             : undefined
           : walletInfo.name === WalletType.METAMASK
-          ? !isNil(chain)
-            ? getAppEthContract(
+            ? !isNil(chain)
+              ? getAppEthContract(
                 chain,
                 baseCoin,
                 selectedAppVersion,
                 selectedChainName ?? ChainName.INJECTIVE,
                 walletInfo.name as WalletType
               )
-            : undefined
-          : !isNil(client)
-          ? getAppContract(
-              client,
-              baseCoin,
-              selectedAppVersion,
-              selectedChainName ?? ChainName.INJECTIVE,
-              walletInfo.name as WalletType
-            )
-          : undefined
+              : undefined
+            : !isNil(client)
+              ? getAppContract(
+                client,
+                baseCoin,
+                selectedAppVersion,
+                selectedChainName ?? ChainName.INJECTIVE,
+                walletInfo.name as WalletType
+              )
+              : undefined
         : undefined,
     [
       isWalletConnected,
@@ -178,7 +178,7 @@ const useAppContract = () => {
   const redeem = useCallback(
     async (amount: number) => {
       console.log("contract", contract, address, amount);
-      
+
       if (isNil(contract) || isNil(address)) return;
       return await contract.redeem(address, amount);
     },
@@ -208,7 +208,7 @@ const useAppContract = () => {
       if (isNil(contract) || isNil(address)) return;
       if ("mint" in contract) {
         return await contract.mint(address, amount);
-      }else{
+      } else {
         return;
       }
     },
@@ -217,11 +217,14 @@ const useAppContract = () => {
 
   const getPrice = useCallback(async () => {
     if (isNil(contract)) return;
+
     if ("getPrice" in contract) {
-    return await contract.getPrice();
-    }else{
-      return
+      const result = await contract.getPrice();
+      return result;
     }
+
+    return;
+
   }, [contract]);
 
   const getCustomTokenBalance = useCallback(
@@ -229,7 +232,7 @@ const useAppContract = () => {
       if (isNil(contract) || isNil(address)) return;
       if ("getCustomTokenBalance" in contract) {
         return await contract.getCustomTokenBalance(address);
-      }else{
+      } else {
         return;
       }
     },
@@ -248,6 +251,8 @@ const useAppContract = () => {
       getAusdBalance,
       getAusdInfo,
       getReward,
+      getCustomTokenBalance,
+      getPrice,
       openTrove,
       addCollateral,
       removeCollateral,
@@ -259,9 +264,7 @@ const useAppContract = () => {
       liquidateTroves,
       liquidateTrovesV2,
       withdrawLiquidationGains,
-      mint,
-      getCustomTokenBalance,
-      getPrice
+      mint
     }),
     [
       getTotalCollateralAmounts,
@@ -274,6 +277,8 @@ const useAppContract = () => {
       getAusdBalance,
       getAusdInfo,
       getReward,
+      getCustomTokenBalance,
+      getPrice,
       openTrove,
       addCollateral,
       removeCollateral,
@@ -285,9 +290,7 @@ const useAppContract = () => {
       liquidateTroves,
       liquidateTrovesV2,
       withdrawLiquidationGains,
-      mint,
-      getCustomTokenBalance,
-      getPrice
+      mint
     ]
   );
 
