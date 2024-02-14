@@ -215,7 +215,7 @@ const useAppContract = () => {
     [address, contract]
   )
 
-  const getPrice = useCallback(async () => {
+  const getPrice = useCallback(async () => {    
     if (isNil(contract)) return;
 
     if ("getPrice" in contract) {

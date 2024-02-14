@@ -107,7 +107,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setTroveLoading(true);
             const troveRes = await contract.getTrove();
-            
+
             if (isNil(troveRes)) throw new Error('Trove is undefined');
 
             let collateralAmounts: CollateralAmount[] = [];
@@ -125,11 +125,11 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     denom: baseCoin?.denom ?? ''
                 }]
             }
-            
+
             const debtAmount = convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal);
 
             const collateralAmountsByDenom = collateralAmounts.reduce<Record<string, CollateralInfo>>((acc, item) => {
-               
+
                 const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : BaseCoinByDenom[item.denom]?.decimal ?? 0;
                 const amount = convertAmount(item.amount, decimal);
                 const denom = item.denom;
@@ -142,23 +142,23 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }
             }, {});
-            const baseCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? collateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount ?? 0 :   collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-            
+            const baseCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? collateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount ?? 0 : collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+
 
             const minCollateralRatioByDenom = Object.entries(collateralAmountsByDenom).reduce<Record<string, number>>((acc, [denom, collateralInfo]) => {
-                const basePrice =  coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
-                console.log("basePrice", basePrice,denom);
-                
+                const basePrice = coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
+                console.log("basePrice", basePrice, denom);
+
                 return {
                     ...acc,
                     [denom]: (collateralInfo.amount * basePrice) / (debtAmount || 1)
                 };
             }, {})
-            
+
             //const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.denom ?? ''] ?? 0;
             const baseMinCollateralRatio = minCollateralRatioByDenom[baseCoin?.cw20Denom ?? ''] ?? 0;
             console.log("baseMinCollateralRatio", baseMinCollateralRatio);
-            
+
 
             setPageData(prev => ({
                 ...prev,
@@ -216,7 +216,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const decimal = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal;
             setPageData(prev => ({
                 ...prev,
-                stakedAmount: convertAmount(stakeRes?.amount ?? 0,decimal),
+                stakedAmount: convertAmount(stakeRes?.amount ?? 0, decimal),
                 poolShare: Number(Number(stakeRes?.percentage).toFixed(6))
             }))
         }
@@ -304,10 +304,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
 
-            const baseTotalCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? totalCollateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount :  totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+            const baseTotalCollateralAmount = baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? totalCollateralAmountsByDenom[baseCoin?.cw20Denom ?? '']?.amount : totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
             console.log();
-            
-                
+
+
             setPageData(prev => ({
                 ...prev,
                 totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
@@ -350,7 +350,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const debouncedGetPageData = useCallback(() => {
         clearTimeout(debounceTimer.current);
         debounceTimer.current = setTimeout(() => {
-            getPageData()
+            getPageData();
         }, 1000);
     }, [getPageData]);
 
