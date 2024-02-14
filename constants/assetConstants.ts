@@ -52,7 +52,7 @@ const neutronAsset: CollateralAsset = {
 const xionAsset: CollateralAsset = {
     name: "Aeroscraper Token",
     shortName: "AST",
-    denom: "uxion",
+    denom: "AST",
     cw20Denom: "AST",
     decimal: 18,
     ausdDecimal: 18,

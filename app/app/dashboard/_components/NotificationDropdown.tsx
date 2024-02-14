@@ -11,6 +11,7 @@ import Link from "next/link";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { TransactionDomainByChainName } from "@/constants/chainConstants";
+import Tooltip from "@/components/Tooltip/Tooltip";
 
 type ItemProps = {
   selectedChainName: ChainName;
@@ -34,7 +35,7 @@ const NotificationDropdown: FC = () => {
         localStorage.getItem("notifications") ?? ""
       );
       setNotifications(parsedNotifications);
-    } catch (error) {}
+    } catch (error) { }
   }, [listenNotification.notification]);
 
   const handleReadNotification = (index: number) => {
@@ -46,7 +47,7 @@ const NotificationDropdown: FC = () => {
       localStorage.setItem("notifications", JSON.stringify(tempNotifications));
 
       setNotifications(tempNotifications);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -57,8 +58,8 @@ const NotificationDropdown: FC = () => {
           {notifications
             .filter((item) => item.status === "success")
             .some((i) => !i.isRead) && (
-            <RedDotIcon className="absolute top-2 right-1" />
-          )}
+              <RedDotIcon className="absolute top-2 right-1" />
+            )}
         </div>
       }
     >
@@ -85,10 +86,10 @@ const NotificationDropdown: FC = () => {
           })}
           {notifications.filter((item) => item.status === "success").length ===
             0 && (
-            <div className="flex flex-col h-full gap-4 mt-20 items-center justify-center">
-              <Text size="sm">Your notifications are empty</Text>
-            </div>
-          )}
+              <div className="flex flex-col h-full gap-4 mt-20 items-center justify-center">
+                <Text size="sm">Your notifications are empty</Text>
+              </div>
+            )}
         </div>
       </BorderedContainer>
     </Dropdown>
@@ -115,9 +116,8 @@ const NotificationItem: FC<ItemProps> = ({
     return (
       <button
         onClick={handleReadNotification}
-        className={`border-0 border-dark-silver border-opacity-40  ${
-          hasDivider ? "border-b" : "border-b-0"
-        } flex items-center pb-3`}
+        className={`border-0 border-dark-silver border-opacity-40  ${hasDivider ? "border-b" : "border-b-0"
+          } flex items-center pb-3`}
       >
         <Link
           className={`flex items-center hover:opacity-30 duration-500 transition-opacity`}
@@ -139,12 +139,11 @@ const NotificationItem: FC<ItemProps> = ({
   return (
     <button onClick={handleReadNotification}>
       <div
-        className={`border-0 border-dark-silver border-opacity-40 ${
-          hasDivider ? "border-b" : "border-b-0"
-        } pb-3 flex`}
+        className={`border-0 border-dark-silver text-start line-clamp-2 border-opacity-40 
+        ${hasDivider ? "border-b" : "border-b-0"} pb-3 flex`}
       >
         {isRead === false && <RedDotIcon className="mr-2" />}
-        <Text size="sm">{text}</Text>
+        <Text size="sm" weight="w-[400px]">{text}</Text>
       </div>
     </button>
   );

@@ -45,7 +45,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
         try {
             setProcessLoading(true);
 
-            const res:any = await contract.liquidateTrovesV2(address);
+            const res: any = await contract.liquidateTrovesV2(address);
             addNotification({
                 status: 'success',
                 directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
@@ -97,6 +97,8 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             }
                         })
 
+                        const baseCollateralAmount = !isNil(baseCoin) ? (collateralAmounts.find(item => item.denom === (baseCoin.cw20Denom ?? baseCoin.denom))?.amount ?? 0) : 0;
+
                         const totalDollarValue = collateralAmounts.reduce((acc, curr) => {
                             const dollarValue = (coinPricesByDenom[curr.denom] ?? 0) * curr.amount;
                             return acc + dollarValue;
@@ -106,6 +108,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             owner: item.owner,
                             liquidityThreshold: item.liquidityThreshold ?? Number(isFinite(Number((totalDollarValue / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number((totalDollarValue / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : (convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal) > 0) ? -1 : 0),
                             collateralAmounts,
+                            baseCollateralAmount,
                             debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal),
                             totalDollarValue
                         };
@@ -114,6 +117,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             owner: item.owner,
                             liquidityThreshold: item.liquidityThreshold ?? 0,
                             collateralAmounts: [],
+                            baseCollateralAmount: 0,
                             debtAmount: 0,
                             totalDollarValue: 0
                         };
@@ -168,7 +172,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             <TableBodyCol col={1} text="XXXXXX" value={
                                 <div className='w-full h-full flex justify-center items-center gap-2 shrink-0'>
                                     <NumericFormat
-                                        value={item.totalDollarValue}
+                                        value={item.baseCollateralAmount}
                                         thousandsGroupStyle="thousand"
                                         thousandSeparator=","
                                         fixedDecimalScale

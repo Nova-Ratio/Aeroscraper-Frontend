@@ -32,12 +32,14 @@ export default function MintTap({
           : res?.transactionHash,
         message: `Mint Success`,
       });
+
       refreshBalance();
     } catch (error) {
       console.log(error);
       addNotification({
+        message: JSON.stringify(err.message),
         status: "error",
-        message: "Already minted today",
+        directLink: "",
       });
     } finally {
       setProcessLoading(false);

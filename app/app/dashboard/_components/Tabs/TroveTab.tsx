@@ -56,7 +56,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
     useNotification();
 
   const selectedCollateral = useMemo(
-    () =>{
+    () => {
       if (ChainName.XION === selectedChainName) {
         return pageData.collateralAmountsByDenom[selectedAsset?.cw20Denom || selectedAsset.denom] ?? {
           denom: selectedAsset.cw20Denom,
@@ -64,13 +64,14 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         }
       } else {
         return pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
-        denom: selectedAsset.denom,
-        amount: 0,
+          denom: selectedAsset.denom,
+          amount: 0,
+        }
       }
-    }},
+    },
     [selectedAsset, pageData.collateralAmountsByDenom]
   );
-  
+
   const selectedMinCollateral = useMemo(
     () => {
       if (ChainName.XION === selectedChainName) {
@@ -104,10 +105,10 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       openTroveAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
-        convertAmount(
-          balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
-          selectedAsset!.decimal
-        ) ||
+      convertAmount(
+        balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
+        selectedAsset!.decimal
+      ) ||
       collacteralRatio < selectedMinCollateral - 0.00001,
     [
       openTroveAmount,
@@ -144,11 +145,11 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       borrowingAmount <= 0 ||
       borrowingAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       borrowingAmount >
-        (selectedCollateral.amount * basePrice * 100) / 115 -
-          pageData.debtAmount,
+      (selectedCollateral.amount * basePrice * 100) / 115 -
+      pageData.debtAmount,
     [borrowingAmount, selectedCollateral]
   );
-  
+
   const repayDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
@@ -193,11 +194,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       getPageData();
       refreshBalance();
       setCollateralAmount(0);
-    } catch (err) {
-      console.error(err);
-
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -225,11 +224,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       getPageData();
       refreshBalance();
       setCollateralAmount(0);
-    } catch (err) {
-      console.error(err);
-
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -254,11 +251,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       getPageData();
       refreshBalance();
       setBorrowingAmount(0);
-    } catch (err) {
-      console.error(err);
-
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -293,11 +288,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       getPageData();
       refreshBalance();
       setBorrowAmount(0);
-    } catch (err) {
-      console.error(err);
-
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -325,13 +318,12 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
       });
       getPageData();
       refreshBalance();
-    } catch (err) {
+    } catch (err: any) {
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
-      console.error(err);
     } finally {
       setProcessLoading(false);
     }
@@ -454,18 +446,17 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                     renderText={(value) => (
                       <StatisticCard
                         title="Management Fee"
-                        description={`${value} ${
-                          selectedAsset?.shortName ?? ""
-                        } (0.5%)`}
+                        description={`${value} ${selectedAsset?.shortName ?? ""
+                          } (0.5%)`}
                         tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                       />
                     )}
                   />
 
                   <StatisticCard
-                    
+
                     title="Total Debt"
-                    description={`${pageData.debtAmount < 0.001 ? '< 0.000':pageData.debtAmount  } AUSD`}
+                    description={`${pageData.debtAmount < 0.001 ? '< 0.000' : pageData.debtAmount} AUSD`}
                     tooltip="The total amount of AUSD you have borrowed"
                   />
                   {/* <StatisticCard
@@ -566,11 +557,12 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         decimalScale={2}
                         displayType="text"
                         renderText={(value) => {
-                          return(
-                          <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
-                            {value} AUSD
-                          </p>
-                        )}}
+                          return (
+                            <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
+                              {value} AUSD
+                            </p>
+                          )
+                        }}
                       />
                     </div>
 
@@ -582,7 +574,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                       <NumericFormat
                         value={
                           ((selectedCollateral.amount ?? 0) * basePrice * 100) /
-                            115 -
+                          115 -
                           pageData.debtAmount
                         }
                         thousandsGroupStyle="thousand"
@@ -774,11 +766,12 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                 displayType="text"
                 renderText={(value) => {
                   console.log("pageData.ausdBalance", pageData.ausdBalance);
-                  return(
-                  <p className="text-white font-regular text-xs md:text-base ml-3">
-                    {value} AUSD
-                  </p>
-                )}}
+                  return (
+                    <p className="text-white font-regular text-xs md:text-base ml-3">
+                      {value} AUSD
+                    </p>
+                  )
+                }}
               />
             </div>
           </div>
@@ -796,9 +789,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
             <StatisticCard
               title="Management Fee"
               isNumeric
-              description={`${Number(openTroveAmount * 0.005)} ${
-                selectedAsset?.shortName ?? ""
-              } (0.5%)`}
+              description={`${Number(openTroveAmount * 0.005)} ${selectedAsset?.shortName ?? ""
+                } (0.5%)`}
               className="w-full h-14"
               tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
             />

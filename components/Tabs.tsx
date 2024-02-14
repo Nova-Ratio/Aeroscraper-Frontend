@@ -88,6 +88,7 @@ function Tabs({
   }
 
   return (
+
     <nav className="relative px-8 border border-white/10 rounded-lg">
        <ul className="grid grid-cols-6 gap-2 py-4 left-0 bottom-0 fixed shadow shadow-white/10 w-full bg-chinese-black md:hidden z-[999]">
         {tabs.map((tab) => (
@@ -120,10 +121,25 @@ function Tabs({
         className=" gap-6 pl-3 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
         onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
       >
+        {tabs.length > 5 && (
+          <motion.button
+            onClick={() => scrollTabs("left")}
+            className="absolute -left-2 top-0 h-full py-0 px-4 z-[999] active:scale-90"
+          >
+            {scrollPosition <= 0 ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ActiveChevronLeftIcon />
+            )}
+          </motion.button>
+        )}
+        
+        {tabs.length > 5 && <div className="pl-4" />}
         {tabs.map((tab, _index) => (
           <motion.li
             key={tab}
             onClick={() => onTabSelected?.(tab)}
+
             className={`px-4 py-3 m-1 text-base first:ml-6 last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
           >
             {camelCaseToTitleCase(tab)}
@@ -138,11 +154,12 @@ function Tabs({
             )}
           </motion.li>
         ))}
-      </ul>
-      {tabs.length > 5 && (
+        {tabs.length > 5 && <div className="pr-10" />}
+
+        {tabs.length > 5 && (
           <motion.button
             onClick={() => scrollTabs("right")}
-            className="absolute flex -right-[0.5px]  h-full py-5 px-3 top-0 z-[999] scale-[0.93] scale rounded-md bg-[#1a0c1c]"
+            className="absolute flex -right-[0.5px] h-full py-5 px-3 top-0 z-[999] scale-[0.93] scale rounded-md bg-[#1a0c1c]"
           >
             {scrollPosition >= 200 ? (
               <ChevronRightIcon />
@@ -151,6 +168,7 @@ function Tabs({
             )}
           </motion.button>
         )}
+      </ul>
     </nav>
   );
 }
