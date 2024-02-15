@@ -163,7 +163,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                   decimalScale={2}
                   displayType="text"
                   renderText={(value) =>
-                    <Text size='xs' responsive={true} className='whitespace-nowrap'>{value} AUSD</Text>
+                    <Text size='xs' responsive={true} className='whitespace-nowrap'>{value} aUSD</Text>
                   }
                 />} />
               <TableBodyCol col={2} text="XXXXXX" value={

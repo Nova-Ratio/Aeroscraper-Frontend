@@ -132,20 +132,20 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : `${Number(pageData.baseTotalCollateralAmount).toFixed(6)}`
             }
             className="w-[191px] h-14"
-            tooltip="The Total Value Locked (TVL) is the total value of sei locked as collateral in the system."
+            tooltip="The Total Value Locked (TVL) is the total value of AST locked as collateral in the system."
             tooltipPlacement="bottom"
             coinName={ selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name}
             isNumeric
           />
           <StatisticCard
-            title="AUSD in Stability Pool"
+            title="aUSD in Stability Pool"
             tooltipPlacement="left-bottom"
             description={isNil(baseCoin)
               ? "-" :Number(pageData.totalStakedAmount)
               .toFixed(3)
               .toString()}
             className="w-[191px] h-14"
-            tooltip="The total AUSD currently held in the Stability Pool."
+            tooltip="The total aUSD currently held in the Stability Pool."
             isNumeric
           />
           <StatisticCard
@@ -177,14 +177,14 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : 0
             } %`}
             className="w-[191px] h-14"
-            tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.name}:AUSD price, to the entire system debt.`}
+            tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.cw20Denom}:aUSD price, to the entire system debt.`}
           />
           <StatisticCard
-            title="AUSD Supply"
+            title="aUSD Supply"
             description={isNil(baseCoin)
               ? "-" : Number(pageData.totalAusdSupply).toFixed(3).toString()}
             className="w-[191px] h-14"
-            tooltip="The total AUSD minted by the Aeroscraper Protocol."
+            tooltip="The total aUSD minted by the Aeroscraper Protocol."
             tooltipPlacement="top"
             isNumeric
           />

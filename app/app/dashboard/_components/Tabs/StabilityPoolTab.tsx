@@ -58,7 +58,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${stakeAmount} AUSD Staked to Stability Pool`,
+        message: `${stakeAmount} aUSD Staked to Stability Pool`,
       });
       getPageData();
       refreshBalance();
@@ -84,7 +84,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${unstakeAmount} AUSD Unstaked from Stability Pool`,
+        message: `${unstakeAmount} aUSD Unstaked from Stability Pool`,
       });
       getPageData();
       refreshBalance();
@@ -106,7 +106,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
     <div className="overflow-hidden md:overflow-visible">
       <Text size="3xl">Add to stability pool to earn rewards</Text>
       <Text size="base" weight="font-regular" className="mt-1 mb-8">
-        Deposit or Withdraw AUSD from your wallet to the Aeroscraper protocol to
+        Deposit or Withdraw aUSD from your wallet to the Aeroscraper protocol to
         earn rewards.{" "}
       </Text>
       <div className="flex flex-col">
@@ -135,7 +135,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                     src="/images/token-images/ausd-blue.svg"
                   />
                   <Text size="base" weight="font-medium">
-                    AUSD
+                    aUSD
                   </Text>
                 </div>
                 <BorderedNumberInput
@@ -166,7 +166,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                   displayType="text"
                   renderText={(value) => (
                     <Text size="base" className="flex ml-2 gap-2">
-                      Available Balance: {value} AUSD
+                      Available Balance: {value} aUSD
                     </Text>
                   )}
                 />
@@ -176,7 +176,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
               <GradientButton
                 disabled={stakeDisabled}
                 disabledText={
-                  "Enter the AUSD amount. 999 AUSD is the upper limit for now."
+                  "Enter the aUSD amount. Check your balance."
                 }
                 loading={processLoading}
                 onClick={stakePool}
@@ -214,7 +214,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                     src="/images/token-images/ausd-blue.svg"
                   />
                   <Text size="base" weight="font-medium">
-                    AUSD
+                    aUSD
                   </Text>
                 </div>
                 <BorderedNumberInput
@@ -245,7 +245,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                   displayType="text"
                   renderText={(value) => (
                     <Text size="base" className="flex ml-2 gap-2">
-                      Available Balance: {value} AUSD
+                      Available Balance: {value} aUSD
                     </Text>
                   )}
                 />
@@ -255,7 +255,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
               <GradientButton
                 disabled={unstakeDisabled}
                 disabledText={
-                  "Enter the AUSD amount. 999 AUSD is the upper limit for now."
+                  "Enter the aUSD amount. Check your balance."
                 }
                 loading={processLoading}
                 onClick={unStakePool}

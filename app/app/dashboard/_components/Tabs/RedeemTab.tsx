@@ -80,7 +80,7 @@ const RedeemTab: FC<Props> = ({
       addNotification({
         status: "success",
         directLink: transactionHash,
-        message: `${redeemAmount} AUSD has Redeemed, Received ${injAmount.toFixed(
+        message: `${redeemAmount} aUSD has Redeemed, Received ${injAmount.toFixed(
           6
         )} ${coinName}`,
       });
@@ -101,7 +101,7 @@ const RedeemTab: FC<Props> = ({
   const coinName = selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name
   return (
     <section>
-      <Text size="3xl">Convert your AUSD directly to {coinName}</Text>
+      <Text size="3xl">Convert your aUSD directly to {coinName}</Text>
       <div className="mt-6">
         <div className="relative w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4">
           <div className="flex items-center justify-between">
@@ -112,7 +112,7 @@ const RedeemTab: FC<Props> = ({
                 src="/images/token-images/ausd-blue.svg"
               />
               <Text size="base" weight="font-medium">
-                AUSD
+                aUSD
               </Text>
             </div>
             <BorderedNumberInput
@@ -133,7 +133,7 @@ const RedeemTab: FC<Props> = ({
             renderText={(value) => (
               <Text size="base" className="md:mt-4 ml-auto">
                 Available:{" "}
-                <span className="font-regular ml-2">{value} AUSD</span>
+                <span className="font-regular ml-2">{value} aUSD</span>
               </Text>
             )}
           />
@@ -184,7 +184,7 @@ const RedeemTab: FC<Props> = ({
             text="Redeem"
             disabled={redeemDisabled}
             disabledText={
-              "Enter the AUSD amount. 999 AUSD is the upper limit for now."
+              "Enter the aUSD amount. Check your balance."
             }
           />
         </div>

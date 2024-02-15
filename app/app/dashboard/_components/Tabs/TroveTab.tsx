@@ -246,7 +246,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${borrowingAmount} AUSD Borrowed`,
+        message: `${borrowingAmount} aUSD Borrowed`,
       });
       getPageData();
       refreshBalance();
@@ -273,7 +273,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${borrowingAmount} AUSD Repayed`,
+        message: `${borrowingAmount} aUSD Repayed`,
       });
 
       if (borrowingAmount >= pageData.debtAmount) {
@@ -341,7 +341,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         <>
           <Text size="3xl">Manage your collateral</Text>
           <Text size="base" weight="font-regular" className="mt-1">
-            Mint AUSD or repay your debt.
+            Mint aUSD or repay your debt.
           </Text>
           <div className="flex flex-col mt-8">
             <Checkbox
@@ -456,8 +456,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   <StatisticCard
 
                     title="Total Debt"
-                    description={`${pageData.debtAmount < 0.001 ? '< 0.000' : pageData.debtAmount} AUSD`}
-                    tooltip="The total amount of AUSD you have borrowed"
+                    description={`${pageData.debtAmount < 0.001 ? '< 0.000' : pageData.debtAmount} aUSD`}
+                    tooltip="The total amount of aUSD you have borrowed"
                   />
                   {/* <StatisticCard
                     isNumeric
@@ -478,14 +478,14 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         ? getRatioColor(selectedMinCollateral * 100)
                         : undefined
                     }
-                    tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
+                    tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
                   />
                 </div>
                 <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
                   <OutlinedButton
                     disabled={withdrawDisabled}
                     disabledText={
-                      "Enter the INJ amount. 999 INJ is the upper limit for now."
+                      "Enter the AST amount. Check your balance."
                     }
                     loading={processLoading}
                     onClick={queryWithdraw}
@@ -496,7 +496,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   <GradientButton
                     disabled={depositDisabled}
                     disabledText={
-                      "Enter the INJ amount. 999 INJ is the upper limit for now."
+                      "Enter the AST amount. Check your balance."
                     }
                     loading={processLoading}
                     onClick={queryAddColletral}
@@ -533,7 +533,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         src="/images/token-images/ausd-blue.svg"
                       />
                       <Text size="base" weight="font-medium">
-                        AUSD
+                        aUSD
                       </Text>
                     </div>
                     <BorderedNumberInput
@@ -559,7 +559,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         renderText={(value) => {
                           return (
                             <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
-                              {value} AUSD
+                              {value} aUSD
                             </p>
                           )
                         }}
@@ -584,7 +584,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         displayType="text"
                         renderText={(value) => (
                           <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
-                            {value} AUSD
+                            {value} aUSD
                           </p>
                         )}
                       />
@@ -601,7 +601,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         decimalScale={2}
                         displayType="text"
                         renderText={(value) => (
-                          <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">{`${value} AUSD`}</p>
+                          <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">{`${value} aUSD`}</p>
                         )}
                       />
                     </div>
@@ -631,14 +631,14 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         ? getRatioColor(pageData.baseMinCollateralRatio * 100)
                         : undefined
                     }
-                    tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
+                    tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
                   />
                 </div>
                 <div className="flex items-center justify-end pr-4 gap-4 mt-6">
                   <OutlinedButton
                     disabled={repayDisabled}
                     disabledText={
-                      "Enter the AUSD amount. 999 AUSD is the upper limit for now."
+                      "Enter the aUSD amount. Check your balance."
                     }
                     loading={processLoading}
                     onClick={queryRepay}
@@ -649,7 +649,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   <GradientButton
                     disabled={borrowDisabled}
                     disabledText={
-                      "Enter the AUSD amount. 999 AUSD is the upper limit for now."
+                      "Enter the aUSD amount. Check your balance."
                     }
                     loading={processLoading}
                     onClick={queryBorrow}
@@ -665,9 +665,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         </>
       ) : (
         <div>
-          <Text size="3xl">Borrow AUSD</Text>
+          <Text size="3xl">Borrow aUSD</Text>
           <Text size="base" weight="font-regular" className="mt-1">
-            Open a trove to borrow AUSD, Aeroscraper’s native stable coin.
+            Open a trove to borrow aUSD, Aeroscraper’s native stable coin.
           </Text>
           <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-4 md:px-6 md:pt-8 flex flex-col gap-4 mt-6">
             <div className="flex items-end justify-between">
@@ -741,7 +741,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                     src="/images/token-images/ausd-blue.svg"
                   />
                   <Text size="base" weight="font-medium">
-                    AUSD
+                    aUSD
                   </Text>
                 </div>
               </div>
@@ -768,7 +768,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   console.log("pageData.ausdBalance", pageData.ausdBalance);
                   return (
                     <p className="text-white font-regular text-xs md:text-base ml-3">
-                      {value} AUSD
+                      {value} aUSD
                     </p>
                   )
                 }}
@@ -797,9 +797,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
             <StatisticCard
               title="Total Debt"
               isNumeric
-              description={`${borrowAmount} AUSD`}
+              description={`${borrowAmount} aUSD`}
               className="w-full h-14"
-              tooltip="The total amount of AUSD you have borrowed"
+              tooltip="The total amount of aUSD you have borrowed"
             />
             {/* <StatisticCard
                 isNumeric
@@ -817,7 +817,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   : undefined
               }
               className="w-full h-14"
-              tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
+              tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
             />
           </motion.div>
           <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
@@ -828,7 +828,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
               rounded="rounded-lg"
               disabled={confirmDisabled}
               disabledText={
-                "Fill in both INJ and AUSD amounts. 999 INJ & AUSD is the upper limit, and 1 AUSD is the lower limit for now."
+                "Fill in both AST and aUSD amounts. 1000 aUSD is the lower limit."
               }
             >
               <Text>Confirm</Text>
