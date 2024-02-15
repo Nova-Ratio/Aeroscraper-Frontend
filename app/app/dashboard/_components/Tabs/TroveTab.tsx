@@ -110,7 +110,7 @@ const TroveTab: FC<Props> = ({
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
-      borrowAmount > (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ||
       openTroveAmount >
         (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       collacteralRatio < 1.15 ||
