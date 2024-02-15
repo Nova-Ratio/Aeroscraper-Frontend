@@ -40,10 +40,10 @@ const RedeemTab: FC<Props> = ({
   const { baseCoin, selectedChainName } = useChainAdapter();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
-  
 
 
-  const {addNotification,setProcessLoading,processLoading} = useNotification();
+
+  const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const contract = useAppContract();
 
@@ -59,28 +59,33 @@ const RedeemTab: FC<Props> = ({
     () =>
       isNil(redeemAmount) ||
       redeemAmount <= 0 ||
-      redeemAmount > 999 ||
       redeemAmount > pageData.ausdBalance,
     [redeemAmount, pageData]
   );
 
-
+  const redeemErrorText = useMemo(() =>
+    (isNil(redeemAmount) || redeemAmount <= 0) ?
+      "Enter the AUSD amount" :
+      redeemAmount > pageData.ausdBalance ? "Insufficient AUSD balance"
+        :
+        undefined,
+    [redeemAmount, pageData])
 
   const redeem = async () => {
     let transactionHash;
     try {
       setProcessLoading(true);
-      
+
       console.log("redeemAmount", redeemAmount);
       const res: any = await contract.redeem(redeemAmount);
       console.log("res", res);
-      
+
 
       transactionHash = getIsInjectiveResponse(res)
         ? res?.txHash
         : res?.transactionHash;
       console.log("transactionHash", transactionHash);
-      
+
       addNotification({
         status: "success",
         directLink: transactionHash,
@@ -92,7 +97,7 @@ const RedeemTab: FC<Props> = ({
       getPageData();
       refreshBalance();
       setRedeemAmount(0);
-    }catch (err: any) {
+    } catch (err: any) {
       addNotification({
         message: JSON.stringify(err.message),
         status: "error",
@@ -187,9 +192,7 @@ const RedeemTab: FC<Props> = ({
             onClick={redeem}
             text="Redeem"
             disabled={redeemDisabled}
-            disabledText={
-              "Enter the AUSD amount. 999 AUSD is the upper limit for now."
-            }
+            disabledText={redeemErrorText}
           />
         </div>
       </div>
