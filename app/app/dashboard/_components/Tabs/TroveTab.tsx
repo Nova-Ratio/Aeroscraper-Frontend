@@ -127,9 +127,34 @@ const TroveTab: FC<Props> = ({
       pageData,
       selectedMinCollateral,
       selectedAsset,
-      balanceByDenom,
+      balanceByDenom
     ]
   );
+
+  const openTroveErrorText = useMemo(() =>
+    (openTroveAmount <= 0 || borrowAmount <= 0) ?
+      "Fill the both amounts."
+      :
+      openTroveAmount > convertAmount(balanceByDenom[selectedAsset!.denom]?.amount ?? 0, selectedAsset!.decimal) ?
+        "Insufficient balance."
+        :
+        collacteralRatio < 1.15 ?
+          "Collateral ratio should be at least 115%."
+          :
+          collacteralRatio < (selectedMinCollateral - 0.00001) ?
+            `Collateral ratio should be at least ${selectedMinCollateral}.`
+            :
+            undefined,
+    [
+      openTroveAmount,
+      borrowAmount,
+      collacteralRatio,
+      pageData,
+      selectedMinCollateral,
+      selectedAsset,
+      balanceByDenom
+    ]
+  )
 
   const withdrawDisabled = useMemo(
     () =>
@@ -139,6 +164,16 @@ const TroveTab: FC<Props> = ({
       selectedCollateral.amount < collateralAmount,
     [collateralAmount, selectedCollateral]
   );
+
+  const withdrawErrorText = useMemo(() =>
+    collateralAmount <= 0 ?
+      "Enter the amount." :
+      selectedCollateral.amount < collateralAmount ?
+        "Insufficient balance." :
+        undefined,
+    [collateralAmount, selectedCollateral]
+  )
+
   const depositDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
@@ -150,18 +185,42 @@ const TroveTab: FC<Props> = ({
           selectedAsset.decimal
         )
       ) < collateralAmount,
-    [collateralAmount, selectedAsset]
+    [collateralAmount, selectedAsset, balanceByDenom]
   );
+
+  const depositErrorText = useMemo(() =>
+    collateralAmount <= 0 ?
+      "Enter the amount." :
+      Number(
+        convertAmount(
+          balanceByDenom[selectedAsset.denom]?.amount ?? 0,
+          selectedAsset.decimal
+        )
+      ) < collateralAmount ?
+        "Insufficient balance." :
+        undefined,
+    [collateralAmount, selectedAsset, balanceByDenom]
+  )
+
   const borrowDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
       borrowingAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      (selectedCollateral.amount * basePrice * 100) / 115 -
+      pageData.debtAmount,
+    [borrowingAmount, pageData, selectedCollateral, basePrice]
+  );
+
+  const borrowErrorText = useMemo(() =>
+    borrowingAmount <= 0 ?
+      "Enter the amount." :
       borrowingAmount >
         (selectedCollateral.amount * basePrice * 100) / 115 -
-          pageData.debtAmount,
-    [borrowingAmount, selectedCollateral]
-  );
+        pageData.debtAmount ?
+        "Insufficient borrowing capacity." :
+        undefined,
+    [borrowingAmount, pageData, selectedCollateral, basePrice]
+  )
 
   const repayDisabled = useMemo(
     () =>
@@ -170,8 +229,17 @@ const TroveTab: FC<Props> = ({
         (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       borrowingAmount > pageData.debtAmount ||
       borrowingAmount > pageData.ausdBalance,
-    [borrowingAmount]
+    [borrowingAmount, pageData]
   );
+
+  const repayErrorText = useMemo(() =>
+    borrowingAmount <= 0 ?
+      "Enter the amount." :
+      (borrowingAmount > pageData.debtAmount || borrowingAmount > pageData.ausdBalance) ?
+        "Insufficient balance." :
+        undefined,
+    [borrowingAmount, pageData]
+  )
 
   const changeOpenTroveAmount = (values: NumberFormatValues) => {
     setOpenTroveAmount(Number(values.value));
@@ -502,7 +570,7 @@ const TroveTab: FC<Props> = ({
                 <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
                   <OutlinedButton
                     disabled={withdrawDisabled}
-                    disabledText={"Enter the AST amount. Check your balance."}
+                    disabledText={withdrawErrorText}
                     loading={processLoading}
                     onClick={queryWithdraw}
                     className="min-w-[136px] md:min-w-[201px] h-11"
@@ -511,7 +579,7 @@ const TroveTab: FC<Props> = ({
                   </OutlinedButton>
                   <GradientButton
                     disabled={depositDisabled}
-                    disabledText={"Enter the AST amount. Check your balance."}
+                    disabledText={depositErrorText}
                     loading={processLoading}
                     onClick={queryAddColletral}
                     className="min-w-[176px] md:min-w-[374px] h-11"
@@ -651,7 +719,7 @@ const TroveTab: FC<Props> = ({
                 <div className="flex items-center justify-end pr-4 gap-4 mt-6">
                   <OutlinedButton
                     disabled={repayDisabled}
-                    disabledText={"Enter the aUSD amount. Check your balance."}
+                    disabledText={repayErrorText}
                     loading={processLoading}
                     onClick={queryRepay}
                     className="min-w-[142px] md:min-w-[201px] h-11"
@@ -660,7 +728,7 @@ const TroveTab: FC<Props> = ({
                   </OutlinedButton>
                   <GradientButton
                     disabled={borrowDisabled}
-                    disabledText={"Enter the aUSD amount. Check your balance."}
+                    disabledText={borrowErrorText}
                     loading={processLoading}
                     onClick={queryBorrow}
                     className="min-w-[176px] md:min-w-[375px] h-11"
@@ -846,9 +914,7 @@ const TroveTab: FC<Props> = ({
               className="min-w-full md:min-w-[375px] h-11 "
               rounded="rounded-lg"
               disabled={confirmDisabled}
-              disabledText={
-                "Fill in both AST and aUSD amounts. 1000 aUSD is the lower limit."
-              }
+              disabledText={openTroveErrorText}
             >
               <Text>Confirm</Text>
             </GradientButton>

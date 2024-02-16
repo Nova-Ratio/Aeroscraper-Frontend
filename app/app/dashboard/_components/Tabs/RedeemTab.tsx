@@ -40,7 +40,6 @@ const RedeemTab: FC<Props> = ({
   const { baseCoin, selectedChainName } = useChainAdapter();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
-
   const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const contract = useAppContract();
@@ -57,11 +56,16 @@ const RedeemTab: FC<Props> = ({
     () =>
       isNil(redeemAmount) ||
       redeemAmount <= 0 ||
-      redeemAmount > 999 ||
       redeemAmount > pageData.ausdBalance,
     [redeemAmount, pageData]
   );
-
+  const redeemErrorText = useMemo(() =>
+    (isNil(redeemAmount) || redeemAmount <= 0) ?
+      "Enter the AUSD amount" :
+      redeemAmount > pageData.ausdBalance ? "Insufficient AUSD balance"
+        :
+        undefined,
+    [redeemAmount, pageData])
   const redeem = async () => {
     let transactionHash;
     try {
@@ -183,9 +187,7 @@ const RedeemTab: FC<Props> = ({
             onClick={redeem}
             text="Redeem"
             disabled={redeemDisabled}
-            disabledText={
-              "Enter the aUSD amount. Check your balance."
-            }
+            disabledText={redeemErrorText}
           />
         </div>
       </div>

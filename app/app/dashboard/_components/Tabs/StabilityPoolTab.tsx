@@ -35,17 +35,32 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
   const stakeDisabled = useMemo(
     () =>
       stakeAmount <= 0 ||
-      stakeAmount > 999 ||
       stakeAmount > pageData.ausdBalance,
-    [stakeAmount]
+    [stakeAmount, pageData.ausdBalance]
   );
+
+  const stakeErrorText = useMemo(() => (
+    stakeAmount <= 0 ?
+      "Enter the AUSD amount." :
+      stakeAmount > pageData.ausdBalance ?
+        "Insufficient AUSD balance." :
+        undefined
+  ), [stakeAmount, pageData.ausdBalance]);
+
   const unstakeDisabled = useMemo(
     () =>
       unstakeAmount <= 0 ||
-      unstakeAmount > 999 ||
       unstakeAmount > pageData.stakedAmount,
-    [unstakeAmount]
+    [unstakeAmount, pageData.stakedAmount]
   );
+
+  const unstakeErrorText = useMemo(() => (
+    unstakeAmount <= 0 ?
+      "Enter the AUSD amount." :
+      unstakeAmount > pageData.stakedAmount ?
+        "Insufficient AUSD balance." :
+        undefined
+  ), [unstakeAmount, pageData.stakedAmount]);
 
   const stakePool = async () => {
     setProcessLoading(true);
@@ -175,9 +190,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
               <GradientButton
                 disabled={stakeDisabled}
-                disabledText={
-                  "Enter the aUSD amount. Check your balance."
-                }
+                disabledText={stakeErrorText}
                 loading={processLoading}
                 onClick={stakePool}
                 className="w-[240px] md:w-[374px] h-11 "
@@ -254,9 +267,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
               <GradientButton
                 disabled={unstakeDisabled}
-                disabledText={
-                  "Enter the aUSD amount. Check your balance."
-                }
+                disabledText={unstakeErrorText}
                 loading={processLoading}
                 onClick={unStakePool}
                 className="min-w-[240px] md:w-[374px] h-11 "
