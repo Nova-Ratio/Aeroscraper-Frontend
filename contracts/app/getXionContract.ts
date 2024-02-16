@@ -313,7 +313,9 @@ export const getXionContract = (
     return await client?.execute(
       senderAddress,
       contractAddress,
-      { liquidate_troves: {} },
+      { liquidate_troves: {
+        liquidation_list: [owner],
+        safe_list: []} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
         gas: "1200000",
