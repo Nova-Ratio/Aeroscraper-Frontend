@@ -144,6 +144,9 @@ const TroveTab: FC<Props> = ({
           collacteralRatio < (selectedMinCollateral - 0.00001) ?
             `Collateral ratio should be at least ${selectedMinCollateral}.`
             :
+              borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ?
+                '1000 aUSD is the lower limit for opening a trove.'
+              :
             undefined,
     [
       openTroveAmount,
