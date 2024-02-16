@@ -37,7 +37,12 @@ type Props = {
   colleteralAmount: number;
 };
 
-const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmount }) => {
+const TroveTab: FC<Props> = ({
+  pageData,
+  getPageData,
+  basePrice,
+  colleteralAmount,
+}) => {
   const contract = useAppContract();
   const { balanceByDenom, refreshBalance } = useBalances();
   const { selectedChainName, selectedAppVersion } = useChainAdapter();
@@ -55,33 +60,37 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();
 
-  const selectedCollateral = useMemo(
-    () => {
-      if (ChainName.XION === selectedChainName) {
-        return pageData.collateralAmountsByDenom[selectedAsset?.cw20Denom || selectedAsset.denom] ?? {
+  const selectedCollateral = useMemo(() => {
+    if (ChainName.XION === selectedChainName) {
+      return (
+        pageData.collateralAmountsByDenom[
+          selectedAsset?.cw20Denom || selectedAsset.denom
+        ] ?? {
           denom: selectedAsset.cw20Denom,
           amount: 0,
         }
-      } else {
-        return pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
+      );
+    } else {
+      return (
+        pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
           denom: selectedAsset.denom,
           amount: 0,
         }
-      }
-    },
-    [selectedAsset, pageData.collateralAmountsByDenom]
-  );
+      );
+    }
+  }, [selectedAsset, pageData.collateralAmountsByDenom]);
 
-  const selectedMinCollateral = useMemo(
-    () => {
-      if (ChainName.XION === selectedChainName) {
-        return pageData.minCollateralRatioByDenom[selectedAsset?.cw20Denom || selectedAsset.denom] ?? 0
-      } else {
-        return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0
-      }
-    },
-    [selectedAsset, pageData.minCollateralRatioByDenom]
-  );
+  const selectedMinCollateral = useMemo(() => {
+    if (ChainName.XION === selectedChainName) {
+      return (
+        pageData.minCollateralRatioByDenom[
+          selectedAsset?.cw20Denom || selectedAsset.denom
+        ] ?? 0
+      );
+    } else {
+      return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0;
+    }
+  }, [selectedAsset, pageData.minCollateralRatioByDenom]);
 
   const isTroveOpened = useMemo(
     () => selectedCollateral.amount > 0,
@@ -101,12 +110,15 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
+      borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ||
+      openTroveAmount >
+        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
-      convertAmount(
-        balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
-        selectedAsset!.decimal
-      ) ||
+        convertAmount(
+          balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
+          selectedAsset!.decimal
+        ) ||
       collacteralRatio < selectedMinCollateral - 0.00001,
     [
       openTroveAmount,
@@ -147,6 +159,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
   const withdrawDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
+      collateralAmount >
+        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       selectedCollateral.amount < collateralAmount,
     [collateralAmount, selectedCollateral]
   );
@@ -163,6 +177,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
   const depositDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
+      collateralAmount >
+        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       Number(
         convertAmount(
           balanceByDenom[selectedAsset.denom]?.amount ?? 0,
@@ -209,6 +225,8 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
   const repayDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
+      borrowingAmount >
+        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       borrowingAmount > pageData.debtAmount ||
       borrowingAmount > pageData.ausdBalance,
     [borrowingAmount, pageData]
@@ -310,7 +328,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${borrowingAmount} AUSD Borrowed`,
+        message: `${borrowingAmount} aUSD Borrowed`,
       });
       getPageData();
       refreshBalance();
@@ -337,7 +355,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
-        message: `${borrowingAmount} AUSD Repayed`,
+        message: `${borrowingAmount} aUSD Repayed`,
       });
 
       if (borrowingAmount >= pageData.debtAmount) {
@@ -405,7 +423,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         <>
           <Text size="3xl">Manage your collateral</Text>
           <Text size="base" weight="font-regular" className="mt-1">
-            Mint AUSD or repay your debt.
+            Mint aUSD or repay your debt.
           </Text>
           <div className="flex flex-col mt-8">
             <Checkbox
@@ -510,18 +528,22 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                     renderText={(value) => (
                       <StatisticCard
                         title="Management Fee"
-                        description={`${value} ${selectedAsset?.shortName ?? ""
-                          } (0.5%)`}
+                        description={`${value} ${
+                          selectedAsset?.shortName ?? ""
+                        } (0.5%)`}
                         tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                       />
                     )}
                   />
 
                   <StatisticCard
-
                     title="Total Debt"
-                    description={`${pageData.debtAmount < 0.001 ? '< 0.000' : pageData.debtAmount} AUSD`}
-                    tooltip="The total amount of AUSD you have borrowed"
+                    description={`${
+                      pageData.debtAmount < 0.001
+                        ? "< 0.000"
+                        : pageData.debtAmount
+                    } aUSD`}
+                    tooltip="The total amount of aUSD you have borrowed"
                   />
                   {/* <StatisticCard
                     isNumeric
@@ -542,7 +564,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         ? getRatioColor(selectedMinCollateral * 100)
                         : undefined
                     }
-                    tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
+                    tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
                   />
                 </div>
                 <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
@@ -593,7 +615,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         src="/images/token-images/ausd-blue.svg"
                       />
                       <Text size="base" weight="font-medium">
-                        AUSD
+                        aUSD
                       </Text>
                     </div>
                     <BorderedNumberInput
@@ -619,9 +641,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         renderText={(value) => {
                           return (
                             <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
-                              {value} AUSD
+                              {value} aUSD
                             </p>
-                          )
+                          );
                         }}
                       />
                     </div>
@@ -634,7 +656,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                       <NumericFormat
                         value={
                           ((selectedCollateral.amount ?? 0) * basePrice * 100) /
-                          115 -
+                            115 -
                           pageData.debtAmount
                         }
                         thousandsGroupStyle="thousand"
@@ -644,7 +666,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         displayType="text"
                         renderText={(value) => (
                           <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">
-                            {value} AUSD
+                            {value} aUSD
                           </p>
                         )}
                       />
@@ -661,7 +683,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         decimalScale={2}
                         displayType="text"
                         renderText={(value) => (
-                          <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">{`${value} AUSD`}</p>
+                          <p className="text-white font-regular text-xs md:text-base ml-1 md:ml-3">{`${value} aUSD`}</p>
                         )}
                       />
                     </div>
@@ -691,7 +713,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                         ? getRatioColor(pageData.baseMinCollateralRatio * 100)
                         : undefined
                     }
-                    tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
+                    tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
                   />
                 </div>
                 <div className="flex items-center justify-end pr-4 gap-4 mt-6">
@@ -721,9 +743,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
         </>
       ) : (
         <div>
-          <Text size="3xl">Borrow AUSD</Text>
+          <Text size="3xl">Borrow aUSD</Text>
           <Text size="base" weight="font-regular" className="mt-1">
-            Open a trove to borrow AUSD, Aeroscraper’s native stable coin.
+            Open a trove to borrow aUSD, Aeroscraper’s native stable coin.
           </Text>
           <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-4 md:px-6 md:pt-8 flex flex-col gap-4 mt-6">
             <div className="flex items-end justify-between">
@@ -797,7 +819,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                     src="/images/token-images/ausd-blue.svg"
                   />
                   <Text size="base" weight="font-medium">
-                    AUSD
+                    aUSD
                   </Text>
                 </div>
               </div>
@@ -824,9 +846,9 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   console.log("pageData.ausdBalance", pageData.ausdBalance);
                   return (
                     <p className="text-white font-regular text-xs md:text-base ml-3">
-                      {value} AUSD
+                      {value} aUSD
                     </p>
-                  )
+                  );
                 }}
               />
             </div>
@@ -842,20 +864,29 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
             }}
             className="grid grid-cols-2 md:grid-cols-3 content-center md:gap-16 mt-8"
           >
-            <StatisticCard
-              title="Management Fee"
-              isNumeric
-              description={`${Number(openTroveAmount * 0.005)} ${selectedAsset?.shortName ?? ""
-                } (0.5%)`}
-              className="w-full h-14"
-              tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
+            <NumericFormat
+              value={Number(openTroveAmount * 0.005)}
+              thousandsGroupStyle="thousand"
+              thousandSeparator=","
+              fixedDecimalScale
+              decimalScale={3}
+              displayType="text"
+              renderText={(value) => (
+                <StatisticCard
+                  title="Management Fee"
+                  description={`${value} ${
+                    selectedAsset?.shortName ?? ""
+                  } (0.5%)`}
+                  tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
+                />
+              )}
             />
             <StatisticCard
               title="Total Debt"
               isNumeric
-              description={`${borrowAmount} AUSD`}
+              description={`${borrowAmount} aUSD`}
               className="w-full h-14"
-              tooltip="The total amount of AUSD you have borrowed"
+              tooltip="The total amount of aUSD you have borrowed"
             />
             {/* <StatisticCard
                 isNumeric
@@ -873,7 +904,7 @@ const TroveTab: FC<Props> = ({ pageData, getPageData, basePrice, colleteralAmoun
                   : undefined
               }
               className="w-full h-14"
-              tooltip="The ratio between the dollar value of the collateral and the debt (in AUSD) you are depositing."
+              tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
             />
           </motion.div>
           <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">

@@ -1,5 +1,7 @@
-import { BaseCoinByChainName, XION_STATIC_PRICE } from "@/constants/chainConstants";
+import { BaseCoinByChainName } from "@/constants/chainConstants";
+import useAppContract from '@/contracts/app/useAppContract';
 import { ChainName } from "@/enums/Chain";
+import useChainAdapter from "@/hooks/useChainAdapter";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { isNil } from "lodash";
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -8,15 +10,19 @@ type PriceContextValue = {
     coinPricesByDenom: Record<string, number>;
     refreshPrices: () => void;
     getPriceByChainName: (chainName?: ChainName) => number;
+    getXionPrice: (price: number) => void
 }
 
 const PriceContext = createContext<PriceContextValue>({
     coinPricesByDenom: {},
     refreshPrices: () => { },
-    getPriceByChainName: () => 0
+    getPriceByChainName: () => 0,
+    getXionPrice: () => {}
 });
 
 const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
+    const contract = useAppContract();
+
     const [coinPricesByDenom, setCoinPricesByDenom] = useState<Record<string, number>>({});
 
     const getInjPrice = useCallback(async () => {
@@ -131,13 +137,14 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
         }
     }, [])
 
-    const getXionPrice = useCallback(async () => {
+    const getXionPrice = useCallback(async (price?: number) => {
         const denom = BaseCoinByChainName[ChainName.XION].denom;
+
         setCoinPricesByDenom(prev => ({
             ...prev,
-            [denom]: XION_STATIC_PRICE
+            [denom]: (price ?? 0) / 100000000
         }))
-    }, [])
+    }, []);
 
     const getAllPrices = useCallback(async () => {
         getInjPrice();
@@ -155,12 +162,13 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const contextValue = useMemo<PriceContextValue>(() => ({
         coinPricesByDenom,
         refreshPrices: getAllPrices,
-        getPriceByChainName
+        getPriceByChainName,
+        getXionPrice
     }), [coinPricesByDenom, getAllPrices, getPriceByChainName])
 
     useEffect(() => {
         getAllPrices();
-    }, [getAllPrices])
+    }, [getAllPrices]);
 
     return (
         <PriceContext.Provider value={contextValue}>

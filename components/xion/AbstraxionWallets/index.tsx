@@ -228,17 +228,6 @@ export const AbstraxionWallets = ({ onClose }: { onClose: () => void }) => {
             </div>
           )}
           <div className="ui-flex ui-w-full ui-flex-col ui-items-center ui-gap-4">
-            {connectionType === "stytch" &&
-              user &&
-              user?.webauthn_registrations.length < 1 && (
-                <Button
-                  structure="outlined"
-                  fullWidth={true}
-                  onClick={registerWebAuthn}
-                >
-                  Add Passkey/Biometrics
-                </Button>
-              )}
             <Button
               structure="outlined"
               fullWidth={true}

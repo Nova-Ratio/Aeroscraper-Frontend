@@ -6,15 +6,15 @@ export const defaultContent: {
   }[] = [
     {
       title: "Your decentralized lending-borrowing protocol",
-      desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow AUSD, earn AUSD rewards by depositing AUSD to the Stability pool, or Liquidate Risky Troves.",
+      desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow aUSD, earn aUSD rewards by depositing aUSD to the Stability pool, or Liquidate Risky Troves.",
     },
     {
-      title: "Open your Trove and Mint AUSD",
-      desc: "Open your first trove using INJ and mint AUSD. You can add or remove collaterals to your Trove later, mint more AUSD, or pay off your debt.",
+      title: "Open your Trove and Mint aUSD",
+      desc: "Open your first trove using AST and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
     },
     {
-      title: "Stake your AUSD to Stability Pool",
-      desc: "Get a right to earn rewards from liquid troves by staking your AUSD to the stability pool.",
+      title: "Stake your aUSD to Stability Pool",
+      desc: "Get a right to earn rewards from liquid troves by staking your aUSD to the stability pool.",
     },
     {
       title: "Rewards!",

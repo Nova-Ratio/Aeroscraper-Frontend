@@ -10,7 +10,6 @@ import {
 } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
 import Footer from "@/components/landing/footer";
-import Hackathons from "@/components/landing/hackathons";
 import Partners from "@/components/landing/partners";
 import { AbstraxionAccount } from "@/hooks/xion";
 import Image from "next/image";
@@ -83,7 +82,6 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <Hackathons />
         <div className="max-w-[626px]">
           <Faq />
         </div>

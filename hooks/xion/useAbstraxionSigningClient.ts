@@ -30,7 +30,7 @@ export const useAbstraxionSigningClient = () => {
       );
 
       const jwtClient = await AAClient.connectWithSigner(
-        "https://xion-testnet-rpc.polkachu.com",
+        "https://xion-test-priv-rpc.kingnodes.com",
         jwtSigner,
         {
           gasPrice: GasPrice.fromString("0uxion"),

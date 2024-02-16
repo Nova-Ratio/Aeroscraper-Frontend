@@ -7,6 +7,7 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Coin } from '@cosmjs/proto-signing';
 import { Dictionary, isNil } from 'lodash';
 import React, { FC, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { usePrice } from './PriceProvider';
 
 type BalanceContextValue = {
     balanceByDenom: Dictionary<Coin | undefined>;
@@ -24,6 +25,8 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
     const { client: absraxionClient } = useAbstraxionSigningClient();
     const [balanceByDenom, setBalanceByDenom] = useState<Dictionary<Coin | undefined>>({});
     const contract = useAppContract();
+    const { getXionPrice } = usePrice();
+
     const getBalances = useCallback(async () => {
         try {
             if (!address || !baseCoin) return;
@@ -33,7 +36,10 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
 
                 //const balance = await absraxionClient.getBalance(address, baseCoin.denom);
                 const getbalance = await contract.getCustomTokenBalance();
-                
+                const getCustomTokenPrice = await contract.getPrice();
+
+                getXionPrice(getCustomTokenPrice[0].price);
+
                 const balance = {
                     denom: baseCoin.denom,
                     amount: getbalance?.balance || "0"
