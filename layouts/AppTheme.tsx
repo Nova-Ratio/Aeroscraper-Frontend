@@ -20,6 +20,7 @@ import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
 import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
+import Tooltip from "@/components/Tooltip/Tooltip";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -35,13 +36,13 @@ const AppTheme = () => {
     disconnect,
     disconnectMetamask,
     disconnectXion,
-    basePrice
+    basePrice,
   } = useChainAdapter();
   const { addNotification } = useNotification();
   const { balanceByDenom } = useBalances();
   const { pageData, getPageData } = usePageData();
   const { profileDetail } = useProfile();
-  
+
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
@@ -60,7 +61,8 @@ const AppTheme = () => {
     if (
       window.ethereum &&
       typeof window !== "undefined" &&
-      selectedWallet === WalletType.METAMASK && selectedChainName === ChainName.INJECTIVE &&
+      selectedWallet === WalletType.METAMASK &&
+      selectedChainName === ChainName.INJECTIVE &&
       isWalletConnected
     ) {
       const getChainId = async () => {
@@ -164,23 +166,26 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
-          
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
-            <img
-              alt="ausd"
-              className="w-5 h-5"
-              src="/images/token-images/ausd-blue.svg"
-            />
+            <Tooltip containerClassName='flex items-center text-white' width='w-[52px]' title="aUSD">
+              <img
+                alt="ausd"
+                className="w-5 h-5"
+                src="/images/token-images/ausd-blue.svg"
+              />
+            </Tooltip>
           </div>
           {!isNil(baseCoin) && (
             <div className="items-center gap-2 mr-12 md:flex hidden">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
-              <img
-                alt={baseCoin.name}
-                className="w-5 h-5"
-                src={baseCoin.tokenImage}
-              />
+              <Tooltip containerClassName='flex items-center text-white' width='w-[52px]' title={"AST"}>
+                <img
+                  alt={baseCoin.name}
+                  className="w-5 h-5"
+                  src={baseCoin.tokenImage}
+                />
+              </Tooltip>
             </div>
           )}
           {isWalletConnected && !isNil(baseCoin) ? (
@@ -265,7 +270,10 @@ const AppTheme = () => {
               ? Number(
                   convertAmount(
                     balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
+                    baseCoin?.cw20Denom ===
+                      DefaultAssetByChainName[ChainName.XION].cw20Denom
+                      ? DefaultAssetByChainName[ChainName.XION].decimal
+                      : baseCoin?.decimal
                   )
                 )
               : 0,
