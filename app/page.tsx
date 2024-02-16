@@ -100,7 +100,7 @@ export default function Home() {
 function LaunchButtons() {
   return (
     <div className="flex gap-8 mt-10">
-      <Link href={"/app/dashboard"}>
+      <Link href={"/app"}>
         <GradientButton className="w-[140px] lg:w-[227px] h-[37px] rounded-lg self-end px-8 group">
           <Text size="base">Launch App</Text>
         </GradientButton>
