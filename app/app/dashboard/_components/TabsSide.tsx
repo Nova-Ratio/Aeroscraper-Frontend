@@ -100,7 +100,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
   }, []);
  
   const handleChangeTab = (e: DashboardTabs) => {
-    router.push(`/app/dashboard?tab=${e}`);
+    router.push(`?tab=${e}`);
 
     setSelectedTab(e);
     setTabPosition(e);

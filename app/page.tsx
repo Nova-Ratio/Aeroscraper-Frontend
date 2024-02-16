@@ -67,8 +67,6 @@ export default function Home() {
             </div>
             <p>
               Security and reliability are the top priorities for Aeroscraper.
-              Aeroscraper has been officially audited, and all errors have been
-              corrected.
             </p>
             <p className="text-white/60 text-xs">
               You can visit the link to access the audit results:

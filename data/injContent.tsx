@@ -22,7 +22,7 @@ export const defaultContent: {
     },
     {
       title: "The Aeroscraper audit is officially complete!",
-      desc: "Security and reliability are the top priorities for Aeroscraper. Aeroscraper has been officially audited, and all errors have been corrected.",
+      desc: "Security and reliability are the top priorities for Aeroscraper.",
       linkStr: "audited",
       linkUrl: "https://beosin.com/audits/Aeroscraper_202402020919.pdf",
     }
