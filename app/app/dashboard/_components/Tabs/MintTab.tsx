@@ -24,7 +24,7 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
   const { balanceByDenom, refreshBalance } = useBalances();
   const { selectedChainName, selectedAppVersion } = useChainAdapter();
   const [selectedAsset, setSelectedAsset] = useState<CollateralAsset>(
-    DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
+    DefaultAssetByChainName[selectedChainName ?? ChainName.XION]
   );
   async function Mint() {
     try {
