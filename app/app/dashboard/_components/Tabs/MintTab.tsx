@@ -2,11 +2,15 @@ import GradientButton from "@/components/Buttons/GradientButton";
 import Text from "@/components/Texts/Text";
 import { useNotification } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
+import { convertAmount, getIsInjectiveResponse } from "@/utils/contractUtils";
 import { PageData } from "../../_types/types";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { useEffect, useState } from "react";
 import useChainAdapter from "@/hooks/useChainAdapter";
+import { NumericFormat } from "react-number-format";
+import { CollateralAsset } from "@/types/types";
+import { ChainName } from "@/enums/Chain";
+import { DefaultAssetByChainName } from "@/constants/assetConstants";
 type Props = {
   pageData?: PageData;
   getPageData?: () => void;
@@ -15,10 +19,13 @@ type Props = {
 export default function MintTap({ pageData, getPageData, basePrice }: Props) {
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();
-  const { refreshBalance } = useBalances();
   const { address } = useChainAdapter();
   const contract = useAppContract();
-
+  const { balanceByDenom, refreshBalance } = useBalances();
+  const { selectedChainName, selectedAppVersion } = useChainAdapter();
+  const [selectedAsset, setSelectedAsset] = useState<CollateralAsset>(
+    DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
+  );
   async function Mint() {
     try {
       setProcessLoading(true);
@@ -101,6 +108,29 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
           <Text>Faucet</Text>
         )}
       </GradientButton>
+      <div className="flex mt-1 w-full justify-end">
+        <label className="font-regular text-xs md:text-base text-gray-300">
+          In Wallet:
+        </label>
+        <NumericFormat
+          value={Number(
+            convertAmount(
+              balanceByDenom[selectedAsset.denom]?.amount ?? 0,
+              selectedAsset.decimal
+            )
+          ).toFixed(6)}
+          thousandsGroupStyle="thousand"
+          thousandSeparator=","
+          fixedDecimalScale
+          decimalScale={4}
+          displayType="text"
+          renderText={(value) => (
+            <p className="text-white font-regular text-xs md:text-base ml-3">
+              {value} {selectedAsset.shortName}
+            </p>
+          )}
+        />
+      </div>
     </div>
   );
 }
