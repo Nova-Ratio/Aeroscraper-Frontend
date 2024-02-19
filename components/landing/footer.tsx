@@ -20,7 +20,7 @@ export default function Footer() {
               href={"https://beosin.com/audits/Aeroscraper_202402020919.pdf"}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white" className="cursor-pointer">
                 Audit
@@ -35,7 +35,7 @@ export default function Footer() {
               href={"/?scroll=FAQ"}
               target="_parent"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white" className="cursor-pointer">
                 FAQ
@@ -47,7 +47,7 @@ export default function Footer() {
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white" className="cursor-pointer">
                 Whitepaper
@@ -64,7 +64,7 @@ export default function Footer() {
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white">
                 Brand Identity
@@ -87,7 +87,7 @@ export default function Footer() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Definition of name
@@ -104,7 +104,7 @@ export default function Footer() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Definition of icon
@@ -121,7 +121,7 @@ export default function Footer() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Definition of colors
@@ -138,7 +138,7 @@ export default function Footer() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Definition of typography
@@ -151,7 +151,7 @@ export default function Footer() {
               </Link>
               <Link
                 href={"https://aeroscraper.gitbook.io/aeroscraper/"}
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Definition of concept
@@ -175,7 +175,7 @@ export default function Footer() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2 whitespace-nowrap"
+                className="hover:scale-105 w-fit transition-all flex gap-2 whitespace-nowrap"
               >
                 <Text size="sm" textColor="text-white">
                   Injective Illuminate Hackathon
@@ -190,7 +190,7 @@ export default function Footer() {
                 href={"https://x.com/SeiNetwork/status/1705128171534717322?s=20"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Code Sei Hackathon
@@ -212,7 +212,7 @@ export default function Footer() {
                 href={"https://twitter.com/aeroscraper"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   X
@@ -227,7 +227,7 @@ export default function Footer() {
                 href={"https://discord.gg/3R6yTqB8hC"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Discord
@@ -242,7 +242,7 @@ export default function Footer() {
                 href={"https://zealy.io/c/aeroscraper/questboard"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Zealy
@@ -257,7 +257,7 @@ export default function Footer() {
                 href={"https://medium.com/@aeroscraper"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Medium
@@ -272,7 +272,7 @@ export default function Footer() {
                 href={"https://guild.xyz/aeroscraper"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-105 transition-all flex gap-2"
+                className="hover:scale-105 w-fit transition-all flex gap-2"
               >
                 <Text size="sm" textColor="text-white">
                   Guild
