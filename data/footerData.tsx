@@ -14,7 +14,7 @@
         },
         {
           title: "Whitepaper",
-          link: "https://novaratio.gitbook.io/aeroscraper/aeroscraper/whitepaper",
+          link: "https://novaratio.gitbook.io/aeroscraper/whitepaper/whitepaper",
         },
         {
           title: "Brand Identity",
@@ -23,6 +23,23 @@
         {
           title: "Injective Faucet",
           link: "https://testnet.faucet.injective.network/",
+        },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        {
+          title: "Disclaimer",
+          link: "https://novaratio.gitbook.io/aeroscraper/legal/protocol-disclaimer",
+        },
+        {
+          title: "Cookie Policy",
+          link: "https://novaratio.gitbook.io/aeroscraper/legal/cookie-policy",
+        },
+        {
+          title: "Privacy Policy",
+          link: "https://novaratio.gitbook.io/aeroscraper/legal/privacy-policy",
         },
       ],
     },
