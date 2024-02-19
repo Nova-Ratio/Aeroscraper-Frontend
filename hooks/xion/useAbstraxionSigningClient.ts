@@ -40,7 +40,6 @@ export const useAbstraxionSigningClient = () => {
         );
 
         setAbstractClient(jwtClient);
-        throw new Error("Abstract client not found");
       } catch (error: any) {
         Swal.fire({
           title: "Error",
