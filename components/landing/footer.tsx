@@ -87,7 +87,7 @@ export default function Footer() {
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white">
                 Disclaimer
@@ -104,7 +104,7 @@ export default function Footer() {
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white">
                 Cookie Policy
@@ -121,7 +121,7 @@ export default function Footer() {
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white">
                 Privacy Policy
