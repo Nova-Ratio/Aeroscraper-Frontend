@@ -43,7 +43,7 @@ export default function Footer() {
             </Link>
             <Link
               href={
-                "https://novaratio.gitbook.io/aeroscraper/aeroscraper/whitepaper"
+                "https://novaratio.gitbook.io/aeroscraper/whitepaper/whitepaper"
               }
               target="_blank"
               rel="noopener noreferrer"
