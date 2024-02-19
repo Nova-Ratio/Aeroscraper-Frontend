@@ -100,12 +100,12 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
       >
         {expTime && getTime < expTime ? (
           <Text>
-            {`You can faucet again in ${new Date(expTime - getTime)
+            {`You can use faucet again in ${new Date(expTime - getTime)
               .toISOString()
               .substr(11, 8)}`}
           </Text>
         ) : (
-          <Text>Faucet</Text>
+          <Text>Get AST</Text>
         )}
       </GradientButton>
       <div className="flex mt-1 w-full justify-end">

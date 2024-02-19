@@ -117,7 +117,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "customtokenminter"
     );
@@ -156,7 +156,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Open Trove"
     );
@@ -174,7 +174,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Add Collateral"
     );
@@ -196,7 +196,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Remove Collateral"
       );
@@ -214,7 +214,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Borrow Loan"
     );
@@ -235,7 +235,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Repay Loan"
     );
@@ -256,7 +256,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Stake"
     );
@@ -269,7 +269,7 @@ export const getXionContract = (
       { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Unstake"
     );
@@ -290,7 +290,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "800000",
+        gas: "1200000000",
       },
       "Redeem"
     );
@@ -303,7 +303,7 @@ export const getXionContract = (
       { liquidate_troves: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Liquidate Troves"
     );
@@ -318,7 +318,7 @@ export const getXionContract = (
         safe_list: []} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Liquidate Troves"
     );
@@ -331,7 +331,7 @@ export const getXionContract = (
       { withdraw_liquidation_gains: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "1200000",
+        gas: "1200000000",
       },
       "Withdraw Liquidation Gains"
     );

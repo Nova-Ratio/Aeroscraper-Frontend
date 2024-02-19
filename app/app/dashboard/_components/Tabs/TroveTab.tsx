@@ -200,7 +200,7 @@ const TroveTab: FC<Props> = ({
           selectedAsset.decimal
         )
       ) < collateralAmount ?
-        "Insufficient balance." :
+        "Insufficient AST balance." :
         undefined,
     [collateralAmount, selectedAsset, balanceByDenom]
   )
@@ -239,7 +239,7 @@ const TroveTab: FC<Props> = ({
     borrowingAmount <= 0 ?
       "Enter the amount." :
       (borrowingAmount > pageData.debtAmount || borrowingAmount > pageData.ausdBalance) ?
-        "Insufficient balance." :
+        "Insufficient aUSD balance." :
         undefined,
     [borrowingAmount, pageData]
   )

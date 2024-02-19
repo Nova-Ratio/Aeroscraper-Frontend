@@ -43,7 +43,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
     stakeAmount <= 0 ?
       "Enter the AUSD amount." :
       stakeAmount > pageData.ausdBalance ?
-        "Insufficient AUSD balance." :
+        "Insufficient aUSD balance." :
         undefined
   ), [stakeAmount, pageData.ausdBalance]);
 
@@ -58,7 +58,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
     unstakeAmount <= 0 ?
       "Enter the AUSD amount." :
       unstakeAmount > pageData.stakedAmount ?
-        "Insufficient AUSD balance." :
+        "Insufficient aUSD balance." :
         undefined
   ), [unstakeAmount, pageData.stakedAmount]);
 

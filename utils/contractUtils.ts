@@ -70,7 +70,7 @@ export const getValueByRatio = (value: string | number, ratio: string | number) 
 }
 
 export const getRatioColor = (value: number) => {
-    if (value < 115) {
+    if (value <= 115) {
         return '#cc2340';
     }
     else if (value > 115 && value < 130) {
