@@ -846,7 +846,7 @@ const TroveTab: FC<Props> = ({
                 decimalScale={2}
                 displayType="text"
                 renderText={(value) => {
-                  console.log("pageData.ausdBalance", pageData.ausdBalance);
+                  //console.log("pageData.ausdBalance", pageData.ausdBalance);
                   return (
                     <p className="text-white font-regular text-xs md:text-base ml-3">
                       {value} aUSD

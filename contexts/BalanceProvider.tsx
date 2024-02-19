@@ -32,7 +32,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
             if (!address || !baseCoin) return;
 
             if (selectedChainName === ChainName.XION) {
-                if (isNil(absraxionClient)) return;
+                if (isNil(absraxionClient) && isNil(contract)) return;
 
                 //const balance = await absraxionClient.getBalance(address, baseCoin.denom);
                 const getbalance = await contract.getCustomTokenBalance();
@@ -55,7 +55,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
         catch (err) {
             console.log(err)
         }
-    }, [chain, address, baseCoin, selectedChainName, absraxionClient])
+    }, [chain, address, baseCoin, selectedChainName, absraxionClient,contract])
 
     const debouncedGetBalances = useCallback(() => {
         clearTimeout(debounceRef.current);

@@ -26,7 +26,6 @@ export const AbstraxionWallets = ({ onClose }: { onClose: () => void }) => {
     setAbstraxionError,
   } = useContext(AbstraxionContext) as AbstraxionContextProps;
   const { selectXionChain, disconnectXion } = useChainAdapter();
-  console.log("abstractAccount", abstractAccount);
 
   const { user } = useStytchUser();
   const stytchClient = useStytch();

@@ -190,7 +190,7 @@ const WalletButton: FC<Props> = ({
         {isWalletConnecting ? (
           <Loading width={36} height={36} />
         ) : (
-          <Text size="base">Connect Wallet</Text>
+          <Text size="base">Connect Account</Text>
         )}
       </GradientButton>
       <Modal modalSize="lg" showModal={walletSelectionOpen}>
