@@ -11,6 +11,7 @@ import { NumericFormat } from "react-number-format";
 import { CollateralAsset } from "@/types/types";
 import { ChainName } from "@/enums/Chain";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
+import { Button } from "@burnt-labs/ui";
 type Props = {
   pageData?: PageData;
   getPageData?: () => void;
@@ -88,26 +89,28 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
           Mint AST and use your minted token on the XION testnet
         </p>
       </div>
-      <GradientButton
-        loading={processLoading}
-        onClick={Mint}
-        className="min-w-full md:min-w-[375px] h-11 "
-        rounded="rounded-lg"
-        disabled={
-          processLoading || (expTime && getTime < expTime) ? true : false
-        }
-        disabledText={""}
-      >
-        {expTime && getTime < expTime ? (
+      {expTime && getTime < expTime ? (
+        <Button structure="outlined" fullWidth={false} disabled={true}>
           <Text>
             {`You can use faucet again in ${new Date(expTime - getTime)
               .toISOString()
               .substr(11, 8)}`}
           </Text>
-        ) : (
+        </Button>
+      ) : (
+        <GradientButton
+          loading={processLoading}
+          onClick={Mint}
+          className="min-w-full md:min-w-[375px] h-11 "
+          rounded="rounded-lg"
+          disabled={
+            processLoading || (expTime && getTime < expTime) ? true : false
+          }
+          disabledText={""}
+        >
           <Text>Get AST</Text>
-        )}
-      </GradientButton>
+        </GradientButton>
+      )}
       <div className="flex mt-1 w-full justify-end">
         <label className="font-regular text-xs md:text-base text-gray-300">
           In Wallet:

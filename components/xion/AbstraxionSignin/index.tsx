@@ -6,6 +6,7 @@ import {
   AbstraxionContext,
   AbstraxionContextProps,
 } from "../AbstraxionContext";
+import GradientButton from "@/components/Buttons/GradientButton";
 
 export const AbstraxionSignin = () => {
   const stytchClient = useStytch();
@@ -17,9 +18,9 @@ export const AbstraxionSignin = () => {
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState("");
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-
+  const [loading, setLoading] = useState(false);
   const { setConnectionType } = useContext(
-    AbstraxionContext,
+    AbstraxionContext
   ) as AbstraxionContextProps;
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,7 @@ export const AbstraxionSignin = () => {
 
   const handleEmail = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
 
     if (!email) {
       setEmailError("Please enter your email");
@@ -58,18 +60,22 @@ export const AbstraxionSignin = () => {
     } catch (error) {
       setEmailError("Error sending email");
       setConnectionType("none");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleOtp = async (event: any) => {
     event.preventDefault();
-
+    setLoading(true);
     try {
       await stytchClient.otps.authenticate(otp, methodId, {
         session_duration_minutes: 60,
       });
     } catch (error) {
       setOtpError("Error verifying otp");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,12 +107,25 @@ export const AbstraxionSignin = () => {
             placeholder="Verification Code"
             value={otp}
             onChange={handleOtpChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleOtp(e);
+              }
+            }}
             error={otpError}
           />
           <div className="ui-flex ui-w-full ui-flex-col ui-items-center ui-gap-4">
-            <Button fullWidth={true} onClick={handleOtp} disabled={!!otpError}>
+            {/* <Button fullWidth={true} onClick={handleOtp} disabled={!!otpError}> */}
+            <GradientButton
+              loading={loading}
+              onClick={handleOtp}
+              className=" h-11 w-full min-w-full md:min-w-[375px]"
+              rounded="rounded-lg"
+              disabled={!!otpError}
+              disabledText={""}
+            >
               Confirm
-            </Button>
+            </GradientButton>
             <Button
               structure="outlined"
               fullWidth={true}
@@ -133,14 +152,22 @@ export const AbstraxionSignin = () => {
             onChange={handleEmailChange}
             error={emailError}
             onBlur={validateEmail}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleEmail(e);
+              }
+            }}
           />
-          <Button
-            fullWidth={true}
+          <GradientButton
+            loading={loading}
             onClick={handleEmail}
+            className=" h-11 w-full min-w-full md:min-w-[375px] "
+            rounded="rounded-lg"
             disabled={!!emailError}
+            disabledText={""}
           >
             Log in / Sign up
-          </Button>
+          </GradientButton>
         </>
       )}
     </ModalSection>
