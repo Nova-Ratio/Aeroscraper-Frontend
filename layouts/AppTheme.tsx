@@ -167,7 +167,7 @@ const AppTheme = () => {
         </div>
         <div className="flex items-center">
           <div className="items-center gap-2 mr-8 md:flex hidden">
-            <Text size="base">$1.00</Text>
+            <Text size="base">$ 1.00</Text>
             <Tooltip containerClassName='flex items-center text-white' width='w-[52px]' title="aUSD">
               <img
                 alt="ausd"
@@ -178,7 +178,7 @@ const AppTheme = () => {
           </div>
           {!isNil(baseCoin) && (
             <div className="items-center gap-2 mr-12 md:flex hidden">
-              <Text size="base">$ {basePrice.toFixed(4)}</Text>
+              <Text size="base">$ 3.0000</Text>
               <Tooltip containerClassName='flex items-center text-white' width='w-[52px]' title={"AST"}>
                 <img
                   alt={baseCoin.name}

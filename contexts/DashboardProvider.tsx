@@ -257,10 +257,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setTotalTrovesLoading(true);
             const totalTrovesRes = await requestTotalTroves();
-
+            const totalTrovesRes2 = await contract?.getTroveCount();
             setPageData(prev => ({
                 ...prev,
-                totalTrovesAmount: totalTrovesRes?.troves.totalCount ?? 0
+                totalTrovesAmount: totalTrovesRes?.troves.totalCount + totalTrovesRes2 ?? 0
             }))
         }
         catch (err) {
@@ -272,7 +272,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         finally {
             setTotalTrovesLoading(false);
         }
-    }, [requestTotalTroves, baseCoin])
+    }, [requestTotalTroves, baseCoin, contract])
 
     const getTotalInfo = useCallback(async () => {
         try {
