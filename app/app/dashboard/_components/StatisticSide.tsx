@@ -4,15 +4,11 @@ import useIsMobile from "@/hooks/useIsMobile";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { motion } from "framer-motion";
 import { isNil } from "lodash";
-import Link from "next/link";
 import React, { FC, useEffect, useState } from "react";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { ChainName } from "@/enums/Chain";
 import RenderContent from "./renderContent";
 import { defaultContent, injContent } from "@/data/injContent";
-import { WalletsByChainName } from "@/constants/walletConstants";
-import { BaseCoinByChainName } from "@/constants/chainConstants";
-import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 interface Props {
   basePrice: number;
@@ -82,9 +78,8 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
               onClick={() => {
                 setShowContentIdx(idx);
               }}
-              className={`md:w-2 md:h-2 w-6 h-1 rounded-sm ${
-                showContentIdx === idx ? "bg-[#E4462D]" : "bg-ghost-white"
-              }`}
+              className={`md:w-2 md:h-2 w-6 h-1 rounded-sm ${showContentIdx === idx ? "bg-[#E4462D]" : "bg-ghost-white"
+                }`}
             />
           );
         })}
@@ -98,9 +93,8 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
       >
         Protocol statistics
         <ChevronUpIcon
-          className={`w-5 h-5 mt-0.5 transition-all duration-300 ${
-            showStatistic ? "rotate-180" : ""
-          }`}
+          className={`w-5 h-5 mt-0.5 transition-all duration-300 ${showStatistic ? "rotate-180" : ""
+            }`}
         />
       </button>
       {showStatistic && (
@@ -134,25 +128,24 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
             className="w-[191px] h-14"
             tooltip="The Total Value Locked (TVL) is the total value of AST locked as collateral in the system."
             tooltipPlacement="bottom"
-            coinName={ selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name}
+            coinName={baseCoin?.name}
             isNumeric
           />
           <StatisticCard
             title="aUSD in Stability Pool"
             tooltipPlacement="left-bottom"
             description={isNil(baseCoin)
-              ? "-" :Number(pageData.totalStakedAmount)
-              .toFixed(3)
-              .toString()}
+              ? "-" : Number(pageData.totalStakedAmount)
+                .toFixed(3)
+                .toString()}
             className="w-[191px] h-14"
             tooltip="The total aUSD currently held in the Stability Pool."
             isNumeric
           />
           <StatisticCard
             title="Troves"
-            description={`${
-              isNil(walletInfo) ? "-" : pageData.totalTrovesAmount
-            }`}
+            description={`${isNil(walletInfo) ? "-" : pageData.totalTrovesAmount
+              }`}
             className="w-[191px] h-14"
             tooltip="The total number of active Troves in the system."
             tooltipPlacement="right-top"
@@ -166,18 +159,18 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 Number(
                   ((pageData.baseTotalCollateralAmount * basePrice) /
                     pageData.totalDebtAmount) *
-                    100
+                  100
                 )
               )
                 ? Number(
-                    ((pageData.baseTotalCollateralAmount * basePrice) /
-                      pageData.totalDebtAmount) *
-                      100
-                  ).toFixed(3)
+                  ((pageData.baseTotalCollateralAmount * basePrice) /
+                    pageData.totalDebtAmount) *
+                  100
+                ).toFixed(3)
                 : 0
-            } %`}
+              } %`}
             className="w-[191px] h-14"
-            tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.cw20Denom}:aUSD price, to the entire system debt.`}
+            tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.denom}:aUSD price, to the entire system debt.`}
           />
           <StatisticCard
             title="aUSD Supply"

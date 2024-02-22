@@ -8,8 +8,6 @@ import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
 import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import { ChainName } from "@/enums/Chain";
-import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 interface Props {
   pageData: PageData;
@@ -21,19 +19,16 @@ interface Props {
 const ClaimRewardTab: FC<Props> = ({
   pageData,
   getPageData,
-  refreshBalance,
-  basePrice,
+  refreshBalance
 }) => {
-  const { baseCoin, selectedChainName } = useChainAdapter();
+  const { baseCoin } = useChainAdapter();
 
   const contract = useAppContract();
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();
 
-  const coinName =
-    selectedChainName === ChainName.XION
-      ? DefaultAssetByChainName[ChainName.XION].shortName
-      : baseCoin?.name;
+  const coinName = baseCoin?.name;
+
   const rewardClaim = async () => {
     setProcessLoading(true);
 

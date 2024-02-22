@@ -32,14 +32,14 @@ type Props = {
 
 const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-    const { selectedChainName = ChainName.INJECTIVE, selectedAppVersion, baseCoin } = useChainAdapter();
+    const { selectedChainName = ChainName.INJECTIVE, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
     const contract = useAppContract();
     const [loading, setLoading] = useState(true);
     const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV2[]>([]);
     const { addNotification, setProcessLoading, processLoading } = useNotification();
 
-    const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName, selectedAppVersion }), [selectedChainName, selectedAppVersion]);
+    const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName }), [selectedChainName]);
 
     const liquidateTroves = async (address: string) => {
         try {
@@ -97,7 +97,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             }
                         })
 
-                        const baseCollateralAmount = !isNil(baseCoin) ? (collateralAmounts.find(item => item.denom === (baseCoin.cw20Denom ?? baseCoin.denom))?.amount ?? 0) : 0;
+                        const baseCollateralAmount = !isNil(baseCoin) ? (collateralAmounts.find(item => item.denom === baseCoin.denom)?.amount ?? 0) : 0;
 
                         const totalDollarValue = collateralAmounts.reduce((acc, curr) => {
                             const dollarValue = (coinPricesByDenom[curr.denom] ?? 0) * curr.amount;

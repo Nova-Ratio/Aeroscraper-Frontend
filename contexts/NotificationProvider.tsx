@@ -1,8 +1,8 @@
 'use client';
 
 import useChainAdapter from '@/hooks/useChainAdapter';
-import { delay, isNil } from 'lodash';
-import React, { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
+import { isNil } from 'lodash';
+import React, { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from 'react';
 
 export type NotificationType = "Reedem"
 

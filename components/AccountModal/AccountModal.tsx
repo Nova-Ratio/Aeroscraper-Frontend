@@ -35,7 +35,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   const avatarSelectRef = useRef<HTMLDivElement>(null);
   const qrCodeViewRef = useRef<HTMLDivElement>(null);
 
-  const { selectedChainName, username, address, baseCoin, walletInfo, chainInfo, disconnect, disconnectMetamask, disconnectXion } = useChainAdapter();
+  const { selectedChainName, username, address, baseCoin, walletInfo, chainInfo, disconnect, disconnectMetamask } = useChainAdapter();
   const { profileDetail, setProfileDetail } = useProfile();
 
   const [selectedTab, setSelectedTab] = useState<Tabs | null>(null);
@@ -72,14 +72,11 @@ const AccountModal: FC<Props> = (props: Props) => {
   }
 
   const logout = () => {
-    if (selectedChainName === ChainName.XION) {
-      disconnectXion();
-    }
-    else if (walletInfo?.name === WalletType.METAMASK) {
+    if (walletInfo?.name === WalletType.METAMASK) {
       disconnectMetamask();
     }
     else {
-      disconnect();
+      disconnect?.();
     }
     setProfileDetail(undefined);
     localStorage.removeItem("profile-detail");
@@ -223,7 +220,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                       <Text size='lg' className='mt-2 whitespace-nowrap flex gap-2 items-center ml-6'>
                         {baseCoin && <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.tokenImage} />}
                         {value}&nbsp;
-                        {selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name}
+                        {baseCoin?.name}
                       </Text>
                     }
                   />

@@ -39,8 +39,6 @@ const WalletButton: FC<Props> = ({
     isWalletConnected,
     isWalletConnecting,
     selectWallet,
-    selectedWallet,
-    openXionChainModal,
   } = useChainAdapter();
 
   const [walletExtensions, setWalletExtensions] = useState<
@@ -166,12 +164,12 @@ const WalletButton: FC<Props> = ({
     setShowDownloadExtension(undefined);
     if (!isWalletConnected) {
       //Reset client type selection
-      selectChainName(undefined);
+      // selectChainName(undefined);
     }
   };
 
   const resetChain = () => {
-    selectChainName(undefined);
+    // selectChainName(undefined);
   };
 
   useOutsideHandler(ref, closeWalletSelection);
@@ -190,7 +188,7 @@ const WalletButton: FC<Props> = ({
         {isWalletConnecting ? (
           <Loading width={36} height={36} />
         ) : (
-          <Text size="base">Select Chain & Connect Wallet</Text>
+          <Text size="base">Connect Wallet</Text>
         )}
       </GradientButton>
       <Modal modalSize="lg" showModal={walletSelectionOpen}>
@@ -586,20 +584,6 @@ const WalletButton: FC<Props> = ({
                             </Button>
                           );
                         })}
-                        <Button
-                          onClick={openXionChainModal}
-                          startIcon={
-                            <img
-                              alt={ChainName.XION}
-                              src={ChainInfoByName[ChainName.XION].logo}
-                              className="w-8 h-8"
-                            />
-                          }
-                        >
-                          <span className="text-[18px] font-medium text-ghost-white uppercase">
-                            {ChainInfoByName[ChainName.XION].displayName}
-                          </span>
-                        </Button>
                       </>
                     )}
                   </div>

@@ -1,13 +1,8 @@
-import useAppContract from '@/contracts/app/useAppContract';
-import { ChainName } from '@/enums/Chain';
 import useChainAdapter from '@/hooks/useChainAdapter';
-import { useAbstraxionSigningClient } from '@/hooks/xion';
-import { getRequestAmount } from '@/utils/contractUtils';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Coin } from '@cosmjs/proto-signing';
-import { Dictionary, isNil } from 'lodash';
+import { Dictionary } from 'lodash';
 import React, { FC, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { usePrice } from './PriceProvider';
 
 type BalanceContextValue = {
     balanceByDenom: Dictionary<Coin | undefined>;
@@ -22,40 +17,20 @@ const BalanceContext = React.createContext<BalanceContextValue>({
 const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
     const debounceRef = useRef<NodeJS.Timeout | undefined>();
     const { chain, address, baseCoin, selectedChainName } = useChainAdapter();
-    const { client: absraxionClient } = useAbstraxionSigningClient();
     const [balanceByDenom, setBalanceByDenom] = useState<Dictionary<Coin | undefined>>({});
-    const contract = useAppContract();
-    const { getXionPrice } = usePrice();
 
     const getBalances = useCallback(async () => {
         try {
             if (!address || !baseCoin) return;
 
-            if (selectedChainName === ChainName.XION) {
-                if (isNil(absraxionClient)) return;
-
-                //const balance = await absraxionClient.getBalance(address, baseCoin.denom);
-                const getbalance = await contract.getCustomTokenBalance();
-                const getCustomTokenPrice = await contract.getPrice();
-
-                getXionPrice(getCustomTokenPrice[0].price);
-
-                const balance = {
-                    denom: baseCoin.denom,
-                    amount: getbalance?.balance || "0"
-                }
-                setBalanceByDenom({ [balance.denom]: balance });
-            }
-            else {
-                const client = await SigningCosmWasmClient.connect(chain.apis?.rpc?.[0].address ?? '')
-                const balance = await client.getBalance(address, baseCoin.denom);
-                setBalanceByDenom({ [balance.denom]: balance });
-            }
+            const client = await SigningCosmWasmClient.connect(chain.apis?.rpc?.[0].address ?? '')
+            const balance = await client.getBalance(address, baseCoin.denom);
+            setBalanceByDenom({ [balance.denom]: balance });
         }
         catch (err) {
             console.log(err)
         }
-    }, [chain, address, baseCoin, selectedChainName, absraxionClient])
+    }, [chain, address, baseCoin, selectedChainName])
 
     const debouncedGetBalances = useCallback(() => {
         clearTimeout(debounceRef.current);

@@ -17,9 +17,7 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import Swal from "sweetalert2";
 import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
-import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
-import BorderedContainer from "@/components/Containers/BorderedContainer";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -34,23 +32,20 @@ const AppTheme = () => {
     selectedWallet,
     disconnect,
     disconnectMetamask,
-    disconnectXion,
     basePrice
   } = useChainAdapter();
   const { addNotification } = useNotification();
   const { balanceByDenom } = useBalances();
-  const { pageData, getPageData } = usePageData();
+  const { pageData } = usePageData();
   const { profileDetail } = useProfile();
 
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
-    if (selectedChainName === ChainName.XION) {
-      disconnectXion();
-    } else if (walletInfo?.name === WalletType.METAMASK) {
+    if (walletInfo?.name === WalletType.METAMASK) {
       disconnectMetamask();
     } else {
-      disconnect();
+      disconnect?.();
     }
     localStorage.removeItem("selectedWallet");
     localStorage.removeItem("profile-detail");
@@ -270,7 +265,7 @@ const AppTheme = () => {
               ? Number(
                 convertAmount(
                   balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                  (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
+                  baseCoin?.decimal
                 )
               )
               : 0,

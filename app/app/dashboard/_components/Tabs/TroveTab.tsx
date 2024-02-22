@@ -11,7 +11,6 @@ import {
   convertAmount,
   getIsInjectiveResponse,
   getRatioColor,
-  getRatioText,
 } from "@/utils/contractUtils";
 import { isNil } from "lodash";
 import { PageData } from "../../_types/types";
@@ -40,12 +39,11 @@ type Props = {
 const TroveTab: FC<Props> = ({
   pageData,
   getPageData,
-  basePrice,
-  colleteralAmount,
+  basePrice
 }) => {
   const contract = useAppContract();
   const { balanceByDenom, refreshBalance } = useBalances();
-  const { selectedChainName, selectedAppVersion } = useChainAdapter();
+  const { selectedChainName } = useChainAdapter();
 
   const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
   const [borrowAmount, setBorrowAmount] = useState<number>(0);
@@ -61,35 +59,16 @@ const TroveTab: FC<Props> = ({
     useNotification();
 
   const selectedCollateral = useMemo(() => {
-    if (ChainName.XION === selectedChainName) {
-      return (
-        pageData.collateralAmountsByDenom[
-          selectedAsset?.cw20Denom || selectedAsset.denom
-        ] ?? {
-          denom: selectedAsset.cw20Denom,
-          amount: 0,
-        }
-      );
-    } else {
-      return (
-        pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
-          denom: selectedAsset.denom,
-          amount: 0,
-        }
-      );
-    }
+    return (
+      pageData.collateralAmountsByDenom[selectedAsset.denom] ?? {
+        denom: selectedAsset.denom,
+        amount: 0,
+      }
+    );
   }, [selectedAsset, pageData.collateralAmountsByDenom]);
 
   const selectedMinCollateral = useMemo(() => {
-    if (ChainName.XION === selectedChainName) {
-      return (
-        pageData.minCollateralRatioByDenom[
-          selectedAsset?.cw20Denom || selectedAsset.denom
-        ] ?? 0
-      );
-    } else {
-      return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0;
-    }
+    return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0;
   }, [selectedAsset, pageData.minCollateralRatioByDenom]);
 
   const isTroveOpened = useMemo(
@@ -110,15 +89,14 @@ const TroveTab: FC<Props> = ({
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
-      borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ||
-      openTroveAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      borrowAmount < 999 ||
+      openTroveAmount > 999 ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
-        convertAmount(
-          balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
-          selectedAsset!.decimal
-        ) ||
+      convertAmount(
+        balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
+        selectedAsset!.decimal
+      ) ||
       collacteralRatio < selectedMinCollateral - 0.00001,
     [
       openTroveAmount,
@@ -159,8 +137,7 @@ const TroveTab: FC<Props> = ({
   const withdrawDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
-      collateralAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      collateralAmount > 999 ||
       selectedCollateral.amount < collateralAmount,
     [collateralAmount, selectedCollateral]
   );
@@ -177,8 +154,7 @@ const TroveTab: FC<Props> = ({
   const depositDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
-      collateralAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      collateralAmount > 999 ||
       Number(
         convertAmount(
           balanceByDenom[selectedAsset.denom]?.amount ?? 0,
@@ -225,8 +201,7 @@ const TroveTab: FC<Props> = ({
   const repayDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
-      borrowingAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      borrowingAmount > 999 ||
       borrowingAmount > pageData.debtAmount ||
       borrowingAmount > pageData.ausdBalance,
     [borrowingAmount, pageData]
@@ -415,7 +390,7 @@ const TroveTab: FC<Props> = ({
     if (selectedChainName) {
       setSelectedAsset(DefaultAssetByChainName[selectedChainName]);
     }
-  }, [selectedChainName, selectedTab, selectedAppVersion]);
+  }, [selectedChainName, selectedTab]);
 
   return (
     <div className="overflow-hidden md:overflow-visible">
@@ -528,9 +503,8 @@ const TroveTab: FC<Props> = ({
                     renderText={(value) => (
                       <StatisticCard
                         title="Management Fee"
-                        description={`${value} ${
-                          selectedAsset?.shortName ?? ""
-                        } (0.5%)`}
+                        description={`${value} ${selectedAsset?.shortName ?? ""
+                          } (0.5%)`}
                         tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                       />
                     )}
@@ -538,11 +512,10 @@ const TroveTab: FC<Props> = ({
 
                   <StatisticCard
                     title="Total Debt"
-                    description={`${
-                      pageData.debtAmount < 0.001
-                        ? "< 0.000"
-                        : pageData.debtAmount
-                    } aUSD`}
+                    description={`${pageData.debtAmount < 0.001
+                      ? "< 0.000"
+                      : pageData.debtAmount
+                      } aUSD`}
                     tooltip="The total amount of aUSD you have borrowed"
                   />
                   {/* <StatisticCard
@@ -656,7 +629,7 @@ const TroveTab: FC<Props> = ({
                       <NumericFormat
                         value={
                           ((selectedCollateral.amount ?? 0) * basePrice * 100) /
-                            115 -
+                          115 -
                           pageData.debtAmount
                         }
                         thousandsGroupStyle="thousand"
@@ -874,9 +847,8 @@ const TroveTab: FC<Props> = ({
               renderText={(value) => (
                 <StatisticCard
                   title="Management Fee"
-                  description={`${value} ${
-                    selectedAsset?.shortName ?? ""
-                  } (0.5%)`}
+                  description={`${value} ${selectedAsset?.shortName ?? ""
+                    } (0.5%)`}
                   tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                 />
               )}

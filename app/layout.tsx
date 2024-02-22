@@ -1,8 +1,6 @@
 import "./globals.css";
 import { Exo } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import "@burnt-labs/abstraxion/styles.css";
-import "@burnt-labs/ui/styles.css";
 const exo = Exo({ subsets: ["latin"] });
 
 export const metadata = {
@@ -16,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${exo.className} relative min-h-screen flex flex-col xion`}>
+      <body className={`${exo.className} relative min-h-screen flex flex-col`}>
         {children}
         <NextTopLoader
           color="#E4462D"

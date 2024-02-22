@@ -1,16 +1,13 @@
 import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
-import { AppVersion, ChainInfo } from "@/types/types";
+import { ChainInfo } from "@/types/types";
 import { getInjectiveAddress } from "@injectivelabs/sdk-ts";
-import { isEmpty, isNil, set } from "lodash";
+import { isEmpty, isNil } from "lodash";
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { usePrice } from "./PriceProvider";
-import { useAbstraxionAccount } from "@/hooks/xion";
 import { ChainInfoByName } from "@/constants/chainConstants";
-import { Abstraxion } from "@/components/xion/Abstraxion";
 
 export type AppContextState = {
-    selectedAppVersion: AppVersion;
     selectedChainName?: ChainName;
     selectedWallet?: WalletType;
     userAddress?: string;
@@ -20,35 +17,23 @@ export type AppContextState = {
     selectChainName: (chainName?: ChainName) => void;
     selectWallet: (wallet?: WalletType) => void;
     disconnectMetamask: () => void;
-    disconnectXion: () => void;
-    changeAppVersion: (appVersion: AppVersion) => void;
-    selectXionChain: () => void;
-    openXionChainModal: () => void;
 }
 
 const AppContext = createContext<AppContextState>({
-    selectedAppVersion: AppVersion.V2,
     selectedChainName: ChainName.INJECTIVE,
     isConnecting: false,
     basePrice: 0,
     chainInfo: ChainInfoByName[ChainName.INJECTIVE],
     selectChainName: () => { },
     selectWallet: () => { },
-    disconnectMetamask: () => { },
-    disconnectXion: () => { },
-    changeAppVersion: () => { },
-    selectXionChain: () => { },
-    openXionChainModal: () => { }
+    disconnectMetamask: () => { }
 });
 
 const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [abstraxionOpen, setAbstraxionOpen] = useState(false);
-    const [selectedAppVersion, setSelectedAppVersion] = useState<AppVersion>(AppVersion.V2);
-    const [selectedChainName, setSelectedChainName] = useState<ChainName>();
+    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(ChainName.INJECTIVE);
     const [selectedWallet, setSelectedWallet] = useState<WalletType>();
     const [userAddress, setUserAddress] = useState<string>();  //This state is used to override cosmos-kit address
     const [isConnecting, setIsConnecting] = useState<boolean>(false);  //This state is used to override cosmos-kit loading
-    const { data: abstraxionData } = useAbstraxionAccount();
 
     const { getPriceByChainName } = usePrice();
 
@@ -89,32 +74,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
         localStorage.removeItem('selectedWallet');
     }, [])
 
-    const disconnectXion = useCallback(() => {
-        setUserAddress(undefined);
-        setSelectedWallet(undefined);
-        setSelectedChainName(undefined);
-        setAbstraxionOpen(false);
-        localStorage.removeItem('selectedWallet');
-        localStorage.removeItem('savedChainName');
-    }, [])
-
-    const changeAppVersion = useCallback((appVersion: AppVersion) => {
-        setSelectedAppVersion(appVersion);
-        localStorage.setItem('selectedAppVersion', appVersion);
-    }, [])
-
-    const openXionChainModal = useCallback(() => {
-        setAbstraxionOpen(true);
-    }, [])
-
-    const selectXionChain = useCallback(() => {
-        setAbstraxionOpen(false);
-        setSelectedChainName(ChainName.XION);
-        localStorage.setItem("savedChainName", ChainName.XION);
-    }, [])
-
     const value = useMemo<AppContextState>(() => ({
-        selectedAppVersion,
         selectedChainName,
         selectedWallet,
         userAddress,
@@ -123,13 +83,8 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
         chainInfo,
         selectChainName,
         selectWallet,
-        disconnectMetamask,
-        disconnectXion,
-        changeAppVersion,
-        selectXionChain,
-        openXionChainModal
+        disconnectMetamask
     }), [
-        selectedAppVersion,
         selectedChainName,
         selectedWallet,
         userAddress,
@@ -138,26 +93,16 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
         chainInfo,
         selectChainName,
         selectWallet,
-        disconnectMetamask,
-        disconnectXion,
-        changeAppVersion,
-        selectXionChain,
-        openXionChainModal
+        disconnectMetamask
     ])
 
-    useEffect(() => {
-        const savedChainName = localStorage.getItem("savedChainName");
-        if (!isNil(savedChainName) && !isEmpty(savedChainName)) {
-            setSelectedChainName(savedChainName as ChainName);
-
-            if (savedChainName === ChainName.XION) {
-                setAbstraxionOpen(true);
-            }
-        }
-
-        const savedAppVersion = localStorage.getItem('selectedAppVersion');
-        setSelectedAppVersion(savedAppVersion as AppVersion ?? AppVersion.V2);
-    }, [])
+    // Remember last selected chain on multichain structure
+    // useEffect(() => {
+    //     const savedChainName = localStorage.getItem("savedChainName");
+    //     if (!isNil(savedChainName) && !isEmpty(savedChainName)) {
+    //         setSelectedChainName(savedChainName as ChainName);
+    //     }
+    // }, [])
 
     useEffect(() => {
         const savedWallet = localStorage.getItem('selectedWallet');
@@ -169,19 +114,10 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
             }
         }
     }, [getMetamaskAccount])
-    useEffect(() => {
-        if (selectedChainName === ChainName.XION && !isNil(abstraxionData)) {
-            setUserAddress(abstraxionData.bech32Address);
-        }
-    }, [selectedChainName, abstraxionData])
 
     return (
         <AppContext.Provider value={value}>
             {children}
-            <Abstraxion
-                isOpen={abstraxionOpen}
-                onClose={() => setAbstraxionOpen(false)}
-            />
         </AppContext.Provider>
     )
 }

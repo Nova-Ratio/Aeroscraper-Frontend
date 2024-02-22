@@ -102,7 +102,7 @@ const RedeemTab: FC<Props> = ({
 
     setProcessLoading(false);
   };
-  const coinName = selectedChainName === ChainName.XION ? DefaultAssetByChainName[ChainName.XION].shortName : baseCoin?.name
+  const coinName = baseCoin?.name
   return (
     <section>
       <Text size="3xl">Convert your aUSD directly to {coinName}</Text>

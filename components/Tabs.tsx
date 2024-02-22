@@ -31,11 +31,11 @@ function Tabs({
 }: TabsProps<string>) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const tabsRef = useRef<HTMLUListElement>(null);
-  const { selectedChainName, selectedAppVersion } = useAppContext();
+  const { selectedChainName } = useAppContext();
 
   useEffect(() => {
     scrollTabs("left");
-  }, [selectedChainName, selectedAppVersion]);
+  }, [selectedChainName]);
 
   useEffect(() => {
     const handleScroll = () => {

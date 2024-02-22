@@ -4,20 +4,6 @@ import { WalletInfo } from "@/types/types";
 import { Wallet } from "@injectivelabs/wallet-ts";
 
 export const WalletsByChainName: Record<ChainName, WalletType[]> = {
-    [ChainName.SEI]: [
-        WalletType.LEAP,
-        WalletType.KEPLR,
-        // WalletType.LEDGER,
-        // WalletType.COSMOSTATION
-    ],
-    [ChainName.ARCHWAY]: [
-        WalletType.LEAP,
-        WalletType.KEPLR,
-    ],
-    [ChainName.NEUTRON]: [
-        WalletType.LEAP,
-        WalletType.KEPLR,
-    ],
     [ChainName.INJECTIVE]: [
         WalletType.METAMASK,
         WalletType.LEAP,
@@ -25,8 +11,7 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
         WalletType.NINJI,
         // WalletType.LEDGER,
         WalletType.COSMOSTATION
-    ],
-    [ChainName.XION]: []
+    ]
 }
 
 export const InjSdkWalletByCosmosWallet: Record<WalletType, Wallet> = {

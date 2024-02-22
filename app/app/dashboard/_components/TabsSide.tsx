@@ -2,11 +2,10 @@ import SkeletonLoading from "@/components/Table/SkeletonLoading";
 import Tabs from "@/components/Tabs";
 import { motion } from "framer-motion";
 import { isNil } from "lodash";
-import React, { Dispatch, FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { Dispatch, FC, useEffect, useRef } from "react";
 import ClaimRewardTab from "./Tabs/ClaimRewardTab";
 import LeaderboardTab from "./Tabs/LeaderboardTab";
 import RedeemTab from "./Tabs/RedeemTab";
-import RiskyTrovesTabV1 from "./Tabs/RiskyTrovesTabV1";
 import StabilityPoolTab from "./Tabs/StabilityPoolTab";
 import TroveTab from "./Tabs/TroveTab";
 import useChainAdapter from "@/hooks/useChainAdapter";
@@ -15,11 +14,7 @@ import RiskyTrovesTabV2 from "./Tabs/RiskyTrovesTabV2";
 import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
-import { ChainName } from "@/enums/Chain";
-import MintTap from "./Tabs/MintTab";
 import { DashboardTabs, useTabs } from "@/contexts/TabsProvider";
-
-const riskyTrovesV2Chains = [ChainName.INJECTIVE, ChainName.XION];
 
 interface Props {
   setTabPosition: Dispatch<DashboardTabs>;
@@ -120,53 +115,53 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
-          {selectedTab === "faucet" && (
-            <MintTap getPageData={getPageData} pageData={pageData} />
-          )}
-          {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
-            <TroveTab
-              colleteralAmount={pageData.baseCollateralAmount}
-              pageData={pageData}
-              getPageData={getPageData}
-              basePrice={basePrice}
-            />
-          )}
-          {selectedTab === "stabilityPool" && (
-            <StabilityPoolTab pageData={pageData} getPageData={getPageData} />
-          )}
-          {selectedTab === "redeem" && (
-            <RedeemTab
-              pageData={pageData}
-              getPageData={getPageData}
-              refreshBalance={refreshBalance}
-              basePrice={basePrice}
-            />
-          )}
-          {selectedTab === "riskyTroves" &&
-            (riskyTrovesV2Chains.includes(selectedChainName ?? ChainName.INJECTIVE) ?
-              <RiskyTrovesTabV2
+          {
+            selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
+              <TroveTab
+                colleteralAmount={pageData.baseCollateralAmount}
+                pageData={pageData}
                 getPageData={getPageData}
                 basePrice={basePrice}
               />
-              :
-              <RiskyTrovesTabV1
+            )
+          }
+          {
+            selectedTab === "stabilityPool" && (
+              <StabilityPoolTab pageData={pageData} getPageData={getPageData} />
+            )
+          }
+          {
+            selectedTab === "redeem" && (
+              <RedeemTab
+                pageData={pageData}
                 getPageData={getPageData}
+                refreshBalance={refreshBalance}
                 basePrice={basePrice}
               />
-            )}
-          {selectedTab === "rewards" && (
-            <ClaimRewardTab
-              pageData={pageData}
+            )
+          }
+          {
+            selectedTab === "riskyTroves" &&
+            <RiskyTrovesTabV2
               getPageData={getPageData}
-              refreshBalance={refreshBalance}
               basePrice={basePrice}
             />
-          )}
+          }
+          {
+            selectedTab === "rewards" && (
+              <ClaimRewardTab
+                pageData={pageData}
+                getPageData={getPageData}
+                refreshBalance={refreshBalance}
+                basePrice={basePrice}
+              />
+            )
+          }
           {selectedTab === "leaderboard" && <LeaderboardTab />}
           {selectedTab === "missions" && <Missions />}
-        </motion.main>
+        </motion.main >
       )}
-    </div>
+    </div >
   );
 };
 

@@ -6,24 +6,19 @@ import Faq from "@/components/FAQ/Faq";
 import {
   BackgroundWave,
   LogoSecondary,
-  MedalIcon,
 } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
 import Footer from "@/components/landing/footer";
 import Partners from "@/components/landing/partners";
-import { AbstraxionAccount } from "@/hooks/xion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-export interface AccountWithAuthenticator extends AbstraxionAccount {
-  authenticators: Authenticators;
-}
+
 export default function Home() {
   const router = useRouter();
+
   useEffect(() => {
-    //prefetching xion page
-    router.prefetch("/app/xion");
     router.prefetch("/app/dashboard");
   }, [router]);
 

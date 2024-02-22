@@ -7,7 +7,6 @@ import { BaseCoin, WalletInfo } from "@/types/types";
 import { BaseCoinByChainName, ChainInfoByName } from "@/constants/chainConstants";
 import { WalletType } from "@/enums/WalletType";
 import { isEmpty, isNil } from "lodash";
-import { useAbstraxionAccount } from "@/hooks/xion";
 
 type ChainAdapterValue = ChainContext & AppContextState & {
     baseCoin?: BaseCoin;
@@ -15,70 +14,49 @@ type ChainAdapterValue = ChainContext & AppContextState & {
 }
 
 const useChainAdapter = () => {
-    const { isConnected: isAbstraxionConnected } = useAbstraxionAccount();
     const appContextValue = useAppContext();
-    const chainContextValue = useChain(
-        appContextValue.selectedChainName === undefined ||
-            appContextValue.selectedChainName === ChainName.XION ?
-            ChainName.INJECTIVE
-            :
-            appContextValue.selectedChainName
-    );
+    const chainContextValue = useChain(appContextValue.selectedChainName ?? ChainName.INJECTIVE);
 
     const address = useMemo<string | undefined>(() =>
-        appContextValue.selectedWallet === WalletType.METAMASK ||
-            appContextValue.selectedChainName === ChainName.XION ?
+        appContextValue.selectedWallet === WalletType.METAMASK ?
             appContextValue.userAddress
             :
             chainContextValue.address,
-        [appContextValue.selectedWallet, appContextValue.userAddress, chainContextValue.address, appContextValue.selectedChainName]
+        [appContextValue.selectedWallet, appContextValue.userAddress, chainContextValue.address]
     );
 
     const username = useMemo<string | undefined>(() =>
-        appContextValue.selectedChainName === ChainName.XION ?
-            ChainInfoByName[ChainName.XION].displayName
+        appContextValue.selectedWallet === WalletType.METAMASK ?
+            "Metamask"
             :
-            appContextValue.selectedWallet === WalletType.METAMASK ?
-                "Metamask"
-                :
-                chainContextValue.username,
-        [appContextValue.selectedWallet, appContextValue.selectedChainName, chainContextValue.username]
+            chainContextValue.username,
+        [appContextValue.selectedWallet, chainContextValue.username]
     );
 
     const walletInfo = useMemo<WalletInfo | undefined>(() =>
-        (appContextValue.selectedChainName === ChainName.XION && isAbstraxionConnected) ?
+        appContextValue.selectedWallet === WalletType.METAMASK ?
             {
-                name: ChainName.XION,
-                prettyName: ChainInfoByName[ChainName.XION].displayName,
-                logo: ChainInfoByName[ChainName.XION].logo
+                name: WalletType.METAMASK,
+                prettyName: 'Metamask',
+                logo: '/images/wallet-images/metamask-icon.png'
             }
             :
-            appContextValue.selectedWallet === WalletType.METAMASK ?
+            chainContextValue.isWalletConnected ?
                 {
-                    name: WalletType.METAMASK,
-                    prettyName: 'Metamask',
-                    logo: '/images/wallet-images/metamask-icon.png'
-                }
-                :
-                chainContextValue.isWalletConnected ?
-                    {
-                        name: (chainContextValue.wallet?.name ?? '') as WalletType,
-                        prettyName: chainContextValue.wallet?.prettyName ?? '',
-                        logo: (chainContextValue.wallet?.logo ?? '') as string
-                    } :
-                    undefined,
-        [appContextValue.selectedWallet, chainContextValue.isWalletConnected, chainContextValue.wallet, appContextValue.selectedChainName, isAbstraxionConnected]
+                    name: (chainContextValue.wallet?.name ?? '') as WalletType,
+                    prettyName: chainContextValue.wallet?.prettyName ?? '',
+                    logo: (chainContextValue.wallet?.logo ?? '') as string
+                } :
+                undefined,
+        [appContextValue.selectedWallet, chainContextValue.isWalletConnected, chainContextValue.wallet]
     );
 
     const isWalletConnected = useMemo(() =>
-        appContextValue.selectedChainName === ChainName.XION ?
-            isAbstraxionConnected
+        appContextValue.selectedWallet === WalletType.METAMASK ?
+            !isNil(appContextValue.userAddress) && !isEmpty(appContextValue.userAddress)
             :
-            appContextValue.selectedWallet === WalletType.METAMASK ?
-                !isNil(appContextValue.userAddress) && !isEmpty(appContextValue.userAddress)
-                :
-                chainContextValue.isWalletConnected,
-        [appContextValue.userAddress, appContextValue.selectedWallet, appContextValue.selectedChainName, chainContextValue.isWalletConnected, isAbstraxionConnected]
+            chainContextValue.isWalletConnected,
+        [appContextValue.userAddress, appContextValue.selectedWallet, chainContextValue.isWalletConnected]
     )
 
     const isWalletConnecting = useMemo(() =>

@@ -1,68 +1,38 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getAppContract } from "./cosmwasmContract";
+import { useCallback, useMemo } from "react";
 import { isNil } from "lodash";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { getAppEthContract } from "./ethereumContract";
+import { getAppContract } from "./contract";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
 import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
-import { useAbstraxionSigningClient } from "@/hooks/xion";
-import { getXionContract } from "./getXionContract";
 
 const useAppContract = () => {
   const {
-    selectedAppVersion,
     isWalletConnected,
     baseCoin,
     walletInfo,
     selectedChainName,
     address,
-    chain,
-    getSigningCosmWasmClient,
+    chain
   } = useChainAdapter();
-  const [client, setClient] = useState<SigningCosmWasmClient>();
-  const { client: abstraxionClient } = useAbstraxionSigningClient();
 
   const contract = useMemo(
     () =>
       isWalletConnected &&
         !isNil(baseCoin) &&
         !isNil(walletInfo) &&
-        !isNil(selectedChainName)
-        ? selectedChainName === ChainName.XION
-          ? !isNil(abstraxionClient)
-            ? getXionContract(abstraxionClient, baseCoin)
-            : undefined
-          : walletInfo.name === WalletType.METAMASK
-            ? !isNil(chain)
-              ? getAppEthContract(
-                chain,
-                baseCoin,
-                selectedAppVersion,
-                selectedChainName ?? ChainName.INJECTIVE,
-                walletInfo.name as WalletType
-              )
-              : undefined
-            : !isNil(client)
-              ? getAppContract(
-                client,
-                baseCoin,
-                selectedAppVersion,
-                selectedChainName ?? ChainName.INJECTIVE,
-                walletInfo.name as WalletType
-              )
-              : undefined
-        : undefined,
+        !isNil(selectedChainName) &&
+        !isNil(chain)
+        ?
+        getAppContract(chain, baseCoin, selectedChainName ?? ChainName.INJECTIVE, walletInfo.name as WalletType)
+        :
+        undefined,
     [
       isWalletConnected,
       baseCoin,
       walletInfo,
       selectedChainName,
-      chain,
-      client,
-      selectedAppVersion,
-      abstraxionClient,
+      chain
     ]
   );
 
@@ -203,42 +173,6 @@ const useAppContract = () => {
     return await contract.withdrawLiquidationGains(address);
   }, [address, contract]);
 
-  const mint = useCallback(
-    async (amount?: number) => {
-      if (isNil(contract) || isNil(address)) return;
-      if ("mint" in contract) {
-        return await contract.mint(address, amount);
-      } else {
-        return;
-      }
-    },
-    [address, contract]
-  )
-
-  const getPrice = useCallback(async () => {    
-    if (isNil(contract)) return;
-
-    if ("getPrice" in contract) {
-      const result = await contract.getPrice();
-      return result;
-    }
-
-    return;
-
-  }, [contract]);
-
-  const getCustomTokenBalance = useCallback(
-    async () => {
-      if (isNil(contract) || isNil(address)) return;
-      if ("getCustomTokenBalance" in contract) {
-        return await contract.getCustomTokenBalance(address);
-      } else {
-        return;
-      }
-    },
-    [address, contract]
-  )
-
   const value = useMemo(
     () => ({
       getTotalCollateralAmounts,
@@ -251,8 +185,6 @@ const useAppContract = () => {
       getAusdBalance,
       getAusdInfo,
       getReward,
-      getCustomTokenBalance,
-      getPrice,
       openTrove,
       addCollateral,
       removeCollateral,
@@ -263,8 +195,7 @@ const useAppContract = () => {
       redeem,
       liquidateTroves,
       liquidateTrovesV2,
-      withdrawLiquidationGains,
-      mint
+      withdrawLiquidationGains
     }),
     [
       getTotalCollateralAmounts,
@@ -277,8 +208,6 @@ const useAppContract = () => {
       getAusdBalance,
       getAusdInfo,
       getReward,
-      getCustomTokenBalance,
-      getPrice,
       openTrove,
       addCollateral,
       removeCollateral,
@@ -289,23 +218,9 @@ const useAppContract = () => {
       redeem,
       liquidateTroves,
       liquidateTrovesV2,
-      withdrawLiquidationGains,
-      mint
+      withdrawLiquidationGains
     ]
   );
-
-  const getClient = useCallback(async () => {
-    try {
-      const newClient = await getSigningCosmWasmClient();
-      setClient(newClient);
-    } catch (err) {
-      setClient(undefined);
-    }
-  }, [address]);
-
-  useEffect(() => {
-    getClient();
-  }, [getClient]);
 
   return value;
 };
