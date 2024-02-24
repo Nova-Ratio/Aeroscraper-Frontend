@@ -1,14 +1,16 @@
 import { motion } from 'framer-motion';
 import React, { FC } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface CheckboxProps {
   label: string;
+  labelClassName?: string;
   checked: boolean;
   onChange: () => void;
   className?: string
 }
 
-const Checkbox: FC<CheckboxProps> = ({ label, checked, onChange, className }) => {
+const Checkbox: FC<CheckboxProps> = ({ label, checked, onChange, className, labelClassName }) => {
 
   const variants = {
     checked: {
@@ -28,11 +30,11 @@ const Checkbox: FC<CheckboxProps> = ({ label, checked, onChange, className }) =>
             variants={variants}
             initial={checked ? 'checked' : 'unchecked'}
             animate={checked ? 'checked' : 'unchecked'}
-            transition={{ease:"easeOut"}}
+            transition={{ ease: "easeOut" }}
           />
         </div>
       </div>
-      <span className="ml-2 text-ghost-white font-medium leading-7 text-2xl checkbox-label">{label}</span>
+      <span className={twMerge("ml-2 text-ghost-white font-medium leading-7 text-2xl checkbox-label", labelClassName)}>{label}</span>
     </label>
   );
 };

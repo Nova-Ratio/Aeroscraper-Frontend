@@ -12,6 +12,9 @@ interface ModalProps {
   showModal: boolean,
   onClose?: () => void,
   modalSize?: "sm" | "md" | "lg",
+  hideCloseButton?: boolean,
+  disableOverlayClose?: boolean,
+  className?: string
 }
 
 const SIZE_VARIANT = {
@@ -65,7 +68,13 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
     props.onClose?.();
   }
 
-  useOutsideHandler(ref, closeModal);
+  const onOutsideClick = () => {
+    if (!props.disableOverlayClose) {
+      props.onClose?.();
+    }
+  }
+
+  useOutsideHandler(ref, onOutsideClick);
 
   //#endregion
 
@@ -84,7 +93,7 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
         }}
         className={`z-[70] ${SIZE_VARIANT[modalSize].width} ${SIZE_VARIANT[modalSize].height} bg-chinese-black rounded-[28px] relative overflow-y-auto`}
       >
-        {props.onClose && <button onClick={closeModal} className="absolute top-8 right-8 z-[100]">
+        {!props.hideCloseButton && props.onClose && <button onClick={closeModal} className="absolute top-8 right-8 z-[100]">
           <CloseIcon className="w-6 h-6" />
         </button>}
         {props.children}

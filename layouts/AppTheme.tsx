@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
 import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
+import ChainSelector from "@/components/ChainSelector/ChainSelector";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -159,7 +160,7 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
-
+          <Text size="base" className="mr-2 md:block hidden">Price Data:</Text>
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
             <img
@@ -191,6 +192,9 @@ const AppTheme = () => {
               <>
                 <div className="md:flex hidden">
                   <NotificationDropdown />
+                </div>
+                <div>
+                  <ChainSelector />
                 </div>
                 <button
                   onClick={() => {
@@ -238,26 +242,30 @@ const AppTheme = () => {
                 </button>
               </>
             ) : (
-              <WalletButton
-                ausdBalance={0}
-                className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
-                baseCoinBalance={
-                  !isNil(baseCoin)
-                    ? Number(
-                      convertAmount(
-                        balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                        baseCoin.decimal
+              <>
+                <div className="mr-3">
+                  <ChainSelector />
+                </div>
+                <WalletButton
+                  ausdBalance={0}
+                  className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
+                  baseCoinBalance={
+                    !isNil(baseCoin)
+                      ? Number(
+                        convertAmount(
+                          balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                          baseCoin.decimal
+                        )
                       )
-                    )
-                    : 0
-                }
-                basePrice={0}
-              />
+                      : 0
+                  }
+                  basePrice={0}
+                />
+              </>
             )}
-          </div>
-        </div>
+          </div >
+        </div >
         <NotificationModal />
-
         <AccountModal
           balance={{
             ausd: pageData.ausdBalance,
@@ -276,7 +284,7 @@ const AppTheme = () => {
             setAccountModal(false);
           }}
         />
-      </header>
+      </header >
       {isWalletConnected && !isNil(baseCoin) && (
         <div className="items-center md:hidden flex border h-[50px] border-white/20 mx-4 rounded-lg mt-8 pl-4 z-40">
           <div className="flex items-center gap-2 mr-8">
@@ -303,7 +311,8 @@ const AppTheme = () => {
             </div>
           )}
         </div>
-      )}
+      )
+      }
     </>
   );
 };

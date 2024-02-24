@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react'
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
     className?: string,
@@ -8,8 +9,24 @@ type Props = {
 
 const BorderedContainer = React.forwardRef<any, PropsWithChildren<Props>>(({ children, className = '', containerClassName = '', style }, ref) => {
     return (
-        <div ref={ref} className={`${containerClassName} main-gradient rounded-lg relative p-[3px]`}>
-            <div className={`${className} w-full h-full rounded-[6px] relative bg-licorice`} style={style}>
+        <div
+            ref={ref}
+            className={
+                twMerge(
+                    'main-gradient rounded-lg relative p-[3px]',
+                    containerClassName
+                )
+            }
+        >
+            <div
+                className={
+                    twMerge(
+                        'w-full h-full rounded-[6px] relative bg-licorice',
+                        className
+                    )
+                }
+                style={style}
+            >
                 {children}
             </div>
         </div>

@@ -59,3 +59,9 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
     [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" }
 }
+
+export const appChainURLs = [
+    { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech" },
+    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech" },
+    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech" }
+]
