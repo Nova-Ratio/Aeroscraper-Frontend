@@ -89,8 +89,6 @@ const TroveTab: FC<Props> = ({
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
-      borrowAmount < 999 ||
-      openTroveAmount > 999 ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
       convertAmount(
@@ -137,7 +135,6 @@ const TroveTab: FC<Props> = ({
   const withdrawDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
-      collateralAmount > 999 ||
       selectedCollateral.amount < collateralAmount,
     [collateralAmount, selectedCollateral]
   );
@@ -154,7 +151,6 @@ const TroveTab: FC<Props> = ({
   const depositDisabled = useMemo(
     () =>
       collateralAmount <= 0 ||
-      collateralAmount > 999 ||
       Number(
         convertAmount(
           balanceByDenom[selectedAsset.denom]?.amount ?? 0,
@@ -201,7 +197,6 @@ const TroveTab: FC<Props> = ({
   const repayDisabled = useMemo(
     () =>
       borrowingAmount <= 0 ||
-      borrowingAmount > 999 ||
       borrowingAmount > pageData.debtAmount ||
       borrowingAmount > pageData.ausdBalance,
     [borrowingAmount, pageData]
