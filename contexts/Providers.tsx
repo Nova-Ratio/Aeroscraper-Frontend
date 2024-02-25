@@ -17,6 +17,7 @@ import PriceProvider from "./PriceProvider";
 import DashboardProvider from "./DashboardProvider";
 import BalanceProvider from "./BalanceProvider";
 import { XionProviders } from "./xionProviders";
+import TabsProvider from "./TabsProvider";
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -64,7 +65,9 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
               <ProfileProvider>
                 <BalanceProvider>
                   <DashboardProvider>
-                    {children}
+                    <TabsProvider>
+                      {children}
+                    </TabsProvider>
                   </DashboardProvider>
                 </BalanceProvider>
               </ProfileProvider>

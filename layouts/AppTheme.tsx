@@ -20,6 +20,8 @@ import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
 import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
+import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
+import BorderedContainer from "@/components/Containers/BorderedContainer";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -41,7 +43,7 @@ const AppTheme = () => {
   const { balanceByDenom } = useBalances();
   const { pageData, getPageData } = usePageData();
   const { profileDetail } = useProfile();
-  
+
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
@@ -164,7 +166,7 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
-          
+
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
             <img
@@ -183,78 +185,83 @@ const AppTheme = () => {
               />
             </div>
           )}
-          {isWalletConnected && !isNil(baseCoin) ? (
-            <>
-              {/* <div className="md:flex hidden mr-4">
-                {selectedChainName === ChainName.INJECTIVE && (
-                  <VersionSelector />
-                )}
-              </div> */}
-              <div className="md:flex hidden">
-                <NotificationDropdown />
-              </div>
-              <button
-                onClick={() => {
-                  setAccountModal(true);
-                }}
-                className="flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300"
-              >
-                <img
-                  alt="user-profile-image"
-                  src={
-                    profileDetail?.photoUrl ??
-                    "/images/profile-images/profile-i-1.jpg"
-                  }
-                  className="rounded-sm bg-raisin-black w-12 h-12"
-                />
-                <div className="flex flex-col">
-                  <div className="flex items-center ml-auto">
-                    <img
-                      alt={walletInfo?.name}
-                      className="w-4 h-4 object-contain rounded"
-                      src={walletInfo?.logo as string}
-                    />
-                    <Text
-                      size="lg"
-                      weight="font-regular"
-                      className="truncate ml-2"
-                    >
-                      {username}
-                    </Text>
-                  </div>
-                  <Text size="sm">
-                    {address?.slice(0, 6)}...{address?.slice(-6)}
-                  </Text>
-                  <div></div>
+
+          <div className="flex md:hidden items-center gap-4">
+            {selectedChainName &&
+               <img alt={selectedChainName} src={baseCoin?.image} className='w-5 h-5 rounded-full' />
+            }
+
+            <MobileHamburgerMenu setAccountModal={setAccountModal} disconnectWallet={disconnectWallet} />
+          </div>
+          <div className="md:flex hidden">
+            {isWalletConnected && !isNil(baseCoin) ? (
+              <>
+                <div className="md:flex hidden">
+                  <NotificationDropdown />
                 </div>
                 <button
-                  className="w-12 h-12 flex items-center justify-center"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    disconnectWallet();
+                  onClick={() => {
+                    setAccountModal(true);
                   }}
+                  className="flex ml-12 gap-2 items-center hover:blur-[1px] transition-all duration-300"
                 >
-                  <ExitIcon className="text-white" />
+                  <img
+                    alt="user-profile-image"
+                    src={
+                      profileDetail?.photoUrl ??
+                      "/images/profile-images/profile-i-1.jpg"
+                    }
+                    className="rounded-sm bg-raisin-black w-12 h-12"
+                  />
+                  <div className="flex flex-col">
+                    <div className="flex items-center ml-auto">
+                      <img
+                        alt={walletInfo?.name}
+                        className="w-4 h-4 object-contain rounded"
+                        src={walletInfo?.logo as string}
+                      />
+                      <Text
+                        size="lg"
+                        weight="font-regular"
+                        className="truncate ml-2"
+                      >
+                        {username}
+                      </Text>
+                    </div>
+                    <Text size="sm">
+                      {address?.slice(0, 6)}...{address?.slice(-6)}
+                    </Text>
+                    <div></div>
+                  </div>
+                  <button
+                    className="w-12 h-12 flex items-center justify-center"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      disconnectWallet();
+                    }}
+                  >
+                    <ExitIcon className="text-white" />
+                  </button>
                 </button>
-              </button>
-            </>
-          ) : (
-            <WalletButton
-              ausdBalance={0}
-              className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
-              baseCoinBalance={
-                !isNil(baseCoin)
-                  ? Number(
+              </>
+            ) : (
+              <WalletButton
+                ausdBalance={0}
+                className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
+                baseCoinBalance={
+                  !isNil(baseCoin)
+                    ? Number(
                       convertAmount(
                         balanceByDenom[baseCoin.denom]?.amount ?? 0,
                         baseCoin.decimal
                       )
                     )
-                  : 0
-              }
-              basePrice={0}
-            />
-          )}
+                    : 0
+                }
+                basePrice={0}
+              />
+            )}
+          </div>
         </div>
         <NotificationModal />
 
@@ -263,11 +270,11 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                  convertAmount(
-                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
-                  )
+                convertAmount(
+                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                  (baseCoin?.cw20Denom === DefaultAssetByChainName[ChainName.XION].cw20Denom ? DefaultAssetByChainName[ChainName.XION].decimal : baseCoin?.decimal)
                 )
+              )
               : 0,
           }}
           basePrice={basePrice}
@@ -278,7 +285,7 @@ const AppTheme = () => {
         />
       </header>
       {isWalletConnected && !isNil(baseCoin) && (
-        <div className="items-center md:hidden flex border h-[50px] border-white/20 mx-4 rounded-lg mt-8 pl-4 z-50">
+        <div className="items-center md:hidden flex border h-[50px] border-white/20 mx-4 rounded-lg mt-8 pl-4 z-40">
           <div className="flex items-center gap-2 mr-8">
             <Text size="base">$1.00</Text>
             <img

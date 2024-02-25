@@ -2,7 +2,7 @@ import SkeletonLoading from "@/components/Table/SkeletonLoading";
 import Tabs from "@/components/Tabs";
 import { motion } from "framer-motion";
 import { isNil } from "lodash";
-import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
+import React, { Dispatch, FC, useEffect, useMemo, useRef, useState } from "react";
 import ClaimRewardTab from "./Tabs/ClaimRewardTab";
 import LeaderboardTab from "./Tabs/LeaderboardTab";
 import RedeemTab from "./Tabs/RedeemTab";
@@ -23,69 +23,26 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import GradientButton from "@/components/Buttons/GradientButton";
 import Text from "@/components/Texts/Text";
 import MintTap from "./Tabs/MintTab";
+import { DashboardTabs, useTabs } from "@/contexts/TabsProvider";
 
 interface Props {
   setTabPosition: Dispatch<DashboardTabs>;
 }
 
-export type DashboardTabs =
-  | "faucet"
-  | "trove"
-  | "createTrove"
-  | "stabilityPool"
-  | "redeem"
-  | "riskyTroves"
-  | "rewards"
-  | "leaderboard"
-  | "missions";
 const TabsSide: FC<Props> = ({ setTabPosition }) => {
-  const { selectedChainName } = useChainAdapter();
+
   const router = useRouter();
   const params = useSearchParams();
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { basePrice, walletInfo, selectedAppVersion, baseCoin } =
-    useChainAdapter();
-  const { pageData, getPageData, loading } = usePageData();
+  const { basePrice, walletInfo, selectedAppVersion, baseCoin } = useChainAdapter();
+
+  const { selectedTab, setSelectedTab, isTroveOpened, tabList } = useTabs();
+
   const { refreshBalance } = useBalances();
 
-  const [isTroveOpened, setIsTroveOpened] = useState(false);
-
-  let TabList: DashboardTabs[] = [
-    isTroveOpened ? "trove" : "createTrove",
-    "stabilityPool",
-    "redeem",
-    "riskyTroves",
-    "rewards",
-    "leaderboard",
-    "missions",
-  ];
-
-  if (
-    selectedChainName === ChainName.XION ||
-    selectedChainName === ChainName.SEI
-  ) {
-    TabList = TabList.filter(
-      (tab) => tab !== "missions" && tab !== "leaderboard"
-    );
-    //TabList ilk sıraya push
-    TabList.unshift("faucet");
-  }
-
-  const [selectedTab, setSelectedTab] = useState<DashboardTabs>(
-    isTroveOpened ? "trove" : "createTrove"
-  );
-
-  useEffect(() => {
-    setIsTroveOpened(pageData.baseCollateralAmount > 0);
-
-    if (selectedTab === "trove" || selectedTab === "createTrove") {
-      setSelectedTab(
-        pageData.baseCollateralAmount > 0 ? "trove" : "createTrove"
-      );
-    }
-  }, [pageData]);
+  const { pageData, loading, getPageData } = usePageData();
 
   useEffect(() => {
     if (typeof window !== "undefined" && window?.innerWidth <= 768) {
@@ -98,7 +55,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
       setSelectedTab(params.get("tab") as DashboardTabs);
     }
   }, []);
- 
+
   const handleChangeTab = (e: DashboardTabs) => {
     router.push(`/app/dashboard?tab=${e}`);
 
@@ -112,7 +69,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
       className="md:flex-1 md:max-w-[778px] px-3 md:px-0 md:ml-auto"
     >
       <Tabs
-        tabs={TabList}
+        tabs={tabList}
         dots={pageData.rewardAmount > 0 ? ["rewards"] : undefined}
         selectedTab={selectedTab}
         onTabSelected={(e) => {
@@ -158,9 +115,8 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className={`md:mt-6 ${
-            isNil(walletInfo) ? "blur-[2px]" : ""
-          } relative`}
+          className={`md:mt-6 ${isNil(walletInfo) ? "blur-[2px]" : ""
+            } relative`}
         >
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
@@ -169,7 +125,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
           {selectedTab === "faucet" && (
-            <MintTap getPageData={getPageData} pageData={pageData} /> 
+            <MintTap getPageData={getPageData} pageData={pageData} />
           )}
           {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
             <TroveTab
