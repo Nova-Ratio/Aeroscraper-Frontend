@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <div>
-      <main className="container w-full px-3 md:px-[64px] mx-auto ">
+      <main className="container w-full px-2 md:px-[64px] mx-auto ">
         <div className="flex md:flex-row flex-col md:justify-between w-full ">
           <div className="max-w-[626px] pt-6 md:pt-0">
             <div className="flex items-center gap-6 lg:mt-20">
@@ -53,7 +53,7 @@ export default function Home() {
             </h2>
             <LaunchButtons />
           </div>
-          <div className=" w-1/2 gradientBorderGray flex flex-col gap-6 p-4 md:p-6 items-center bg-white mt-32 -mr-[100px] h-fit text-white text-center">
+          <div className="w-full md:w-1/2 gradientBorderGray flex flex-col gap-6 p-4 md:p-6 items-center bg-white mt-32 -mr-[100px] h-fit text-white text-center">
             <div className="flex items-center gap-6">
               <Image
                 src={"/images/audit.png"}
@@ -74,7 +74,7 @@ export default function Home() {
               You can visit the link to access the audit results:
             </p>
             <Link
-              className=" text-[#5C5CFF] underline text-base"
+              className=" text-[#5C5CFF] underline text-xs md:text-base"
               href={"https://beosin.com/audits/Aeroscraper_202402020919.pdf"}
               target="_blank"
             >
@@ -99,9 +99,9 @@ export default function Home() {
 
 function LaunchButtons() {
   return (
-    <div className="flex gap-8 mt-10">
+    <div className="w-full flex gap-4 md:gap-8 mt-10">
       <Link href={"/app/dashboard"}>
-        <GradientButton className="w-[140px] lg:w-[227px] h-[37px] rounded-lg self-end px-8 group">
+        <GradientButton className="w-[160px] lg:w-[227px] h-[37px] rounded-lg self-end px-8 group">
           <Text size="base">Launch App</Text>
         </GradientButton>
       </Link>
@@ -109,7 +109,7 @@ function LaunchButtons() {
         href={"https://aeroscraper.gitbook.io/aeroscraper/"}
         target="_blank"
       >
-        <OutlinedButton className="w-[140px] lg:w-[227px] h-[41px] rounded-lg self-end group">
+        <OutlinedButton className="w-[160px] lg:w-[227px] h-[41px] rounded-lg self-end group">
           <Text size="base">Learn More</Text>
         </OutlinedButton>
       </Link>

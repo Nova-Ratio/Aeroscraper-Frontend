@@ -102,18 +102,16 @@ const ClaimRewardTab: FC<Props> = ({
             )}
           />
         </div>
-        <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
-          <TransactionButton
+        <TransactionButton
             loading={processLoading}
             disabled={pageData.rewardAmount == 0}
             disabledText={"No rewards are available."}
-            className="w-full md:w-[375px] h-11"
+            className="w-full md:w-[375px] h-11 mt-10 ml-auto"
             onClick={() => {
               rewardClaim();
             }}
             text="Claim Rewards"
           />
-        </div>
       </div>
     </section>
   );

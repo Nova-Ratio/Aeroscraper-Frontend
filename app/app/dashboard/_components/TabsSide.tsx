@@ -66,7 +66,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
   return (
     <div
       ref={ref}
-      className="md:flex-1 md:max-w-[778px] px-3 md:px-0 md:ml-auto"
+      className="md:flex-1 md:max-w-[778px] px-1 md:px-0 md:ml-auto"
     >
       <Tabs
         tabs={tabList}

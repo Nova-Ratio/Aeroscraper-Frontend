@@ -84,7 +84,7 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
       <GradientButton
         loading={processLoading}
         onClick={Mint}
-        className="min-w-full md:min-w-[375px] h-11 "
+        className="w-full md:min-w-[375px] h-11 "
         rounded="rounded-lg"
         disabled={
           processLoading || (expTime && getTime < expTime) ? true : false

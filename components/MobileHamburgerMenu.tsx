@@ -62,7 +62,7 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
                         initial={{ opacity: 0, right: -100, top: -15 }}
                         animate={{ opacity: 1, right: 0, top: 0 }}
                         exit={{ opacity: 0 }}
-                        className={`z-[50] fixed text-end rounded-tl-lg rounded-bl-lg top-0 -right-2 border-2 border-white/10 p-7 backdrop-blur bg-[#1a0b1c]/20`}
+                        className={`z-[50] fixed text-end rounded-tl-lg rounded-bl-lg top-0 -right-2 border-2 border-white/10 p-7 backdrop-blur bg-[#1a0b1c]`}
                     >
                         <button className='pt-2' onClick={handleCloseMenu}>
                             <HamburgerIcon />

@@ -91,20 +91,6 @@ function Tabs({
   return (
     <>
       <nav className="relative px-8 border border-white/10 rounded-lg md:block hidden">
-        <ul className="grid grid-cols-6 gap-2 py-4 left-0 bottom-0 fixed shadow shadow-white/10 w-full bg-chinese-black z-[999]">
-          {tabs.map((tab) => (
-            <motion.li
-              key={tab}
-              onClick={() => onTabSelected?.(tab)}
-              className={`m-1 text-[8px] font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-wrap items-center justify-center flex text-center`}
-            >
-              {camelCaseToTitleCase(tab)}
-              {dots?.includes(tab) && (
-                <div className="h-2 w-2 absolute bg-red-500 right-3 -top-2.5 md:top-2 animate-pulse rounded-full" />
-              )}
-            </motion.li>
-          ))}
-        </ul>
         {tabs.length > 5 && (
           <motion.button
             onClick={() => scrollTabs("left")}

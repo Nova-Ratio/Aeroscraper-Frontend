@@ -10,7 +10,7 @@ export default function Footer({}) {
   const { selectedChainName, selectedAppVersion } = useAppContext();
 
   return (
-    <footer className="flex flex-col md:gap-x-48 md:gap-y-16 items-top flex-wrap px-6 md:px-20 bg-transparent md:-mx-20 md:pr-16 mt-40 pb-24 relative">
+    <footer className="flex flex-col md:gap-x-48 md:gap-y-16 items-top flex-wrap px-2 md:px-20 bg-transparent md:-mx-20 md:pr-16 mt-40 pb-24 relative">
       <div className="flex items-center gap-6 md:mt-20">
         <LogoSecondary />
         <Text size="2xl" textColor="text-white">
