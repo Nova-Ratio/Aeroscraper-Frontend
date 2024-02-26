@@ -1,4 +1,6 @@
-import React, { FC } from "react";
+"use client"
+
+import React, { FC, useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import { CheckIcon } from "@/components/Icons/Icons";
@@ -9,19 +11,25 @@ import useChainAdapter from "@/hooks/useChainAdapter";
 
 const ChainSelector: FC = () => {
     const { chainInfo } = useChainAdapter();
+    const [selectedChainIndex, setSelectedChainIndex] = useState(-1);
+
+    useEffect(() => {
+        const chainIndex = appChainURLs.findIndex(chain => chain.url.includes(window.location.host));
+        setSelectedChainIndex(chainIndex);
+    }, [])
 
     return (
         <Dropdown
             toggleButton={
                 <BorderedContainer
-                    containerClassName="md:w-12 md:h-12 w-6 h-6 p-[1.5px]"
+                    containerClassName="md:w-12 md:h-12 w-8 h-8 p-[1.5px]"
                     className="w-full h-full flex justify-center items-center"
                 >
                     <div className="md:hidden block">
                         <Image
                             alt={chainInfo.name}
-                            width={12}
-                            height={12}
+                            width={16}
+                            height={16}
                             src={chainInfo.logo}
                         />
                     </div>
@@ -48,7 +56,7 @@ const ChainSelector: FC = () => {
                                     <a href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
                                         <div className="w-6 h-6 flex items-center justify-center">
                                             {
-                                                chain.url.includes(window.location.host) ?
+                                                idx === selectedChainIndex ?
                                                     <CheckIcon width="20" height="20" />
                                                     :
                                                     <Image

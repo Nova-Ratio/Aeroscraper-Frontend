@@ -4,14 +4,13 @@ import {
   BackgroundWave,
 } from "@/components/Icons/Icons";
 import StatisticSide from "./StatisticSide";
-import TabsSide, {
-  DashboardTabs,
-} from "./TabsSide";
-import { useCallback, useEffect, useState } from "react";
+import TabsSide from "./TabsSide";
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { useNotification } from "@/contexts/NotificationProvider";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import Footer from "./footer";
+import { DashboardTabs } from "@/contexts/TabsProvider";
 
 export default function Dashboard() {
 
@@ -116,7 +115,7 @@ export default function Dashboard() {
         <StatisticSide basePrice={basePrice} />
         <TabsSide setTabPosition={changeTabPosition} />
       </div>
-     <Footer />
+      <Footer />
     </div>
   );
 }

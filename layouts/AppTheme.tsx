@@ -170,7 +170,7 @@ const AppTheme = () => {
             />
           </div>
           {!isNil(baseCoin) && (
-            <div className="items-center gap-2 mr-12 md:flex hidden">
+            <div className="items-center gap-2 mr-6 md:flex hidden">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
               <img
                 alt={baseCoin.name}
@@ -181,16 +181,13 @@ const AppTheme = () => {
           )}
 
           <div className="flex md:hidden items-center gap-4">
-            {selectedChainName &&
-              <img alt={selectedChainName} src={baseCoin?.image} className='w-5 h-5 rounded-full' />
-            }
-
+            <ChainSelector />
             <MobileHamburgerMenu setAccountModal={setAccountModal} disconnectWallet={disconnectWallet} />
           </div>
           <div className="md:flex hidden">
             {isWalletConnected && !isNil(baseCoin) ? (
               <>
-                <div className="md:flex hidden">
+                <div className="md:flex hidden mr-6">
                   <NotificationDropdown />
                 </div>
                 <div>

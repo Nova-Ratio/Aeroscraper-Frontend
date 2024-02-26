@@ -14,7 +14,7 @@ interface Props {
   basePrice: number;
 }
 
-const INTERVAL_TIME = 8000;
+const INTERVAL_TIME = 12000;
 
 const StatisticSide: FC<Props> = ({ basePrice }) => {
   const isMobile = useIsMobile();
