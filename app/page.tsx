@@ -56,7 +56,7 @@ export default function Home() {
                 height={100}
                 alt="audit"
               />
-              <h3 className="tertiary-gradient-text auditCard-text">
+              <h3 className="tertiary-gradient-text auditCard-text md:text-[40px] text-4xl">
                 A Milestone Achievement in Security and Reliability
               </h3>
             </div>

@@ -36,7 +36,6 @@ body::-webkit-scrollbar {
     @apply tertiary-gradient transition-all delay-300;
   }
   .auditCard-text {
-    font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: 119%; /* 47.6px */
