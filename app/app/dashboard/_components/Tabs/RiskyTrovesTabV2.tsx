@@ -98,7 +98,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                         })
 
                         const totalDollarValue = collateralAmounts.reduce((acc, curr) => {
-                            const dollarValue = (coinPricesByDenom[curr.denom] ?? 0) * curr.amount;
+                            const dollarValue = /* (coinPricesByDenom[curr.denom] ?? 0) *  */curr.amount;
                             return acc + dollarValue;
                         }, 0)
 
