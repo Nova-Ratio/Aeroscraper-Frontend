@@ -10,7 +10,7 @@ export const defaultContent: {
     },
     {
       title: "Open your Trove and Mint aUSD",
-      desc: "Open your first trove using AST and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
+      desc: "Open your first trove using INJ and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
     },
     {
       title: "Stake your aUSD to Stability Pool",
@@ -21,9 +21,9 @@ export const defaultContent: {
       desc: "Collect the rewards you earned from liquid troves.",
     },
     {
-      title: "The Aeroscraper audit is officially complete!",
-      desc: "Security and reliability are the top priorities for Aeroscraper. Aeroscraper has been officially audited, and all errors have been corrected.",
-      linkStr: "audited",
+      title: "An Achievement in Security and Reliability",
+      desc: "We are thrilled to announce the successful completion of the Aeroscraper audit! At Aeroscraper, ensuring the utmost security and reliability of our platform is paramount.",
+      linkStr: "audit!",
       linkUrl: "https://beosin.com/audits/Aeroscraper_202402020919.pdf",
     }
   ];
@@ -42,7 +42,7 @@ export const injContent: {
       linkUrl: "https://galxe.com/aeroscraper/campaign/GCi8BtwKhx",
     },
     {
-      title: "Become the member of the Aeroscraper Guild",
+      title: "Become a member of the Aeroscraper Guild",
       desc: "Begin your Aeroscraper journey by becoming an official Guild Member. Earn exclusive roles to unlock future surprises.",
       linkStr: "unlock",
       linkUrl: "https://guild.xyz/aeroscraper",

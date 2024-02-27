@@ -57,13 +57,11 @@ export default function Home() {
                 alt="audit"
               />
               <h3 className="tertiary-gradient-text auditCard-text">
-                Audit is completed!
+                A Milestone Achievement in Security and Reliability
               </h3>
             </div>
             <p>
-              Security and reliability are the top priorities for Aeroscraper.
-              Aeroscraper has been officially audited, and all errors have been
-              corrected.
+            We are thrilled to announce the successful completion of the Aeroscraper audit! At Aeroscraper, ensuring the utmost security and reliability of our platform is paramount. This audit marks a significant step forward in our commitment to these principles.
             </p>
             <p className="text-white/60 text-xs">
               You can visit the link to access the audit results:

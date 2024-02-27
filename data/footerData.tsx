@@ -14,7 +14,7 @@
         },
         {
           title: "Whitepaper",
-          link: "https://novaratio.gitbook.io/aeroscraper/aeroscraper/whitepaper",
+          link: "https://novaratio.gitbook.io/aeroscraper/whitepaper/whitepaper",
         },
         {
           title: "Brand Identity",

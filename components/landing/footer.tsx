@@ -11,7 +11,7 @@ export default function Footer() {
             Aeroscraper
           </Text>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-40">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-40">
           <div className="flex flex-col content-start justify-start gap-4">
             <Text size="sm" textColor="text-white" weight="font-semibold">
               Product
@@ -43,7 +43,7 @@ export default function Footer() {
             </Link>
             <Link
               href={
-                "https://novaratio.gitbook.io/aeroscraper/aeroscraper/whitepaper"
+                "https://novaratio.gitbook.io/aeroscraper/whitepaper/whitepaper"
               }
               target="_blank"
               rel="noopener noreferrer"
@@ -76,6 +76,64 @@ export default function Footer() {
               />
             </Link>
           </div>
+          <div className="flex flex-col content-start justify-start gap-6">
+          <Text size="sm" weight="font-semibold">
+            Legal
+          </Text>
+          <div className="flex flex-col content-start gap-3">
+            <Link
+              href={
+                "https://novaratio.gitbook.io/aeroscraper/legal/protocol-disclaimer"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Disclaimer
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+            <Link
+              href={
+                "https://novaratio.gitbook.io/aeroscraper/legal/cookie-policy"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Cookie Policy
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+            <Link
+              href={
+                "https://novaratio.gitbook.io/aeroscraper/legal/privacy-policy"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 w-fit transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Privacy Policy
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+          </div>
+        </div>
           <div className="flex flex-col content-start justify-start gap-6">
             <Text size="sm" weight="font-semibold">
               Deep dive
