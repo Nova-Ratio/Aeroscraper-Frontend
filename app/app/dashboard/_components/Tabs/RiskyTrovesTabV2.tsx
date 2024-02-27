@@ -98,8 +98,13 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                         })
 
                         const totalDollarValue = collateralAmounts.reduce((acc, curr) => {
-                            const dollarValue = /* (coinPricesByDenom[curr.denom] ?? 0) *  */curr.amount;
+                            const dollarValue = (coinPricesByDenom[curr.denom] ?? 0) * curr.amount;
                             return acc + dollarValue;
+                        }, 0)
+
+                        const collAmount = collateralAmounts.reduce((acc, curr) => {
+                            const amount = (curr.amount)
+                            return amount;
                         }, 0)
 
                         return {
@@ -107,7 +112,8 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             liquidityThreshold: item.liquidityThreshold ?? Number(isFinite(Number((totalDollarValue / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number((totalDollarValue / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : (convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal) > 0) ? -1 : 0),
                             collateralAmounts,
                             debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal),
-                            totalDollarValue
+                            totalDollarValue,
+                            collAmount
                         };
                     } catch (err) {
                         return {
@@ -115,7 +121,8 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             liquidityThreshold: item.liquidityThreshold ?? 0,
                             collateralAmounts: [],
                             debtAmount: 0,
-                            totalDollarValue: 0
+                            totalDollarValue: 0,
+                            collAmount: 0
                         };
                     }
                 });
@@ -168,7 +175,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                             <TableBodyCol col={1} text="XXXXXX" value={
                                 <div className='w-full h-full flex justify-center items-center gap-2 shrink-0'>
                                     <NumericFormat
-                                        value={item.totalDollarValue}
+                                        value={item.collAmount}
                                         thousandsGroupStyle="thousand"
                                         thousandSeparator=","
                                         fixedDecimalScale

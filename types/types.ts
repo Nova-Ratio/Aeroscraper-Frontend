@@ -19,6 +19,7 @@ export type RiskyTrovesModelV1 = {
 }
 
 export type RiskyTrovesModelV2 = {
+    collAmount: string | number | null | undefined;
     owner: string;
     liquidityThreshold: number;
     collateralAmounts: CollateralInfo[];
