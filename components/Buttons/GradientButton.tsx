@@ -10,6 +10,7 @@ type Props = {
     rounded?: string;
     loading?: boolean
     disabledText?: string;
+    containerClassName?: string;
     tooltipPlacement?: keyof typeof PLACEMENT_CLASSES;
 } & React.ButtonHTMLAttributes<Element>
 
@@ -22,12 +23,13 @@ const GradientButton: React.FC<PropsWithChildren<Props>> = ({
     children,
     disabledText,
     tooltipPlacement,
+    containerClassName,
     ...rest
 }
 ) => {
 
     return (
-        <Tooltip placement={tooltipPlacement} active={!!rest.disabled && !isNil(disabledText) && !isEmpty(disabledText)} title={<Text size='base'>{disabledText}</Text>} >
+        <Tooltip placement={tooltipPlacement} active={!!rest.disabled && !isNil(disabledText) && !isEmpty(disabledText)} title={<Text size='base'>{disabledText}</Text>} containerClassName={containerClassName} >
             <button
                 disabled={loading}
                 className={`py-5 ${className} main-gradient flex justify-between gap-2 items-center ${rounded} active:scale-95 transition-all disabled:opacity-60 disabled:active:scale-100 disabled:cursor-not-allowed`}

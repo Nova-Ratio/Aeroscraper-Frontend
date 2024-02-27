@@ -2,6 +2,7 @@
 
 import GradientButton from '@/components/Buttons/GradientButton'
 import Checkbox from '@/components/Checkbox'
+import CookieAccept from '@/components/CookieAccept/CookieAccept'
 import Loading from '@/components/Loading/Loading'
 import { Modal } from '@/components/Modal/Modal'
 import Text from '@/components/Texts/Text'
@@ -202,6 +203,7 @@ const DisclaimerController: FC<PropsWithChildren> = ({ children }) => {
                     }
                 </div>
             </Modal>
+            <CookieAccept hide={showDisclaimer} />
         </>
     )
 }
