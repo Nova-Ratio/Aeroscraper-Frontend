@@ -45,7 +45,7 @@ const ChainSelector: FC = () => {
             }
         >
             <BorderedContainer
-                containerClassName="w-[155px] notification-dropdown-gradient p-[1.5px]"
+                containerClassName="w-[155px] notification-dropdown-gradient p-[1.5px] right-4"
                 className="relative p-4 overflow-auto scrollbar-hidden"
             >
                 <div className="flex flex-col gap-4">

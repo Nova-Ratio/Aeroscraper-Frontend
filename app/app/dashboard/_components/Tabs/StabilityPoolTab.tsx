@@ -187,18 +187,16 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
-              <GradientButton
+            <GradientButton
                 disabled={stakeDisabled}
                 disabledText={stakeErrorText}
                 loading={processLoading}
                 onClick={stakePool}
-                className="w-[240px] md:w-[374px] h-11 "
+                className="w-full md:w-[374px] h-11 ml-auto mt-10"
                 rounded="rounded-lg"
               >
                 <Text>Deposit</Text>
               </GradientButton>
-            </div>
           </motion.div>
         )}
         {pageData.stakedAmount > 0 && (

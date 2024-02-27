@@ -876,18 +876,16 @@ const TroveTab: FC<Props> = ({
               tooltip="The ratio between the dollar value of the collateral and the debt (in aUSD) you are depositing."
             />
           </motion.div>
-          <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
-            <GradientButton
+          <GradientButton
               loading={processLoading}
               onClick={openTrove}
-              className="min-w-full md:min-w-[375px] h-11 "
+              className="w-full md:w-[375px] h-11 ml-auto mt-10"
               rounded="rounded-lg"
               disabled={confirmDisabled}
               disabledText={openTroveErrorText}
             >
               <Text>Confirm</Text>
             </GradientButton>
-          </div>
         </div>
       )}
     </div>
