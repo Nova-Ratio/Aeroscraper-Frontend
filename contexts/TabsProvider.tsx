@@ -49,11 +49,7 @@ const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
             "leaderboard",
             "missions",
         ];
-
-        tempTablist = tempTablist.filter(
-            (tab) => tab !== "missions" && tab !== "leaderboard"
-        );
-        tempTablist.unshift("faucet");
+        
         return tempTablist;
     }, [isTroveOpened, selectedChainName]);
 
