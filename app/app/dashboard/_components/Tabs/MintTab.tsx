@@ -22,16 +22,15 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
   async function Mint() {
     try {
       setProcessLoading(true);
-      const res: any = await contract.mint();
-      console.log(res);
+      //const res: any = await contract.mint();
 
-      addNotification({
+      /* addNotification({
         status: "success",
         directLink: getIsInjectiveResponse(res)
           ? res?.txHash
           : res?.transactionHash,
         message: `Mint Success`,
-      });
+      }); */
       let time = new Date().getTime() + 86400000;
       localStorage.setItem(
         `mintExp${address}`,

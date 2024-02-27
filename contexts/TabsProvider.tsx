@@ -51,10 +51,10 @@ const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
             "missions",
         ];
     
-        if (
+        /* if (
             selectedChainName === ChainName.XION ||
             selectedChainName === ChainName.SEI
-        ) {
+        )  */{
             tempTablist = tempTablist.filter(
                 (tab) => tab !== "missions" && tab !== "leaderboard"
             );

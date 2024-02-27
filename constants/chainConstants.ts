@@ -63,5 +63,5 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
 export const appChainURLs = [
     { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech" },
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech" },
-    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech" }
+    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app" }
 ]
