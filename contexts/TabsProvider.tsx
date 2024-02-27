@@ -1,7 +1,6 @@
 import useChainAdapter from "@/hooks/useChainAdapter";
-import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { FC, PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePageData } from "./DashboardProvider";
-import { ChainName } from "@/enums/Chain";
 
 export type DashboardTabs =
     | "faucet"
@@ -50,19 +49,13 @@ const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
             "leaderboard",
             "missions",
         ];
-    
-        /* if (
-            selectedChainName === ChainName.XION ||
-            selectedChainName === ChainName.SEI
-        )  */{
-            tempTablist = tempTablist.filter(
-                (tab) => tab !== "missions" && tab !== "leaderboard"
-            );
-            tempTablist.unshift("faucet");
-        }
-    
+
+        tempTablist = tempTablist.filter(
+            (tab) => tab !== "missions" && tab !== "leaderboard"
+        );
+        tempTablist.unshift("faucet");
         return tempTablist;
-    }, [isTroveOpened,selectedChainName]);
+    }, [isTroveOpened, selectedChainName]);
 
     useEffect(() => {
         setIsTroveOpened(pageData.baseCollateralAmount > 0);
