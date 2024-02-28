@@ -33,8 +33,6 @@ export type DashboardTabs =
   | "trove"
   | "createTrove"
   | "stabilityPool"
-  | "redeem"
-  | "riskyTroves"
   | "rewards"
   | "leaderboard"
   | "missions";
@@ -55,8 +53,6 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
   let TabList: DashboardTabs[] = [
     isTroveOpened ? "trove" : "createTrove",
     "stabilityPool",
-    "redeem",
-    "riskyTroves",
     "rewards",
     "leaderboard",
     "missions",
@@ -181,27 +177,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           )}
           {selectedTab === "stabilityPool" && (
             <StabilityPoolTab pageData={pageData} getPageData={getPageData} />
-          )}
-          {selectedTab === "redeem" && (
-            <RedeemTab
-              pageData={pageData}
-              getPageData={getPageData}
-              refreshBalance={refreshBalance}
-              basePrice={basePrice}
-            />
-          )}
-          {selectedTab === "riskyTroves" &&
-            (selectedAppVersion === AppVersion.V1 ? (
-              <RiskyTrovesTabV1
-                getPageData={getPageData}
-                basePrice={basePrice}
-              />
-            ) : (
-              <RiskyTrovesTabV2
-                getPageData={getPageData}
-                basePrice={basePrice}
-              />
-            ))}          
+          )}          
           {selectedTab === "rewards" && (
             <ClaimRewardTab
               pageData={pageData}
