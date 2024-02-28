@@ -8,6 +8,7 @@ import { appChainURLs } from "@/constants/chainConstants";
 import Image from "next/image";
 import Text from "../Texts/Text";
 import useChainAdapter from "@/hooks/useChainAdapter";
+import Tooltip from "../Tooltip/Tooltip";
 
 const ChainSelector: FC = () => {
     const { chainInfo } = useChainAdapter();
@@ -45,32 +46,40 @@ const ChainSelector: FC = () => {
             }
         >
             <BorderedContainer
-                containerClassName="w-[155px] notification-dropdown-gradient p-[1.5px] right-4"
-                className="relative p-4 overflow-auto scrollbar-hidden"
+                containerClassName="w-[220px] notification-dropdown-gradient p-[1.5px] right-4"
+                className="relative p-4 scrollbar-hidden"
             >
                 <div className="flex flex-col gap-4">
                     {
                         appChainURLs.map((chain, idx) => {
                             return (
                                 <>
-                                    <a href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
-                                        <div className="w-6 h-6 flex items-center justify-center">
-                                            {
-                                                idx === selectedChainIndex ?
-                                                    <CheckIcon width="20" height="20" />
-                                                    :
-                                                    <Image
-                                                        alt={chain.chainName}
-                                                        width={24}
-                                                        height={24}
-                                                        src={chain.image}
-                                                    />
-                                            }
-                                        </div>
-                                        <Text size="lg">
-                                            {chain.chainName}
-                                        </Text>
-                                    </a>
+                                    <Tooltip
+                                        placement="left"
+                                        containerClassName="text-white whitespace-nowrap"
+                                        width="w-fit"
+                                        title={chain.tooltip}
+                                    >
+                                        <a href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
+                                            <div className="w-6 h-6 flex items-center justify-center">
+                                                {
+                                                    idx === selectedChainIndex ?
+                                                        <CheckIcon width="20" height="20" />
+                                                        :
+                                                        <Image
+                                                            alt={chain.chainName}
+                                                            width={24}
+                                                            height={24}
+                                                            src={chain.image}
+                                                            className="shrink-0"
+                                                        />
+                                                }
+                                            </div>
+                                            <Text size="lg">
+                                                {chain.chainName}
+                                            </Text>
+                                        </a>
+                                    </Tooltip>
                                     {
                                         idx !== appChainURLs.length - 1 &&
                                         <span className='w-full h-[1px] bg-white' />

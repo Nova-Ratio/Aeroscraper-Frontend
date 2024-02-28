@@ -19,6 +19,7 @@ import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
 import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
+import Tooltip from "@/components/Tooltip/Tooltip";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -163,20 +164,24 @@ const AppTheme = () => {
           <Text size="base" className="mr-2 md:block hidden">Price Data:</Text>
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
-            <img
-              alt="ausd"
-              className="w-5 h-5"
-              src="/images/token-images/ausd-blue.svg"
-            />
+            <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="aUSD">
+              <img
+                alt="ausd"
+                className="w-5 h-5"
+                src="/images/token-images/ausd-blue.svg"
+              />
+            </Tooltip>
           </div>
           {!isNil(baseCoin) && (
             <div className="items-center gap-2 mr-6 md:flex hidden">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
-              <img
-                alt={baseCoin.name}
-                className="w-5 h-5"
-                src={baseCoin.tokenImage}
-              />
+              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="INJ">
+                <img
+                  alt={baseCoin.name}
+                  className="w-5 h-5"
+                  src={baseCoin.tokenImage}
+                />
+              </Tooltip>
             </div>
           )}
 
@@ -286,20 +291,24 @@ const AppTheme = () => {
         <div className="items-center md:hidden flex border h-[50px] border-white/20 mx-4 rounded-lg mt-8 pl-4 z-40">
           <div className="flex items-center gap-2 mr-8">
             <Text size="base">$1.00</Text>
-            <img
-              alt="ausd"
-              className="w-5 h-5"
-              src="/images/token-images/ausd-blue.svg"
-            />
+            <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="aUSD">
+              <img
+                alt="ausd"
+                className="w-5 h-5"
+                src="/images/token-images/ausd-blue.svg"
+              />
+            </Tooltip>
           </div>
           {!isNil(baseCoin) && (
             <div className="flex items-center gap-2 mr-12">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
-              <img
-                alt={baseCoin.name}
-                className="w-5 h-5"
-                src={baseCoin.tokenImage}
-              />
+              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="INJ">
+                <img
+                  alt={baseCoin.name}
+                  className="w-5 h-5"
+                  src={baseCoin.tokenImage}
+                />
+              </Tooltip>
             </div>
           )}
           {isWalletConnected && !isNil(baseCoin) && (
