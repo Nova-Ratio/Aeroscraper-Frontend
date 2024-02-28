@@ -178,7 +178,7 @@ const AppTheme = () => {
           </div>
           {!isNil(baseCoin) && (
             <div className="items-center gap-2 mr-12 md:flex hidden">
-              <Text size="base">$ 3.0000</Text>
+              <Text size="base">$ {basePrice.toFixed(4)}</Text>
               <Tooltip containerClassName='flex items-center text-white' width='w-[52px]' title={"AST"}>
                 <img
                   alt={baseCoin.name}
