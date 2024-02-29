@@ -15,7 +15,7 @@ export default function Footer({}) {
           Aeroscraper
         </Text>
       </div>
-      <div className="grid md:grid-cols-5 gap-10 md:gap-40 md:mt-0 mt-10">
+      <div className="grid md:grid-cols-5 gap-10 md:gap-20 md:mt-0 mt-10">
         <div className="flex flex-col content-start justify-start gap-4">
           <Text size="sm" textColor="text-white" weight="font-semibold">
             Product
