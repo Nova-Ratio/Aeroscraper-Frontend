@@ -9,80 +9,98 @@ import Image from "next/image";
 import Text from "../Texts/Text";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import Tooltip from "../Tooltip/Tooltip";
+import { groupBy } from "lodash";
+import { ChainNavigator } from "@/enums/Chain";
+
+const chainsGroupByEnv = groupBy(appChainURLs, 'env');
 
 const ChainSelector: FC = () => {
     const { chainInfo } = useChainAdapter();
-    const [selectedChainIndex, setSelectedChainIndex] = useState(-1);
+    const [selectedChain, setSelectedChain] = useState<ChainNavigator>();
 
     useEffect(() => {
-        const chainIndex = appChainURLs.findIndex(chain => chain.url.includes(window.location.host));
-        setSelectedChainIndex(chainIndex);
+        const chain = appChainURLs.find(chain => chain.url.includes(window.location.host));
+        setSelectedChain(chain);
     }, [])
 
     return (
         <Dropdown
             toggleButton={
-                <BorderedContainer
-                    containerClassName="md:w-12 md:h-12 w-8 h-8 p-[1.5px]"
-                    className="w-full h-full flex justify-center items-center"
+                <Tooltip
+                    containerClassName="text-white whitespace-nowrap"
+                    width="w-fit"
+                    title={`${selectedChain?.chainName}-${selectedChain?.env}`}
                 >
-                    <div className="md:hidden block">
-                        <Image
-                            alt={chainInfo.name}
-                            width={16}
-                            height={16}
-                            src={chainInfo.logo}
-                        />
-                    </div>
-                    <div className="md:block hidden">
-                        <Image
-                            alt={chainInfo.name}
-                            width={24}
-                            height={24}
-                            src={chainInfo.logo}
-                        />
-                    </div>
-                </BorderedContainer>
+                    <BorderedContainer
+                        containerClassName="md:w-12 md:h-12 w-8 h-8 p-[1.5px]"
+                        className="w-full h-full flex justify-center items-center"
+                    >
+                        <div className="md:hidden block">
+                            <Image
+                                alt={chainInfo.name}
+                                width={16}
+                                height={16}
+                                src={chainInfo.logo}
+                            />
+                        </div>
+                        <div className="md:block hidden">
+                            <Image
+                                alt={chainInfo.name}
+                                width={24}
+                                height={24}
+                                src={chainInfo.logo}
+                            />
+                        </div>
+                    </BorderedContainer>
+                </Tooltip>
             }
         >
             <BorderedContainer
                 containerClassName="w-[220px] notification-dropdown-gradient p-[1.5px] right-4"
-                className="relative p-4 scrollbar-hidden"
+                className="relative p-0 scrollbar-hidden"
             >
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
                     {
-                        appChainURLs.map((chain, idx) => {
+                        Object.entries(chainsGroupByEnv).map(([env, envChains], idx, arr) => {
                             return (
                                 <>
-                                    <Tooltip
-                                        placement="left"
-                                        containerClassName="text-white whitespace-nowrap"
-                                        width="w-fit"
-                                        title={chain.tooltip}
-                                    >
-                                        <a href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
-                                            <div className="w-6 h-6 flex items-center justify-center">
-                                                {
-                                                    idx === selectedChainIndex ?
-                                                        <CheckIcon width="20" height="20" />
-                                                        :
-                                                        <Image
-                                                            alt={chain.chainName}
-                                                            width={24}
-                                                            height={24}
-                                                            src={chain.image}
-                                                            className="shrink-0"
-                                                        />
-                                                }
-                                            </div>
-                                            <Text size="lg">
-                                                {chain.chainName}
-                                            </Text>
-                                        </a>
-                                    </Tooltip>
+                                    <div className="flex flex-col gap-4 p-4">
+                                        <Text size="xl" className="font-bold">
+                                            {env}
+                                        </Text>
+                                        {
+                                            envChains.map((chain, idx) => (
+                                                <>
+                                                    <a href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
+                                                        <div className="w-6 h-6 flex items-center justify-center">
+                                                            {
+                                                                chain.url === selectedChain?.url ?
+                                                                    <CheckIcon width="20" height="20" />
+                                                                    :
+                                                                    <Image
+                                                                        alt={chain.chainName}
+                                                                        width={24}
+                                                                        height={24}
+                                                                        src={chain.image}
+                                                                        className="shrink-0"
+                                                                    />
+                                                            }
+                                                        </div>
+                                                        <Text size="lg">
+                                                            {chain.chainName}
+                                                        </Text>
+                                                    </a>
+                                                    {
+                                                        idx !== envChains.length - 1 &&
+                                                        <span className='w-full h-[1px] bg-white' />
+                                                    }
+                                                </>
+                                            ))
+                                        }
+                                    </div>
                                     {
-                                        idx !== appChainURLs.length - 1 &&
-                                        <span className='w-full h-[1px] bg-white' />
+                                        idx !== arr.length - 1 &&
+                                        <span className='w-full h-[1px] notification-dropdown-gradient' />
                                     }
                                 </>
                             )

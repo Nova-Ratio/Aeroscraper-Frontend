@@ -1,4 +1,4 @@
-import { ChainName } from "@/enums/Chain";
+import { ChainName, ChainNavigator } from "@/enums/Chain";
 import { BaseCoin, ChainInfo } from "@/types/types";
 import { chains } from 'chain-registry'
 
@@ -60,9 +60,10 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
     [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" }
 }
 
-export const appChainURLs = [
-    { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", tooltip: "Sei" },
-    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", tooltip: "Injective Mainnet" },
-    { chainName: "Injective (Test)", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", tooltip: "Injective Testnet" },
-    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", tooltip: "Xion" }
+
+
+export const appChainURLs: ChainNavigator[] = [
+    { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
+    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet" },
+    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Mainnet" }
 ]
