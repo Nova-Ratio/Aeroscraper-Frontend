@@ -9,6 +9,9 @@ import { usePageData } from "@/contexts/DashboardProvider";
 import { ChainName } from "@/enums/Chain";
 import RenderContent from "./renderContent";
 import { defaultContent, injContent } from "@/data/injContent";
+import Tooltip from "@/components/Tooltip/Tooltip";
+import NotificationDropdown from "./NotificationDropdown";
+import Text from "@/components/Texts/Text";
 
 interface Props {
   basePrice: number;
@@ -18,7 +21,7 @@ const INTERVAL_TIME = 12000;
 
 const StatisticSide: FC<Props> = ({ basePrice }) => {
   const isMobile = useIsMobile();
-  const { baseCoin, walletInfo, selectedChainName } = useChainAdapter();
+  const { baseCoin, walletInfo, selectedChainName, isWalletConnected } = useChainAdapter();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
   const [content, setContent] = useState(defaultContent);
   useEffect(() => {
@@ -84,6 +87,39 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
           );
         })}
       </div>
+
+      {isWalletConnected && !isNil(baseCoin) && (
+        <div className="items-center md:hidden flex border h-[50px] border-white/20 -mx-2 rounded-lg my-6 pl-4 z-40">
+          <div className="flex items-center gap-2 mr-8">
+            <Text size="base">$1.00</Text>
+            <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="aUSD">
+              <img
+                alt="ausd"
+                className="w-5 h-5"
+                src="/images/token-images/ausd-blue.svg"
+              />
+            </Tooltip>
+          </div>
+          {!isNil(baseCoin) && (
+            <div className="flex items-center gap-2 mr-12">
+              <Text size="base">$ {basePrice.toFixed(4)}</Text>
+              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="INJ">
+                <img
+                  alt={baseCoin.name}
+                  className="w-5 h-5"
+                  src={baseCoin.tokenImage}
+                />
+              </Tooltip>
+            </div>
+          )}
+          {isWalletConnected && !isNil(baseCoin) && (
+            <div className="ml-auto">
+              <NotificationDropdown />
+            </div>
+          )}
+        </div>
+      )
+      }
 
       <button
         onClick={() => {
