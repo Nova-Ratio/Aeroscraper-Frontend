@@ -111,6 +111,12 @@ export const getXionContract = (
       trove_count: {},
     })
   }
+
+  const FindSortedTroveInsertPosition = async ():Promise<any> => {
+    return await client?.queryContractSmart(contractAddress,{
+      icr: {},
+    }) 
+  }
   //EXECUTE QUERIES
   // bu hariç
   const mint = async (senderAddress: string, amount?: number) => {
@@ -122,7 +128,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "250000",
       },
       "customtokenminter"
     );
@@ -147,11 +153,15 @@ export const getXionContract = (
     senderAddress: string,
     amount: number,
     loanAmount: number,
-    asset: CollateralAsset = defaultAsset
+    asset: CollateralAsset = defaultAsset,
+    preID: string,
+    nextID: string
   ) => {
     const msg = getMsg(amount, asset, {
       open_trove: {
         loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
+        prev_node_id: "xion16p8xefwrea8gddmaa8unphhdcfcjjqjjaqsfdzawmdnzpa5uh0hsg3jfj5",
+        next_node_id: "xion16hkp8t29j9d98r69htlw3r85u6c3uehdl8k53l33apqkj2hnjeaqkedr4r",
       },
     });
     
@@ -179,7 +189,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Add Collateral"
     );
@@ -201,7 +211,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Remove Collateral"
       );
@@ -219,7 +229,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Borrow Loan"
     );
@@ -240,7 +250,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Repay Loan"
     );
@@ -261,7 +271,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Stake"
     );
@@ -274,7 +284,7 @@ export const getXionContract = (
       { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Unstake"
     );
@@ -295,7 +305,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Redeem"
     );
@@ -308,7 +318,7 @@ export const getXionContract = (
       { liquidate_troves: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Liquidate Troves"
     );
@@ -323,7 +333,7 @@ export const getXionContract = (
         safe_list: []} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Liquidate Troves"
     );
@@ -336,7 +346,7 @@ export const getXionContract = (
       { withdraw_liquidation_gains: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Withdraw Liquidation Gains"
     );
@@ -367,5 +377,6 @@ export const getXionContract = (
     withdrawLiquidationGains,
     mint,
     getTroveCount,
+    FindSortedTroveInsertPosition
   };
 };

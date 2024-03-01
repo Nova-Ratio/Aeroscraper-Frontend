@@ -120,9 +120,9 @@ const useAppContract = () => {
   }, [address, contract]);
 
   const openTrove = useCallback(
-    async (amount: number, loan_amount: number, asset?: CollateralAsset) => {
+    async (amount: number, loan_amount: number, asset?: CollateralAsset, preID?: any, nextID?: any) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.openTrove(address, amount, loan_amount, asset);
+      return await contract.openTrove(address, amount, loan_amount, asset, preID, nextID);
     },
     [address, contract]
   );
@@ -275,7 +275,7 @@ const useAppContract = () => {
       liquidateTrovesV2,
       withdrawLiquidationGains,
       mint,
-      getTroveCount
+      getTroveCount,
     }),
     [
       getTotalCollateralAmounts,
@@ -302,7 +302,7 @@ const useAppContract = () => {
       liquidateTrovesV2,
       withdrawLiquidationGains,
       mint,
-      getTroveCount
+      getTroveCount,
     ]
   );
 
