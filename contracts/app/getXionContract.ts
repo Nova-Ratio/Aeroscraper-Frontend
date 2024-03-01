@@ -75,7 +75,7 @@ export const getXionContract = (
   const getAusdBalance = async (
     address: string
   ): Promise<CW20BalanceResponse> => {
-    let balance =  await client?.queryContractSmart(ausdContractAddress, {
+    let balance = await client?.queryContractSmart(ausdContractAddress, {
       balance: { address },
     });
     return balance;
@@ -106,16 +106,33 @@ export const getXionContract = (
     })
   }
 
-  const getTroveCount = async ():Promise<any> => {
+  const getTroveCount = async (): Promise<any> => {
     return await client?.queryContractSmart(contractAddress, {
       trove_count: {},
     })
   }
 
-  const FindSortedTroveInsertPosition = async ():Promise<any> => {
-    return await client?.queryContractSmart(contractAddress,{
-      icr: {},
-    }) 
+  const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string, next_node_id: string }> => {
+    let next_node_id = "";
+    let prev_node_id = "";
+
+    try {
+      const data = await client?.queryContractSmart(contractAddress, {
+        find_sorted_trove_insert_position: {
+          icr: collRatio.toString(),
+        }
+      })
+
+      next_node_id = data[0] ?? "";
+      prev_node_id = data[1] ?? "";
+
+      console.log("FindSortedTroveInsertPosition response", data)
+    }
+    catch (err) {
+      console.log("FindSortedTroveInsertPosition error", err);
+    }
+
+    return { prev_node_id, next_node_id };
   }
   //EXECUTE QUERIES
   // bu hariç
@@ -153,18 +170,19 @@ export const getXionContract = (
     senderAddress: string,
     amount: number,
     loanAmount: number,
+    collRatio: number,
     asset: CollateralAsset = defaultAsset,
-    preID: string,
-    nextID: string
   ) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
+
     const msg = getMsg(amount, asset, {
       open_trove: {
         loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
-        prev_node_id: "xion16p8xefwrea8gddmaa8unphhdcfcjjqjjaqsfdzawmdnzpa5uh0hsg3jfj5",
-        next_node_id: "xion16hkp8t29j9d98r69htlw3r85u6c3uehdl8k53l33apqkj2hnjeaqkedr4r",
+        prev_node_id,
+        next_node_id
       },
     });
-    
+
     return await client?.execute(
       senderAddress,
       cw20CustomToken as string,
@@ -180,9 +198,11 @@ export const getXionContract = (
   const addCollateral = async (
     senderAddress: string,
     amount: number,
+    collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const msg = getMsg(amount, asset, { add_collateral: {} });
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
+    const msg = getMsg(amount, asset, { add_collateral: { prev_node_id, next_node_id } });
     return await client?.execute(
       senderAddress,
       cw20CustomToken as string,
@@ -198,8 +218,10 @@ export const getXionContract = (
   const removeCollateral = async (
     senderAddress: string,
     amount: number,
+    collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
       contractAddress,
@@ -207,6 +229,8 @@ export const getXionContract = (
         remove_collateral: {
           collateral_amount: getRequestAmount(amount, asset.decimal),
           collateral_denom: asset.cw20Denom,
+          prev_node_id,
+          next_node_id
         },
       },
       {
@@ -214,17 +238,20 @@ export const getXionContract = (
         gas: "500000",
       },
       "Remove Collateral"
-      );
+    );
   };
-  
 
-  const borrowLoan = async (senderAddress: string, amount: number) => {
+
+  const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
       contractAddress,
       {
         borrow_loan: {
           loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal),
+          prev_node_id,
+          next_node_id
         },
       },
       {
@@ -235,12 +262,18 @@ export const getXionContract = (
     );
   };
 
-  const repayLoan = async (senderAddress: string, amount: number) => {
+  const repayLoan = async (senderAddress: string, amount: number, collRatio: number) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ repay_loan: {} }),
+        msg: jsonToBinary({
+          repay_loan: {
+            prev_node_id,
+            next_node_id
+          }
+        }),
       },
     };
 
@@ -328,9 +361,12 @@ export const getXionContract = (
     return await client?.execute(
       senderAddress,
       contractAddress,
-      { liquidate_troves: {
-        liquidation_list: [owner],
-        safe_list: []} },
+      {
+        liquidate_troves: {
+          liquidation_list: [owner],
+          safe_list: []
+        }
+      },
       {
         amount: [{ amount: "0", denom: "uxion" }],
         gas: "500000",

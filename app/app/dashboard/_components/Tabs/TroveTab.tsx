@@ -64,7 +64,7 @@ const TroveTab: FC<Props> = ({
     if (ChainName.XION === selectedChainName) {
       return (
         pageData.collateralAmountsByDenom[
-          selectedAsset?.cw20Denom || selectedAsset.denom
+        selectedAsset?.cw20Denom || selectedAsset.denom
         ] ?? {
           denom: selectedAsset.cw20Denom,
           amount: 0,
@@ -84,7 +84,7 @@ const TroveTab: FC<Props> = ({
     if (ChainName.XION === selectedChainName) {
       return (
         pageData.minCollateralRatioByDenom[
-          selectedAsset?.cw20Denom || selectedAsset.denom
+        selectedAsset?.cw20Denom || selectedAsset.denom
         ] ?? 0
       );
     } else {
@@ -106,19 +106,51 @@ const TroveTab: FC<Props> = ({
     ? collacteralRatioCalculate
     : 0;
 
+  const depositCollRatio = useMemo(() => {
+    const ratio = Number((selectedCollateral.amount + collateralAmount) * basePrice) / (pageData.debtAmount);
+    return isFinite(ratio) ? ratio : 0;
+  }
+    ,
+    [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount]
+  )
+
+  const withdrawCollRatio = useMemo(() => {
+    const ratio = Number((selectedCollateral.amount - collateralAmount) * basePrice) / (pageData.debtAmount);
+    return isFinite(ratio) && ratio > 0 ? ratio : 0;
+  }
+    ,
+    [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount]
+  )
+
+  const borrowCollRatio = useMemo(() => {
+    const ratio = Number(selectedCollateral.amount * basePrice) / Number(pageData.debtAmount + borrowingAmount);
+    return isFinite(ratio) ? ratio : 0;
+  }
+    ,
+    [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount]
+  )
+
+  const repayCollRatio = useMemo(() => {
+    const ratio = Number(selectedCollateral.amount * basePrice) / Number(pageData.debtAmount - borrowingAmount);
+    return isFinite(ratio) && ratio > 0 ? ratio : 0;
+  }
+    ,
+    [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount]
+  )
+
   const confirmDisabled = useMemo(
     () =>
       borrowAmount <= 0 ||
       openTroveAmount <= 0 ||
       borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ||
       openTroveAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       collacteralRatio < 1.15 ||
       openTroveAmount >
-        convertAmount(
-          balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
-          selectedAsset!.decimal
-        ) ||
+      convertAmount(
+        balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
+        selectedAsset!.decimal
+      ) ||
       collacteralRatio < selectedMinCollateral - 0.00001,
     [
       openTroveAmount,
@@ -144,10 +176,10 @@ const TroveTab: FC<Props> = ({
           collacteralRatio < (selectedMinCollateral - 0.00001) ?
             `Collateral ratio should be at least ${selectedMinCollateral}.`
             :
-              borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ?
-                '1000 aUSD is the lower limit for opening a trove.'
+            borrowAmount < (selectedChainName === ChainName.XION ? 1000 : 999) ?
+              '1000 aUSD is the lower limit for opening a trove.'
               :
-            undefined,
+              undefined,
     [
       openTroveAmount,
       borrowAmount,
@@ -163,7 +195,7 @@ const TroveTab: FC<Props> = ({
     () =>
       collateralAmount <= 0 ||
       collateralAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       selectedCollateral.amount < collateralAmount,
     [collateralAmount, selectedCollateral]
   );
@@ -181,7 +213,7 @@ const TroveTab: FC<Props> = ({
     () =>
       collateralAmount <= 0 ||
       collateralAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       Number(
         convertAmount(
           balanceByDenom[selectedAsset.denom]?.amount ?? 0,
@@ -229,7 +261,7 @@ const TroveTab: FC<Props> = ({
     () =>
       borrowingAmount <= 0 ||
       borrowingAmount >
-        (selectedChainName === ChainName.XION ? 99999999 : 999) ||
+      (selectedChainName === ChainName.XION ? 99999999 : 999) ||
       borrowingAmount > pageData.debtAmount ||
       borrowingAmount > pageData.ausdBalance,
     [borrowingAmount, pageData]
@@ -266,6 +298,7 @@ const TroveTab: FC<Props> = ({
     try {
       const res: any = await contract.addCollateral(
         collateralAmount,
+        depositCollRatio,
         selectedAsset
       );
 
@@ -296,6 +329,7 @@ const TroveTab: FC<Props> = ({
     try {
       const res: any = await contract.removeCollateral(
         collateralAmount,
+        withdrawCollRatio,
         selectedAsset
       );
 
@@ -324,7 +358,7 @@ const TroveTab: FC<Props> = ({
     setProcessLoading(true);
 
     try {
-      const res: any = await contract.borrowLoan(borrowingAmount);
+      const res: any = await contract.borrowLoan(borrowingAmount, borrowCollRatio);
 
       addNotification({
         status: "success",
@@ -351,7 +385,7 @@ const TroveTab: FC<Props> = ({
     setProcessLoading(true);
 
     try {
-      const res: any = await contract.repayLoan(borrowingAmount);
+      const res: any = await contract.repayLoan(borrowingAmount, repayCollRatio);
 
       addNotification({
         status: "success",
@@ -391,6 +425,7 @@ const TroveTab: FC<Props> = ({
       const res: any = await contract.openTrove(
         openTroveAmount,
         borrowAmount,
+        collacteralRatioCalculate,
         selectedAsset
       );
 
@@ -531,9 +566,8 @@ const TroveTab: FC<Props> = ({
                     renderText={(value) => (
                       <StatisticCard
                         title="Management Fee"
-                        description={`${value} ${
-                          selectedAsset?.shortName ?? ""
-                        } (0.5%)`}
+                        description={`${value} ${selectedAsset?.shortName ?? ""
+                          } (0.5%)`}
                         tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                       />
                     )}
@@ -541,11 +575,10 @@ const TroveTab: FC<Props> = ({
 
                   <StatisticCard
                     title="Total Debt"
-                    description={`${
-                      pageData.debtAmount < 0.001
-                        ? "< 0.000"
-                        : pageData.debtAmount
-                    } aUSD`}
+                    description={`${pageData.debtAmount < 0.001
+                      ? "< 0.000"
+                      : pageData.debtAmount
+                      } aUSD`}
                     tooltip="The total amount of aUSD you have borrowed"
                   />
                   {/* <StatisticCard
@@ -659,7 +692,7 @@ const TroveTab: FC<Props> = ({
                       <NumericFormat
                         value={
                           ((selectedCollateral.amount ?? 0) * basePrice * 100) /
-                            115 -
+                          115 -
                           pageData.debtAmount
                         }
                         thousandsGroupStyle="thousand"
@@ -877,9 +910,8 @@ const TroveTab: FC<Props> = ({
               renderText={(value) => (
                 <StatisticCard
                   title="Management Fee"
-                  description={`${value} ${
-                    selectedAsset?.shortName ?? ""
-                  } (0.5%)`}
+                  description={`${value} ${selectedAsset?.shortName ?? ""
+                    } (0.5%)`}
                   tooltip="This amount is deducted from the collateral amount as a management fee. There are no recurring fees for borrowing, which is thus interest-free."
                 />
               )}
