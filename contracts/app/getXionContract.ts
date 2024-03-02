@@ -112,19 +112,19 @@ export const getXionContract = (
     })
   }
 
-  const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string, next_node_id: string }> => {
+  const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string | null, next_node_id: string | null}> => {
     let next_node_id = "";
     let prev_node_id = "";
 
     try {
       const data = await client?.queryContractSmart(contractAddress, {
         find_sorted_trove_insert_position: {
-          icr: collRatio.toString(),
+          icr: (collRatio*100).toString(),
         }
       })
-
-      next_node_id = data[0] ?? "";
-      prev_node_id = data[1] ?? "";
+      console.log("icr", (collRatio*100).toString())
+      next_node_id = data[0] ?? null;
+      prev_node_id = data[1] ?? null;
 
       console.log("FindSortedTroveInsertPosition response", data)
     }
@@ -189,7 +189,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Open Trove"
     );
