@@ -24,6 +24,7 @@ import { CollateralAsset } from "@/types/types";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import { ChainName } from "@/enums/Chain";
 import { useBalances } from "@/contexts/BalanceProvider";
+import { MANAGEMENT_FEE } from "@/constants/chainConstants";
 
 enum TABS {
   COLLATERAL = 0,
@@ -98,7 +99,7 @@ const TroveTab: FC<Props> = ({
   );
 
   const collacteralRatioCalculate = useMemo(
-    () => Number((openTroveAmount || 0) * basePrice) / (borrowAmount || 0),
+    () => Number(((openTroveAmount * (1 - MANAGEMENT_FEE)) || 0) * basePrice) / (borrowAmount || 0),
     [openTroveAmount, borrowAmount, basePrice]
   );
 
@@ -107,7 +108,7 @@ const TroveTab: FC<Props> = ({
     : 0;
 
   const depositCollRatio = useMemo(() => {
-    const ratio = Number((selectedCollateral.amount + collateralAmount) * basePrice) / (pageData.debtAmount);
+    const ratio = Number((selectedCollateral.amount + (collateralAmount * (1 - MANAGEMENT_FEE))) * basePrice) / (pageData.debtAmount);
     return isFinite(ratio) ? ratio : 0;
   }
     ,
@@ -115,7 +116,7 @@ const TroveTab: FC<Props> = ({
   )
 
   const withdrawCollRatio = useMemo(() => {
-    const ratio = Number((selectedCollateral.amount - collateralAmount) * basePrice) / (pageData.debtAmount);
+    const ratio = Number((selectedCollateral.amount - (collateralAmount)) * basePrice) / (pageData.debtAmount);
     return isFinite(ratio) && ratio > 0 ? ratio : 0;
   }
     ,
@@ -557,7 +558,7 @@ const TroveTab: FC<Props> = ({
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-20 md:gap-6 gap-y-4 mt-4 md:mt-0 md:p-4">
                   <NumericFormat
-                    value={Number(collateralAmount * 0.005)}
+                    value={Number(collateralAmount * MANAGEMENT_FEE)}
                     thousandsGroupStyle="thousand"
                     thousandSeparator=","
                     fixedDecimalScale
@@ -901,7 +902,7 @@ const TroveTab: FC<Props> = ({
             className="grid grid-cols-2 md:grid-cols-3 content-center md:gap-16 mt-8"
           >
             <NumericFormat
-              value={Number(openTroveAmount * 0.005)}
+              value={Number(openTroveAmount * MANAGEMENT_FEE)}
               thousandsGroupStyle="thousand"
               thousandSeparator=","
               fixedDecimalScale
