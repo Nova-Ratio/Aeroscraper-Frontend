@@ -6,9 +6,8 @@ import { motion } from "framer-motion";
 import { isNil } from "lodash";
 import React, { FC, useEffect, useState } from "react";
 import { usePageData } from "@/contexts/DashboardProvider";
-import { ChainName } from "@/enums/Chain";
 import RenderContent from "./renderContent";
-import { defaultContent, injContent } from "@/data/injContent";
+import { defaultContent } from "@/data/injContent";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import NotificationDropdown from "./NotificationDropdown";
 import Text from "@/components/Texts/Text";
@@ -21,14 +20,8 @@ const INTERVAL_TIME = 12000;
 
 const StatisticSide: FC<Props> = ({ basePrice }) => {
   const isMobile = useIsMobile();
-  const { baseCoin, walletInfo, selectedChainName, isWalletConnected } = useChainAdapter();
+  const { baseCoin, walletInfo, isWalletConnected } = useChainAdapter();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
-  const [content, setContent] = useState(defaultContent);
-  useEffect(() => {
-    setContent(
-      ChainName.INJECTIVE === selectedChainName ? injContent : defaultContent
-    );
-  }, [selectedChainName]);
   const { pageData } = usePageData();
   const [showContentIdx, setShowContentIdx] = useState(0);
   const [hovering, setHovering] = useState(false);
@@ -42,7 +35,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
     if (!hovering) {
       timer = setInterval(() => {
         setShowContentIdx((prev) =>
-          prev + 1 === content.length ? 0 : prev + 1
+          prev + 1 === defaultContent.length ? 0 : prev + 1
         );
       }, INTERVAL_TIME);
     }
@@ -74,7 +67,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
         <RenderContent showContentIdx={showContentIdx} />
       </motion.div>
       <div className="space-x-2 md:space-x-1 group-hover:opacity-100 md:opacity-0 transition-opacity my-2">
-        {content.map((i, idx) => {
+        {defaultContent.map((i, idx) => {
           return (
             <button
               key={idx}
@@ -103,7 +96,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
           {!isNil(baseCoin) && (
             <div className="flex items-center gap-2 mr-12">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
-              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="INJ">
+              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="SEI">
                 <img
                   alt={baseCoin.name}
                   className="w-5 h-5"

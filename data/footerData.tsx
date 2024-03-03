@@ -76,10 +76,6 @@
           link: "https://discord.gg/3R6yTqB8hC",
         },
         {
-          title: "Zealy",
-          link: "https://zealy.io/c/aeroscraper/questboard",
-        },
-        {
           title: "Medium",
           link: "https:xxxxxxxx.xxxx@xxxxxxxxxxx",
         },

@@ -5,7 +5,7 @@ import {
   useNotification,
 } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
-import { getValueByRatio, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { getValueByRatio } from "@/utils/contractUtils";
 import { isNil } from "lodash";
 import { NumberFormatValues, NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
@@ -72,13 +72,10 @@ const RedeemTab: FC<Props> = ({
       setProcessLoading(true);
 
       console.log("redeemAmount", redeemAmount);
-      const res: any = await contract.redeem(redeemAmount);
+      const res = await contract.redeem(redeemAmount);
       console.log("res", res);
 
-
-      transactionHash = getIsInjectiveResponse(res)
-        ? res?.txHash
-        : res?.transactionHash;
+      transactionHash = res?.transactionHash;
       console.log("transactionHash", transactionHash);
 
       addNotification({
@@ -181,13 +178,13 @@ const RedeemTab: FC<Props> = ({
           />
         </div>
         <TransactionButton
-            loading={processLoading}
-            className="w-full md:w-[375px] h-11 mt-10 ml-auto"
-            onClick={redeem}
-            text="Redeem"
-            disabled={redeemDisabled}
-            disabledText={redeemErrorText}
-          />
+          loading={processLoading}
+          className="w-full md:w-[375px] h-11 mt-10 ml-auto"
+          onClick={redeem}
+          text="Redeem"
+          disabled={redeemDisabled}
+          disabledText={redeemErrorText}
+        />
       </div>
     </section>
   );

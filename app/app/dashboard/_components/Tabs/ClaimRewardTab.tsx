@@ -6,7 +6,6 @@ import { isNil } from "lodash";
 import { NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
 
 interface Props {
@@ -33,12 +32,10 @@ const ClaimRewardTab: FC<Props> = ({
     setProcessLoading(true);
 
     try {
-      const res: any = await contract.withdrawLiquidationGains();
+      const res = await contract.withdrawLiquidationGains();
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${pageData.rewardAmount} ${coinName} Reward Received`,
       });
       getPageData();
@@ -98,15 +95,15 @@ const ClaimRewardTab: FC<Props> = ({
           />
         </div>
         <TransactionButton
-            loading={processLoading}
-            disabled={pageData.rewardAmount == 0}
-            disabledText={"No rewards are available."}
-            className="w-full md:w-[375px] h-11 mt-10 ml-auto"
-            onClick={() => {
-              rewardClaim();
-            }}
-            text="Claim Rewards"
-          />
+          loading={processLoading}
+          disabled={pageData.rewardAmount == 0}
+          disabledText={"No rewards are available."}
+          className="w-full md:w-[375px] h-11 mt-10 ml-auto"
+          onClick={() => {
+            rewardClaim();
+          }}
+          text="Claim Rewards"
+        />
       </div>
     </section>
   );

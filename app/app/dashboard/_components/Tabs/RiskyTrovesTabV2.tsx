@@ -7,7 +7,7 @@ import { useNotification } from '@/contexts/NotificationProvider';
 import useAppContract from '@/contracts/app/useAppContract';
 
 import { RiskyTrovesModelV2 } from '@/types/types';
-import { getIsInjectiveResponse, convertAmount, getRatioColor } from '@/utils/contractUtils';
+import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NumericFormat } from 'react-number-format';
@@ -32,7 +32,7 @@ type Props = {
 
 const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-    const { selectedChainName = ChainName.INJECTIVE, baseCoin } = useChainAdapter();
+    const { selectedChainName = ChainName.SEI, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
     const contract = useAppContract();
     const [loading, setLoading] = useState(true);
@@ -45,10 +45,10 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
         try {
             setProcessLoading(true);
 
-            const res: any = await contract.liquidateTrovesV2(address);
+            const res = await contract.liquidateTrovesV2(address);
             addNotification({
                 status: 'success',
-                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
+                directLink: res?.transactionHash,
                 message: 'Risky Troves Liquidated'
             });
             getPageData();

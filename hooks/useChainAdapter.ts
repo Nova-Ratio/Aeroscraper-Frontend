@@ -4,9 +4,8 @@ import { useChain } from "@cosmos-kit/react"
 import { ChainContext } from "@cosmos-kit/core"
 import { useMemo } from "react";
 import { BaseCoin, WalletInfo } from "@/types/types";
-import { BaseCoinByChainName, ChainInfoByName } from "@/constants/chainConstants";
+import { BaseCoinByChainName } from "@/constants/chainConstants";
 import { WalletType } from "@/enums/WalletType";
-import { isEmpty, isNil } from "lodash";
 
 type ChainAdapterValue = ChainContext & AppContextState & {
     baseCoin?: BaseCoin;
@@ -15,57 +14,26 @@ type ChainAdapterValue = ChainContext & AppContextState & {
 
 const useChainAdapter = () => {
     const appContextValue = useAppContext();
-    const chainContextValue = useChain(appContextValue.selectedChainName ?? ChainName.INJECTIVE);
+    const chainContextValue = useChain(appContextValue.selectedChainName ?? ChainName.SEI);
 
-    const address = useMemo<string | undefined>(() =>
-        appContextValue.selectedWallet === WalletType.METAMASK ?
-            appContextValue.userAddress
-            :
-            chainContextValue.address,
-        [appContextValue.selectedWallet, appContextValue.userAddress, chainContextValue.address]
-    );
+    const address = useMemo<string | undefined>(() => chainContextValue.address, [chainContextValue.address]);
 
-    const username = useMemo<string | undefined>(() =>
-        appContextValue.selectedWallet === WalletType.METAMASK ?
-            "Metamask"
-            :
-            chainContextValue.username,
-        [appContextValue.selectedWallet, chainContextValue.username]
-    );
+    const username = useMemo<string | undefined>(() => chainContextValue.username, [chainContextValue.username]);
 
     const walletInfo = useMemo<WalletInfo | undefined>(() =>
-        appContextValue.selectedWallet === WalletType.METAMASK ?
+        chainContextValue.isWalletConnected ?
             {
-                name: WalletType.METAMASK,
-                prettyName: 'Metamask',
-                logo: '/images/wallet-images/metamask-icon.png'
-            }
-            :
-            chainContextValue.isWalletConnected ?
-                {
-                    name: (chainContextValue.wallet?.name ?? '') as WalletType,
-                    prettyName: chainContextValue.wallet?.prettyName ?? '',
-                    logo: (chainContextValue.wallet?.logo ?? '') as string
-                } :
-                undefined,
-        [appContextValue.selectedWallet, chainContextValue.isWalletConnected, chainContextValue.wallet]
+                name: (chainContextValue.wallet?.name ?? '') as WalletType,
+                prettyName: chainContextValue.wallet?.prettyName ?? '',
+                logo: (chainContextValue.wallet?.logo ?? '') as string
+            } :
+            undefined,
+        [chainContextValue.isWalletConnected, chainContextValue.wallet]
     );
 
-    const isWalletConnected = useMemo(() =>
-        appContextValue.selectedWallet === WalletType.METAMASK ?
-            !isNil(appContextValue.userAddress) && !isEmpty(appContextValue.userAddress)
-            :
-            chainContextValue.isWalletConnected,
-        [appContextValue.userAddress, appContextValue.selectedWallet, chainContextValue.isWalletConnected]
-    )
+    const isWalletConnected = useMemo(() => chainContextValue.isWalletConnected, [chainContextValue.isWalletConnected])
 
-    const isWalletConnecting = useMemo(() =>
-        appContextValue.selectedWallet === WalletType.METAMASK ?
-            appContextValue.isConnecting
-            :
-            chainContextValue.isWalletConnecting,
-        [appContextValue.isConnecting, appContextValue.selectedWallet, chainContextValue.isWalletConnecting]
-    )
+    const isWalletConnecting = useMemo(() => chainContextValue.isWalletConnecting, [chainContextValue.isWalletConnecting])
 
     const baseCoin = useMemo<BaseCoin | undefined>(() => appContextValue.selectedChainName ? BaseCoinByChainName[appContextValue.selectedChainName] : undefined, [appContextValue.selectedChainName]);
 

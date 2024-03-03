@@ -15,7 +15,7 @@ import { isNil } from 'lodash';
 import { DefaultAssetByChainName } from '@/constants/assetConstants';
 
 const FilterParamByChainName: Record<ChainName, string> = {
-    [ChainName.INJECTIVE]: 'INJECTIVE'
+    [ChainName.SEI]: 'SEI'
 }
 
 type DashboardContextValue = {
@@ -53,7 +53,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const { selectedChainName, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
 
-    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
+    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.SEI }), [selectedChainName]);
     const contract = useAppContract();
 
     const [pageData, setPageData] = useState<PageData>({
@@ -263,11 +263,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const getTotalInfo = useCallback(async () => {
         try {
             setTotalInfoLoading(true);
-            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
-
-            if (selectedChainName === ChainName.INJECTIVE) {
-                chainNameQuery = `${chainNameQuery}2`;
-            }
+            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.SEI];
 
             const { data } = await axios.get<TotalInfoResponseV1 | TotalInfoResponseV2>(
                 `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`

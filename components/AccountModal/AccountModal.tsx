@@ -35,7 +35,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   const avatarSelectRef = useRef<HTMLDivElement>(null);
   const qrCodeViewRef = useRef<HTMLDivElement>(null);
 
-  const { selectedChainName, username, address, baseCoin, walletInfo, chainInfo, disconnect, disconnectMetamask } = useChainAdapter();
+  const { selectedChainName, username, address, baseCoin, walletInfo, chainInfo, disconnect } = useChainAdapter();
   const { profileDetail, setProfileDetail } = useProfile();
 
   const [selectedTab, setSelectedTab] = useState<Tabs | null>(null);
@@ -72,12 +72,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   }
 
   const logout = () => {
-    if (walletInfo?.name === WalletType.METAMASK) {
-      disconnectMetamask();
-    }
-    else {
-      disconnect?.();
-    }
+    disconnect?.();
     setProfileDetail(undefined);
     localStorage.removeItem("profile-detail");
     localStorage.removeItem("selectedWallet");

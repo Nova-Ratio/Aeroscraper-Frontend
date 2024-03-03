@@ -8,7 +8,6 @@ import useOutsideHandler from "@/hooks/useOutsideHandler";
 import Loading from "../Loading/Loading";
 import {
   WalletsByChainName,
-  metamaskWalletInfo,
 } from "@/constants/walletConstants";
 import { isNil } from "lodash";
 import { Modal } from "../Modal/Modal";
@@ -136,13 +135,6 @@ const WalletButton: FC<Props> = ({
       });
     // anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
     // anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
-    anyWindow.ethereum
-      ? walletExtensions.installed.push({ name: WalletType.METAMASK })
-      : walletExtensions.otherWallets.push({
-        name: WalletType.METAMASK,
-        downloadLink:
-          "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1",
-      });
     anyWindow.ninji ? walletExtensions.installed.push({ name: WalletType.NINJI }) : walletExtensions.otherWallets.push({ name: WalletType.NINJI, downloadLink: "https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm" });
     anyWindow.cosmostation ? walletExtensions.installed.push({ name: WalletType.COSMOSTATION }) : walletExtensions.otherWallets.push({ name: WalletType.COSMOSTATION, downloadLink: "https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf" });
 
@@ -237,50 +229,6 @@ const WalletButton: FC<Props> = ({
                     </div>
                   );
                 })}
-                {selectedChainName === ChainName.INJECTIVE && (
-                  <div className="mr-auto md:inline-block hidden">
-                    {walletExtensions?.installed.some(
-                      (item: any) => item.name === WalletType.METAMASK
-                    ) ? (
-                      <Button
-                        onClick={() => selectWallet(WalletType.METAMASK)}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setShowDownloadExtension({
-                            name: metamaskWalletInfo.prettyName,
-                            downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === WalletType.METAMASK
-                            )?.downloadLink!,
-                          });
-                        }}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    )}
-                  </div>
-                )}
                 {otherWallets.map((wallet: any, idx: any) => (
                   <div
                     key={idx}
@@ -357,56 +305,6 @@ const WalletButton: FC<Props> = ({
                     </motion.div>
                   );
                 })}
-                {onHoverChain === ChainName.INJECTIVE && (
-                  <motion.div
-                    key={WalletType.METAMASK}
-                    className={`inline-block mr-auto duration-300 transition-all`}
-                    initial={{ opacity: 0.0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                  >
-                    {walletExtensions?.installed.some(
-                      (item: any) => item.name === WalletType.METAMASK
-                    ) ? (
-                      <Button
-                        onClick={() => selectWallet(WalletType.METAMASK)}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setShowDownloadExtension({
-                            name: metamaskWalletInfo.prettyName,
-                            downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === WalletType.METAMASK
-                            )?.downloadLink!,
-                          });
-                        }}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    )}
-                  </motion.div>
-                )}
                 {otherHoveredWallets.map((wallet: any, idx: any) => {
                   return (
                     <motion.div
@@ -516,13 +414,6 @@ const WalletButton: FC<Props> = ({
                         />
                       );
                     })}
-                    {selectedChainName === ChainName.INJECTIVE && (
-                      <img
-                        alt={metamaskWalletInfo.name}
-                        className="w-6 h-6 object-contain md:inline-block hidden"
-                        src={metamaskWalletInfo.logo}
-                      />
-                    )}
                   </div>
                   <Text size="base" textColor="text-[#989396]">
                     If you want to connect an installed wallet, you can log in

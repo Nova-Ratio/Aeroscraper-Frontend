@@ -1,7 +1,6 @@
 import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
 import { ChainInfo } from "@/types/types";
-import { getInjectiveAddress } from "@injectivelabs/sdk-ts";
 import { isEmpty, isNil } from "lodash";
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { usePrice } from "./PriceProvider";
@@ -16,21 +15,19 @@ export type AppContextState = {
     chainInfo: ChainInfo;
     selectChainName: (chainName?: ChainName) => void;
     selectWallet: (wallet?: WalletType) => void;
-    disconnectMetamask: () => void;
 }
 
 const AppContext = createContext<AppContextState>({
-    selectedChainName: ChainName.INJECTIVE,
+    selectedChainName: ChainName.SEI,
     isConnecting: false,
     basePrice: 0,
-    chainInfo: ChainInfoByName[ChainName.INJECTIVE],
+    chainInfo: ChainInfoByName[ChainName.SEI],
     selectChainName: () => { },
-    selectWallet: () => { },
-    disconnectMetamask: () => { }
+    selectWallet: () => { }
 });
 
 const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(ChainName.INJECTIVE);
+    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(ChainName.SEI);
     const [selectedWallet, setSelectedWallet] = useState<WalletType>();
     const [userAddress, setUserAddress] = useState<string>();  //This state is used to override cosmos-kit address
     const [isConnecting, setIsConnecting] = useState<boolean>(false);  //This state is used to override cosmos-kit loading
@@ -38,21 +35,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const { getPriceByChainName } = usePrice();
 
     const basePrice = useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]);
-    const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? ChainName.INJECTIVE], [selectedChainName])
-
-    const getMetamaskAccount = useCallback(async () => {
-        try {
-            setIsConnecting(true);
-            const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-            const ethAddress = accounts[0];
-            setUserAddress(getInjectiveAddress(ethAddress));
-            setIsConnecting(false);
-        }
-        catch (err) {
-            setUserAddress(undefined);
-            setIsConnecting(false);
-        }
-    }, [])
+    const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? ChainName.SEI], [selectedChainName])
 
     const selectChainName = useCallback((chainName?: ChainName) => {
         setSelectedChainName(chainName);
@@ -61,17 +44,6 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const selectWallet = useCallback(async (wallet?: WalletType) => {
         setSelectedWallet(wallet);
-        localStorage.setItem('selectedWallet', wallet || '');
-
-        if (wallet === WalletType.METAMASK) {
-            getMetamaskAccount();
-        }
-    }, [getMetamaskAccount])
-
-    const disconnectMetamask = useCallback(() => {
-        setUserAddress(undefined);
-        setSelectedWallet(undefined);
-        localStorage.removeItem('selectedWallet');
     }, [])
 
     const value = useMemo<AppContextState>(() => ({
@@ -82,8 +54,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
         basePrice,
         chainInfo,
         selectChainName,
-        selectWallet,
-        disconnectMetamask
+        selectWallet
     }), [
         selectedChainName,
         selectedWallet,
@@ -92,8 +63,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
         basePrice,
         chainInfo,
         selectChainName,
-        selectWallet,
-        disconnectMetamask
+        selectWallet
     ])
 
     // Remember last selected chain on multichain structure
@@ -103,17 +73,6 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     //         setSelectedChainName(savedChainName as ChainName);
     //     }
     // }, [])
-
-    useEffect(() => {
-        const savedWallet = localStorage.getItem('selectedWallet');
-        if (!isNil(savedWallet) && !isEmpty(savedWallet)) {
-            setSelectedWallet(savedWallet as WalletType);
-
-            if (savedWallet === WalletType.METAMASK) {
-                getMetamaskAccount();
-            }
-        }
-    }, [getMetamaskAccount])
 
     return (
         <AppContext.Provider value={value}>

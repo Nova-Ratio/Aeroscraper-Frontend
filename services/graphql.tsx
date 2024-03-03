@@ -7,17 +7,12 @@ import {
 import { request, gql } from "graphql-request";
 
 export default function graphql({
-  selectedChainName = ChainName.INJECTIVE
+  selectedChainName = ChainName.SEI
 }: {
   selectedChainName?: ChainName;
 }) {
   const URL = (): string => {
-    switch (selectedChainName) {
-      case ChainName.INJECTIVE:
-        return process.env.NEXT_PUBLIC_INDEXER_INJ as string;
-      default:
-        return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
-    }
+    return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
   };
 
   const getRiskyTrovesQuery = gql`

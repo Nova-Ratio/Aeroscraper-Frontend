@@ -9,7 +9,6 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import {
   AUSD_PRICE,
   convertAmount,
-  getIsInjectiveResponse,
   getRatioColor,
 } from "@/utils/contractUtils";
 import { isNil } from "lodash";
@@ -50,7 +49,7 @@ const TroveTab: FC<Props> = ({
   const [collateralAmount, setCollateralAmount] = useState<number>(0);
   const [borrowingAmount, setBorrowingAmount] = useState<number>(0);
   const [selectedAsset, setSelectedAsset] = useState<CollateralAsset>(
-    DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
+    DefaultAssetByChainName[selectedChainName ?? ChainName.SEI]
   );
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
@@ -238,9 +237,7 @@ const TroveTab: FC<Props> = ({
 
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${collateralAmount} ${selectedAsset?.shortName} Collateral Added`,
       });
       getPageData();
@@ -261,16 +258,14 @@ const TroveTab: FC<Props> = ({
     setProcessLoading(true);
 
     try {
-      const res: any = await contract.removeCollateral(
+      const res = await contract.removeCollateral(
         collateralAmount,
         selectedAsset
       );
 
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${collateralAmount} ${selectedAsset?.shortName} Collateral Removed`,
       });
       getPageData();
@@ -295,9 +290,7 @@ const TroveTab: FC<Props> = ({
 
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${borrowingAmount} aUSD Borrowed`,
       });
       getPageData();
@@ -322,9 +315,7 @@ const TroveTab: FC<Props> = ({
 
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${borrowingAmount} aUSD Repayed`,
       });
 
@@ -363,16 +354,14 @@ const TroveTab: FC<Props> = ({
 
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: "Trove Opened",
       });
       getPageData();
       refreshBalance();
     } catch (err: any) {
       console.log("err", err);
-      
+
       addNotification({
         message: JSON.stringify(err.message),
         status: "error",
@@ -877,15 +866,15 @@ const TroveTab: FC<Props> = ({
             />
           </motion.div>
           <GradientButton
-              loading={processLoading}
-              onClick={openTrove}
-              className="w-full md:w-[375px] h-11 ml-auto mt-10"
-              rounded="rounded-lg"
-              disabled={confirmDisabled}
-              disabledText={openTroveErrorText}
-            >
-              <Text>Confirm</Text>
-            </GradientButton>
+            loading={processLoading}
+            onClick={openTrove}
+            className="w-full md:w-[375px] h-11 ml-auto mt-10"
+            rounded="rounded-lg"
+            disabled={confirmDisabled}
+            disabledText={openTroveErrorText}
+          >
+            <Text>Confirm</Text>
+          </GradientButton>
         </div>
       )}
     </div>
