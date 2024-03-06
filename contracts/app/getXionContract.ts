@@ -75,7 +75,7 @@ export const getXionContract = (
   const getAusdBalance = async (
     address: string
   ): Promise<CW20BalanceResponse> => {
-    let balance =  await client?.queryContractSmart(ausdContractAddress, {
+    let balance = await client?.queryContractSmart(ausdContractAddress, {
       balance: { address },
     });
     return balance;
@@ -106,10 +106,33 @@ export const getXionContract = (
     })
   }
 
-  const getTroveCount = async ():Promise<any> => {
+  const getTroveCount = async (): Promise<any> => {
     return await client?.queryContractSmart(contractAddress, {
       trove_count: {},
     })
+  }
+
+  const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string | null, next_node_id: string | null}> => {
+    let next_node_id = "";
+    let prev_node_id = "";
+
+    try {
+      const data = await client?.queryContractSmart(contractAddress, {
+        find_sorted_trove_insert_position: {
+          icr: (collRatio*100).toString(),
+        }
+      })
+      console.log("icr", (collRatio*100).toString())
+      next_node_id = data[0] ?? null;
+      prev_node_id = data[1] ?? null;
+
+      console.log("FindSortedTroveInsertPosition response", data)
+    }
+    catch (err) {
+      console.log("FindSortedTroveInsertPosition error", err);
+    }
+
+    return { prev_node_id, next_node_id };
   }
   //EXECUTE QUERIES
   // bu hariç
@@ -122,7 +145,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "250000",
       },
       "customtokenminter"
     );
@@ -147,21 +170,26 @@ export const getXionContract = (
     senderAddress: string,
     amount: number,
     loanAmount: number,
-    asset: CollateralAsset = defaultAsset
+    collRatio: number,
+    asset: CollateralAsset = defaultAsset,
   ) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
+
     const msg = getMsg(amount, asset, {
       open_trove: {
         loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
+        prev_node_id,
+        next_node_id
       },
     });
-    
+
     return await client?.execute(
       senderAddress,
       cw20CustomToken as string,
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "2500000",
       },
       "Open Trove"
     );
@@ -170,16 +198,18 @@ export const getXionContract = (
   const addCollateral = async (
     senderAddress: string,
     amount: number,
+    collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const msg = getMsg(amount, asset, { add_collateral: {} });
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
+    const msg = getMsg(amount, asset, { add_collateral: { prev_node_id, next_node_id } });
     return await client?.execute(
       senderAddress,
       cw20CustomToken as string,
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "1000000",
       },
       "Add Collateral"
     );
@@ -188,8 +218,10 @@ export const getXionContract = (
   const removeCollateral = async (
     senderAddress: string,
     amount: number,
+    collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
       contractAddress,
@@ -197,40 +229,51 @@ export const getXionContract = (
         remove_collateral: {
           collateral_amount: getRequestAmount(amount, asset.decimal),
           collateral_denom: asset.cw20Denom,
+          prev_node_id,
+          next_node_id
         },
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "1000000",
       },
       "Remove Collateral"
-      );
+    );
   };
-  
 
-  const borrowLoan = async (senderAddress: string, amount: number) => {
+
+  const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
       contractAddress,
       {
         borrow_loan: {
           loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal),
+          prev_node_id,
+          next_node_id
         },
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "1000000",
       },
       "Borrow Loan"
     );
   };
 
-  const repayLoan = async (senderAddress: string, amount: number) => {
+  const repayLoan = async (senderAddress: string, amount: number, collRatio: number) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ repay_loan: {} }),
+        msg: jsonToBinary({
+          repay_loan: {
+            prev_node_id,
+            next_node_id
+          }
+        }),
       },
     };
 
@@ -240,7 +283,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "1000000",
       },
       "Repay Loan"
     );
@@ -261,7 +304,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "1000000",
       },
       "Stake"
     );
@@ -274,18 +317,19 @@ export const getXionContract = (
       { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "1000000",
       },
       "Unstake"
     );
   };
 
   const redeem = async (senderAddress: string, amount: number) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(1.15);
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ redeem: {} }),
+        msg: jsonToBinary({ redeem: {prev_node_id, next_node_id} }),
       },
     };
 
@@ -295,7 +339,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "2500000",
       },
       "Redeem"
     );
@@ -308,7 +352,7 @@ export const getXionContract = (
       { liquidate_troves: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "500000",
       },
       "Liquidate Troves"
     );
@@ -318,12 +362,14 @@ export const getXionContract = (
     return await client?.execute(
       senderAddress,
       contractAddress,
-      { liquidate_troves: {
-        liquidation_list: [owner],
-        safe_list: []} },
+      {
+        liquidate_troves: {
+          liquidation_list: [owner],
+        }
+      },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "8500000",
       },
       "Liquidate Troves"
     );
@@ -336,7 +382,7 @@ export const getXionContract = (
       { withdraw_liquidation_gains: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "400000",
+        gas: "800000",
       },
       "Withdraw Liquidation Gains"
     );
@@ -367,5 +413,6 @@ export const getXionContract = (
     withdrawLiquidationGains,
     mint,
     getTroveCount,
+    FindSortedTroveInsertPosition
   };
 };

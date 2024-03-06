@@ -16,7 +16,7 @@ import Footer from "./footer";
 export default function Dashboard() {
 
   const { basePrice } = useChainAdapter();
-  const [tabPosition, setTabPosition] = useState<DashboardTabs>();
+  const [tabPosition, setTabPosition] = useState<DashboardTabs>("redeem");
 
   const { processLoading } = useNotification();
 
@@ -61,7 +61,7 @@ export default function Dashboard() {
           />
         </motion.div>
       )}
-      {/* {tabPosition === "redeem" && (
+      {tabPosition === "redeem" && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -94,7 +94,7 @@ export default function Dashboard() {
             className="absolute -top-[240px] left-80 -z-10 h-[664px] rotate-[300deg]"
           />
         </motion.div>
-      )} */}
+      )}
       {tabPosition === "rewards" && (
         <motion.div
           initial={{ opacity: 0 }}

@@ -118,8 +118,8 @@ function Tabs({
       )}
       <ul
         ref={tabsRef}
-        //className=" gap-6 pl-3 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
-        className=" gap-6 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
+        className=" gap-6 pl-3 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden"
+        /* className=" gap-6 md:flex hidden overflow-y-hidden overflow-x-scroll scrollbar-hidden" */
         onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
       >
         {tabs.length > 5 && (
@@ -141,8 +141,8 @@ function Tabs({
             key={tab}
             onClick={() => onTabSelected?.(tab)}
 
-            //className={`px-4 py-3 m-1 text-base first:ml-6 last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
-            className={`px-4 py-3 m-1 text-base last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}          
+            className={`px-4 py-3 m-1 text-base first:ml-6 last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}
+            /* className={`px-4 py-3 m-1 text-base last:mr-3 font-medium text-white relative cursor-pointer rounded-md hover:text-red-500 duration-700 flex-1 whitespace-nowrap text-center`}*/        
           >
             {camelCaseToTitleCase(tab)}
             {dots?.includes(tab) && (
