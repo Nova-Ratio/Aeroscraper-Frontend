@@ -189,7 +189,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "2500000",
       },
       "Open Trove"
     );
@@ -209,7 +209,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "1000000",
       },
       "Add Collateral"
     );
@@ -235,7 +235,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "1000000",
       },
       "Remove Collateral"
     );
@@ -256,7 +256,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "1000000",
       },
       "Borrow Loan"
     );
@@ -283,7 +283,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "1000000",
       },
       "Repay Loan"
     );
@@ -304,7 +304,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "1000000",
       },
       "Stake"
     );
@@ -317,18 +317,19 @@ export const getXionContract = (
       { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "1000000",
       },
       "Unstake"
     );
   };
 
   const redeem = async (senderAddress: string, amount: number) => {
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(1.15);
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ redeem: {} }),
+        msg: jsonToBinary({ redeem: {prev_node_id, next_node_id} }),
       },
     };
 
@@ -338,7 +339,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "2500000",
       },
       "Redeem"
     );
@@ -364,12 +365,11 @@ export const getXionContract = (
       {
         liquidate_troves: {
           liquidation_list: [owner],
-          safe_list: []
         }
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "8500000",
       },
       "Liquidate Troves"
     );
@@ -382,7 +382,7 @@ export const getXionContract = (
       { withdraw_liquidation_gains: {} },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "500000",
+        gas: "800000",
       },
       "Withdraw Liquidation Gains"
     );
