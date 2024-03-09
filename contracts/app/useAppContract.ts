@@ -112,9 +112,9 @@ const useAppContract = () => {
   );
 
   const repayLoan = useCallback(
-    async (amount: number, collRatio: number) => {
+    async (amount: number, collRatio: number, isAllAmount: boolean) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.repayLoan(address, amount, collRatio);
+      return await contract.repayLoan(address, amount, collRatio, isAllAmount);
     },
     [address, contract]
   );
