@@ -386,8 +386,7 @@ const TroveTab: FC<Props> = ({
     setProcessLoading(true);
 
     try {
-      const isAllAmount = borrowingAmount >= pageData.debtAmount;
-      const res: any = await contract.repayLoan(borrowingAmount, repayCollRatio, isAllAmount);
+      const res: any = await contract.repayLoan(borrowingAmount, repayCollRatio);
 
       addNotification({
         status: "success",

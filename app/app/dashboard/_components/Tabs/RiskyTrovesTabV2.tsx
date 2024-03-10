@@ -32,14 +32,14 @@ type Props = {
 
 const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-    const { selectedChainName = ChainName.INJECTIVE, baseCoin } = useChainAdapter();
+    const { selectedChainName = ChainName.INJECTIVE, selectedAppVersion, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
     const contract = useAppContract();
     const [loading, setLoading] = useState(true);
     const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV2[]>([]);
     const { addNotification, setProcessLoading, processLoading } = useNotification();
 
-    const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName }), [selectedChainName]);
+    const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName, selectedAppVersion }), [selectedChainName, selectedAppVersion]);
 
     const liquidateTroves = async (address: string) => {
         try {
