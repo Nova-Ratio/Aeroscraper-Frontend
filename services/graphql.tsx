@@ -2,16 +2,17 @@
 import { ChainName } from "@/enums/Chain";
 import {
   AppVersion,
-  ICRGraphqlResponse,
   RiskyTrovesResponse,
   TotalTrovesResponse,
 } from "@/types/types";
 import { request, gql } from "graphql-request";
 
 export default function graphql({
-  selectedChainName = ChainName.INJECTIVE
+  selectedChainName = ChainName.INJECTIVE,
+  selectedAppVersion = AppVersion.V1,
 }: {
   selectedChainName?: ChainName;
+  selectedAppVersion: AppVersion;
 }) {
   const URL = (): string => {
     switch (selectedChainName) {
@@ -22,6 +23,9 @@ export default function graphql({
       case ChainName.NEUTRON:
         return process.env.NEXT_PUBLIC_INDEXER_NEUTRON as string;
       case ChainName.INJECTIVE:
+        if (selectedAppVersion === AppVersion.V1) {
+          return process.env.NEXT_PUBLIC_INDEXER_INJ_V1 as string;
+        }
         return process.env.NEXT_PUBLIC_INDEXER_INJ_V2 as string;
       case ChainName.XION:
         return process.env.NEXT_PUBLIC_INDEXER_XION as string;
@@ -42,7 +46,7 @@ export default function graphql({
           }
         `
       : selectedChainName === ChainName.XION
-        ? gql`
+      ? gql`
           query {
             troves {
               nodes {
@@ -52,7 +56,7 @@ export default function graphql({
             }
           }
         `
-        : gql`
+      : gql`
           query {
             troves {
               nodes {
@@ -70,32 +74,6 @@ export default function graphql({
       }
     }
   `;
-
-  const ICRQuery = gql`
-  query FindBoundingNodes($input: Float!) {
-    prevTrove: troves(
-        filter: { ratio: { greaterThan: $input } }
-        orderBy: RATIO_ASC
-        first: 1
-    ) {
-        nodes {
-            owner
-            ratio
-        } 
-      }
-    nextTrove: troves(
-        filter: { ratio: { lessThan: $input } }
-        orderBy: RATIO_DESC
-        first: 1
-    ) {
-        nodes {
-            owner
-            ratio
-        }
-      }
-  }
-`;
-
   const requestRiskyTroves = async (): Promise<RiskyTrovesResponse> => {
     return await request(URL(), getRiskyTrovesQuery);
   };
@@ -103,14 +81,8 @@ export default function graphql({
   const requestTotalTroves = async (): Promise<TotalTrovesResponse> => {
     return await request(URL(), getTotalTrovesQuery);
   };
-
-  const requestICR = async (input: number): Promise<ICRGraphqlResponse> => {
-    return await request(URL(), ICRQuery, { input });
-  }
-
   return {
     requestRiskyTroves,
     requestTotalTroves,
-    requestICR
   };
 }

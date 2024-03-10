@@ -75,17 +75,3 @@ export type ChainInfo = {
 }
 
 export type AbstractionClient = ReturnType<typeof useAbstraxionSigningClient>['client'];
-
-export type ICRGraphqlNode = {
-    owner: string;
-    ratio: number;
-}
-
-export type ICRGraphqlResponse = {
-    nextTrove: {
-        nodes: ICRGraphqlNode[];
-    },
-    prevTrove: {
-        nodes: ICRGraphqlNode[];
-    }
-}
