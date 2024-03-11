@@ -105,7 +105,6 @@ export default function graphql({
   };
 
   const requestICR = async (input: number): Promise<ICRGraphqlResponse> => {
-    console.log("input", input);
     
     return await request(URL(), ICRQuery, { input });
   }

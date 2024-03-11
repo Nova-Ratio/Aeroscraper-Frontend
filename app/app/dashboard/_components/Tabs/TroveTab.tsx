@@ -124,11 +124,12 @@ const TroveTab: FC<Props> = ({
   )
 
   const borrowCollRatio = useMemo(() => {
+    
     const ratio = Number(selectedCollateral.amount * basePrice) / Number(pageData.debtAmount + borrowingAmount);
     return isFinite(ratio) ? ratio : 0;
   }
     ,
-    [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount]
+    [selectedCollateral, borrowingAmount, basePrice, pageData.debtAmount]
   )
 
   const repayCollRatio = useMemo(() => {
@@ -136,7 +137,7 @@ const TroveTab: FC<Props> = ({
     return isFinite(ratio) && ratio > 0 ? ratio : 0;
   }
     ,
-    [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount]
+    [selectedCollateral, borrowingAmount, basePrice, pageData.debtAmount]
   )
 
   const confirmDisabled = useMemo(
@@ -456,7 +457,7 @@ const TroveTab: FC<Props> = ({
       setSelectedAsset(DefaultAssetByChainName[selectedChainName]);
     }
   }, [selectedChainName, selectedTab, selectedAppVersion]);
-
+ 
   return (
     <div className="overflow-hidden md:overflow-visible">
       {isTroveOpened ? (
