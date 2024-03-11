@@ -120,7 +120,7 @@ export const getXionContract = (
     let prev_node_id = "";
 
     try {
-      const data = await requestICR(collRatio);
+      const data = await requestICR(collRatio * 100);
       next_node_id = data.nextTrove.nodes[0]?.owner ?? null;
       prev_node_id = data.prevTrove.nodes[0]?.owner ?? null;
 
