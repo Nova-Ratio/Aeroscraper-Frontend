@@ -201,6 +201,8 @@ export const getXionContract = (
     collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
+    //TODO
+    //collRatio needs to be change to (((collateralAmount + amount) * baseprice) / debtAmount ) * 100
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     const msg = getMsg(amount, asset, { add_collateral: { prev_node_id, next_node_id } });
     return await client?.execute(
@@ -221,6 +223,8 @@ export const getXionContract = (
     collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
+    //TODO
+    //collRatio needs to be change to (((collateralAmount - amount) * baseprice) / debtAmount ) * 100
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
@@ -243,6 +247,8 @@ export const getXionContract = (
 
 
   const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
+    //TODO
+    //collRatio needs to be change to (((collateralAmount) * baseprice) / (debtAmount + loan_amount)) * 100
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
@@ -263,6 +269,8 @@ export const getXionContract = (
   };
 
   const repayLoan = async (senderAddress: string, amount: number, collRatio: number, isAllAmount: boolean) => {
+    //TODO
+    //collRatio needs to be change to (((collateralAmount) * baseprice) / (debtAmount - amount)) * 100
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
 
     const msg = {
