@@ -19,6 +19,7 @@ import { Chain } from '@chain-registry/types';
 import { BaseCoinByChainName, getContractAddressesByChain, priceIdByChainName } from "@/constants/chainConstants";
 import { InjSdkWalletByCosmosWallet } from "@/constants/walletConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
+import graphql from "@/services/graphql";
 
 const injectivePrivRpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_RPC as string;
 const injectivePrivGrpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_GRPC as string;
@@ -33,6 +34,7 @@ export const getAppContract = (
   const defaultAsset = DefaultAssetByChainName[chainName];
 
   const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
+  const { requestICR } = graphql({ selectedChainName: ChainName.INJECTIVE });
 
   const rpcUrl = injectivePrivRpc;
 
@@ -91,6 +93,45 @@ export const getAppContract = (
       throw new Error("Error getting price feed")
     }
   };
+
+  const findSortedTroveInsertPosition = async (
+    collRatio: number,
+    user_addr: string
+  ): Promise<{ prev_node_id: string | undefined, next_node_id: string | undefined }> => {
+    let next_node_id
+    let prev_node_id
+
+    try {
+      const data = await requestICR(collRatio * 100);
+      if (data.nextTrove.nodes.length === 2) {
+        if (data.nextTrove.nodes[0].owner === user_addr) {
+          // Skip the first node and check the second
+          next_node_id = data.nextTrove.nodes[1].owner !== user_addr ? data.nextTrove.nodes[1].owner : undefined;
+        } else {
+          // The first node is not the user, so we take it
+          next_node_id = data.nextTrove.nodes[0].owner;
+        }
+      } else if (data.nextTrove.nodes.length === 1) {
+        // If there's only one node, we check if it's not the user
+        next_node_id = data.nextTrove.nodes[0].owner !== user_addr ? data.nextTrove.nodes[0].owner : undefined;
+      } else {
+        next_node_id = undefined;
+      }
+
+      if (data.prevTrove.nodes.length === 2) {
+        prev_node_id = data.prevTrove.nodes.find(node => node.owner !== user_addr)?.owner;
+      } else if (data.prevTrove.nodes.length === 1 && data.prevTrove.nodes[0].owner !== user_addr) {
+        prev_node_id = data.prevTrove.nodes[0].owner;
+      } else {
+        prev_node_id = undefined;
+      }
+    }
+    catch (err) {
+      console.log("FindSortedTroveInsertPosition error", err);
+    }
+
+    return { prev_node_id, next_node_id };
+  }
 
   const getTotalCollateralAmounts = async (): Promise<TotalCollateralModel[] | undefined> => {
     const res = await chainGrpcWasmApi.fetchSmartContractState(
@@ -171,8 +212,15 @@ export const getAppContract = (
   };
 
   //EXECUTE QUERIES
-  const openTrove = async (senderAddress: string, amount: number, loanAmount: number, asset: CollateralAsset = defaultAsset) => {
+  const openTrove = async (
+    senderAddress: string,
+    amount: number,
+    loanAmount: number,
+    collRatio: number,
+    asset: CollateralAsset = defaultAsset
+  ) => {
     const vaa = await getVAA(asset);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     const msg = MsgExecuteContractCompat.fromJSON({
       contractAddress: asset.oracleContractAddress,
@@ -192,7 +240,9 @@ export const getAppContract = (
       sender: senderAddress,
       msg: {
         open_trove: {
-          loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal)
+          loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
+          prev_node_id,
+          next_node_id
         }
       },
       funds: [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
@@ -205,9 +255,9 @@ export const getAppContract = (
     });
   }
 
-  const addCollateral = async (senderAddress: string, amount: number, asset: CollateralAsset = defaultAsset) => {
-
+  const addCollateral = async (senderAddress: string, amount: number, collRatio: number, asset: CollateralAsset = defaultAsset) => {
     const vaa = await getVAA(asset);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     const msg = MsgExecuteContractCompat.fromJSON({
       contractAddress: asset.oracleContractAddress,
@@ -225,7 +275,7 @@ export const getAppContract = (
     const msg1 = MsgExecuteContractCompat.fromJSON({
       contractAddress: contractAddress,
       sender: senderAddress,
-      msg: { add_collateral: {} },
+      msg: { add_collateral: { prev_node_id, next_node_id } },
       funds: [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
     })
 
@@ -236,8 +286,9 @@ export const getAppContract = (
     })
   }
 
-  const removeCollateral = async (senderAddress: string, amount: number, asset: CollateralAsset = defaultAsset) => {
+  const removeCollateral = async (senderAddress: string, amount: number, collRatio: number, asset: CollateralAsset = defaultAsset) => {
     const vaa = await getVAA(asset);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     const msg = MsgExecuteContractCompat.fromJSON({
       contractAddress: asset.oracleContractAddress,
@@ -258,7 +309,9 @@ export const getAppContract = (
       msg: {
         remove_collateral: {
           collateral_denom: asset.denom,
-          collateral_amount: getRequestAmount(amount, asset.decimal)
+          collateral_amount: getRequestAmount(amount, asset.decimal),
+          prev_node_id,
+          next_node_id
         }
       }
     })
@@ -270,9 +323,9 @@ export const getAppContract = (
     })
   };
 
-  const borrowLoan = async (senderAddress: string, amount: number) => {
-
+  const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
     const vaa = await getVAA();
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     const msg = MsgExecuteContractCompat.fromJSON({
       contractAddress: oraclecontractAddress,
@@ -290,7 +343,13 @@ export const getAppContract = (
     const msg1 = MsgExecuteContractCompat.fromJSON({
       contractAddress: contractAddress,
       sender: senderAddress,
-      msg: { borrow_loan: { loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal) } }
+      msg: {
+        borrow_loan: {
+          loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal),
+          prev_node_id,
+          next_node_id
+        }
+      }
     })
 
     return await msgBroadcastClient.broadcast({
@@ -300,12 +359,26 @@ export const getAppContract = (
     })
   }
 
-  const repayLoan = async (senderAddress: string, amount: number) => {
+  const repayLoan = async (senderAddress: string, amount: number, collRatio: number, isAllAmount: boolean) => {
+    let prev_node_id = null;
+    let next_node_id = null;
+
+    if (!isAllAmount) {
+      const response = await findSortedTroveInsertPosition(collRatio, senderAddress);
+      prev_node_id = response.prev_node_id;
+      next_node_id = response.next_node_id;
+    }
+
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ repay_loan: {} }),
+        msg: jsonToBinary({
+          repay_loan: {
+            prev_node_id,
+            next_node_id
+          }
+        }),
       },
     };
 
@@ -374,11 +447,18 @@ export const getAppContract = (
   };
 
   const redeem = async (senderAddress: string, amount: number) => {
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(1.15, senderAddress);
+
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.decimal),
-        msg: jsonToBinary({ redeem: {} }),
+        msg: jsonToBinary({
+          redeem: {
+            prev_node_id,
+            next_node_id
+          }
+        }),
       },
     };
 

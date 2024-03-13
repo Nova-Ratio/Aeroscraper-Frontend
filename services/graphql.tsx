@@ -1,6 +1,7 @@
 "use client";
 import { ChainName } from "@/enums/Chain";
 import {
+  ICRGraphqlResponse,
   RiskyTrovesResponse,
   TotalTrovesResponse,
 } from "@/types/types";
@@ -37,6 +38,32 @@ export default function graphql({
       }
     }
   `;
+
+  const ICRQuery = gql`
+  query FindBoundingNodes($input: Float!) {
+    prevTrove: troves(
+        filter: { ratio: { greaterThan: $input } }
+        orderBy: RATIO_ASC
+        first: 2
+    ) {
+        nodes {
+            owner
+            ratio
+        } 
+      }
+    nextTrove: troves(
+        filter: { ratio: { lessThan: $input } }
+        orderBy: RATIO_DESC
+        first: 2
+    ) {
+        nodes {
+            owner
+            ratio
+        }
+      }
+  }
+`;
+
   const requestRiskyTroves = async (): Promise<RiskyTrovesResponse> => {
     return await request(URL(), getRiskyTrovesQuery);
   };
@@ -44,8 +71,15 @@ export default function graphql({
   const requestTotalTroves = async (): Promise<TotalTrovesResponse> => {
     return await request(URL(), getTotalTrovesQuery);
   };
+
+  const requestICR = async (input: number): Promise<ICRGraphqlResponse> => {
+
+    return await request(URL(), ICRQuery, { input });
+  }
+
   return {
     requestRiskyTroves,
     requestTotalTroves,
+    requestICR
   };
 }
