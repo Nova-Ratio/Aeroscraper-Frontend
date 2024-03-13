@@ -115,14 +115,35 @@ export const getXionContract = (
     })
   }
 
-  const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string | null, next_node_id: string | null }> => {
-    let next_node_id = "";
-    let prev_node_id = "";
+  const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string | undefined, next_node_id: string | undefined }> => {
+    let next_node_id
+    let prev_node_id
+    let user_addr = "xion1dgq42aue5lev4tv7z593std2gle7yjzg2wrk4uc2xuxt7dfmmges58t2ac"
 
     try {
       const data = await requestICR(collRatio * 100);
-      next_node_id = data.nextTrove.nodes[0]?.owner ?? null;
-      prev_node_id = data.prevTrove.nodes[0]?.owner ?? null;
+      if (data.nextTrove.nodes.length === 2) {
+        if (data.nextTrove.nodes[0].owner === user_addr) {
+            // Skip the first node and check the second
+            next_node_id = data.nextTrove.nodes[1].owner !== user_addr ? data.nextTrove.nodes[1].owner : undefined;
+        } else {
+            // The first node is not the user, so we take it
+            next_node_id = data.nextTrove.nodes[0].owner;
+        }
+    } else if (data.nextTrove.nodes.length === 1) {
+        // If there's only one node, we check if it's not the user
+        next_node_id = data.nextTrove.nodes[0].owner !== user_addr ? data.nextTrove.nodes[0].owner : undefined;
+    } else {
+        next_node_id = undefined;
+    }
+    
+    if (data.prevTrove.nodes.length === 2) {
+      prev_node_id = data.prevTrove.nodes.find(node => node.owner !== user_addr)?.owner;
+  } else if (data.prevTrove.nodes.length === 1 && data.prevTrove.nodes[0].owner !== user_addr) {
+      prev_node_id = data.prevTrove.nodes[0].owner;
+  } else {
+      prev_node_id = undefined;
+  }
 
       console.log("FindSortedTroveInsertPosition response", data)
       console.log("FindSortedTroveInsertPosition next_node_id", next_node_id)

@@ -76,7 +76,7 @@ export default function graphql({
     prevTrove: troves(
         filter: { ratio: { greaterThan: $input } }
         orderBy: RATIO_ASC
-        first: 1
+        first: 2
     ) {
         nodes {
             owner
@@ -86,7 +86,7 @@ export default function graphql({
     nextTrove: troves(
         filter: { ratio: { lessThan: $input } }
         orderBy: RATIO_DESC
-        first: 1
+        first: 2
     ) {
         nodes {
             owner
