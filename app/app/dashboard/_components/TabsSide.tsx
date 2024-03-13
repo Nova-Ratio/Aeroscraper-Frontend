@@ -17,11 +17,6 @@ import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { ChainName } from "@/enums/Chain";
-import useAppContract from "@/contracts/app/useAppContract";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
-import { useNotification } from "@/contexts/NotificationProvider";
-import GradientButton from "@/components/Buttons/GradientButton";
-import Text from "@/components/Texts/Text";
 import MintTap from "./Tabs/MintTab";
 
 interface Props {
@@ -45,8 +40,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { basePrice, walletInfo, selectedAppVersion, baseCoin } =
-    useChainAdapter();
+  const { basePrice, walletInfo, selectedAppVersion } = useChainAdapter();
   const { pageData, getPageData, loading } = usePageData();
   const { refreshBalance } = useBalances();
 
@@ -98,7 +92,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
       setSelectedTab(params.get("tab") as DashboardTabs);
     }
   }, []);
- 
+
   const handleChangeTab = (e: DashboardTabs) => {
     router.push(`?tab=${e}`);
 
@@ -158,9 +152,8 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
-          className={`md:mt-6 ${
-            isNil(walletInfo) ? "blur-[2px]" : ""
-          } relative`}
+          className={`md:mt-6 ${isNil(walletInfo) ? "blur-[2px]" : ""
+            } relative`}
         >
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
@@ -169,19 +162,12 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
           {selectedTab === "faucet" && (
-            <MintTap getPageData={getPageData} pageData={pageData} /> 
+            <MintTap getPageData={getPageData} pageData={pageData} />
           )}
-          {selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
-            <TroveTab
-              colleteralAmount={pageData.baseCollateralAmount}
-              pageData={pageData}
-              getPageData={getPageData}
-              basePrice={basePrice}
-            />
-          )}
+          {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab />}
           {selectedTab === "stabilityPool" && (
             <StabilityPoolTab pageData={pageData} getPageData={getPageData} />
-          )}       
+          )}
           {selectedTab === "redeem" && (
             <RedeemTab
               pageData={pageData}
@@ -201,7 +187,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
                 getPageData={getPageData}
                 basePrice={basePrice}
               />
-            ))}   
+            ))}
           {selectedTab === "rewards" && (
             <ClaimRewardTab
               pageData={pageData}

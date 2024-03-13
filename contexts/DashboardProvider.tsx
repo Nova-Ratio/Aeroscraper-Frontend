@@ -58,7 +58,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const { selectedAppVersion, selectedChainName, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
 
-    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE, selectedAppVersion }), [selectedChainName, selectedAppVersion]);
+    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
     const contract = useAppContract();
 
     const [pageData, setPageData] = useState<PageData>({
@@ -259,7 +259,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const totalTrovesRes = await requestTotalTroves();
             setPageData(prev => ({
                 ...prev,
-                totalTrovesAmount: totalTrovesRes?.troves.totalCount + 88025 ?? 0
+                totalTrovesAmount: totalTrovesRes?.troves.totalCount + 88166 ?? 0
             }))
         }
         catch (err) {
