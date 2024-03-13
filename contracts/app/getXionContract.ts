@@ -18,7 +18,6 @@ import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { ChainName } from "@/enums/Chain";
 import { getContractAddressesByChain } from "@/constants/chainConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
-import graphql from "@/services/graphql";
 
 export const getXionContract = (
   client: AbstractionClient,
@@ -33,8 +32,6 @@ export const getXionContract = (
     ausdContractAddress,
     cw20CustomToken,
   } = getContractAddressesByChain(AppVersion.V2, ChainName.XION);
-
-  const { requestICR } = graphql({ selectedChainName: ChainName.XION });
 
   const getTotalCollateralAmounts = async (): Promise<
     TotalCollateralModel | undefined
@@ -147,8 +144,6 @@ export const getXionContract = (
       }
 
       console.log("FindSortedTroveInsertPosition response", data)
-      console.log("FindSortedTroveInsertPosition next_node_id", next_node_id)
-      console.log("FindSortedTroveInsertPosition prev_node_id", prev_node_id)
     }
     catch (err) {
       console.log("FindSortedTroveInsertPosition error", err);
@@ -287,17 +282,15 @@ export const getXionContract = (
   };
 
   const repayLoan = async (senderAddress: string, amount: number, collRatio: number, isAllAmount: boolean) => {
-
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
-
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
         msg: jsonToBinary({
           repay_loan: {
-            prev_node_id: isAllAmount ? null : prev_node_id,
-            next_node_id: isAllAmount ? null : next_node_id,
+            prev_node_id,
+            next_node_id
           }
         }),
       },
@@ -355,7 +348,7 @@ export const getXionContract = (
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ redeem: { prev_node_id, next_node_id } }),
+        msg: jsonToBinary({ redeem: {prev_node_id, next_node_id} }),
       },
     };
 

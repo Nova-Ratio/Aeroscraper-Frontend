@@ -58,7 +58,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const { selectedAppVersion, selectedChainName, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
 
-    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
+    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE, selectedAppVersion }), [selectedChainName, selectedAppVersion]);
     const contract = useAppContract();
 
     const [pageData, setPageData] = useState<PageData>({
