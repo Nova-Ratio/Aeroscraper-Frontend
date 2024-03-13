@@ -16,7 +16,7 @@ const useAppContract = () => {
   const contract = useMemo(
     () =>
       isWalletConnected && !isNil(baseCoin) && !isNil(abstraxionClient) && !isNil(address)
-        ? getXionContract(abstraxionClient, baseCoin)
+        ? getXionContract(abstraxionClient, baseCoin, address)
         : undefined,
     [
       isWalletConnected,

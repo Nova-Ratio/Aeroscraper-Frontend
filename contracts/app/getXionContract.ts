@@ -22,7 +22,8 @@ import graphql from "@/services/graphql";
 
 export const getXionContract = (
   client: AbstractionClient,
-  baseCoin: BaseCoin
+  baseCoin: BaseCoin,
+  userAddress: string
 ) => {
   const defaultAsset = DefaultAssetByChainName[ChainName.XION];
   const {
@@ -118,32 +119,32 @@ export const getXionContract = (
   const FindSortedTroveInsertPosition = async (collRatio: number): Promise<{ prev_node_id: string | undefined, next_node_id: string | undefined }> => {
     let next_node_id
     let prev_node_id
-    let user_addr = "xion1dgq42aue5lev4tv7z593std2gle7yjzg2wrk4uc2xuxt7dfmmges58t2ac"
+    let user_addr = userAddress
 
     try {
       const data = await requestICR(collRatio * 100);
       if (data.nextTrove.nodes.length === 2) {
         if (data.nextTrove.nodes[0].owner === user_addr) {
-            // Skip the first node and check the second
-            next_node_id = data.nextTrove.nodes[1].owner !== user_addr ? data.nextTrove.nodes[1].owner : undefined;
+          // Skip the first node and check the second
+          next_node_id = data.nextTrove.nodes[1].owner !== user_addr ? data.nextTrove.nodes[1].owner : undefined;
         } else {
-            // The first node is not the user, so we take it
-            next_node_id = data.nextTrove.nodes[0].owner;
+          // The first node is not the user, so we take it
+          next_node_id = data.nextTrove.nodes[0].owner;
         }
-    } else if (data.nextTrove.nodes.length === 1) {
+      } else if (data.nextTrove.nodes.length === 1) {
         // If there's only one node, we check if it's not the user
         next_node_id = data.nextTrove.nodes[0].owner !== user_addr ? data.nextTrove.nodes[0].owner : undefined;
-    } else {
+      } else {
         next_node_id = undefined;
-    }
-    
-    if (data.prevTrove.nodes.length === 2) {
-      prev_node_id = data.prevTrove.nodes.find(node => node.owner !== user_addr)?.owner;
-  } else if (data.prevTrove.nodes.length === 1 && data.prevTrove.nodes[0].owner !== user_addr) {
-      prev_node_id = data.prevTrove.nodes[0].owner;
-  } else {
-      prev_node_id = undefined;
-  }
+      }
+
+      if (data.prevTrove.nodes.length === 2) {
+        prev_node_id = data.prevTrove.nodes.find(node => node.owner !== user_addr)?.owner;
+      } else if (data.prevTrove.nodes.length === 1 && data.prevTrove.nodes[0].owner !== user_addr) {
+        prev_node_id = data.prevTrove.nodes[0].owner;
+      } else {
+        prev_node_id = undefined;
+      }
 
       console.log("FindSortedTroveInsertPosition response", data)
       console.log("FindSortedTroveInsertPosition next_node_id", next_node_id)
@@ -265,7 +266,7 @@ export const getXionContract = (
 
 
   const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
-    
+
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
     return await client?.execute(
       senderAddress,
@@ -286,7 +287,7 @@ export const getXionContract = (
   };
 
   const repayLoan = async (senderAddress: string, amount: number, collRatio: number, isAllAmount: boolean) => {
-    
+
     const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(collRatio);
 
     const msg = {
