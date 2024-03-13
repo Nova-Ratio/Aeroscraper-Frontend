@@ -55,7 +55,7 @@ const TroveTab: FC = () => {
       </div>
     )
   }
-  
+
   return (
     <div className="overflow-hidden md:overflow-visible">
       <Text size="3xl">Manage your collateral</Text>
