@@ -113,16 +113,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           {isNil(walletInfo) && (
             <div className="cursor-not-allowed h-full w-full absolute top-0 bottom-0 left-0 z-50" />
           )}
-          {
-            selectedTab === (isTroveOpened ? "trove" : "createTrove") && (
-              <TroveTab
-                colleteralAmount={pageData.baseCollateralAmount}
-                pageData={pageData}
-                getPageData={getPageData}
-                basePrice={basePrice}
-              />
-            )
-          }
+          {selectedTab === (isTroveOpened ? "trove" : "createTrove") && <TroveTab />}
           {
             selectedTab === "stabilityPool" && (
               <StabilityPoolTab pageData={pageData} getPageData={getPageData} />

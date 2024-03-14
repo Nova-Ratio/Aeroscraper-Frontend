@@ -65,3 +65,5 @@ export const appChainURLs: ChainNavigator[] = [
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet" },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Mainnet" }
 ]
+
+export const MANAGEMENT_FEE = 0.005;

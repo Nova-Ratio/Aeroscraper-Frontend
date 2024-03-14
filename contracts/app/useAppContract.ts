@@ -91,41 +91,41 @@ const useAppContract = () => {
   }, [address, contract]);
 
   const openTrove = useCallback(
-    async (amount: number, loan_amount: number, asset?: CollateralAsset) => {
+    async (amount: number, loan_amount: number, collRatio: number, asset?: CollateralAsset) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.openTrove(address, amount, loan_amount, asset);
+      return await contract.openTrove(address, amount, loan_amount, collRatio, asset);
     },
     [address, contract]
   );
 
   const addCollateral = useCallback(
-    async (amount: number, asset?: CollateralAsset) => {
+    async (amount: number, collRatio: number, asset?: CollateralAsset) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.addCollateral(address, amount, asset);
+      return await contract.addCollateral(address, amount, collRatio, asset);
     },
     [address, contract]
   );
 
   const removeCollateral = useCallback(
-    async (amount: number, asset?: CollateralAsset) => {
+    async (amount: number, collRatio: number, asset?: CollateralAsset) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.removeCollateral(address, amount, asset);
+      return await contract.removeCollateral(address, amount, collRatio, asset);
     },
     [address, contract]
   );
 
   const borrowLoan = useCallback(
-    async (amount: number) => {
+    async (amount: number, collRatio: number) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.borrowLoan(address, amount);
+      return await contract.borrowLoan(address, amount, collRatio);
     },
     [address, contract]
   );
 
   const repayLoan = useCallback(
-    async (amount: number) => {
+    async (amount: number, collRatio: number, isAllAmount: boolean) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.repayLoan(address, amount);
+      return await contract.repayLoan(address, amount, collRatio, isAllAmount);
     },
     [address, contract]
   );

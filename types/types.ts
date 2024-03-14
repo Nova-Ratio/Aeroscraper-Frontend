@@ -65,3 +65,17 @@ export type ChainInfo = {
     logo: string;
     bech32Prefix: string;
 }
+
+export type ICRGraphqlNode = {
+    owner: string;
+    ratio: number;
+}
+
+export type ICRGraphqlResponse = {
+    nextTrove: {
+        nodes: ICRGraphqlNode[];
+    },
+    prevTrove: {
+        nodes: ICRGraphqlNode[];
+    }
+}
