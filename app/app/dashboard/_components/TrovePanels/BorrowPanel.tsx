@@ -51,14 +51,25 @@ const BorrowPanel: FC = () => {
 
     const borrowCollRatio = useMemo(() => {
 
-        const ratio = Number(selectedCollateral.amount * basePrice) / Number(pageData.debtAmount + borrowingAmount);
+        const ratio = Number(selectedCollateral.amount ) * basePrice / Number(pageData.debtAmount + borrowingAmount);
         return isFinite(ratio) ? ratio : 0;
     }, [selectedCollateral, borrowingAmount, basePrice, pageData.debtAmount])
 
+    const borrowICR = useMemo(() => {
+
+        const ratio = Number(selectedCollateral.amount ) / Number(pageData.debtAmount + borrowingAmount);
+        return isFinite(ratio) ? ratio : 0;
+    }, [selectedCollateral, borrowingAmount, pageData.debtAmount])
+
     const repayCollRatio = useMemo(() => {
-        const ratio = Number(selectedCollateral.amount * basePrice) / Number(pageData.debtAmount - borrowingAmount);
+        const ratio = Number(selectedCollateral.amount) * basePrice / Number(pageData.debtAmount - borrowingAmount);
         return isFinite(ratio) && ratio > 0 ? ratio : 0;
-    }, [selectedCollateral, borrowingAmount, basePrice, pageData.debtAmount])
+    }, [selectedCollateral, borrowingAmount, pageData.debtAmount])
+
+    const repayICR = useMemo(() => {
+        const ratio = Number(selectedCollateral.amount) / Number(pageData.debtAmount - borrowingAmount);
+        return isFinite(ratio) && ratio > 0 ? ratio : 0;
+    }, [selectedCollateral, borrowingAmount, pageData.debtAmount])
 
     const borrowDisabled = useMemo(
         () =>
@@ -107,7 +118,7 @@ const BorrowPanel: FC = () => {
         setProcessLoading(true);
 
         try {
-            const res = await contract.borrowLoan(borrowingAmount, borrowCollRatio);
+            const res = await contract.borrowLoan(borrowingAmount, borrowICR);
 
             addNotification({
                 status: "success",
@@ -133,7 +144,7 @@ const BorrowPanel: FC = () => {
 
         try {
             const isAllAmount = borrowingAmount >= pageData.debtAmount;
-            const res = await contract.repayLoan(borrowingAmount, repayCollRatio, isAllAmount);
+            const res = await contract.repayLoan(borrowingAmount, repayICR, isAllAmount);
 
             addNotification({
                 status: "success",

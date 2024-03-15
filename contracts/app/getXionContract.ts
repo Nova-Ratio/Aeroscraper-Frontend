@@ -122,7 +122,7 @@ export const getXionContract = (
     let user_addr = userAddress
 
     try {
-      const data = await requestICR(collRatio * 100);
+      const data = await requestICR(collRatio * 10e-17);
       if (data.nextTrove.nodes.length === 2) {
         if (data.nextTrove.nodes[0].owner === user_addr) {
           // Skip the first node and check the second
@@ -145,7 +145,7 @@ export const getXionContract = (
       } else {
         prev_node_id = undefined;
       }
-
+      console.log("ICR", collRatio * 10e-17)
       console.log("FindSortedTroveInsertPosition response", data)
       console.log("FindSortedTroveInsertPosition next_node_id", next_node_id)
       console.log("FindSortedTroveInsertPosition prev_node_id", prev_node_id)
@@ -350,7 +350,7 @@ export const getXionContract = (
   };
 
   const redeem = async (senderAddress: string, amount: number) => {
-    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(1.15);
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(0.15);
     const msg = {
       send: {
         contract: contractAddress,
@@ -365,7 +365,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "2500000",
+        gas: "4000000",
       },
       "Redeem"
     );
@@ -395,7 +395,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "8500000",
+        gas: "2500000",
       },
       "Liquidate Troves"
     );

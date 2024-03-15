@@ -44,7 +44,7 @@ export default function graphql({
       : selectedChainName === ChainName.XION
         ? gql`
           query {
-            troves {
+            troves(orderBy: RATIO_ASC) {
               nodes {
                 owner
                 ratio

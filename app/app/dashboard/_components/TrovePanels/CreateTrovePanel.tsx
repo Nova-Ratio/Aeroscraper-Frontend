@@ -48,6 +48,11 @@ const CreateTrovePanel: FC = () => {
         }
     }, [selectedAsset, pageData.minCollateralRatioByDenom]);
 
+    const calculateICR = useMemo(
+        () => Number(((openTroveAmount * (1 - MANAGEMENT_FEE)) || 0) ) / (borrowAmount || 0),
+        [openTroveAmount, borrowAmount]
+    );
+
     const collacteralRatio = isFinite(collacteralRatioCalculate) ? collacteralRatioCalculate : 0;
 
     const confirmDisabled = useMemo(
@@ -118,7 +123,7 @@ const CreateTrovePanel: FC = () => {
             const res = await contract.openTrove(
                 openTroveAmount,
                 borrowAmount,
-                collacteralRatioCalculate,
+                calculateICR,
                 selectedAsset
             );
 
