@@ -169,7 +169,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                     Pool Share:
                   </label>
                   <p className="font-regular text-sm md:text-base ml-3">
-                    {(pageData.poolShare) * 100 || "0"}%
+                    {(pageData.poolShare) || "0"}%
                   </p>
                 </div>
                 <NumericFormat
@@ -246,7 +246,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                     Pool Share:
                   </label>
                   <p className="font-regular text-sm md:text-base ml-3">
-                    {(pageData.poolShare)*100 || "0"}%
+                    {(pageData.poolShare) || "0"}%
                   </p>
                 </div>
                 <NumericFormat
