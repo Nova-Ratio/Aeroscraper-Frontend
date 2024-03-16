@@ -64,14 +64,24 @@ const CollateralPanel: FC = () => {
     }, [selectedAsset, pageData.minCollateralRatioByDenom]);
 
     const depositCollRatio = useMemo(() => {
-        const ratio = Number((selectedCollateral.amount + (collateralAmount * (1 - MANAGEMENT_FEE))) * basePrice) / (pageData.debtAmount);
+        const ratio = Number((selectedCollateral.amount + (collateralAmount * (1 - MANAGEMENT_FEE)))) * basePrice / (pageData.debtAmount);
         return isFinite(ratio) ? ratio : 0;
     }, [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount])
 
+    const depositICR = useMemo(() => {
+        const ratio = Number((selectedCollateral.amount + (collateralAmount * (1 - MANAGEMENT_FEE)))) / (pageData.debtAmount);
+        return isFinite(ratio) ? ratio : 0;
+    }, [selectedCollateral, collateralAmount, pageData.debtAmount])
+
     const withdrawCollRatio = useMemo(() => {
-        const ratio = Number((selectedCollateral.amount - (collateralAmount)) * basePrice) / (pageData.debtAmount);
+        const ratio = Number((selectedCollateral.amount - (collateralAmount))) * basePrice / (pageData.debtAmount);
         return isFinite(ratio) && ratio > 0 ? ratio : 0;
     }, [selectedCollateral, collateralAmount, basePrice, pageData.debtAmount])
+
+    const withdrawICR = useMemo(() => {
+        const ratio = Number((selectedCollateral.amount - (collateralAmount * (1 - MANAGEMENT_FEE)))) / (pageData.debtAmount);
+        return isFinite(ratio) ? ratio : 0;
+    }, [selectedCollateral, collateralAmount, pageData.debtAmount])
 
     const withdrawDisabled = useMemo(
         () =>
@@ -129,7 +139,7 @@ const CollateralPanel: FC = () => {
         try {
             const res = await contract.addCollateral(
                 collateralAmount,
-                depositCollRatio,
+                depositICR,
                 selectedAsset
             );
 
@@ -158,7 +168,7 @@ const CollateralPanel: FC = () => {
         try {
             const res = await contract.removeCollateral(
                 collateralAmount,
-                withdrawCollRatio,
+                withdrawICR,
                 selectedAsset
             );
 

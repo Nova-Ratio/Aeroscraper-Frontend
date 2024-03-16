@@ -259,7 +259,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const totalTrovesRes = await requestTotalTroves();
             setPageData(prev => ({
                 ...prev,
-                totalTrovesAmount: totalTrovesRes?.troves.totalCount + 88166 ?? 0
+                totalTrovesAmount: totalTrovesRes?.troves.totalCount + 89273 ?? 0
             }))
         }
         catch (err) {

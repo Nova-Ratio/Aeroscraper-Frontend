@@ -19,6 +19,7 @@ import { ChainName } from "@/enums/Chain";
 import { getContractAddressesByChain } from "@/constants/chainConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
+import { usePrice } from "@/contexts/PriceProvider";
 
 export const getXionContract = (
   client: AbstractionClient,
@@ -33,8 +34,9 @@ export const getXionContract = (
     ausdContractAddress,
     cw20CustomToken,
   } = getContractAddressesByChain(AppVersion.V2, ChainName.XION);
+  const { coinPricesByDenom } = usePrice();
 
-  const { requestICR } = graphql({ selectedChainName: ChainName.XION });
+  const { requestICR, requestRedeemICR } = graphql({ selectedChainName: ChainName.XION });
 
   const getTotalCollateralAmounts = async (): Promise<
     TotalCollateralModel | undefined
@@ -145,10 +147,6 @@ export const getXionContract = (
       } else {
         prev_node_id = undefined;
       }
-
-      console.log("FindSortedTroveInsertPosition response", data)
-      console.log("FindSortedTroveInsertPosition next_node_id", next_node_id)
-      console.log("FindSortedTroveInsertPosition prev_node_id", prev_node_id)
     }
     catch (err) {
       console.log("FindSortedTroveInsertPosition error", err);
@@ -348,14 +346,47 @@ export const getXionContract = (
       "Unstake"
     );
   };
+  const basePrice = coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
+
+  const processRedeemICR = async (amount: string) => {
+    let remainingAmount = BigInt(amount) 
+    let icrdata = (await requestRedeemICR()).troves.nodes.map(i => {
+      return {
+        debt: BigInt(i.debtAmount),
+        collateral: BigInt(i.collaterals[0].amount.slice(0,-1))
+      }
+    })  
+    let selectedidx = 0  
+    for(let idx in icrdata){
+      let trove = icrdata[idx]
+      if(remainingAmount > trove.debt){
+        remainingAmount -= trove.debt
+      } else {
+        selectedidx = Number(idx)
+        break
+      }
+    } 
+    let troveDebt = icrdata[selectedidx].debt - remainingAmount
+    if(Number(troveDebt) === 0) return 0
+    let collateraltodecrease = BigInt(Number(remainingAmount) / basePrice)
+    let troveCollateral = icrdata[selectedidx].collateral - collateraltodecrease
+    return Number(troveCollateral) / Number(troveDebt)
+  }
 
   const redeem = async (senderAddress: string, amount: number) => {
-    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(1.15);
+    let prev_node = undefined
+    let next_node = undefined
+    let icr = await processRedeemICR(getRequestAmount(amount, baseCoin.ausdDecimal))
+    if(icr != 0) {
+      const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(icr);
+      prev_node = prev_node_id
+      next_node = next_node_id
+    }  
     const msg = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(amount, baseCoin.ausdDecimal),
-        msg: jsonToBinary({ redeem: { prev_node_id, next_node_id } }),
+        msg: jsonToBinary({ redeem: { prev_node_id: prev_node, next_node_id: next_node } }),
       },
     };
 
@@ -365,7 +396,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "2500000",
+        gas: "4000000",
       },
       "Redeem"
     );
@@ -395,7 +426,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "8500000",
+        gas: "2500000",
       },
       "Liquidate Troves"
     );
