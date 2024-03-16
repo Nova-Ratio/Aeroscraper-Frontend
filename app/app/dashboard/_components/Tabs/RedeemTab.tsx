@@ -186,7 +186,7 @@ const RedeemTab: FC<Props> = ({
             className="w-full md:w-[375px] h-11"
             onClick={redeem}
             text="Redeem"
-            disabled={redeemDisabled}
+            /* disabled={redeemDisabled} */
             disabledText={redeemErrorText}
           />
         </div>

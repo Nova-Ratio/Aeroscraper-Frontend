@@ -5,6 +5,7 @@ import {
   ICRGraphqlResponse,
   RiskyTrovesResponse,
   TotalTrovesResponse,
+  redeemICRresponse,
 } from "@/types/types";
 import { request, gql } from "graphql-request";
 
@@ -96,6 +97,17 @@ export default function graphql({
   }
 `;
 
+  const redeemICRQuery = gql`
+  query {
+    troves(orderBy: RATIO_ASC) {
+        nodes {
+            collaterals
+            debtAmount
+        }
+    }
+}
+`
+
   const requestRiskyTroves = async (): Promise<RiskyTrovesResponse> => {
     return await request(URL(), getRiskyTrovesQuery);
   };
@@ -109,9 +121,14 @@ export default function graphql({
     return await request(URL(), ICRQuery, { input });
   }
 
+  const requestRedeemICR = async(): Promise<redeemICRresponse> => {
+    return await request(URL(), redeemICRQuery);
+  }
+
   return {
     requestRiskyTroves,
     requestTotalTroves,
-    requestICR
+    requestICR,
+    requestRedeemICR
   };
 }

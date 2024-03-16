@@ -89,3 +89,15 @@ export type ICRGraphqlResponse = {
         nodes: ICRGraphqlNode[];
     }
 }
+
+export type redeemICRresponse = {
+    troves: {
+        nodes: {
+            collaterals:{
+                denom: string
+                amount: string
+            }[];
+            debtAmount: string
+        }[]
+    }
+}

@@ -34,7 +34,7 @@ export const getXionContract = (
     cw20CustomToken,
   } = getContractAddressesByChain(AppVersion.V2, ChainName.XION);
 
-  const { requestICR } = graphql({ selectedChainName: ChainName.XION });
+  const { requestICR, requestRedeemICR } = graphql({ selectedChainName: ChainName.XION });
 
   const getTotalCollateralAmounts = async (): Promise<
     TotalCollateralModel | undefined
@@ -145,7 +145,7 @@ export const getXionContract = (
       } else {
         prev_node_id = undefined;
       }
-      console.log("ICR", collRatio)
+      console.log("ICR", collRatio * 100)
       console.log("FindSortedTroveInsertPosition response", data)
       console.log("FindSortedTroveInsertPosition next_node_id", next_node_id)
       console.log("FindSortedTroveInsertPosition prev_node_id", prev_node_id)
@@ -349,8 +349,38 @@ export const getXionContract = (
     );
   };
 
+  const processRedeemICR = async (amount: string) => {
+    let remainingAmount = BigInt(amount) 
+    let icrdata = (await requestRedeemICR()).troves.nodes.map(i => {
+      return {
+        debt: BigInt(i.debtAmount),
+        collateral: BigInt(i.collaterals[0].amount.slice(0,-1))
+      }
+    })  
+    let selectedidx = 0  
+    for(let idx in icrdata){
+      let trove = icrdata[idx]
+      if(remainingAmount > trove.debt){
+        remainingAmount -= trove.debt
+      } else {
+        selectedidx = Number(idx)
+        break
+      }
+    } 
+    let troveDebt = icrdata[selectedidx].debt - remainingAmount
+    let collateraltodecrease = remainingAmount * BigInt("1000000000000000000") * BigInt(100000000) / BigInt(270000000) / BigInt("1000000000000000000")
+    let troveCollateral = icrdata[selectedidx].collateral - collateraltodecrease
+
+
+    console.log("descrease", collateraltodecrease)
+    console.log("new trovecollateral", icrdata[selectedidx].collateral - collateraltodecrease)
+
+    return Number(troveCollateral) / Number(troveDebt)
+  }
+
   const redeem = async (senderAddress: string, amount: number) => {
-    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(0.15);
+    let icr = await processRedeemICR(getRequestAmount(amount, baseCoin.ausdDecimal))
+    const { prev_node_id, next_node_id } = await FindSortedTroveInsertPosition(icr);
     const msg = {
       send: {
         contract: contractAddress,
