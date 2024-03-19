@@ -363,16 +363,18 @@ export const getXionContract = (
         amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal)
       }
     }
-
+    console.log("ausd", ausdContractAddress)
+    console.log("contractAddress", contractAddress)
+    console.log("senderAddress", senderAddress)
     return await client?.executeMultiple(
       senderAddress,
       [
         {
-          contractAddress,
+          contractAddress: contractAddress,
           msg: unstakeMsg
         },
         {
-          contractAddress,
+          contractAddress: ausdContractAddress,
           msg: stakeMsg
         }
       ],

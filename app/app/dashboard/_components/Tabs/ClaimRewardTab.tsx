@@ -49,10 +49,10 @@ const ClaimRewardTab: FC<Props> = ({
       });
       getPageData();
       refreshBalance();
-    } catch (err) {
+    } catch (err:any) {
       console.log(err);
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -62,14 +62,26 @@ const ClaimRewardTab: FC<Props> = ({
 
   const updateReward = async () => {
     setProcessLoading(true);
-
+    let transactionHash;
     try {
-      await contract.updateReward();
+      const res: any = await contract.updateReward();
+
+      transactionHash = getIsInjectiveResponse(res)
+      ? res?.txHash
+      : res?.transactionHash;
+
+      addNotification({
+        status: "success",
+        directLink: transactionHash,
+        message: `Reward Updated`,
+      });
+
       getPageData();
       refreshBalance();
-    } catch (err) {
+    } catch (err:any) {  
+      console.log(err)    
       addNotification({
-        message: "",
+        message: JSON.stringify(err.message),
         status: "error",
         directLink: "",
       });
@@ -123,7 +135,6 @@ const ClaimRewardTab: FC<Props> = ({
         </div>
         <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
           <OutlinedButton
-            disabled={pageData.rewardAmount == 0}
             loading={processLoading}
             onClick={updateReward}
             className="w-full md:w-[325px] h-11"
