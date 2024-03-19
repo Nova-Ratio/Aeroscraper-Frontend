@@ -135,6 +135,14 @@ const useAppContract = () => {
     [address, contract]
   );
 
+  const updateReward = useCallback(
+    async () => {
+      if (isNil(contract) || isNil(address)) return;
+      return await contract.updateReward(address);
+    },
+    [address, contract]
+  );
+
   const redeem = useCallback(
     async (amount: number) => {
       console.log("contract", contract, address, amount);
@@ -236,6 +244,7 @@ const useAppContract = () => {
       withdrawLiquidationGains,
       mint,
       getTroveCount,
+      updateReward
     }),
     [
       getTotalCollateralAmounts,
@@ -263,6 +272,7 @@ const useAppContract = () => {
       withdrawLiquidationGains,
       mint,
       getTroveCount,
+      updateReward
     ]
   );
 
