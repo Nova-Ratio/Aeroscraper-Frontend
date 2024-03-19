@@ -33,7 +33,8 @@ const useAppContract = () => {
       isWalletConnected,
       baseCoin,
       walletInfo,
-      selectedChainName
+      selectedChainName,
+      client
     ]
   );
 
