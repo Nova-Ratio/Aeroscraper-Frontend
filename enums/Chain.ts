@@ -1,5 +1,5 @@
 export enum ChainName {
-    SEI = "seitestnet2"
+    SEI = "sei"
 }
 
 export type ChainNavigator = {
