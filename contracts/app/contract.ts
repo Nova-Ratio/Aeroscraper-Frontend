@@ -138,8 +138,7 @@ export const getAppContract = (
     asset: CollateralAsset = defaultAsset
   ) => {
     const vaa = await getVAA();
-/*     const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio); */
-console.log("vaa", vaa)
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio);
     return await client.executeMultiple(
       senderAddress,
       [
@@ -159,8 +158,8 @@ console.log("vaa", vaa)
           msg: {
             open_trove: {
               loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
-/*               prev_node_id,
-              next_node_id */
+              prev_node_id,
+              next_node_id
             }
           },
           funds: [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
