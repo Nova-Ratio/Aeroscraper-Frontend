@@ -287,12 +287,11 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
 
             const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-            console.log();
 
 
             setPageData(prev => ({
                 ...prev,
-                totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
+                totalStakedAmount: convertAmount(res.totalStake ?? 0, baseCoin?.ausdDecimal),
                 baseTotalCollateralAmount,
                 totalCollateralAmountsByDenom,
                 totalDebtAmount: convertAmount(res.totalDebtAmount ?? 0, baseCoin?.ausdDecimal),
