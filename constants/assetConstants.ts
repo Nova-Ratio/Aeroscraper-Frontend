@@ -6,7 +6,7 @@ const seiAsset: CollateralAsset = {
     shortName: "SEI",
     denom: "usei",
     decimal: 6,
-    ausdDecimal: 6,
+    ausdDecimal: 18,
     imageURL: "/images/token-images/sei.png",
     priceId: "53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb",
     priceServiceUrl: "https://hermes.pyth.network/",

@@ -199,7 +199,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setStakeLoading(true);
             const stakeRes = await contract.getStake();
-            const decimal = baseCoin?.decimal;
+            const decimal = baseCoin?.ausdDecimal;
             setPageData(prev => ({
                 ...prev,
                 stakedAmount: convertAmount(stakeRes?.amount ?? 0, decimal),
