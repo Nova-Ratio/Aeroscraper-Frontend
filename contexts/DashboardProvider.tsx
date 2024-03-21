@@ -199,7 +199,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setStakeLoading(true);
             const stakeRes = await contract.getStake();
-            const decimal = baseCoin?.decimal;
+            const decimal = baseCoin?.ausdDecimal;
             setPageData(prev => ({
                 ...prev,
                 stakedAmount: convertAmount(stakeRes?.amount ?? 0, decimal),
@@ -291,12 +291,10 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                 }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
 
             const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-            console.log();
-
 
             setPageData(prev => ({
                 ...prev,
-                totalStakedAmount: convertAmount(res.totalStake ?? 0, decimal),
+                totalStakedAmount: convertAmount(res.totalStake ?? 0, baseCoin?.ausdDecimal),
                 baseTotalCollateralAmount,
                 totalCollateralAmountsByDenom,
                 totalDebtAmount: convertAmount(res.totalDebtAmount ?? 0, baseCoin?.ausdDecimal),

@@ -13,7 +13,8 @@ const useAppContract = () => {
     walletInfo,
     selectedChainName,
     address,
-    chain
+    chain,
+    basePrice
   } = useChainAdapter();
 
   const contract = useMemo(
@@ -24,7 +25,7 @@ const useAppContract = () => {
         !isNil(selectedChainName) &&
         !isNil(chain)
         ?
-        getAppContract(chain, baseCoin, selectedChainName ?? ChainName.INJECTIVE, walletInfo.name as WalletType)
+        getAppContract(chain, baseCoin, selectedChainName ?? ChainName.INJECTIVE, walletInfo.name as WalletType, basePrice)
         :
         undefined,
     [
@@ -32,7 +33,8 @@ const useAppContract = () => {
       baseCoin,
       walletInfo,
       selectedChainName,
-      chain
+      chain,
+      basePrice
     ]
   );
 
@@ -147,8 +149,6 @@ const useAppContract = () => {
 
   const redeem = useCallback(
     async (amount: number) => {
-      console.log("contract", contract, address, amount);
-
       if (isNil(contract) || isNil(address)) return;
       return await contract.redeem(address, amount);
     },

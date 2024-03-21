@@ -29,12 +29,13 @@ export const getAppContract = (
   chain: Chain,
   baseCoin: BaseCoin,
   chainName: ChainName,
-  walletType?: WalletType
+  walletType?: WalletType,
+  basePrice: number = 0
 ) => {
   const defaultAsset = DefaultAssetByChainName[chainName];
 
   const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
-  const { requestICR } = graphql({ selectedChainName: ChainName.INJECTIVE });
+  const { requestICR, requestRedeemICR } = graphql({ selectedChainName: ChainName.INJECTIVE });
 
   const rpcUrl = injectivePrivRpc;
 
@@ -446,8 +447,40 @@ export const getAppContract = (
     })
   };
 
+  const processRedeemICR = async (amount: string) => {
+    let remainingAmount = BigInt(amount)
+    let icrdata = (await requestRedeemICR()).troves.nodes.map(i => {
+      return {
+        debt: BigInt(i.debtAmount),
+        collateral: BigInt(i.collaterals[0].amount.slice(0, -1))
+      }
+    })
+    let selectedidx = 0
+    for (let idx in icrdata) {
+      let trove = icrdata[idx]
+      if (remainingAmount > trove.debt) {
+        remainingAmount -= trove.debt
+      } else {
+        selectedidx = Number(idx)
+        break
+      }
+    }
+    let troveDebt = icrdata[selectedidx].debt - remainingAmount
+    if (Number(troveDebt) === 0) return 0
+    let collateraltodecrease = BigInt(Number(remainingAmount) / basePrice)
+    let troveCollateral = icrdata[selectedidx].collateral - collateraltodecrease
+    return Number(troveCollateral) / Number(troveDebt)
+  }
+
   const redeem = async (senderAddress: string, amount: number) => {
-    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(1.15, senderAddress);
+    let prev_node = undefined
+    let next_node = undefined
+    let icr = await processRedeemICR(getRequestAmount(amount, baseCoin.ausdDecimal))
+    if (icr != 0) {
+      const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(icr, senderAddress);
+      prev_node = prev_node_id
+      next_node = next_node_id
+    }
 
     const msg = {
       send: {
@@ -455,8 +488,8 @@ export const getAppContract = (
         amount: getRequestAmount(amount, baseCoin.decimal),
         msg: jsonToBinary({
           redeem: {
-            prev_node_id,
-            next_node_id
+            prev_node_id: prev_node,
+            next_node_id: next_node
           }
         }),
       },
