@@ -4,7 +4,7 @@ import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponseV1, GetTroveResponseV2 } from "./types";
 import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { BaseCoin, CollateralAsset } from "@/types/types";
-import { BaseCoinByChainName, priceIdByChainName } from "@/constants/chainConstants";
+import { priceIdByChainName } from "@/constants/chainConstants";
 import { isNil } from "lodash";
 import { WalletType } from "@/enums/WalletType";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
@@ -12,19 +12,16 @@ import { ChainName } from "@/enums/Chain";
 import { getContractAddressesByChain } from "@/constants/chainConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
-import { usePrice } from "@/contexts/PriceProvider";
 
 export const getAppContract = (
   client: SigningCosmWasmClient,
   baseCoin: BaseCoin,
   chainName: ChainName,
-  userAddress: string,
   walletType?: WalletType,
-
+  basePrice: number = 0
 ) => {
   const defaultAsset = DefaultAssetByChainName[chainName];
   const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
-  const { coinPricesByDenom } = usePrice();
   const { requestICR, requestRedeemICR } = graphql({ selectedChainName: ChainName.SEI });
 
   //GET QUERIES
@@ -56,10 +53,10 @@ export const getAppContract = (
 
   const findSortedTroveInsertPosition = async (
     collRatio: number,
+    user_addr?: string
   ): Promise<{ prev_node_id: string | undefined, next_node_id: string | undefined }> => {
     let next_node_id
     let prev_node_id
-    let user_addr = userAddress
 
     try {
       const data = await requestICR(collRatio * 100);
@@ -138,7 +135,7 @@ export const getAppContract = (
     asset: CollateralAsset = defaultAsset
   ) => {
     const vaa = await getVAA();
-    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
     return await client.executeMultiple(
       senderAddress,
       [
@@ -172,7 +169,7 @@ export const getAppContract = (
 
   const addCollateral = async (senderAddress: string, amount: number, collRatio: number, asset: CollateralAsset = defaultAsset) => {
     const vaa = await getVAA(asset);
-    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     return await client.executeMultiple(
       senderAddress,
@@ -201,7 +198,7 @@ export const getAppContract = (
 
   const removeCollateral = async (senderAddress: string, amount: number, collRatio: number, asset: CollateralAsset = defaultAsset) => {
     const vaa = await getVAA();
-    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     return await client.executeMultiple(
       senderAddress,
@@ -235,7 +232,7 @@ export const getAppContract = (
 
   const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
     const vaa = await getVAA();
-    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio);
+    const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     return await client.executeMultiple(
       senderAddress,
@@ -272,7 +269,7 @@ export const getAppContract = (
     let next_node_id = null;
 
     if (!isAllAmount) {
-      const response = await findSortedTroveInsertPosition(collRatio);
+      const response = await findSortedTroveInsertPosition(collRatio, senderAddress);
       prev_node_id = response.prev_node_id;
       next_node_id = response.next_node_id;
     }
@@ -343,8 +340,6 @@ export const getAppContract = (
       "Unstake"
     )
   }
-
-  const basePrice = coinPricesByDenom[baseCoin?.denom || ""] ?? 0;
 
   const processRedeemICR = async (amount: string) => {
     let remainingAmount = BigInt(amount)

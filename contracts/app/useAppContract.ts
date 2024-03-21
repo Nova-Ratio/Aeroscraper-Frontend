@@ -14,6 +14,7 @@ const useAppContract = () => {
     walletInfo,
     selectedChainName,
     address,
+    basePrice,
     getSigningCosmWasmClient
   } = useChainAdapter();
   const [client, setClient] = useState<SigningCosmWasmClient>();
@@ -26,7 +27,7 @@ const useAppContract = () => {
         !isNil(selectedChainName) &&
         !isNil(client)
         ?
-        getAppContract(client, baseCoin, selectedChainName ?? ChainName.SEI, walletInfo.name as WalletType)
+        getAppContract(client, baseCoin, selectedChainName ?? ChainName.SEI, walletInfo.name as WalletType, basePrice)
         :
         undefined,
     [
@@ -34,7 +35,8 @@ const useAppContract = () => {
       baseCoin,
       walletInfo,
       selectedChainName,
-      client
+      client,
+      basePrice
     ]
   );
 
