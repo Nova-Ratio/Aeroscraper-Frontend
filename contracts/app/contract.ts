@@ -60,7 +60,7 @@ export const getAppContract = (
 
   const msgBroadcastClient = new MsgBroadcaster({
     walletStrategy,
-    network: Network.Testnet,
+    network: Network.Mainnet,
     networkEndpoints: {
       indexer: '',
       rest: injectivePrivRest,

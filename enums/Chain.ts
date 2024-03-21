@@ -1,5 +1,5 @@
 export enum ChainName {
-    INJECTIVE = "injectivetestnet"
+    INJECTIVE = "injective"
 }
 
 export type ChainNavigator = {
