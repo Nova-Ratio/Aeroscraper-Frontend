@@ -89,7 +89,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
               <img
                 alt="ausd"
                 className="w-5 h-5"
-                src="/images/token-images/ausd-blue.svg"
+                src="/images/token-images/ausd.svg"
               />
             </Tooltip>
           </div>

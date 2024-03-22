@@ -110,7 +110,7 @@ const RedeemTab: FC<Props> = ({
               <img
                 alt="ausd"
                 className="w-6 h-6"
-                src="/images/token-images/ausd-blue.svg"
+                src="/images/token-images/ausd.svg"
               />
               <Text size="base" weight="font-medium">
                 aUSD
