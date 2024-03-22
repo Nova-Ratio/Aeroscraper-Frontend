@@ -161,7 +161,7 @@ const BorrowPanel: FC = () => {
             <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex flex-col gap-4 mt-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd-blue.svg" />
+                        <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd.svg" />
                         <Text size="base" weight="font-medium">aUSD</Text>
                     </div>
                     <BorderedNumberInput

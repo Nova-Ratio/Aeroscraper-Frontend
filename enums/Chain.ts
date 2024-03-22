@@ -7,4 +7,5 @@ export type ChainNavigator = {
     image: string
     url: string
     env: string
+    isSelected?: boolean
 }

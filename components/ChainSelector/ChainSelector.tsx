@@ -19,7 +19,7 @@ const ChainSelector: FC = () => {
     const [selectedChain, setSelectedChain] = useState<ChainNavigator>();
 
     useEffect(() => {
-        const chain = appChainURLs.find(chain => chain.url.includes(window.location.host));
+        const chain = appChainURLs.find(chain => chain.isSelected);
         setSelectedChain(chain);
     }, [])
 
@@ -59,48 +59,42 @@ const ChainSelector: FC = () => {
                 containerClassName="w-[220px] notification-dropdown-gradient p-[1.5px] right-4"
                 className="relative p-0 scrollbar-hidden"
             >
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-4 p-4">
                     {
                         Object.entries(chainsGroupByEnv).map(([env, envChains], idx, arr) => {
                             return (
                                 <>
-                                    <div className="flex flex-col gap-4 p-4">
+                                    <div className="flex flex-col gap-4">
                                         <Text size="xl" className="font-bold">
                                             {env}
                                         </Text>
                                         {
                                             envChains.map((chain, idx) => (
-                                                <>
-                                                    <a href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
-                                                        <div className="w-6 h-6 flex items-center justify-center">
-                                                            {
-                                                                chain.url === selectedChain?.url ?
-                                                                    <CheckIcon width="20" height="20" />
-                                                                    :
-                                                                    <Image
-                                                                        alt={chain.chainName}
-                                                                        width={24}
-                                                                        height={24}
-                                                                        src={chain.image}
-                                                                        className="shrink-0"
-                                                                    />
-                                                            }
-                                                        </div>
-                                                        <Text size="lg">
-                                                            {chain.chainName}
-                                                        </Text>
-                                                    </a>
-                                                    {
-                                                        idx !== envChains.length - 1 &&
-                                                        <span className='w-full h-[1px] bg-white' />
-                                                    }
-                                                </>
+                                                <a key={idx} href={chain.url} className="flex items-center gap-3 hover:opacity-60 transition-all">
+                                                    <div className="w-6 h-6 flex items-center justify-center">
+                                                        {
+                                                            chain.url === selectedChain?.url ?
+                                                                <CheckIcon width="20" height="20" />
+                                                                :
+                                                                <Image
+                                                                    alt={chain.chainName}
+                                                                    width={24}
+                                                                    height={24}
+                                                                    src={chain.image}
+                                                                    className="shrink-0"
+                                                                />
+                                                        }
+                                                    </div>
+                                                    <Text size="lg">
+                                                        {chain.chainName}
+                                                    </Text>
+                                                </a>
                                             ))
                                         }
                                     </div>
                                     {
                                         idx !== arr.length - 1 &&
-                                        <span className='w-full h-[1px] notification-dropdown-gradient' />
+                                        <span className='w-full h-[1px] bg-white' />
                                     }
                                 </>
                             )

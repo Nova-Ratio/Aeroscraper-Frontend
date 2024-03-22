@@ -184,7 +184,7 @@ const CreateTrovePanel: FC = () => {
                     <div>
                         <Text size="sm" weight="mb-2">Borrow</Text>
                         <div className="flex items-center gap-2 mb-2">
-                            <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd-blue.svg" />
+                            <img alt="ausd" className="w-6 h-6" src="/images/token-images/ausd.svg" />
                             <Text size="base" weight="font-medium">aUSD</Text>
                         </div>
                     </div>
