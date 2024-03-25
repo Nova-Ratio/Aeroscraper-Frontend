@@ -64,7 +64,7 @@ export default function Footer({}) {
           </Link>
           <Link
             href={
-              "https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit"
+              "https://novaratio.gitbook.io/aeroscraper/brand-identity/brand-kit"
             }
             target="_blank"
             rel="noopener noreferrer"
