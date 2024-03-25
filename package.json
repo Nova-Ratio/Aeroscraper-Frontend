@@ -25,6 +25,7 @@
     "@cosmos-kit/ledger": "^2.6.2",
     "@cosmos-kit/ninji": "^2.6.2",
     "@cosmos-kit/react": "^2.10.2",
+    "@injectivelabs/networks": "^1.14.6",
     "@injectivelabs/sdk-ts": "^1.14.5",
     "@injectivelabs/utils": "^1.14.5",
     "@injectivelabs/wallet-ts": "^1.14.5",

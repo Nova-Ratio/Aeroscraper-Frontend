@@ -26,8 +26,8 @@ export const BaseCoinByDenom = Object.values(BaseCoinByChainName).reduce<Record<
 
 export const TransactionDomainByChainName: Record<ChainName, { accountUrl: string, txDetailUrl: string }> = {
     [ChainName.INJECTIVE]: {
-        txDetailUrl: "https://testnet.explorer.injective.network/transaction/",
-        accountUrl: "https://testnet.explorer.injective.network/account/"
+        txDetailUrl: "https://explorer.injective.network/transaction/",
+        accountUrl: "https://explorer.injective.network/account/"
     }
 }
 

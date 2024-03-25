@@ -233,7 +233,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("1", asset.denom)]
+      funds: [coin("23", asset.denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -252,7 +252,6 @@ export const getAppContract = (
     return await msgBroadcastClient.broadcast({
       msgs: [msg, msg1],
       injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
     });
   }
 
@@ -270,7 +269,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("1", asset.denom)]
+      funds: [coin("23", asset.denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -282,8 +281,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   }
 
@@ -319,8 +317,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   };
 
@@ -338,7 +335,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("1", BaseCoinByChainName[chainName].denom)]
+      funds: [coin("23", BaseCoinByChainName[chainName].denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -355,8 +352,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   }
 
@@ -404,8 +400,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msgVAA, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   };
 
@@ -426,8 +421,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: msg1,
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   };
 
@@ -442,8 +436,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: msg1,
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   };
 
@@ -505,7 +498,7 @@ export const getAppContract = (
           data: [vaa],
         },
       },
-      funds: [coin("1", BaseCoinByChainName[chainName].denom)],
+      funds: [coin("23", BaseCoinByChainName[chainName].denom)],
     });
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -516,8 +509,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg0, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   };
 
@@ -532,7 +524,7 @@ export const getAppContract = (
           data: [vaa],
         },
       },
-      funds: [coin("1", BaseCoinByChainName[chainName].denom)],
+      funds: [coin("23", BaseCoinByChainName[chainName].denom)],
     });
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -543,8 +535,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg0, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   };
 
@@ -562,7 +553,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("1", BaseCoinByChainName[chainName].denom)]
+      funds: [coin("23", BaseCoinByChainName[chainName].denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -578,8 +569,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg0, msg1],
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   }
 
@@ -592,8 +582,7 @@ export const getAppContract = (
 
     return await msgBroadcastClient.broadcast({
       msgs: msg,
-      injectiveAddress: senderAddress,
-      gas: { gas: 40000000 }
+      injectiveAddress: senderAddress,      
     })
   }
 
