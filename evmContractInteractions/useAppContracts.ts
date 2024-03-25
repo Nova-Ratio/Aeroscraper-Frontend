@@ -380,7 +380,7 @@ export const callLiquidateTroves = async (n: number) => {
     }
 };
 
-export const callRedeemCollateral = async (_AUSDamount: number, _firstRedemptionHint: string, _upperPartialRedemptionHint: string, _lowerPartialRedemptionHint, _partialRedemptionHintNICR: number, _maxIterations: number, _maxFeePercentage: number) => {
+export const callRedeemCollateral = async (_AUSDamount: number, _firstRedemptionHint: string, _upperPartialRedemptionHint: string, _lowerPartialRedemptionHint: string, _partialRedemptionHintNICR: number, _maxIterations: number, _maxFeePercentage: number) => {
     try {
         const redeemCollateral = await (await callTroveManagerContract()).contractWithSigner.redeemCollateral(_AUSDamount, _firstRedemptionHint, _upperPartialRedemptionHint, _lowerPartialRedemptionHint, _partialRedemptionHintNICR, _maxIterations, _maxFeePercentage);
         return await redeemCollateral;
