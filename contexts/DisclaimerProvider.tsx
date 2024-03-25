@@ -9,7 +9,7 @@ import Text from '@/components/Texts/Text'
 import { usePathname } from 'next/navigation'
 import React, { FC, PropsWithChildren, useCallback, useEffect, useState } from 'react'
 
-const illegalCountryCodes = ['TR', 'Unknown'];
+const illegalCountryCodes = ['Unknown'];
 
 const DisclaimerController: FC<PropsWithChildren> = ({ children }) => {
     const pathname = usePathname();
