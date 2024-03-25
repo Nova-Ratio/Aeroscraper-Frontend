@@ -27,7 +27,7 @@ const MaintenancePage = () => {
             <Link href={'https://novaratio.gitbook.io/aeroscraper/whitepaper/whitepaper'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white' className="cursor-pointer">Whitepaper</Text>
             </Link>
-            <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+            <Link href={'https://novaratio.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white'>Brand Identity</Text>
             </Link>
             <Link href={'https://testnet.faucet.injective.network/'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
