@@ -18,7 +18,7 @@
         },
         {
           title: "Brand Identity",
-          link: "https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit",
+          link: "https://novaratio.gitbook.io/aeroscraper/brand-identity/brand-kit",
         },
         {
           title: "Injective Faucet",

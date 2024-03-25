@@ -153,7 +153,7 @@ export default function Home() {
                 className="w-4 h-4"
               />
             </Link>
-            <Link href={'https://aeroscraper.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
+            <Link href={'https://novaratio.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white'>Brand Identity</Text>
               <img
                 alt="external-link"
