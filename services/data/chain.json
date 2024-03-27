@@ -85,5 +85,15 @@
     "blockExplorerUrls": ["https://goerli.etherscan.io/"],
     "explorer": "https://goerli.etherscan.io/",
     "faucets": ["https://goerli-faucet.slock.it/"]
+  },
+  "11155111": {
+    "chainId": "0xaa36a7",
+    "name": "Sepolia Testnet",
+    "token": "ETH",
+    "chainName": "Sepolia Testnet",
+    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
+    "rpcUrls": ["https://sepolia.infura.io/v3/"],
+    "blockExplorerUrls": ["https://sepolia.etherscan.io/"],
+    "explorer": "https://sepolia.etherscan.io/"
   }
 }

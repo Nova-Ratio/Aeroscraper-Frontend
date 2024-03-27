@@ -16,7 +16,15 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         tokenImage: "/images/token-images/inj.svg",
         decimal: 18,
         ausdDecimal: 18
-    }
+    },
+    [ChainName.METAMASK]: {
+        name: "ETH",
+        denom: "eth",
+        image: "/images/token-images/eth.svg",
+        tokenImage: "/images/token-images/eth.svg",
+        decimal: 18,
+        ausdDecimal: 18
+    },
 }
 
 export const BaseCoinByDenom = Object.values(BaseCoinByChainName).reduce<Record<string, BaseCoin>>((acc, baseCoin) => {
@@ -28,6 +36,10 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
     [ChainName.INJECTIVE]: {
         txDetailUrl: "https://explorer.injective.network/transaction/",
         accountUrl: "https://explorer.injective.network/account/"
+    },
+    [ChainName.METAMASK]: {
+        txDetailUrl: "https://etherscan.io/tx/",
+        accountUrl: "https://etherscan.io/address/"
     }
 }
 
@@ -53,15 +65,23 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
         displayName: "INJ",
         logo: "/images/token-images/inj.svg",
         bech32Prefix: "inj"
+    },
+    [ChainName.METAMASK]: {
+        name: ChainName.METAMASK,
+        displayName: "ETH",
+        logo: "/images/wallet-images/metamask-icon.png",
+        bech32Prefix: "eth"
     }
 }
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
-    [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" }
+    [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" },
+    [ChainName.METAMASK]: { priceId: "", serviceUrl: "" }
 }
 
 export const appChainURLs: ChainNavigator[] = [
     { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
+    { chainName: "Sepolia", image: "/images/wallet-images/metamask-icon.png", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet", isSelected: true },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]

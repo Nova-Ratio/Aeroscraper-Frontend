@@ -237,7 +237,7 @@ const WalletButton: FC<Props> = ({
                     </div>
                   );
                 })}
-                {selectedChainName === ChainName.INJECTIVE && (
+                {selectedChainName === ChainName.METAMASK && (
                   <div className="mr-auto md:inline-block hidden">
                     {walletExtensions?.installed.some(
                       (item: any) => item.name === WalletType.METAMASK

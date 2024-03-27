@@ -1,7 +1,5 @@
-import { boolean } from "yup";
+
 import { callBorrowerOperationsContract, callTroveManagerContract, callStabilityPoolContract } from "./ethereumContracts";
-import { Bytes, ethers } from 'ethers';
-import { useMemo } from 'react';
 
 //StabilityPool Contract
 export const callStabilityPoolSetAddresses = async (_borrowerOperationsAddress: string, _troveManagerAddress: string, _activePoolAddress: string, _AUSDTokenAddress: string, _sortedTrovesAddress: string, _priceFeedAddress: string) => {

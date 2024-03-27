@@ -11,6 +11,9 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
         WalletType.NINJI,
         // WalletType.LEDGER,
         WalletType.COSMOSTATION
+    ],
+    [ChainName.METAMASK]: [
+        WalletType.METAMASK
     ]
 }
 
@@ -22,6 +25,7 @@ export const InjSdkWalletByCosmosWallet: Record<WalletType, Wallet> = {
     [WalletType.LEDGER]: Wallet.Ledger,
     [WalletType.COSMOSTATION]: Wallet.Cosmostation
 }
+
 
 export const metamaskWalletInfo: WalletInfo = {
     name: WalletType.METAMASK,

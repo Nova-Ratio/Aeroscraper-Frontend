@@ -5,6 +5,7 @@ import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
 import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
+import { getAppEVMContract } from "@/evmContractInteractions/contract";
 
 const useAppContract = () => {
   const {
@@ -14,30 +15,29 @@ const useAppContract = () => {
     selectedChainName,
     address,
     chain,
-    basePrice
+    basePrice,
   } = useChainAdapter();
 
   const contract = useMemo(
     () =>
       isWalletConnected &&
-        !isNil(baseCoin) &&
-        !isNil(walletInfo) &&
-        !isNil(selectedChainName) &&
-        !isNil(chain)
-        ?
-        getAppContract(chain, baseCoin, selectedChainName ?? ChainName.INJECTIVE, walletInfo.name as WalletType, basePrice)
-        :
-        undefined,
+      !isNil(baseCoin) &&
+      !isNil(walletInfo) &&
+      !isNil(selectedChainName) &&
+      !isNil(chain)
+        ? getAppEVMContract()
+        : undefined,
     [
       isWalletConnected,
       baseCoin,
       walletInfo,
       selectedChainName,
       chain,
-      basePrice
+      basePrice,
     ]
   );
-
+ console.log("selectedChainName", selectedChainName);
+ 
   const getTotalCollateralAmounts = useCallback(async () => {
     if (isNil(contract)) return;
     return await contract.getTotalCollateralAmounts();
@@ -92,9 +92,20 @@ const useAppContract = () => {
   }, [address, contract]);
 
   const openTrove = useCallback(
-    async (amount: number, loan_amount: number, collRatio: number, asset?: CollateralAsset) => {
+    async (
+      amount: number,
+      loan_amount: number,
+      collRatio: number,
+      asset?: CollateralAsset
+    ) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.openTrove(address, amount, loan_amount, collRatio, asset);
+      return await contract.openTrove(
+        address,
+        amount,
+        loan_amount,
+        collRatio,
+        asset
+      );
     },
     [address, contract]
   );
@@ -195,7 +206,7 @@ const useAppContract = () => {
       redeem,
       liquidateTroves,
       liquidateTrovesV2,
-      withdrawLiquidationGains
+      withdrawLiquidationGains,
     }),
     [
       getTotalCollateralAmounts,
@@ -218,7 +229,7 @@ const useAppContract = () => {
       redeem,
       liquidateTroves,
       liquidateTrovesV2,
-      withdrawLiquidationGains
+      withdrawLiquidationGains,
     ]
   );
 

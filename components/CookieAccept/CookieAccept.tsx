@@ -57,7 +57,7 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
                 </motion.div>
             }
         </AnimatePresence>
-    ), document.body)
+    ), document?.body)
 }
 
 export default CookieAccept

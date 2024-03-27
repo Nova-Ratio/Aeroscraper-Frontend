@@ -1,66 +1,98 @@
-import useChainAdapter from '@/hooks/useChainAdapter';
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Coin } from '@cosmjs/proto-signing';
-import { Dictionary } from 'lodash';
-import React, { FC, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import useChainAdapter from "@/hooks/useChainAdapter";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { Coin } from "@cosmjs/proto-signing";
+import { ethers } from "ethers";
+import { Dictionary } from "lodash";
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 type BalanceContextValue = {
-    balanceByDenom: Dictionary<Coin | undefined>;
-    refreshBalance: () => void;
-}
+  balanceByDenom: Dictionary<Coin | undefined>;
+  refreshBalance: () => void;
+};
 
 const BalanceContext = React.createContext<BalanceContextValue>({
-    balanceByDenom: {},
-    refreshBalance: () => { }
+  balanceByDenom: {},
+  refreshBalance: () => {},
 });
 
 const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
-    const debounceRef = useRef<NodeJS.Timeout | undefined>();
-    const { chain, address, baseCoin, selectedChainName } = useChainAdapter();
-    const [balanceByDenom, setBalanceByDenom] = useState<Dictionary<Coin | undefined>>({});
+  const debounceRef = useRef<NodeJS.Timeout | undefined>();
+  const { chain, address, baseCoin, selectedChainName } = useChainAdapter();
+  const [balanceByDenom, setBalanceByDenom] = useState<
+    Dictionary<Coin | undefined>
+  >({});
 
-    const getBalances = useCallback(async () => {
-        try {
-            if (!address || !baseCoin) return;
+  const getBalances = useCallback(async () => {
+    try {
+      if (!address || !baseCoin) return;
 
-            const client = await SigningCosmWasmClient.connect("https://sentry.tm.injective.network" ?? '')
+      /*  const client = await SigningCosmWasmClient.connect("https://sentry.tm.injective.network" ?? '')
             const balance = await client.getBalance(address, baseCoin.denom);
-            setBalanceByDenom({ [balance.denom]: balance });
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }, [chain, address, baseCoin, selectedChainName])
+            setBalanceByDenom({ [balance.denom]: balance }); */
 
-    const debouncedGetBalances = useCallback(() => {
-        clearTimeout(debounceRef.current);
-        debounceRef.current = setTimeout(() => {
-            getBalances();
-        }, 500);
-    }, [getBalances])
+      // metamask native token get balance
+      if (selectedChainName === "metamask") {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        const balance = await provider.getBalance(address).then((balance: any) => {
+          console.log("getBalance", ethers.formatEther(balance));
+          return balance;
+        });
+        console.log("baseCoin.denom", baseCoin.denom);
+        console.log("balance", balance);
+        
+        setBalanceByDenom({
+          [baseCoin.denom]: {
+            denom: baseCoin.denom,
+            amount: balance || "0",
+          },
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [chain, address, baseCoin, selectedChainName]);
 
-    const value = useMemo<BalanceContextValue>(() => ({
-        balanceByDenom,
-        refreshBalance: getBalances
-    }), [balanceByDenom, getBalances])
+  const debouncedGetBalances = useCallback(() => {
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      getBalances();
+    }, 500);
+  }, [getBalances]);
 
-    useEffect(() => {
-        debouncedGetBalances();
-    }, [debouncedGetBalances])
+  const value = useMemo<BalanceContextValue>(
+    () => ({
+      balanceByDenom,
+      refreshBalance: getBalances,
+    }),
+    [balanceByDenom, getBalances]
+  );
 
-    useEffect(() => {
-        return () => {
-            clearTimeout(debounceRef.current);
-        }
-    }, [])
+  useEffect(() => {
+    debouncedGetBalances();
+  }, [debouncedGetBalances]);
 
-    return (
-        <BalanceContext.Provider value={value}>
-            {children}
-        </BalanceContext.Provider>
-    )
-}
+  useEffect(() => {
+    return () => {
+      clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  return (
+    <BalanceContext.Provider value={value}>{children}</BalanceContext.Provider>
+  );
+};
 
 export const useBalances = () => useContext(BalanceContext);
 
-export default BalanceProvider
+export default BalanceProvider;

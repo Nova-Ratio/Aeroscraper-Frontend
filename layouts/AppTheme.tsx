@@ -21,7 +21,7 @@ import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
 import Tooltip from "@/components/Tooltip/Tooltip";
 
-const chainID = EthereumChainId.Goerli;
+const chainID = 11155111;
 
 const AppTheme = () => {
   const {

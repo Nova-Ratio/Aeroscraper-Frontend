@@ -48,7 +48,7 @@ const CreateTrovePanel: FC = () => {
         () =>
             borrowAmount <= 0 ||
             openTroveAmount <= 0 ||
-            collacteralRatio < 1.15 ||
+            /* collacteralRatio < 1.15 || */
             openTroveAmount >
             convertAmount(
                 balanceByDenom[selectedAsset!.denom]?.amount ?? 0,

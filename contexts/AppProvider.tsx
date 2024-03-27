@@ -6,7 +6,7 @@ import { isEmpty, isNil } from "lodash";
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { usePrice } from "./PriceProvider";
 import { ChainInfoByName } from "@/constants/chainConstants";
-
+const defaultChainName = ChainName.METAMASK;
 export type AppContextState = {
     selectedChainName?: ChainName;
     selectedWallet?: WalletType;
@@ -20,17 +20,17 @@ export type AppContextState = {
 }
 
 const AppContext = createContext<AppContextState>({
-    selectedChainName: ChainName.INJECTIVE,
+    selectedChainName: defaultChainName,
     isConnecting: false,
     basePrice: 0,
-    chainInfo: ChainInfoByName[ChainName.INJECTIVE],
+    chainInfo: ChainInfoByName[defaultChainName],
     selectChainName: () => { },
     selectWallet: () => { },
     disconnectMetamask: () => { }
 });
 
 const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(ChainName.INJECTIVE);
+    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(defaultChainName);
     const [selectedWallet, setSelectedWallet] = useState<WalletType>();
     const [userAddress, setUserAddress] = useState<string>();  //This state is used to override cosmos-kit address
     const [isConnecting, setIsConnecting] = useState<boolean>(false);  //This state is used to override cosmos-kit loading
@@ -38,14 +38,14 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const { getPriceByChainName } = usePrice();
 
     const basePrice = useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]);
-    const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? ChainName.INJECTIVE], [selectedChainName])
+    const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? defaultChainName], [selectedChainName])
 
     const getMetamaskAccount = useCallback(async () => {
         try {
             setIsConnecting(true);
             const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
             const ethAddress = accounts[0];
-            setUserAddress(getInjectiveAddress(ethAddress));
+            setUserAddress(ethAddress);
             setIsConnecting(false);
         }
         catch (err) {
