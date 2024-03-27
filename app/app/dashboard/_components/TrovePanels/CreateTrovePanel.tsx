@@ -46,7 +46,7 @@ const CreateTrovePanel: FC = () => {
 
     const confirmDisabled = useMemo(
         () =>
-            borrowAmount <= 0 ||
+            borrowAmount <= 100 ||
             openTroveAmount <= 0 ||
             collacteralRatio < 1.15 ||
             openTroveAmount >
@@ -78,6 +78,9 @@ const CreateTrovePanel: FC = () => {
                     collacteralRatio < (selectedMinCollateral - 0.00001) ?
                         `Collateral ratio should be at least ${selectedMinCollateral}.`
                         :
+                            borrowAmount <= 100 ?
+                            "aUSD amount should be at least 100"
+                            :
                         undefined,
         [
             openTroveAmount,
