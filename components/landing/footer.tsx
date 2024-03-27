@@ -259,6 +259,21 @@ export default function Footer() {
                   className="w-4 h-4"
                 />
               </Link>
+              <Link
+                href={"https://twitter.com/burnt_xion/status/1761246050415743270"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:scale-105 transition-all flex gap-2"
+              >
+                <Text size="sm" textColor="text-white">
+                  ABSTRACTATHON
+                </Text>
+                <img
+                  alt="external-link"
+                  src="/images/external-link.svg"
+                  className="w-4 h-4"
+                />
+              </Link>
             </div>
           </div>
           <div className="flex flex-col content-start justify-start gap-6">

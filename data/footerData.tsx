@@ -20,10 +20,6 @@
           title: "Brand Identity",
           link: "https://novaratio.gitbook.io/aeroscraper/brand-identity/brand-kit",
         },
-        {
-          title: "Injective Faucet",
-          link: "https://testnet.faucet.injective.network/",
-        },
       ],
     },
     {
@@ -62,6 +58,10 @@
           title: "Code Sei Hackathon",
           link: "https://x.com/SeiNetwork/status/1705128171534717322?s=20",
         },
+        {
+          title: "ABSTRACTATHON",
+          link: "https://twitter.com/burnt_xion/status/1761246050415743270",
+        }
       ],
     },
     {

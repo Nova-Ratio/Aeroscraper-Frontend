@@ -53,10 +53,4 @@ export const injContent: {
       linkStr: "Zealy",
       linkUrl: "https://zealy.io/c/aeroscraper/questboard",
     },
-    {
-      title: "Injective Faucet",
-      desc: "Get your Injective(Testnet) tokens here.",
-      linkStr: "here",
-      linkUrl: "https://testnet.faucet.injective.network/",
-    },
   ];

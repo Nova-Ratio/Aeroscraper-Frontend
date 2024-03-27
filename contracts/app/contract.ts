@@ -299,7 +299,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("14", asset.denom)]
+      funds: [coin("23", asset.denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -321,12 +321,12 @@ export const getAppContract = (
     })
   };
 
-  const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
-    const vaa = await getVAA();
+  const borrowLoan = async (senderAddress: string, amount: number, collRatio: number, asset: CollateralAsset = defaultAsset) => {
+    const vaa = await getVAA(asset);
     const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
     const msg = MsgExecuteContractCompat.fromJSON({
-      contractAddress: oraclecontractAddress,
+      contractAddress: asset.oracleContractAddress,
       sender: senderAddress,
       msg: {
         update_price_feeds: {
@@ -335,7 +335,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("23", BaseCoinByChainName[chainName].denom)]
+      funds: [coin("23", asset.denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -356,7 +356,7 @@ export const getAppContract = (
     })
   }
 
-  const repayLoan = async (senderAddress: string, amount: number, collRatio: number, isAllAmount: boolean) => {
+  const repayLoan = async (senderAddress: string, amount: number, collRatio: number, isAllAmount: boolean, asset: CollateralAsset = defaultAsset) => {
     let prev_node_id = null;
     let next_node_id = null;
 
@@ -379,17 +379,17 @@ export const getAppContract = (
       },
     };
 
-    const vaa = await getVAA();
+    const vaa = await getVAA(asset);
 
     const msgVAA = MsgExecuteContractCompat.fromJSON({
-      contractAddress: oraclecontractAddress,
+      contractAddress: asset.oracleContractAddress,
       sender: senderAddress,
       msg: {
         update_price_feeds: {
           data: [vaa],
         },
       },
-      funds: [coin("14", BaseCoinByChainName[chainName].denom)],
+      funds: [coin("23", asset.denom)],
     });
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -465,7 +465,7 @@ export const getAppContract = (
     return Number(troveCollateral) / Number(troveDebt)
   }
 
-  const redeem = async (senderAddress: string, amount: number) => {
+  const redeem = async (senderAddress: string, amount: number, asset: CollateralAsset = defaultAsset) => {
     let prev_node = undefined
     let next_node = undefined
     let icr = await processRedeemICR(getRequestAmount(amount, baseCoin.ausdDecimal))
@@ -488,7 +488,7 @@ export const getAppContract = (
       },
     };
 
-    const vaa = await getVAA();
+    const vaa = await getVAA(asset);
 
     const msg0 = MsgExecuteContractCompat.fromJSON({
       contractAddress: oraclecontractAddress,
@@ -498,7 +498,7 @@ export const getAppContract = (
           data: [vaa],
         },
       },
-      funds: [coin("23", BaseCoinByChainName[chainName].denom)],
+      funds: [coin("23", asset.denom)],
     });
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -513,8 +513,8 @@ export const getAppContract = (
     })
   };
 
-  const liquidateTroves = async (senderAddress: string) => {
-    const vaa = await getVAA();
+  const liquidateTroves = async (senderAddress: string, asset: CollateralAsset = defaultAsset) => {
+    const vaa = await getVAA(asset);
 
     const msg0 = MsgExecuteContractCompat.fromJSON({
       contractAddress: oraclecontractAddress,
@@ -524,7 +524,7 @@ export const getAppContract = (
           data: [vaa],
         },
       },
-      funds: [coin("23", BaseCoinByChainName[chainName].denom)],
+      funds: [coin("23", asset.denom)],
     });
 
     const msg1 = MsgExecuteContractCompat.fromJSON({
@@ -539,9 +539,9 @@ export const getAppContract = (
     })
   };
 
-  const liquidateTrovesV2 = async (senderAddress: string, owner: string) => {
+  const liquidateTrovesV2 = async (senderAddress: string, owner: string, asset: CollateralAsset = defaultAsset) => {
 
-    const vaa = await getVAA();
+    const vaa = await getVAA(asset);
 
     const msg0 = MsgExecuteContractCompat.fromJSON({
       contractAddress: oraclecontractAddress,
@@ -553,7 +553,7 @@ export const getAppContract = (
           ]
         }
       },
-      funds: [coin("23", BaseCoinByChainName[chainName].denom)]
+      funds: [coin("23", asset.denom)]
     })
 
     const msg1 = MsgExecuteContractCompat.fromJSON({

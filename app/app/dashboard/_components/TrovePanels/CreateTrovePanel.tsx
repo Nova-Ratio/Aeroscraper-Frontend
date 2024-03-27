@@ -46,7 +46,7 @@ const CreateTrovePanel: FC = () => {
 
     const confirmDisabled = useMemo(
         () =>
-            borrowAmount <= 100 ||
+            borrowAmount < 100 ||
             openTroveAmount <= 0 ||
             collacteralRatio < 1.15 ||
             openTroveAmount >
@@ -64,6 +64,7 @@ const CreateTrovePanel: FC = () => {
             balanceByDenom
         ]
     );
+    console.log("borrowamount", borrowAmount)
 
     const openTroveErrorText = useMemo(() =>
         (openTroveAmount <= 0 || borrowAmount <= 0) ?

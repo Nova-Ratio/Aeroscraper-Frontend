@@ -74,7 +74,7 @@ export default function Hackathons() {
         <Link
           target={"_blank"}
           className="border w-full gradientBorderBlue p-4 md:p-6 rounded-lg flex flex-col items-center gap-6 backdrop-blur-2xl mr-auto"
-          href={"https://x.com/SeiNetwork/status/1705128171534717322?s=20"}
+          href={"https://twitter.com/burnt_xion/status/1761246050415743270"}
         >
           <div className="flex gap-4 items-center">
             <MedalIcon className="text-[#E4462D]" />

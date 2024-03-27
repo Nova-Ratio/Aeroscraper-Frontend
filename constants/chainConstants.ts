@@ -61,8 +61,8 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
 }
 
 export const appChainURLs: ChainNavigator[] = [
-    { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
-    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscraper.io/", env: "Mainnet", isSelected: true },
+    { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://aeroscrapertest.tech", env: "Mainnet" },
+    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscraper.io/app/dashboard", env: "Mainnet", isSelected: true },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]
 

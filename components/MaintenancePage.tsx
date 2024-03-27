@@ -30,9 +30,6 @@ const MaintenancePage = () => {
             <Link href={'https://novaratio.gitbook.io/aeroscraper/brand-identity/brand-kit'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
               <Text size="sm" textColor='text-white'>Brand Identity</Text>
             </Link>
-            <Link href={'https://testnet.faucet.injective.network/'} target="_blank" rel="noopener noreferrer" className='hover:scale-105 transition-all flex gap-2'>
-              <Text size="sm" textColor='text-white'>Injective Faucet</Text>
-            </Link>
           </div>
           <div className='flex flex-col content-start justify-start gap-6'>
             <Text size="sm" weight="font-semibold">Deep dive</Text>

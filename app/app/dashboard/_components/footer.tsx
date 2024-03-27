@@ -78,24 +78,7 @@ export default function Footer({}) {
               src="/images/external-link.svg"
               className="w-4 h-4"
             />
-          </Link>
-          {selectedChainName === ChainName.INJECTIVE && (
-            <Link
-              href={"https://testnet.faucet.injective.network/"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
-            >
-              <Text size="sm" textColor="text-white">
-                Injective Faucet
-              </Text>
-              <img
-                alt="external-link"
-                src="/images/external-link.svg"
-                className="w-4 h-4"
-              />
-            </Link>
-          )}
+          </Link>          
         </div>
         <div className="flex flex-col content-start justify-start gap-6">
           <Text size="sm" weight="font-semibold">
@@ -273,6 +256,21 @@ export default function Footer({}) {
             >
               <Text size="sm" textColor="text-white">
                 Code Sei Hackathon
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+            <Link
+              href={"https://twitter.com/burnt_xion/status/1761246050415743270"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+              ABSTRACTATHON
               </Text>
               <img
                 alt="external-link"
