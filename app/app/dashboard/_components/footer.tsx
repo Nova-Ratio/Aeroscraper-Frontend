@@ -213,6 +213,8 @@ export default function Footer({}) {
             </Link>
             <Link
               href={"https://aeroscraper.gitbook.io/aeroscraper/"}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:scale-105 transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white">

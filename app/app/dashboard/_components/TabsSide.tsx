@@ -4,12 +4,14 @@ import { motion } from "framer-motion";
 import { isNil } from "lodash";
 import React, { Dispatch, FC, useEffect, useRef } from "react";
 import ClaimRewardTab from "./Tabs/ClaimRewardTab";
+import LeaderboardTab from "./Tabs/LeaderboardTab";
 import RedeemTab from "./Tabs/RedeemTab";
 import StabilityPoolTab from "./Tabs/StabilityPoolTab";
 import TroveTab from "./Tabs/TroveTab";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { useRouter, useSearchParams } from "next/navigation";
 import RiskyTrovesTabV2 from "./Tabs/RiskyTrovesTabV2";
+import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { DashboardTabs, useTabs } from "@/contexts/TabsProvider";
@@ -146,6 +148,8 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
               />
             )
           }
+          {selectedTab === "leaderboard" && <LeaderboardTab />}
+          {selectedTab === "missions" && <Missions />}
         </motion.main >
       )}
     </div >
