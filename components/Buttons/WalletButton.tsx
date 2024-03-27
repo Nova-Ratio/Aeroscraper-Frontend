@@ -49,7 +49,7 @@ const WalletButton: FC<Props> = ({
     | undefined
   >();
   const [showDownloadExtension, setShowDownloadExtension] = useState<
-    { name: string; downloadLink: string } | undefined
+    { name: string; downloadLink: string, img:string } | undefined
   >();
 
   const [onHoverChain, setOnHoverChain] = useState<ChainName | null>();
@@ -116,10 +116,10 @@ const WalletButton: FC<Props> = ({
 
   const checkWalletExtensions = () => {
     const anyWindow: any = window;
-
+""
     const walletExtensions: {
       installed: { name: WalletType }[];
-      otherWallets: { name: WalletType; downloadLink: string }[];
+      otherWallets: { name: WalletType; downloadLink: string, img?:string }[];
     } = { installed: [], otherWallets: [] };
 
     anyWindow.keplr?.getOfflineSigner
@@ -127,12 +127,14 @@ const WalletButton: FC<Props> = ({
       : walletExtensions.otherWallets.push({
         name: WalletType.KEPLR,
         downloadLink: "https://www.keplr.app/",
+        img: "/images/wallet-images/keplr.svg"
       });
     anyWindow.leap?.getOfflineSigner
       ? walletExtensions.installed.push({ name: WalletType.LEAP })
       : walletExtensions.otherWallets.push({
         name: WalletType.LEAP,
         downloadLink: "https://www.leapwallet.io/",
+        img:"/images/wallet-images/leap.svg"
       });
     // anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
     // anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
@@ -142,9 +144,12 @@ const WalletButton: FC<Props> = ({
         name: WalletType.METAMASK,
         downloadLink:
           "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1",
+          img: "/images/wallet-images/metamask.png"
       });
-    anyWindow.ninji ? walletExtensions.installed.push({ name: WalletType.NINJI }) : walletExtensions.otherWallets.push({ name: WalletType.NINJI, downloadLink: "https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm" });
-    anyWindow.cosmostation ? walletExtensions.installed.push({ name: WalletType.COSMOSTATION }) : walletExtensions.otherWallets.push({ name: WalletType.COSMOSTATION, downloadLink: "https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf" });
+    anyWindow.ninji ? walletExtensions.installed.push({ name: WalletType.NINJI }) : walletExtensions.otherWallets.push({ name: WalletType.NINJI, downloadLink: "https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm",
+    img: "/images/wallet-images/ninji.png" });
+    anyWindow.cosmostation ? walletExtensions.installed.push({ name: WalletType.COSMOSTATION }) : walletExtensions.otherWallets.push({ name: WalletType.COSMOSTATION, downloadLink: "https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf",
+    img: "/images/wallet-images/compass.png" });
 
     setWalletExtensions({
       ...walletExtensions,
@@ -264,6 +269,7 @@ const WalletButton: FC<Props> = ({
                             downloadLink: walletExtensions?.otherWallets.find(
                               (i) => i.name === WalletType.METAMASK
                             )?.downloadLink!,
+                            img: metamaskWalletInfo.logo
                           });
                         }}
                         startIcon={
@@ -302,6 +308,7 @@ const WalletButton: FC<Props> = ({
                           downloadLink: walletExtensions?.otherWallets.find(
                             (i) => i.name === wallet.walletInfo.name
                           )?.downloadLink!,
+                          img: wallet.walletInfo.logo as string
                         });
                       }}
                       startIcon={
@@ -390,6 +397,7 @@ const WalletButton: FC<Props> = ({
                             downloadLink: walletExtensions?.otherWallets.find(
                               (i) => i.name === WalletType.METAMASK
                             )?.downloadLink!,
+                            img: metamaskWalletInfo.logo
                           });
                         }}
                         startIcon={
@@ -429,6 +437,7 @@ const WalletButton: FC<Props> = ({
                             downloadLink: walletExtensions?.otherWallets.find(
                               (i) => i.name === wallet.walletInfo.name
                             )?.downloadLink!,
+                            img: wallet.walletInfo.logo as string
                           });
                         }}
                         startIcon={
@@ -461,7 +470,7 @@ const WalletButton: FC<Props> = ({
                 <img
                   className="w-[112px] h-[112px] object-contain mx-auto mb-14"
                   alt={showDownloadExtension.name}
-                  src={""}
+                  src={showDownloadExtension?.img }
                 />
                 <Text size="4xl" textColor="text-white" className="mb-10">
                   {capitalizeFirstLetter(showDownloadExtension.name)} is not

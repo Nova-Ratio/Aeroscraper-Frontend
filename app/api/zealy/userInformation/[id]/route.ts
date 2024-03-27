@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
 
   const result = await fetch(`https://api.zealy.io/communities/aeroscraper/users/${zealyId}`, {
     headers: {
-      "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`
+      "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`,
+      "Access-Control-Allow-Origin": "*",
     },
     method: req.method
   });
