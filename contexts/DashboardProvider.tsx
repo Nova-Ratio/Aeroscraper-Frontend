@@ -303,7 +303,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         }
       ); */
       const response: any = await fetch(
-        `https://db.novaratio.io/api/collections/protocol/records?filter=chainName=%22INJECTIVE_MAINNET%22`,
+        `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`,
         {
           method: "GET",
           headers: {
