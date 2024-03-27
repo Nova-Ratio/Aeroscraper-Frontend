@@ -21,7 +21,7 @@ import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
 import Tooltip from "@/components/Tooltip/Tooltip";
 
-const chainID = EthereumChainId.Goerli;
+const chainID = EthereumChainId.Mainnet;
 
 const AppTheme = () => {
   const {
@@ -98,7 +98,7 @@ const AppTheme = () => {
         const { name } = chainData[id.toString()] || { name: "UNKNOW" };
         const fromNetwork = name || "Unknown Network";
         const toNetwork =
-          chainData[chainID.toString()]?.name || "GOERLI NETWORK ";
+          chainData[chainID.toString()]?.name || "ETHERIUM NETWORK ";
         const alert = async () =>
           await Swal.fire({
             title: "Please Change Network",

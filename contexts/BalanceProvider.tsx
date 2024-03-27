@@ -23,7 +23,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             if (!address || !baseCoin) return;
 
-            const client = await SigningCosmWasmClient.connect("https://sentry.tm.injective.network" ?? '')
+            const client = await SigningCosmWasmClient.connect(chain.apis?.rpc?.[0].address ?? '')
             const balance = await client.getBalance(address, baseCoin.denom);
             setBalanceByDenom({ [balance.denom]: balance });
         }

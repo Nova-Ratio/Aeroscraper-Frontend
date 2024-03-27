@@ -46,7 +46,7 @@ export const getAppContract = (
   const walletStrategy = new WalletStrategy({
     chainId: chain.chain_id as ChainId,
     ethereumOptions: {
-      ethereumChainId: EthereumChainId.Goerli,
+      ethereumChainId: EthereumChainId.Mainnet,
       rpcUrl: rpcUrl,
     },
     endpoints: {
