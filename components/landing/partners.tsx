@@ -19,7 +19,29 @@ export default function Partners() {
           <img
             alt={"injective"}
             src={"/images/token-images/injective.svg"}
-            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+            className="px-4 w-[148px] h-[70px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+        <Link
+          className="flex gap-6"
+          href={"https://www.sei.io/"}
+          target="_blank"
+        >
+          <img
+            alt={"sei"}
+            src={"/images/token-images/sei.svg"}
+            className="px-4 w-[148px] h-[70px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+        <Link
+          className="flex gap-6"
+          href={"https://xion.bonusblock.io/"}
+          target="_blank"
+        >
+          <img
+            alt={"sei"}
+            src={"/images/token-images/xion.svg"}
+            className="px-4 w-[120px] h-[70px] mt-4 border border-white/10 rounded-md"
           />
         </Link>
       </div>

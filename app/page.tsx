@@ -10,6 +10,7 @@ import {
 } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
 import Footer from "@/components/landing/footer";
+import Hackathons from "@/components/landing/hackathons";
 import Partners from "@/components/landing/partners";
 import Image from "next/image";
 import Link from "next/link";
@@ -77,6 +78,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
+          <Hackathons />
           <div className="max-w-[626px]">
             <Faq />
           </div>
