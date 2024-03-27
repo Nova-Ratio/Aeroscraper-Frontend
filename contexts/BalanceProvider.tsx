@@ -1,3 +1,4 @@
+import { ChainName } from "@/enums/Chain";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { Coin } from "@cosmjs/proto-signing";
@@ -40,7 +41,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
             setBalanceByDenom({ [balance.denom]: balance }); */
 
       // metamask native token get balance
-      if (selectedChainName === "metamask") {
+      if (selectedChainName === ChainName.EVM) {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const address = await signer.getAddress();

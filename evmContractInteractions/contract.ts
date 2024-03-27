@@ -1,3 +1,4 @@
+
 import { ethers } from "ethers";
 import {
   callBorrowerOperationsContract,
@@ -7,12 +8,13 @@ import {
 import { CollateralAsset } from "@/types/types";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import { getRequestAmount } from "@/utils/contractUtils";
+import { ChainName } from '@/enums/Chain';
 
 export const getAppEVMContract = () => {
   let _maxFeePercentage = "5000000000000000";
   let _upperHint = "0x0000000000000000000000000000000000000000";
   let _lowerHint = "0x0000000000000000000000000000000000000000";
-  let asset = DefaultAssetByChainName["metamask"];
+  let asset = DefaultAssetByChainName[ChainName.EVM];
   console.log("asset", asset);
   
   const openTrove = async (

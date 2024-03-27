@@ -17,7 +17,7 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         decimal: 18,
         ausdDecimal: 18
     },
-    [ChainName.METAMASK]: {
+    [ChainName.EVM]: {
         name: "ETH",
         denom: "eth",
         image: "/images/token-images/eth.svg",
@@ -37,7 +37,7 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
         txDetailUrl: "https://explorer.injective.network/transaction/",
         accountUrl: "https://explorer.injective.network/account/"
     },
-    [ChainName.METAMASK]: {
+    [ChainName.EVM]: {
         txDetailUrl: "https://etherscan.io/tx/",
         accountUrl: "https://etherscan.io/address/"
     }
@@ -66,8 +66,8 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
         logo: "/images/token-images/inj.svg",
         bech32Prefix: "inj"
     },
-    [ChainName.METAMASK]: {
-        name: ChainName.METAMASK,
+    [ChainName.EVM]: {
+        name: ChainName.EVM,
         displayName: "ETH",
         logo: "/images/wallet-images/metamask-icon.png",
         bech32Prefix: "eth"
@@ -76,7 +76,7 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
     [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" },
-    [ChainName.METAMASK]: { priceId: "", serviceUrl: "" }
+    [ChainName.EVM]: { priceId: "", serviceUrl: "" }
 }
 
 export const appChainURLs: ChainNavigator[] = [

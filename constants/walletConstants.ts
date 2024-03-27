@@ -12,7 +12,7 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
         // WalletType.LEDGER,
         WalletType.COSMOSTATION
     ],
-    [ChainName.METAMASK]: [
+    [ChainName.EVM]: [
         WalletType.METAMASK
     ]
 }

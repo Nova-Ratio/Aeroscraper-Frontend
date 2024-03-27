@@ -6,7 +6,7 @@ import { isEmpty, isNil } from "lodash";
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { usePrice } from "./PriceProvider";
 import { ChainInfoByName } from "@/constants/chainConstants";
-const defaultChainName = ChainName.METAMASK;
+const defaultChainName = ChainName.EVM;
 export type AppContextState = {
     selectedChainName?: ChainName;
     selectedWallet?: WalletType;

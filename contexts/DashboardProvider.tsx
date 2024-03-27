@@ -15,7 +15,8 @@ import { isNil } from 'lodash';
 import { DefaultAssetByChainName } from '@/constants/assetConstants';
 
 const FilterParamByChainName: Record<ChainName, string> = {
-    [ChainName.INJECTIVE]: 'INJECTIVE'
+    [ChainName.INJECTIVE]: 'INJECTIVE',
+    [ChainName.EVM]: 'ETHERIUM'
 }
 
 type DashboardContextValue = {

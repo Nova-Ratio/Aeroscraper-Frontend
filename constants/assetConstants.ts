@@ -12,8 +12,8 @@ const injAsset: CollateralAsset = {
     priceServiceUrl: "https://hermes.pyth.network/",
     oracleContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
 }
-const metamask: CollateralAsset = {
-    name: "metamask",
+const evm: CollateralAsset = {
+    name: "evm",
     shortName: "ETH",
     denom: "eth",
     decimal: 18,
@@ -26,12 +26,12 @@ const metamask: CollateralAsset = {
 
 export const collateralAssets: CollateralAsset[] = [
     injAsset,
-    metamask
+    evm
 ]
 
 export const DefaultAssetByChainName: Record<ChainName, CollateralAsset> = {
     [ChainName.INJECTIVE]: injAsset,
-    [ChainName.METAMASK]: metamask
+    [ChainName.EVM]: evm
 }
 
 export const assetByDenom: Record<string, CollateralAsset | undefined> = Object
