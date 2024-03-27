@@ -290,7 +290,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         chainNameQuery = `${chainNameQuery}_MAINNET`;
       }
 
-      const { data } = await axios.get<
+      /* const { data } = await axios.get<
         TotalInfoResponseV1 | TotalInfoResponseV2
       >(
         `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`,
@@ -298,18 +298,31 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
           headers: {
             "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`,
             "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+        }
+      ); */
+      const response: any = await fetch(
+        `https://db.novaratio.io/api/collections/protocol/records?filter=chainName=%22INJECTIVE_MAINNET%22`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
           },
         }
       );
-      const res = data.items[0];
 
-      const decimal = baseCoin?.decimal;
+      let data = await response.json();
+
+      const res:any = data.items[0];
+
+      const decimal:any = baseCoin?.decimal;
 
       const totalCollateralAmountsByDenom = Array.isArray(
         res.totalCollateralAmounts
       )
-        ? res.totalCollateralAmounts.reduce<Record<string, CollateralInfo>>(
-            (acc, item) => {
+        ? res.totalCollateralAmounts.reduce(
+            (acc:any, item:any) => {
               const amount = convertAmount(item.amount, decimal);
               const denom = item.denom;
 
