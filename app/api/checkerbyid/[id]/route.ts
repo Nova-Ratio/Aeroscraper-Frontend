@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
       let troveRes = await getTrove(user.address);
       let stakeRes = await getStake(user.address);
       let point = user.point_number;
+      let message = "";
       let calc =
         (convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 2 +
         convertAmount(stakeRes?.amount ?? 0, 18) * Number(stakeRes?.percentage))/10;
@@ -45,6 +46,10 @@ export async function GET(req: NextRequest) {
             point_number: point+ calc
           });
           point= point+ calc;
+          message = "Updated user point";
+        }else {
+          //24 saat içinde daha önce güncellenmiş 
+          message = "User point is already updated in the last 24 hours";
         }
       return NextResponse.json({
         /* login: login, */
@@ -53,6 +58,7 @@ export async function GET(req: NextRequest) {
           address: user?.address,
           point: point,
         },
+        message: message,
         trove: troveRes,
         stake: stakeRes,
         calc: calc,
