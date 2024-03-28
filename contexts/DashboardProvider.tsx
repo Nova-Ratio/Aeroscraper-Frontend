@@ -58,7 +58,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const { selectedAppVersion, selectedChainName, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
 
-    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
+    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.XION }), [selectedChainName]);
     const contract = useAppContract();
 
     const [pageData, setPageData] = useState<PageData>({
@@ -276,7 +276,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const getTotalInfo = useCallback(async () => {
         try {
             setTotalInfoLoading(true);
-            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
+            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.XION];
 
             if (selectedChainName === ChainName.INJECTIVE && selectedAppVersion === AppVersion.V2) {
                 chainNameQuery = `${chainNameQuery}2`;

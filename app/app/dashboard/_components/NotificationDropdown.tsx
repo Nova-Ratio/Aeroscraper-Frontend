@@ -65,7 +65,7 @@ const NotificationDropdown: FC = () => {
     >
       <BorderedContainer
         containerClassName="w-[342px] -translate-x-[144px] md:w-[446px] h-[226px] notification-dropdown-gradient p-[1.5px]"
-        className="relative p-4 overflow-auto scrollbar-hidden"
+        className="relative p-4 overflow-auto"
       >
         <div className="flex flex-col-reverse gap-2">
           {notifications.map((item, index) => {
