@@ -219,7 +219,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : 0
               } %`}
             className="w-[191px] h-14"
-            tooltip={`The ratio of the Dollar value of the entire system collateral at the current ${baseCoin?.denom}:aUSD price, to the entire system debt.`}
+            tooltip={`The ratio of the Dollar value of the entire system collateral at the current INJ:aUSD price, to the entire system debt.`}
           />
           <StatisticCard
             title="aUSD Supply"
