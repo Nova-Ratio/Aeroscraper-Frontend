@@ -15,7 +15,6 @@ export async function GET(req: NextRequest) {
     });
     return res;
   };
-
   const getStake = async (user_addr: string) => {
     const res = await client.queryContractSmart(contractAddress, {
       stake: { user_addr },
@@ -26,21 +25,24 @@ export async function GET(req: NextRequest) {
   const password = process.env
     .NEXT_PUBLIC_POCKETBASE_CHECKER_PASSWORD as string;
   try {
-    const id = req.nextUrl.searchParams.get("id") as string;
+    const address = req.nextUrl.searchParams.get("id") as string;
 
     const login = await pb
       .collection("users")
       .authWithPassword(username, password);
 
-    const user = await pb.collection("points").getOne(id);
+    const user = await pb.collection("points").getFirstListItem(
+      `address = '${address}'`
+    ).then((res) => res?.data).catch((err) => false);
+    let troveRes = await getTrove(address);
+    let stakeRes = await getStake(address);
+    let calc =
+        (convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 80 +
+        convertAmount(stakeRes?.amount ?? 0, 18));
     if (user) {
-      let troveRes = await getTrove(user.address);
-      let stakeRes = await getStake(user.address);
       let point = user.point_number;
       let message = "";
-      let calc =
-        (convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 2 +
-        convertAmount(stakeRes?.amount ?? 0, 18) * Number(stakeRes?.percentage))/10;
+      
         if ( new Date(user?.updated).getTime() < new Date().getTime() - 1000 * 60 * 60 * 24) {
           const updatedUser = await pb.collection("points").update(user.id, {
             point_number: point+ calc
@@ -65,9 +67,28 @@ export async function GET(req: NextRequest) {
         calcString: ` (${convertAmount(
           troveRes?.collateral_amounts[0]?.amount ?? 0,
           18
-        )} * 2) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * ${
-          stakeRes?.percentage
-        }) / 10 = ${calc}`,
+        )} * 80) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * 1) = ${calc}`,
+      });
+    } else {
+      let create = await pb.collection("points").create({
+        address: address,
+        point_number: Number(calc),
+      });
+      return NextResponse.json({
+        /* login: login, */
+        user: {
+          id: create.id,
+          address: create.address,
+          point: create.point_number,
+        },
+        message: "Created user point successfully",
+        trove: troveRes,
+        stake: stakeRes,
+        calc: calc,
+        calcString: ` (${convertAmount(
+          troveRes?.collateral_amounts[0]?.amount ?? 0,
+          18
+        )} * 80) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * 1) = ${calc}`,
       });
     }
   } catch (error) {
