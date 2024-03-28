@@ -9,6 +9,10 @@ export const defaultContent: {
       desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow aUSD, earn aUSD rewards by depositing aUSD to the Stability pool, or Liquidate Risky Troves.",
     },
     {
+      title: "Aeroscraper is Live on Injective Mainnet",
+      desc: "Feel free to participate in Decentralized Lending and stable coin Borrowing at Injective",
+    },
+    {
       title: "Open your Trove and Mint aUSD",
       desc: "Open your first trove using INJ and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
     },
