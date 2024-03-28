@@ -18,7 +18,7 @@ export const defaultContent: {
     },
     {
       title: "Stake your aUSD to Stability Pool",
-      desc: "Get a right to earn rewards from liquid troves by staking your aUSD to the stability pool.",
+      desc: "Get a right to earn rewards from liquidated troves by staking your aUSD to the stability pool.",
     },
     {
       title: "Rewards!",
