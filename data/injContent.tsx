@@ -43,7 +43,7 @@ export const injContent: {
       title: "Don't miss our Injective Mainnet Galxe campaign",
       desc: "Get a chance to win exclusive rewards by participating in our current Injective Mainnet Galxe campaign.",
       linkStr: "participating",
-      linkUrl: "https://galxe.com/aeroscraper/campaign/GCi8BtwKhx",
+      linkUrl: "https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd",
     },
     {
       title: "Don't miss our latest Galxe campaign",
