@@ -101,6 +101,7 @@ const ClaimRewardTab: FC<Props> = ({
             loading={processLoading}
             disabled={pageData.rewardAmount == 0}
             disabledText={"No rewards are available."}
+            tooltipPlacement="bottom-right"
             className="w-full md:w-[375px] h-11 mt-10 ml-auto"
             onClick={() => {
               rewardClaim();

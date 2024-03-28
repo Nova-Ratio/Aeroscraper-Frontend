@@ -186,6 +186,7 @@ const RedeemTab: FC<Props> = ({
             onClick={redeem}
             text="Redeem"
             disabled={redeemDisabled}
+            tooltipPlacement="bottom-right"
             disabledText={redeemErrorText}
           />
       </div>

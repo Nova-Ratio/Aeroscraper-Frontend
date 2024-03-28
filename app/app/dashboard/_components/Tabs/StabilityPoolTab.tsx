@@ -189,6 +189,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             </div>
             <GradientButton
                 disabled={stakeDisabled}
+                tooltipPlacement="bottom-right"
                 disabledText={stakeErrorText}
                 loading={processLoading}
                 onClick={stakePool}
