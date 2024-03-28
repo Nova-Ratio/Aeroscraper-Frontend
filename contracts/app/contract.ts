@@ -562,7 +562,6 @@ export const getAppContract = (
       msg: {
         liquidate_troves: {
           liquidation_list: [owner],
-          safe_list: []
         }
       }
     })
