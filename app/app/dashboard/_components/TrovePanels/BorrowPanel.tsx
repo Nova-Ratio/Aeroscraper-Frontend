@@ -63,7 +63,7 @@ const BorrowPanel: FC = () => {
 
     const borrowErrorText = useMemo(() =>
         borrowingAmount <= 0 ?
-            "Enter the amount." :
+            "Enter the aUSD amount." :
             borrowingAmount >
                 (selectedCollateral.amount * basePrice * 100) / 115 -
                 pageData.debtAmount ?
@@ -82,7 +82,7 @@ const BorrowPanel: FC = () => {
 
     const repayErrorText = useMemo(() =>
         borrowingAmount <= 0 ?
-            "Enter the amount." :
+            "Enter the aUSD amount." :
             (borrowingAmount > pageData.debtAmount || borrowingAmount > pageData.ausdBalance) ?
                 "Insufficient aUSD balance." :
                 undefined,

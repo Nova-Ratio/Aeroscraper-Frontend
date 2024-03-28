@@ -155,21 +155,34 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
             tooltipPlacement="left-bottom-corner"
           />
           <StatisticCard
-            title="Total Value Locked"
+            title="Total Collateral Amount"
             description={
               isNil(baseCoin)
                 ? "-"
                 : `${Number(pageData.baseTotalCollateralAmount).toFixed(6)}`
             }
             className="w-[191px] h-14"
-            tooltip="The Total Value Locked (TVL) is the total value of AST locked as collateral in the system."
+            tooltip="The Total Collateral Amount (TCA) is the total value of INJ locked as collateral in the system."
             tooltipPlacement="bottom"
             coinName={baseCoin?.name}
             isNumeric
           />
           <StatisticCard
+            title="Total Value Locked"
+            description={
+              isNil(baseCoin)
+                ? "-"
+                : `${Number(((pageData.baseTotalCollateralAmount * basePrice) + pageData.totalStakedAmount)).toFixed(6)}`
+            }
+            className="w-[191px] h-14"
+            tooltip="The Total Value Locked (TVL) is the total value locked in the protocol."
+            tooltipPlacement="left-bottom-corner"
+            coinName="$"
+            isNumeric
+          />
+          <StatisticCard
             title="aUSD in Stability Pool"
-            tooltipPlacement="left-bottom"
+            tooltipPlacement="bottom"
             description={isNil(baseCoin)
               ? "-" : Number(pageData.totalStakedAmount)
                 .toFixed(3)
@@ -184,11 +197,11 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
               }`}
             className="w-[191px] h-14"
             tooltip="The total number of active Troves in the system."
-            tooltipPlacement="right-top"
+            tooltipPlacement="left-bottom-corner"
           />
           <StatisticCard
             title="Total Collateral Ratio"
-            tooltipPlacement="left-top"
+            tooltipPlacement="top"
             description={`${isNil(baseCoin)
               ? "-" :
               isFinite(
@@ -214,7 +227,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
               ? "-" : Number(pageData.totalAusdSupply).toFixed(3).toString()}
             className="w-[191px] h-14"
             tooltip="The total aUSD minted by the Aeroscraper Protocol."
-            tooltipPlacement="top"
+            tooltipPlacement="left-top-corner"
             isNumeric
           />
         </motion.div>
