@@ -31,15 +31,28 @@ export async function GET(req: NextRequest) {
     const login = await pb
       .collection("users")
       .authWithPassword(username, password);
+
     const user = await pb.collection("points").getOne(id);
     if (user) {
       let troveRes = await getTrove(user.address);
       let stakeRes = await getStake(user.address);
+      let point = user.point_number;
       let calc =
         (convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 2 +
         convertAmount(stakeRes?.amount ?? 0, 18) * Number(stakeRes?.percentage))/10;
+        if ( new Date(user?.updated).getTime() < new Date().getTime() - 1000 * 60 * 60 * 24) {
+          const updatedUser = await pb.collection("points").update(user.id, {
+            point_number: point+ calc
+          });
+          point= point+ calc;
+        }
       return NextResponse.json({
-        user: user,
+        /* login: login, */
+        user: {
+          id: user?.id,
+          address: user?.address,
+          point: point,
+        },
         trove: troveRes,
         stake: stakeRes,
         calc: calc,
@@ -55,7 +68,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       status: 400,
       msg: "There was a problem",
-      /* error: error, */
+      error: error,
     });
   }
 
