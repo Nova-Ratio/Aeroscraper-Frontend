@@ -1,4 +1,4 @@
-import { ChainName, ChainNavigator } from "@/enums/Chain";
+import { ChainName } from "@/enums/Chain";
 import { AppVersion, BaseCoin, ChainInfo } from "@/types/types";
 import { chains } from 'chain-registry'
 
@@ -172,11 +172,5 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
     [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" },
     [ChainName.XION]: { priceId: "", serviceUrl: "" }
 }
-
-export const appChainURLs: ChainNavigator[] = [
-    /* { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" }, */
-    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscraper.io", env: "Testnet" },
-    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet", isSelected: true }
-]
 
 export const MANAGEMENT_FEE = 0.005;

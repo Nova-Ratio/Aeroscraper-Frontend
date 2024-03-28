@@ -203,7 +203,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                     displayType="text"
                     renderText={(value) =>
                       <Text size='lg' className='mt-2 whitespace-nowrap flex gap-2 items-center'>
-                        <img alt="ausd" className="w-5 h-5" src="/images/token-images/ausd.svg" />
+                        <img alt="ausd" className="w-5 h-5" src="/images/token-images/ausd-blue.svg" />
                         {value}&nbsp;
                         aUSD
                       </Text>

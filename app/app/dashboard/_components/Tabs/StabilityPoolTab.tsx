@@ -147,7 +147,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                   <img
                     alt="ausd"
                     className="w-6 h-6"
-                    src="/images/token-images/ausd.svg"
+                    src="/images/token-images/ausd-blue.svg"
                   />
                   <Text size="base" weight="font-medium">
                     aUSD
@@ -224,7 +224,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
                   <img
                     alt="ausd"
                     className="w-6 h-6"
-                    src="/images/token-images/ausd.svg"
+                    src="/images/token-images/ausd-blue.svg"
                   />
                   <Text size="base" weight="font-medium">
                     aUSD

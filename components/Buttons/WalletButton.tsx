@@ -609,18 +609,20 @@ const WalletButton: FC<Props> = ({
           {selectedChainName && (
             <div className="flex gap-4 items-center mt-auto absolute bottom-8 left-8">
               <Text size="base">Chain</Text>
-              <div className="flex items-center space-x-2">
-                <img
-                  alt={selectedChainName}
-                  src={ChainInfoByName[selectedChainName].logo}
-                  className="w-6 h-6"
-                />
-                <Text size="lg">
-                  {capitalizeFirstLetter(
-                    ChainInfoByName[selectedChainName].displayName
-                  )}
-                </Text>
-              </div>
+              <Button
+                onClick={resetChain}
+                startIcon={
+                  <img
+                    alt={selectedChainName}
+                    src={ChainInfoByName[selectedChainName].logo}
+                    className="w-6 h-6"
+                  />
+                }
+              >
+                {capitalizeFirstLetter(
+                  ChainInfoByName[selectedChainName].displayName
+                )}
+              </Button>
             </div>
           )}
         </div>
