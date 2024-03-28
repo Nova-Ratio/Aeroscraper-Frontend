@@ -46,11 +46,11 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
         const signer = await provider.getSigner();
         const address = await signer.getAddress();
         const balance = await provider.getBalance(address).then((balance: any) => {
-          console.log("getBalance", ethers.formatEther(balance));
+          //console.log("getBalance", ethers.formatEther(balance));
           return balance;
         });
-        console.log("baseCoin.denom", baseCoin.denom);
-        console.log("balance", balance);
+        //console.log("baseCoin.denom", baseCoin.denom);
+        //console.log("balance", balance);
         
         setBalanceByDenom({
           [baseCoin.denom]: {

@@ -36,7 +36,7 @@ const useAppContract = () => {
       basePrice,
     ]
   );
- console.log("selectedChainName", selectedChainName);
+ //console.log("selectedChainName", selectedChainName);
  
   const getTotalCollateralAmounts = useCallback(async () => {
     if (isNil(contract)) return;

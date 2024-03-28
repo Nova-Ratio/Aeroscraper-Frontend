@@ -42,7 +42,7 @@ const CollateralPanel: FC = () => {
             }
         );
     }, [selectedAsset, pageData.collateralAmountsByDenom]);
-
+    
     const selectedMinCollateral = useMemo(() => {
         return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0;
     }, [selectedAsset, pageData.minCollateralRatioByDenom]);

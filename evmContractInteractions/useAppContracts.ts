@@ -1,5 +1,7 @@
 
-import { callBorrowerOperationsContract, callTroveManagerContract, callStabilityPoolContract } from "./ethereumContracts";
+import { ethers } from "ethers";
+import { callBorrowerOperationsContract, callTroveManagerContract, callStabilityPoolContract, callSortedTrovesContract, callAUSDTTokenContract,callPriceFeedContract } from "./ethereumContracts";
+import { useMemo } from 'react';
 
 //StabilityPool Contract
 export const callStabilityPoolSetAddresses = async (_borrowerOperationsAddress: string, _troveManagerAddress: string, _activePoolAddress: string, _AUSDTokenAddress: string, _sortedTrovesAddress: string, _priceFeedAddress: string) => {
@@ -114,25 +116,47 @@ export const registerFrontEnd = async (_kickbackRate: number) => {
 
 
 //borrowerOperations Contract Functions
-export const callOpenTrove = async (_maxFeePercentage: number, _AUSDAmount: number, _upperHint: string, _lowerHint: string) => {
+export const callOpenTrove = async (_maxFeePercentage: number, _AUSDAmount: number, _upperHint: string, _lowerHint: string, _value: ethers.BigNumberish ) => {
     try {
-        const openTrove = await (await callBorrowerOperationsContract()).contractWithSigner.openTrove(_maxFeePercentage, _AUSDAmount, _upperHint, _lowerHint);
+        const openTrove = await (await callBorrowerOperationsContract()).contractWithSigner.openTrove(_maxFeePercentage, _AUSDAmount, _upperHint, _lowerHint,{ value: _value });
         return await openTrove;
     } catch (error) {
         console.log(error);
         return false;
     }
 };
-
-export const callAddColl = async (_upperHint: string, _lowerHint: string) => {
+export const callAddColl = async (_upperHint: string, _lowerHint: string,_value: ethers.BigNumberish) => {
     try {
-        const addColl = await (await callBorrowerOperationsContract()).contractWithSigner.addColl(_upperHint, _lowerHint);
+        const addColl = await (await callBorrowerOperationsContract()).contractWithSigner.addColl(_upperHint, _lowerHint,{ value: _value });
         return await addColl;
     } catch (error) {
         console.log(error);
         return false;
     }
 };
+
+
+export const callEntireSystemColl = async () => {
+    try {
+        const entireSystemColl = await (await callBorrowerOperationsContract()).contractWithSigner.entireSystemColl();
+        return await entireSystemColl;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
+export const callEntireSystemDebt = async () => {
+    try {
+        const entireSystemDebt = await (await callBorrowerOperationsContract()).contractWithSigner.entireSystemDebt();
+        return await entireSystemDebt;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
+
 
 export const callGetAUSDValue = async (_coll: number) => {
     try {
@@ -222,9 +246,9 @@ export const callBorrowerOperationsSetAddresses = async (_troveManagerAddress: s
 
 // TroveManager Contract
 
-export const callBatchLiquidateTroves = async (_troveArray: string, _lowerHint: string) => { // address arrayi verilecek sorulacak
+export const callBatchLiquidateTroves = async (_troveArray: string[]) => { 
     try {
-        const batchLiquidateTroves = await (await callTroveManagerContract()).contractWithSigner.batchLiquidateTroves(_troveArray, _lowerHint);
+        const batchLiquidateTroves = await (await callTroveManagerContract()).contractWithSigner.batchLiquidateTroves(_troveArray);
         return await batchLiquidateTroves;
     } catch (error) {
         console.log(error);
@@ -378,7 +402,7 @@ export const callLiquidateTroves = async (n: number) => {
     }
 };
 
-export const callRedeemCollateral = async (_AUSDamount: number, _firstRedemptionHint: string, _upperPartialRedemptionHint: string, _lowerPartialRedemptionHint: string, _partialRedemptionHintNICR: number, _maxIterations: number, _maxFeePercentage: number) => {
+export const callRedeemCollateral = async (_AUSDamount: number, _firstRedemptionHint: string, _upperPartialRedemptionHint: string, _lowerPartialRedemptionHint:string, _partialRedemptionHintNICR: number, _maxIterations: number, _maxFeePercentage: number) => {
     try {
         const redeemCollateral = await (await callTroveManagerContract()).contractWithSigner.redeemCollateral(_AUSDamount, _firstRedemptionHint, _upperPartialRedemptionHint, _lowerPartialRedemptionHint, _partialRedemptionHintNICR, _maxIterations, _maxFeePercentage);
         return await redeemCollateral;
@@ -585,11 +609,52 @@ export const callIncreaseTroveDebt = async (borrower: string, _debtIncrease:numb
     }
 };
 
-
 export const callDecreaseTroveDebt = async (borrower: string, _debtDecrease:number) => {
     try {
         const decreaseTroveDebt = await (await callTroveManagerContract()).contractWithSigner.decreaseTroveDebt(borrower,_debtDecrease);
         return await decreaseTroveDebt;
+    } catch (error) {   
+        console.log(error);
+        return false;
+    }
+};
+
+export const callTroves = async (borrower: string) => {
+    try {
+        const troves = await (await callTroveManagerContract()).contractWithSigner.Troves(borrower);
+        return await troves;
+    } catch (error) {   
+        console.log(error);
+        return false;
+    }
+};
+
+
+//Sorted Troves Functions
+export const callFindInsertPositon = async (_NICR: number, _prevId:string, _nextId:string) => {
+    try {
+        const findInsertPosition = await (await callSortedTrovesContract()).contractWithSigner.findInsertPosition(_NICR,_prevId,_nextId);
+        return await findInsertPosition;
+    } catch (error) {   
+        console.log(error);
+        return false;
+    }
+};
+//ASUD Token Contract Functions  
+export const callBalanceOf = async (borrower:string) => {
+    try {
+        const balanceOf = await (await callAUSDTTokenContract()).contractWithSigner.balanceOf(borrower);
+        return await balanceOf;
+    } catch (error) {   
+        console.log(error);
+        return false;
+    }
+};
+//PriceFeed Contract Functions
+export const callFetchPrice = async () => {
+    try {
+        const fetchPrice = await (await callPriceFeedContract()).contractWithSigner.fetchPrice();
+        return await fetchPrice;
     } catch (error) {   
         console.log(error);
         return false;

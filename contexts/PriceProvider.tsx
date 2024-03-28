@@ -1,5 +1,7 @@
 import { BaseCoinByChainName } from "@/constants/chainConstants";
 import { ChainName } from "@/enums/Chain";
+import { callFetchPrice } from "@/evmContractInteractions/useAppContracts";
+import { convertAmount, getRequestAmount } from "@/utils/contractUtils";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { isNil } from "lodash";
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -46,9 +48,28 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
             console.log(err);
         }
     }, [])
+    const getEthPrice = useCallback(async () => {
+        try {
+            const asset = BaseCoinByChainName[ChainName.EVM];
+            const denom = asset.denom;
+            const currentPrices = await callFetchPrice();
+            console.log("currentPrices", convertAmount(currentPrices, asset.decimal));
+            
+            if (currentPrices) {
+                setCoinPricesByDenom(prev => ({
+                    ...prev,
+                    [denom]: convertAmount(currentPrices, asset.decimal)
+                }))
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }, [])
 
     const getAllPrices = useCallback(async () => {
         getInjPrice();
+        getEthPrice();
     }, [getInjPrice])
 
     const getPriceByChainName = useCallback((chainName?: ChainName) => {

@@ -120,11 +120,14 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const debtAmount = convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal);
 
             const collateralAmountsByDenom = collateralAmounts.reduce<Record<string, CollateralInfo>>((acc, item) => {
-
-                const decimal = BaseCoinByDenom[item.denom]?.decimal;
-                const amount = convertAmount(item.amount, decimal);
+                
                 const denom = item.denom;
-
+                const decimal = BaseCoinByDenom[denom]?.decimal;
+                console.log('item.amount', item.amount);
+                
+                const amount = convertAmount(item.amount, decimal);
+                console.log('amount', amount, denom, decimal);
+                
                 return {
                     ...acc,
                     [denom]: {
@@ -200,6 +203,8 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             setStakeLoading(true);
             const stakeRes = await contract.getStake();
+            console.log('stakeRes', stakeRes);
+            
             const decimal = baseCoin?.ausdDecimal;
             setPageData(prev => ({
                 ...prev,
