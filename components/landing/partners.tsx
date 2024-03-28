@@ -65,6 +65,16 @@ export default function Partners() {
           className="px-8 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
         />
       </Link>
+      <Text size="base" className="mt-8" textColor="text-white/60">
+        Defi / Dex
+      </Text>
+      <Link className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center" href={"https://dojo.trading/"}>
+        <img
+          alt={"dojoswap"}
+          src={"/images/dojoswap.png"}
+          className="w-[148px] h-fit  "
+        />
+      </Link>
     </div>
   );
 }

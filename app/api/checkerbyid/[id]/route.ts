@@ -10,20 +10,38 @@ export async function GET(req: NextRequest) {
   const contractAddress = process.env
     .NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS as string;
   const getTrove = async (user_addr: string) => {
-    const res = await client.queryContractSmart(contractAddress, {
-      trove: { user_addr },
-    });
-    return res;
+    try {
+      const res = await client.queryContractSmart(contractAddress, {
+        trove: { user_addr },
+      });
+      return res;
+    } catch (error) {
+      return NextResponse.json({
+        status: 400,
+        msg: "There was a problem",
+        error: error,
+      });
+    }
   };
   const getStake = async (user_addr: string) => {
-    const res = await client.queryContractSmart(contractAddress, {
-      stake: { user_addr },
-    });
-    return res;
+    try {
+      const res = await client.queryContractSmart(contractAddress, {
+        stake: { user_addr },
+      });
+      return res;
+    } catch (error) {
+      return NextResponse.json({
+        status: 400,
+        msg: "There was a problem",
+        error: error,
+      });
+    }
   };
   const username = process.env.NEXT_PUBLIC_POCKETBASE_CHECKER_ADMIN as string;
   const password = process.env
     .NEXT_PUBLIC_POCKETBASE_CHECKER_PASSWORD as string;
+  let message = "";
+  let calc = 0;
   try {
     const address = req.nextUrl.searchParams.get("id") as string;
 
@@ -31,28 +49,37 @@ export async function GET(req: NextRequest) {
       .collection("users")
       .authWithPassword(username, password);
 
-    const user:any = await pb.collection("points").getFirstListItem(
-      `address = '${address}'`
-    ).then((res) => res).catch((err) => false);
+    const user: any = await pb
+      .collection("points")
+      .getFirstListItem(`address = '${address}'`)
+      .then((res) => res)
+      .catch((err) => false);
+    message = "get User";
     let troveRes = await getTrove(address);
     let stakeRes = await getStake(address);
-    let calc =
-        (convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 80 +
-        convertAmount(stakeRes?.amount ?? 0, 18));
+    message = "get Trove and Stake";
+    if (troveRes?.collateral_amounts && stakeRes?.amount) {
+      calc =
+        convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 80 +
+        convertAmount(stakeRes?.amount ?? 0, 18);
+    }
+    message = "Calc";
     if (user) {
       let point = user?.point_number;
-      let message = "";
-      
-        if ( new Date(user?.updated).getTime() < new Date().getTime() - 1000 * 60 * 60 * 24) {
-          const updatedUser = await pb.collection("points").update(user?.id, {
-            point_number: point+ calc
-          });
-          point= point+ calc;
-          message = "Updated user point successfully";
-        }else {
-          //24 saat içinde daha önce güncellenmiş 
-          message = "User point is already updated in the last 24 hours";
-        }
+      message = "User point";
+      if (
+        new Date(user?.updated).getTime() <
+        new Date().getTime() - 1000 * 60 * 60 * 24
+      ) {
+        const updatedUser = await pb.collection("points").update(user?.id, {
+          point_number: point + calc,
+        });
+        point = point + calc;
+        message = "Updated user point successfully";
+      } else {
+        //24 saat içinde daha önce güncellenmiş
+        message = "User point is already updated in the last 24 hours";
+      }
       return NextResponse.json({
         /* login: login, */
         user: {
@@ -64,12 +91,13 @@ export async function GET(req: NextRequest) {
         trove: troveRes,
         stake: stakeRes,
         calc: calc,
-        calcString: ` (${convertAmount(
+        /* calcString: ` (${convertAmount(
           troveRes?.collateral_amounts[0]?.amount ?? 0,
           18
-        )} * 80) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * 1) = ${calc}`,
+        )} * 80) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * 1) = ${calc}`, */
       });
     } else {
+      message = "Create User point";
       let create = await pb.collection("points").create({
         address: address,
         point_number: Number(calc),
@@ -85,10 +113,10 @@ export async function GET(req: NextRequest) {
         trove: troveRes,
         stake: stakeRes,
         calc: calc,
-        calcString: ` (${convertAmount(
+        /* calcString: ` (${convertAmount(
           troveRes?.collateral_amounts[0]?.amount ?? 0,
           18
-        )} * 80) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * 1) = ${calc}`,
+        )} * 80) + (${convertAmount(stakeRes?.amount ?? 0, 18)} * 1) = ${calc}`, */
       });
     }
   } catch (error) {
@@ -96,6 +124,11 @@ export async function GET(req: NextRequest) {
       status: 400,
       msg: "There was a problem",
       error: error,
+      info: {
+        username: username,
+        password: password,
+      },
+      message: message,
     });
   }
 
