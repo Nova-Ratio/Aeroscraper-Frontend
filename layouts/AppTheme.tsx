@@ -21,6 +21,7 @@ import ChainData from "@/services/data/chain.json";
 import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import ChainSelector from "@/components/ChainSelector/ChainSelector";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -172,7 +173,7 @@ const AppTheme = () => {
               <img
                 alt="ausd"
                 className="w-5 h-5"
-                src="/images/token-images/ausd-blue.svg"
+                src="/images/token-images/ausd.svg"
               />
             </Tooltip>
           </div>
@@ -195,8 +196,11 @@ const AppTheme = () => {
                   <VersionSelector />
                 )}
               </div> */}
-              <div className="md:flex hidden">
+              <div className="md:flex hidden mr-6">
                 <NotificationDropdown />
+              </div>
+              <div>
+                <ChainSelector />
               </div>
               <button
                 onClick={() => {
@@ -244,21 +248,26 @@ const AppTheme = () => {
               </button>
             </>
           ) : (
-            <WalletButton
-              ausdBalance={0}
-              className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
-              baseCoinBalance={
-                !isNil(baseCoin)
-                  ? Number(
+            <>
+              <div className="mr-3">
+                <ChainSelector />
+              </div>
+              <WalletButton
+                ausdBalance={0}
+                className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
+                baseCoinBalance={
+                  !isNil(baseCoin)
+                    ? Number(
                       convertAmount(
                         balanceByDenom[baseCoin.denom]?.amount ?? 0,
                         baseCoin.decimal
                       )
                     )
-                  : 0
-              }
-              basePrice={0}
-            />
+                    : 0
+                }
+                basePrice={0}
+              />
+            </>
           )}
         </div>
         <NotificationModal />
@@ -268,14 +277,14 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                  convertAmount(
-                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    baseCoin?.cw20Denom ===
-                      DefaultAssetByChainName[ChainName.XION].cw20Denom
-                      ? DefaultAssetByChainName[ChainName.XION].decimal
-                      : baseCoin?.decimal
-                  )
+                convertAmount(
+                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                  baseCoin?.cw20Denom ===
+                    DefaultAssetByChainName[ChainName.XION].cw20Denom
+                    ? DefaultAssetByChainName[ChainName.XION].decimal
+                    : baseCoin?.decimal
                 )
+              )
               : 0,
           }}
           basePrice={basePrice}
@@ -292,7 +301,7 @@ const AppTheme = () => {
             <img
               alt="ausd"
               className="w-5 h-5"
-              src="/images/token-images/ausd-blue.svg"
+              src="/images/token-images/ausd.svg"
             />
           </div>
           {!isNil(baseCoin) && (

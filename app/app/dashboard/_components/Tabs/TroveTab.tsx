@@ -21,7 +21,7 @@ const TroveTab: FC = () => {
 
   // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
   const [selectedAsset] = useState<CollateralAsset>(
-    DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
+    DefaultAssetByChainName[selectedChainName ?? ChainName.XION]
   );
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
