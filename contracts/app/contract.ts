@@ -574,6 +574,17 @@ export const getAppContract = (
   }
 
   const updateReward = async (senderAddress: string) => {
+    
+    const unstake = MsgExecuteContractCompat.fromJSON({
+      contractAddress: contractAddress,
+      sender: senderAddress,
+      msg: {
+        unstake: {
+          amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal)
+        }
+      },
+    })
+    
     const msg = {
       send: {
         contract: contractAddress,
@@ -588,18 +599,8 @@ export const getAppContract = (
       msg,
     });
     
-    const unstake = MsgExecuteContractCompat.fromJSON({
-      contractAddress: contractAddress,
-      sender: senderAddress,
-      msg: {
-        unstake: {
-          amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal)
-        }
-      },
-    })
-    
     return await msgBroadcastClient.broadcast({
-      msgs: [stake, unstake],
+      msgs: [unstake, stake],
       injectiveAddress: senderAddress,      
     })
   }
