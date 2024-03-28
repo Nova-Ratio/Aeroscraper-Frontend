@@ -25,6 +25,7 @@ export const getAppEVMContract = () => {
     x:any
   ) => {
     try {
+      
       const openTrove = await (
         await callBorrowerOperationsContract()
       ).contractWithSigner.openTrove(
