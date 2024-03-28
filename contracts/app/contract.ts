@@ -21,6 +21,7 @@ import { InjSdkWalletByCosmosWallet } from "@/constants/walletConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
 
+const updateRewardAmount = 0.01;
 const injectivePrivRpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_RPC as string;
 const injectivePrivGrpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_GRPC as string;
 const injectivePrivRest = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_REST as string;
@@ -562,13 +563,44 @@ export const getAppContract = (
       msg: {
         liquidate_troves: {
           liquidation_list: [owner],
-          safe_list: []
         }
       }
     })
 
     return await msgBroadcastClient.broadcast({
       msgs: [msg0, msg1],
+      injectiveAddress: senderAddress,      
+    })
+  }
+
+  const updateReward = async (senderAddress: string) => {
+    
+    const unstake = MsgExecuteContractCompat.fromJSON({
+      contractAddress: contractAddress,
+      sender: senderAddress,
+      msg: {
+        unstake: {
+          amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal)
+        }
+      },
+    })
+    
+    const msg = {
+      send: {
+        contract: contractAddress,
+        amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal),
+        msg: jsonToBinary({ stake: {} }),
+      }
+    };
+
+    const stake = MsgExecuteContractCompat.fromJSON({
+      contractAddress: ausdContractAddress,
+      sender: senderAddress,
+      msg,
+    });
+    
+    return await msgBroadcastClient.broadcast({
+      msgs: [unstake, stake],
       injectiveAddress: senderAddress,      
     })
   }
@@ -606,6 +638,7 @@ export const getAppContract = (
     redeem,
     liquidateTroves,
     liquidateTrovesV2,
-    withdrawLiquidationGains
+    withdrawLiquidationGains,
+    updateReward
   }
 }

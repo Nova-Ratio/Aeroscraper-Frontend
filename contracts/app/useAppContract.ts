@@ -168,6 +168,14 @@ const useAppContract = () => {
     [address, contract]
   );
 
+  const updateReward = useCallback(
+    async () => {
+      if (isNil(contract) || isNil(address)) return;
+      return await contract.updateReward(address);
+    },
+    [address, contract]
+  );
+
   const withdrawLiquidationGains = useCallback(async () => {
     if (isNil(contract) || isNil(address)) return;
     return await contract.withdrawLiquidationGains(address);
@@ -195,7 +203,8 @@ const useAppContract = () => {
       redeem,
       liquidateTroves,
       liquidateTrovesV2,
-      withdrawLiquidationGains
+      withdrawLiquidationGains,
+      updateReward
     }),
     [
       getTotalCollateralAmounts,
@@ -218,7 +227,8 @@ const useAppContract = () => {
       redeem,
       liquidateTroves,
       liquidateTrovesV2,
-      withdrawLiquidationGains
+      withdrawLiquidationGains,
+      updateReward
     ]
   );
 
