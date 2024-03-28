@@ -61,8 +61,8 @@ const RedeemTab: FC<Props> = ({
   );
   const redeemErrorText = useMemo(() =>
     (isNil(redeemAmount) || redeemAmount <= 0) ?
-      "Enter the AUSD amount" :
-      redeemAmount > pageData.ausdBalance ? "Insufficient AUSD balance"
+      "Enter the aUSD amount" :
+      redeemAmount > pageData.ausdBalance ? "Insufficient aUSD balance"
         :
         undefined,
     [redeemAmount, pageData])
@@ -186,6 +186,7 @@ const RedeemTab: FC<Props> = ({
             onClick={redeem}
             text="Redeem"
             disabled={redeemDisabled}
+            tooltipPlacement="bottom-right"
             disabledText={redeemErrorText}
           />
       </div>

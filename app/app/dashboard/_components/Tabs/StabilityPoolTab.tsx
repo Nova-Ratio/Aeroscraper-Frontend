@@ -41,9 +41,9 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
 
   const stakeErrorText = useMemo(() => (
     stakeAmount <= 0 ?
-      "Enter the AUSD amount." :
+      "Enter the aUSD amount." :
       stakeAmount > pageData.ausdBalance ?
-        "Insufficient AUSD balance." :
+        "Insufficient aUSD balance." :
         undefined
   ), [stakeAmount, pageData.ausdBalance]);
 
@@ -56,9 +56,9 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
 
   const unstakeErrorText = useMemo(() => (
     unstakeAmount <= 0 ?
-      "Enter the AUSD amount." :
+      "Enter the aUSD amount." :
       unstakeAmount > pageData.stakedAmount ?
-        "Insufficient AUSD balance." :
+        "Insufficient aUSD balance." :
         undefined
   ), [unstakeAmount, pageData.stakedAmount]);
 
@@ -189,6 +189,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
             </div>
             <GradientButton
                 disabled={stakeDisabled}
+                tooltipPlacement="bottom-right"
                 disabledText={stakeErrorText}
                 loading={processLoading}
                 onClick={stakePool}

@@ -9,12 +9,16 @@ export const defaultContent: {
       desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow aUSD, earn aUSD rewards by depositing aUSD to the Stability pool, or Liquidate Risky Troves.",
     },
     {
+      title: "Aeroscraper is Live on Injective Mainnet",
+      desc: "Feel free to participate in Decentralized Lending and stable coin Borrowing at Injective",
+    },
+    {
       title: "Open your Trove and Mint aUSD",
       desc: "Open your first trove using INJ and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
     },
     {
       title: "Stake your aUSD to Stability Pool",
-      desc: "Get a right to earn rewards from liquid troves by staking your aUSD to the stability pool.",
+      desc: "Get a right to earn rewards from liquidated troves by staking your aUSD to the stability pool.",
     },
     {
       title: "Rewards!",
@@ -35,6 +39,12 @@ export const injContent: {
     linkUrl?: string;
   }[] = [
     ...defaultContent,
+    {
+      title: "Don't miss our Injective Mainnet Galxe campaign",
+      desc: "Get a chance to win exclusive rewards by participating in our current Injective Mainnet Galxe campaign.",
+      linkStr: "participating",
+      linkUrl: "https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd",
+    },
     {
       title: "Don't miss our latest Galxe campaign",
       desc: "Get a chance to win exclusive rewards by participating in our current Galxe campaign.",

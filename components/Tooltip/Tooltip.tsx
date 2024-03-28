@@ -7,6 +7,7 @@ import useIsMobile from '@/hooks/useIsMobile'
 export const PLACEMENT_CLASSES = {
     "bottom": "top-full left-1/2 -translate-x-1/2 translate-y-4",
     "bottom-center": "top-full left-1/2 translate-x-[20%] translate-y-4",
+    "bottom-right": "top-full right-[15%] translate-x-[20%] translate-y-4",
     "top": "bottom-full left-1/2 -translate-x-1/2 -translate-y-4",
     "left": "top-1/2 right-full -translate-x-4 -translate-y-1/2",
     "right": "top-1/2 left-full translate-x-4 -translate-y-1/2",
@@ -15,7 +16,8 @@ export const PLACEMENT_CLASSES = {
     "right-bottom": "bottom-0 left-full translate-x-4",
     "left-top": "top-0 right-full -translate-x-4",
     "left-bottom": "bottom-0 right-full -translate-x-4",
-    "left-bottom-corner": "top-0 left-full translate-y-1/2 -translate-x-[100%]"
+    "left-bottom-corner": "top-0 left-full translate-y-1/2 -translate-x-[100%]",
+    "left-top-corner": "top-0 right-full -translate-x-4 -translate-x-[50%] -translate-y-[50%]"
 }
 
 type Props = {
@@ -44,7 +46,7 @@ const Tooltip: FC<PropsWithChildren<Props>> = ({
     onHover,
     onLeave,
     children,
-    width = 'w-[300px]',
+    width = 'w-full min-w-[230px] text-center',
     rounded = 'rounded-lg'
 }) => {
     const isMobile = useIsMobile();

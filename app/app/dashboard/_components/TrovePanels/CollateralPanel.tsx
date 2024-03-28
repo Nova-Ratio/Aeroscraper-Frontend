@@ -66,9 +66,9 @@ const CollateralPanel: FC = () => {
 
     const withdrawErrorText = useMemo(() =>
         collateralAmount <= 0 ?
-            "Enter the amount." :
+            "Enter the INJ amount." :
             selectedCollateral.amount < collateralAmount ?
-                "Insufficient balance." :
+                "Insufficient in trove INJ balance." :
                 undefined,
         [collateralAmount, selectedCollateral]
     )
@@ -87,7 +87,7 @@ const CollateralPanel: FC = () => {
 
     const depositErrorText = useMemo(() =>
         collateralAmount <= 0 ?
-            "Enter the amount." :
+            "Enter the INJ amount." :
             Number(
                 convertAmount(
                     balanceByDenom[selectedAsset.denom]?.amount ?? 0,

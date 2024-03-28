@@ -71,7 +71,7 @@ const CreateTrovePanel: FC = () => {
             "Fill the both amounts."
             :
             openTroveAmount > convertAmount(balanceByDenom[selectedAsset!.denom]?.amount ?? 0, selectedAsset!.decimal) ?
-                "Insufficient balance."
+                "Insufficient INJ balance."
                 :
                 collacteralRatio < 1.15 ?
                     "Collateral ratio should be at least 115%."
@@ -80,7 +80,7 @@ const CreateTrovePanel: FC = () => {
                         `Collateral ratio should be at least ${selectedMinCollateral}.`
                         :
                             borrowAmount <= 100 ?
-                            "aUSD amount should be at least 100"
+                            "You should borrow minimum 100 aUSD."
                             :
                         undefined,
         [
