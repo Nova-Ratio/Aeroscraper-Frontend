@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
             point_number: point+ calc
           });
           point= point+ calc;
-          message = "Updated user point";
+          message = "Updated user point successfully";
         }else {
           //24 saat içinde daha önce güncellenmiş 
           message = "User point is already updated in the last 24 hours";
