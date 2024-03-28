@@ -31,20 +31,20 @@ export async function GET(req: NextRequest) {
       .collection("users")
       .authWithPassword(username, password);
 
-    const user = await pb.collection("points").getFirstListItem(
+    const user:any = await pb.collection("points").getFirstListItem(
       `address = '${address}'`
-    ).then((res) => res?.data).catch((err) => false);
+    ).then((res) => res).catch((err) => false);
     let troveRes = await getTrove(address);
     let stakeRes = await getStake(address);
     let calc =
         (convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 80 +
         convertAmount(stakeRes?.amount ?? 0, 18));
     if (user) {
-      let point = user.point_number;
+      let point = user?.point_number;
       let message = "";
       
         if ( new Date(user?.updated).getTime() < new Date().getTime() - 1000 * 60 * 60 * 24) {
-          const updatedUser = await pb.collection("points").update(user.id, {
+          const updatedUser = await pb.collection("points").update(user?.id, {
             point_number: point+ calc
           });
           point= point+ calc;
