@@ -19,8 +19,8 @@ interface ModalProps {
 
 const SIZE_VARIANT = {
   'sm': {
-    width: 'w-full md:w-[65%]',
-    height: 'h-[65%]',
+    width: 'w-full md:w-[55vw]',
+    height: 'h-[65vh] md:h-[45vh]',
   },
   'md': {
     width: 'w-full md:w-[65%]',

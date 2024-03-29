@@ -42,9 +42,13 @@ export async function GET(req: NextRequest) {
     .NEXT_PUBLIC_POCKETBASE_CHECKER_PASSWORD as string;
   let message = "";
   let calc = 0;
+  let collateralamount = 0;
+  let stakeamount = 0;
+  let updated = false;
+  let point = 0;
+  const ref = req.nextUrl.searchParams.get("ref") as string;
+  const address = req.nextUrl.searchParams.get("id") as string;
   try {
-    const address = req.nextUrl.searchParams.get("id") as string;
-
     const login = await pb
       .collection("users")
       .authWithPassword(username, password);
@@ -54,27 +58,68 @@ export async function GET(req: NextRequest) {
       .getFirstListItem(`address = '${address}'`)
       .then((res) => res)
       .catch((err) => false);
+
+    const leaderBoard: any = await pb
+      .collection("leaderboard")
+      .getFirstListItem(`address = '${address}'`)
+      .then((res) => true)
+      .catch((err) => false);
+    if (!leaderBoard) {
+      await pb
+        .collection("leaderboard")
+        .create({
+          address: address,
+          xp: 0,
+        })
+        .then((res) => res)
+        .catch((err) => false);
+    }
     message = "get User";
     let troveRes = await getTrove(address);
     let stakeRes = await getStake(address);
     message = "get Trove and Stake";
     if (troveRes?.collateral_amounts && stakeRes?.amount) {
-      calc =
-        convertAmount(troveRes?.collateral_amounts[0]?.amount ?? 0, 18) * 80 +
-        convertAmount(stakeRes?.amount ?? 0, 18);
+      collateralamount = convertAmount(
+        troveRes?.collateral_amounts[0]?.amount ?? 0,
+        18
+      );
+      stakeamount = convertAmount(stakeRes?.amount ?? 0, 18);
+      calc = collateralamount * 80 + stakeamount * 1;
+      updated = true;
     }
     message = "Calc";
     if (user) {
-      let point = user?.point_number;
+      point = user?.point_number || 0;
       message = "User point";
       if (
         new Date(user?.updated).getTime() <
         new Date().getTime() - 1000 * 60 * 60 * 24
       ) {
-        const updatedUser = await pb.collection("points").update(user?.id, {
-          point_number: point + calc,
-        });
-        point = point + calc;
+        if (user?.first_trove) {
+          point = point + calc;
+          const updatedUser = await pb.collection("points").update(user?.id, {
+            point_number: point,
+            collateralamount: collateralamount * 80 + user?.collateralamount,
+            stakeamount: stakeamount * 1 + user?.stakeamount,
+          });
+        } else {
+          let firt_trove = calc > 0;
+          point = point + calc + (user.referralCode && firt_trove ? 100 : 0);
+          const updatedUser = await pb.collection("points").update(user?.id, {
+            point_number: point,
+            collateralamount: collateralamount * 80 + user?.collateralamount,
+            stakeamount: stakeamount * 1 + user?.stakeamount,
+            first_trove: firt_trove,
+          });
+          if (user.referralCode) {
+            const updateref = await pb
+              .collection("points")
+              .update(user.referralCode, {
+                point_number: user?.point_number + 100,
+              });
+          }
+        }
+        updated = true;
         message = "Updated user point successfully";
       } else {
         //24 saat içinde daha önce güncellenmiş
@@ -86,11 +131,13 @@ export async function GET(req: NextRequest) {
           id: user?.id,
           address: user?.address,
           point: point,
+          ref: ref,
         },
         message: message,
         trove: troveRes,
         stake: stakeRes,
         calc: calc,
+        updated: updated,
         /* calcString: ` (${convertAmount(
           troveRes?.collateral_amounts[0]?.amount ?? 0,
           18
@@ -100,19 +147,31 @@ export async function GET(req: NextRequest) {
       message = "Create User point";
       let create = await pb.collection("points").create({
         address: address,
-        point_number: Number(calc),
+        point_number: ref && Number(calc),
+        collateralamount: collateralamount * 80,
+        stakeamount: stakeamount * 1,
+        referralCode: ref,
       });
+      if (ref) {
+        let get = await pb.collection("points").getOne(ref);
+        let update = await pb.collection("points").update(ref, {
+          referrals: [...get.referrals, create.id],
+        });
+      }
+      updated = true;
       return NextResponse.json({
         /* login: login, */
         user: {
           id: create.id,
           address: create.address,
           point: create.point_number,
+          ref: ref,
         },
         message: "Created user point successfully",
         trove: troveRes,
         stake: stakeRes,
         calc: calc,
+        updated: updated,
         /* calcString: ` (${convertAmount(
           troveRes?.collateral_amounts[0]?.amount ?? 0,
           18
@@ -125,8 +184,9 @@ export async function GET(req: NextRequest) {
       msg: "There was a problem",
       error: error,
       info: {
-        username: username,
-        password: password,
+        ref: ref,
+        /* username: username,
+        password: password, */
       },
       message: message,
     });

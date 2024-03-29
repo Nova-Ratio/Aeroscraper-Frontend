@@ -14,16 +14,24 @@ import Hackathons from "@/components/landing/hackathons";
 import Partners from "@/components/landing/partners";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-
+  const search = useSearchParams();
+  const ref = search.get("ref");
+  console.log(ref);
+  
   useEffect(() => {
     router.prefetch("/app/dashboard");
   }, [router]);
 
+  useEffect(() => {
+    if (ref) {
+      localStorage.setItem("referralCode", ref);
+    }
+  }, [ref]);
   return (
     <>
       <div>
