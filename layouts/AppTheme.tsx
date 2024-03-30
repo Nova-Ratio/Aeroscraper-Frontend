@@ -112,7 +112,7 @@ const AppTheme = () => {
         .collection("points")
         .getFirstListItem(`address = '${address}'`);
       setUserId(res?.id || "");
-      setExpTime(new Date(res?.updated).getTime() + 86400000);
+      setExpTime(res?.expTime || 0);
     } catch (error) {
       console.log("error", error);
       setExpTime(0);
@@ -124,7 +124,7 @@ const AppTheme = () => {
   async function getCheckPoint(address: string) {
     try {
       setProcessLoading(true);
-      const res = await checkPoint(address);
+      const res:any = await checkPoint(address);
       console.log("res", res);
       if (res?.updated) {
         addNotification({

@@ -48,7 +48,7 @@ const ReferralModal: FC<Props> = (props: Props) => {
     setIsClipped(null);
     props.onClose();
   };
-  const ref_url = `https://inj-dev.aeroscraper-frontend.pages.dev?ref=${props.userId}`;
+  const ref_url = `${process.env.NEXT_PUBLIC_WEBSITE_DOMAIN}?ref=${props.userId}`;
   return (
     <Modal
       title="Profile"

@@ -46,6 +46,10 @@ interface Account {
 }
 
 interface ZealyUserInformation {
+  total?: number;
+  trove?: number;
+  stability?: number;
+  referral?: number,
   xp: number;
   rank: number;
   invites: number;
@@ -167,7 +171,11 @@ const LeaderboardTab = () => {
 
       setUserInformation({
         ...data,
-        xp: res?.xp || data?.xp,
+        total: res?.total || 0,
+        xp: res?.xp || data?.xp || 0,
+        trove: res?.trove || 0,
+        stability: res?.stability || 0,
+        referral: res?.referralPoint || 0,
       });
       setInformationLoading(false);
 
@@ -223,7 +231,7 @@ const LeaderboardTab = () => {
                         textColor="text-white"
                         weight="font-semibold"
                       >
-                        {userInformation?.xp ?? "-"}
+                        {userInformation?.total?.toFixed(0) ?? "-"}
                       </Text>
                       <Text
                         size="sm"
@@ -243,19 +251,19 @@ const LeaderboardTab = () => {
                   >
                     <div className="flex justify-between">
                       <Text size="sm" textColor="text-white" weight="font-medium">Trove Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.trove?.toFixed(0)}</Text>
                     </div>
                     <div className="flex justify-between">
                       <Text size="sm" textColor="text-white" weight="font-medium">Stability Pool Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.stability?.toFixed(0)}</Text>
                     </div>
                     <div className="flex justify-between">
                       <Text size="sm" textColor="text-white" weight="font-medium">Referral Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.referral?.toFixed(0)}</Text>
                     </div>
                     <div className="flex justify-between">
                       <Text size="sm" textColor="text-white" weight="font-medium">Zealy Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp?.toFixed(0)}</Text>
                     </div>
 
                   </BorderedContainer>
