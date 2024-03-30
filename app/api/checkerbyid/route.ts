@@ -3,7 +3,7 @@ import { convertAmount } from "@/utils/contractUtils";
 //@ts-ignore
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { NextRequest, NextResponse } from "next/server";
-export const runtime = "edge";
+//export const runtime = "edge";
 export async function GET(req: NextRequest) {
   const RPC_URL = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_RPC as string;
   const client = await CosmWasmClient.connect(RPC_URL);
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
   let updated = false;
   let point = 0;
   const ref = req.nextUrl.searchParams.get("ref") as string;
-  const address = req.nextUrl.searchParams.get("id") as string;
+  const address = req.nextUrl.searchParams.get("address") as string;
   try {
     const login = await pb
       .collection("users")
