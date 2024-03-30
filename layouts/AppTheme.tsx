@@ -271,14 +271,14 @@ const AppTheme = () => {
                     onClick={() => {
                       address && getCheckPoint(address);
                     }}
-                    className="rounded-lg w-[170px] md:w-[170px] ml-2 text-center h-[44px] md:h-[70px] "
+                    className="rounded-lg w-[128px] md:w-[128px] ml-2 text-center h-[52px]"
                   >
                     {getTime < expTime ? (
                       <div className="w-full flex flex-col items-center justify-start">
                         <Text size="base">Daily Check-In</Text>
                         <Text
                           size="sm"
-                          className="text-white main-gradient w-fit px-6 pt-1 rounded-full"
+                          className="text-white main-gradient w-fit px-6 mb-1 rounded-full"
                         >
                           {` ${new Date(expTime - getTime)
                             .toISOString()
@@ -290,16 +290,14 @@ const AppTheme = () => {
                     )}
                   </OutlinedButton>
                 </div>
-                <div className="md:flex hidden mr-3 w-full">
-                  <button
-                    onClick={() => {
-                      setRefModal(true);
-                    }}
-                    className=" text-base font-semibold text-gradient w-full h-10"
-                  >
-                    Create Referral
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    setRefModal(true);
+                  }}
+                  className="text-base font-semibold text-gradient w-full h-10"
+                >
+                  Create Referral
+                </button>
                 <div className="md:flex hidden mr-3">
                   <NotificationDropdown />
                 </div>
@@ -362,11 +360,11 @@ const AppTheme = () => {
                   baseCoinBalance={
                     !isNil(baseCoin)
                       ? Number(
-                          convertAmount(
-                            balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                            baseCoin.decimal
-                          )
+                        convertAmount(
+                          balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                          baseCoin.decimal
                         )
+                      )
                       : 0
                   }
                   basePrice={0}
@@ -381,11 +379,11 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                  convertAmount(
-                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    baseCoin?.decimal
-                  )
+                convertAmount(
+                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                  baseCoin?.decimal
                 )
+              )
               : 0,
           }}
           basePrice={basePrice}

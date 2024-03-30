@@ -72,8 +72,7 @@ const LeaderboardTab = () => {
   const { address } = useChainAdapter();
 
   const [leaderboard, setLeaderboard] = useState<ZealyUser[]>([]);
-  const [userInformation, setUserInformation] =
-    useState<ZealyUserInformation | null>(null);
+  const [userInformation, setUserInformation] =useState<ZealyUserInformation | null>(null);
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   const [informationLoading, setInformationLoading] = useState(false);
@@ -174,6 +173,9 @@ const LeaderboardTab = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  console.log(userInformation);
+  
 
   return (
     <div ref={ref}>

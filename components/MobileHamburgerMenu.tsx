@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { Dispatch, FC, useRef, useState } from 'react'
+import React, { Dispatch, FC, useEffect, useRef, useState } from 'react'
 import Text from "@/components/Texts/Text";
 import { ExitIcon, HamburgerIcon } from './Icons/Icons';
 import { convertAmount } from '@/utils/contractUtils';
@@ -12,6 +12,11 @@ import NotificationDropdown from '@/app/app/dashboard/_components/NotificationDr
 import { useProfile } from '@/contexts/ProfileProvider';
 import { useTabs } from '@/contexts/TabsProvider';
 import useOutsideHandler from '@/hooks/useOutsideHandler';
+import ReferralModal from './AccountModal/RefModal';
+import pb from '@/lib/pocketbase';
+import OutlinedButton from './Buttons/OutlinedButton';
+import { checkPoint } from '@/hooks/usePointer';
+import { useNotification } from '@/contexts/NotificationProvider';
 
 interface Props {
     setAccountModal: Dispatch<boolean>,
@@ -19,6 +24,8 @@ interface Props {
 }
 
 const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) => {
+
+    const { addNotification, processLoading, setProcessLoading } = useNotification();
 
     const {
         isWalletConnected,
@@ -39,12 +46,66 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
 
     const ref = useRef(null);
 
+    const [refModal, setRefModal] = useState<boolean>(false);
+
+    const [userId, setUserId] = useState<string>("");
+
+    const [expTime, setExpTime] = useState<number>(0);
+
+    const [getTime, setGetTime] = useState<number>(new Date().getTime());
+
+    useEffect(() => {
+        if (showMenu) {
+            address && getPointsInfo(address);
+        }
+    }, [showMenu, address]);
+
     const handleShowMenu = () => {
         setShowMenu(true);
     }
 
     const handleCloseMenu = () => {
         setShowMenu(false);
+    }
+
+    const getCheckPoint = async (address: string) => {
+        try {
+            setProcessLoading(true);
+            const res = await checkPoint(address);
+            console.log("res", res);
+            if (res?.updated) {
+                addNotification({
+                    status: "check",
+                    directLink: "",
+                    message: "Your point updated successfully",
+                });
+                getPointsInfo(address);
+            } else {
+                addNotification({
+                    status: "checkError",
+                    directLink: "",
+                    message: "Failed to update your point",
+                });
+            }
+        } catch (error) {
+            console.log("error", error);
+        } finally {
+            setProcessLoading(false);
+        }
+    }
+
+
+    const getPointsInfo = async (address: string) => {
+        try {
+            const res = await pb
+                .collection("points")
+                .getFirstListItem(`address = '${address}'`);
+            setUserId(res?.id || "");
+            setExpTime(new Date(res?.updated).getTime() + 86400000);
+        } catch (error) {
+            console.log("error", error);
+            setExpTime(0);
+        }
     }
 
     useOutsideHandler(ref, handleCloseMenu);
@@ -67,7 +128,7 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
                         <button className='pt-2' onClick={handleCloseMenu}>
                             <HamburgerIcon />
                         </button>
-                        <ul className='space-y-4 my-6'>
+                        <ul className='space-y-4 my-6 border-b border-red-500/90 pb-8 -mx-6 px-6'>
                             {tabList.map((tab) => (
                                 <motion.li
                                     key={tab}
@@ -84,6 +145,40 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
                         </ul>
                         {isWalletConnected && !isNil(baseCoin) ? (
                             <>
+                                <OutlinedButton
+                                    disabledText="Already checked in today"
+                                    disabled={getTime < expTime}
+                                    loading={processLoading}
+                                    onClick={() => {
+                                        address && getCheckPoint(address);
+                                    }}
+                                    containerClassName='w-full mb-2 px-8'
+                                    className="rounded-lg text-center h-16 flex"
+                                >
+                                    {getTime < expTime ? (
+                                        <div className="flex flex-col mx-4 items-center justify-start">
+                                            <Text size="base">Daily Check-In</Text>
+                                            <Text
+                                                size="sm"
+                                                className="text-white main-gradient w-fit px-6 py-1 mt-1 mb-1 rounded-md"
+                                            >
+                                                {` ${new Date(expTime - getTime)
+                                                    .toISOString()
+                                                    .substr(11, 8)}`}
+                                            </Text>
+                                        </div>
+                                    ) : (
+                                        <Text size="base">Daily Check-In</Text>
+                                    )}
+                                </OutlinedButton>
+                                <button
+                                    onClick={() => {
+                                        setRefModal(true);
+                                    }}
+                                    className=" text-base font-semibold text-gradient w-full h-10"
+                                >
+                                    Create Referral
+                                </button>
                                 <button
                                     onClick={() => {
                                         setAccountModal(true);
@@ -150,6 +245,12 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
                     </motion.div>
                 }
             </AnimatePresence>
+
+            <ReferralModal
+                showModal={refModal}
+                userId={userId}
+                onClose={() => setRefModal(false)}
+            />
         </div>
     )
 }
