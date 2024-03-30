@@ -8,6 +8,9 @@ import { NumericFormat } from "react-number-format";
 import SkeletonLoading from "@/components/Table/SkeletonLoading";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import pb from "@/lib/pocketbase";
+import Dropdown from "@/components/Dropdown/Dropdown";
+import BorderedContainer from "@/components/Containers/BorderedContainer";
+import { ChevronUpIcon } from "@/components/Icons/Icons";
 
 interface ZealyResponseModel {
   items: ZealyUser[];
@@ -72,7 +75,7 @@ const LeaderboardTab = () => {
   const { address } = useChainAdapter();
 
   const [leaderboard, setLeaderboard] = useState<ZealyUser[]>([]);
-  const [userInformation, setUserInformation] =useState<ZealyUserInformation | null>(null);
+  const [userInformation, setUserInformation] = useState<ZealyUserInformation | null>(null);
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   const [informationLoading, setInformationLoading] = useState(false);
@@ -150,10 +153,10 @@ const LeaderboardTab = () => {
       const data = result.status !== 500 && result
         ? result
         : {
-            rank: "N/A  ",
-            xp: 0,
-            level: 1,
-          };
+          rank: "N/A  ",
+          xp: 0,
+          level: 1,
+        };
       //console.log("api.zealy.io", data);
       const res: any = await pb
         .collection("total_points")
@@ -175,7 +178,7 @@ const LeaderboardTab = () => {
   };
 
   console.log(userInformation);
-  
+
 
   return (
     <div ref={ref}>
@@ -212,23 +215,52 @@ const LeaderboardTab = () => {
                     </Text>
                   </div>
                 )}
-                <div className="flex items-end">
-                  <Text
-                    size="2xl"
-                    textColor="text-white"
-                    weight="font-semibold"
+                <Dropdown
+                  toggleButton={
+                    <div className="flex items-end">
+                      <Text
+                        size="2xl"
+                        textColor="text-white"
+                        weight="font-semibold"
+                      >
+                        {userInformation?.xp ?? "-"}
+                      </Text>
+                      <Text
+                        size="sm"
+                        weight="font-regular"
+                        textColor="text-gray-400"
+                        className="ml-2 mb-1"
+                      >
+                        points
+                      </Text>
+                      <ChevronUpIcon className="w-5 h-5 mb-1 ml-1 text-white rotate-180"/>
+                    </div>
+                  }
+                >
+                  <BorderedContainer
+                    containerClassName="-translate-x-[60px] w-[250px] h-36 md:h-[160px] notification-dropdown-gradient p-[1.5px]"
+                    className="relative p-4 overflow-auto space-y-3"
                   >
-                    {userInformation?.xp ?? "-"}
-                  </Text>
-                  <Text
-                    size="sm"
-                    weight="font-regular"
-                    textColor="text-gray-400"
-                    className="ml-2 mb-1"
-                  >
-                    points
-                  </Text>
-                </div>
+                    <div className="flex justify-between">
+                      <Text size="sm" textColor="text-white" weight="font-medium">Trove Points:</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                    </div>
+                    <div className="flex justify-between">
+                      <Text size="sm" textColor="text-white" weight="font-medium">Stability Pool Points:</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                    </div>
+                    <div className="flex justify-between">
+                      <Text size="sm" textColor="text-white" weight="font-medium">Referral Points:</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                    </div>
+                    <div className="flex justify-between">
+                      <Text size="sm" textColor="text-white" weight="font-medium">Zealy Points:</Text>
+                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp}</Text>
+                    </div>
+
+                  </BorderedContainer>
+                </Dropdown>
+
               </div>
             </div>
           </div>
