@@ -1,6 +1,6 @@
 import useOutsideHandler from "@/hooks/useOutsideHandler";
 import { motion } from "framer-motion";
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import { NumericFormat } from "react-number-format";
 import { CounterUp } from "../CounterUp";
@@ -22,11 +22,15 @@ import { useProfile } from "@/contexts/ProfileProvider";
 import { WalletType } from "@/enums/WalletType";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import OutlinedButton from "../Buttons/OutlinedButton";
+import { checkPoint } from "@/hooks/usePointer";
 
 interface Props {
   showModal: boolean;
   userId: string;
   onClose: () => void;
+  refresh: Function;
+  loading: boolean;
+  setLoading: Function;
 }
 
 const ReferralModal: FC<Props> = (props: Props) => {
@@ -49,6 +53,24 @@ const ReferralModal: FC<Props> = (props: Props) => {
     props.onClose();
   };
   const ref_url = `${process.env.NEXT_PUBLIC_WEBSITE_DOMAIN}?ref=${props.userId}`;
+  async function createUser() {
+    try {
+      if (!address || props.userId) {
+        return;
+      }
+      props.setLoading(true);
+      let res = await checkPoint(address);
+      console.log(res);
+      props.refresh();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    if (props.showModal) {
+      createUser();
+    }
+  }, [props.showModal]);
   return (
     <Modal
       title="Profile"
@@ -60,16 +82,23 @@ const ReferralModal: FC<Props> = (props: Props) => {
       <div className="flex  flex-col h-full w-full  main-gradient p-0.5">
         <div className="bg-licorice w-full h-full rounded-3xl text-white p-4 md:p-8 flex flex-col justify-center gap-6">
           <Text size="2xl">Create Referral </Text>
-          <Text size="base" className="text-gray-200">
-            Anyone who opens a trove using this referral link will get 100 points and so will you.
+          <Text size="base" className="text-gray-300">
+            Anyone who opens a trove using this referral link will get 100
+            points and so will you.
           </Text>
           <div className="w-full bg-cetacean-dark-blue border backdrop-blur-[37px] border-blue-700/40 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-4 md:py-4 flex flex-col gap-4">
-            <div className="flex items-end justify-between">
-              <div>
-                <Text size="sm" weight="mb-2">Referral Link</Text>
-                <div className="flex items-center gap-4">
-                  <div className="bg-[#111130] py-3 px-3 w-fit rounded-md">
-                    <Text size="sm"> {ref_url}</Text>
+            <div className="flex items-end justify-between w-full">
+              <div className="w-full flex-col flex" >
+                <Text size="sm" weight="mb-2">
+                  Referral Link
+                </Text>
+                <div className="flex items-center gap-4 w-full">
+                  <div className="bg-[#111130] py-3 px-4  rounded-md w-full">
+                    {props.loading ? (
+                      <Text size="sm">Creating...</Text>
+                    ) : (
+                      <Text size="sm">{ref_url}</Text>
+                    )}
                   </div>
                   {isClipped === "ref" ? (
                     <Text size="xs" textColor="text-[#37D489]">
@@ -77,7 +106,7 @@ const ReferralModal: FC<Props> = (props: Props) => {
                     </Text>
                   ) : (
                     <button
-                      className="w-6 h-6 active:scale-90  min-w-[50px]"
+                      className="w-6 h-6 active:scale-90 shrink-0  min-w-[50px]"
                       onClick={() => {
                         setIsClipped("ref");
                         navigator.clipboard.writeText(ref_url ?? "");

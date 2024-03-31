@@ -106,8 +106,10 @@ const AppTheme = () => {
     return () => clearInterval(interval);
   }, []);
   const [userId, setUserId] = useState<string>("");
-  async function getPointsInfo(address: string) {
+  const [loading, setLoading] = useState<boolean>(false);
+  async function getPointsInfo() {
     try {
+      setLoading(true);
       const res = await pb
         .collection("points")
         .getFirstListItem(`address = '${address}'`);
@@ -116,15 +118,18 @@ const AppTheme = () => {
     } catch (error) {
       console.log("error", error);
       setExpTime(0);
+      setUserId("");
+    } finally {
+      setLoading(false);
     }
   }
   useEffect(() => {
-    address && getPointsInfo(address);
+    address && getPointsInfo();
   }, [address]);
   async function getCheckPoint(address: string) {
     try {
       setProcessLoading(true);
-      const res:any = await checkPoint(address);
+      const res: any = await checkPoint(address);
       console.log("res", res);
       if (res?.updated) {
         addNotification({
@@ -132,7 +137,7 @@ const AppTheme = () => {
           directLink: "",
           message: "Your point updated successfully",
         });
-        getPointsInfo(address);
+        getPointsInfo();
       } else {
         addNotification({
           status: "checkError",
@@ -360,11 +365,11 @@ const AppTheme = () => {
                   baseCoinBalance={
                     !isNil(baseCoin)
                       ? Number(
-                        convertAmount(
-                          balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                          baseCoin.decimal
+                          convertAmount(
+                            balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                            baseCoin.decimal
+                          )
                         )
-                      )
                       : 0
                   }
                   basePrice={0}
@@ -379,11 +384,11 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                convertAmount(
-                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                  baseCoin?.decimal
+                  convertAmount(
+                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                    baseCoin?.decimal
+                  )
                 )
-              )
               : 0,
           }}
           basePrice={basePrice}
@@ -396,6 +401,9 @@ const AppTheme = () => {
           showModal={refModal}
           userId={userId}
           onClose={() => setRefModal(false)}
+          refresh={getPointsInfo}
+          loading={loading}
+          setLoading={setLoading}
         />
       </header>
     </>

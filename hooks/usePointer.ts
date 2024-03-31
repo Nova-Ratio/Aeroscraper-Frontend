@@ -1,17 +1,22 @@
 export const checkPoint = async (address: string) => {
   try {
     const local = localStorage.getItem("referralCode");
-   /*  let res = await fetch("/api/checkerbyid?address=" + address+"&ref="+"yif8dd1eprvs25x");
+    console.log("referralCode", local);
+
+    let res = await fetch(
+      process.env.NEXT_PUBLIC_WEBSITE_REF_API +
+        "/checkbyaddress?address=" +
+        address +
+        "&ref=" +
+        local
+    );
     console.log(res);
     if (res.ok) {
       return res.json();
-    } */
-    return {
-      updated: true,
-    };
+    }
+    return res;
   } catch (error) {
     console.error(error);
     return false;
   }
 };
-
