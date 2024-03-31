@@ -4,10 +4,8 @@ import GradientButton from "@/components/Buttons/GradientButton";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import CookieAccept from "@/components/CookieAccept/CookieAccept";
 import Faq from "@/components/FAQ/Faq";
-import {
-  BackgroundWave,
-  LogoSecondary,
-} from "@/components/Icons/Icons";
+import { BackgroundWave, LogoSecondary } from "@/components/Icons/Icons";
+import Loading from "@/components/Loading/Loading";
 import Text from "@/components/Texts/Text";
 import Footer from "@/components/landing/footer";
 import Hackathons from "@/components/landing/hackathons";
@@ -15,25 +13,25 @@ import Partners from "@/components/landing/partners";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   const search = useSearchParams();
-  const ref = search.get("ref");
-  console.log(ref);
-  
+
   useEffect(() => {
     router.prefetch("/app/dashboard");
   }, [router]);
 
   useEffect(() => {
+    const ref = search.get("ref");
+    console.log(ref);
     if (ref) {
       localStorage.setItem("referralCode", ref);
     }
-  }, [ref]);
+  }, [search]);
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <div>
         <main className="container w-full px-2 md:px-[64px] mx-auto ">
           <div className="flex md:flex-row flex-col md:justify-between w-full gap-6">
@@ -72,7 +70,10 @@ export default function Home() {
                 </h3>
               </div>
               <p>
-                We are thrilled to announce the successful completion of the Aeroscraper audit! At Aeroscraper, ensuring the utmost security and reliability of our platform is paramount. This audit marks a significant step forward in our commitment to these principles.
+                We are thrilled to announce the successful completion of the
+                Aeroscraper audit! At Aeroscraper, ensuring the utmost security
+                and reliability of our platform is paramount. This audit marks a
+                significant step forward in our commitment to these principles.
               </p>
               <p className="text-white/60 text-xs">
                 You can visit the link to access the audit results:
@@ -100,7 +101,7 @@ export default function Home() {
         <Footer />
       </div>
       <CookieAccept />
-    </>
+    </Suspense>
   );
 }
 
@@ -115,9 +116,11 @@ function LaunchButtons() {
       <Link
         href={"https://aeroscraper.gitbook.io/aeroscraper/"}
         target="_blank"
-
       >
-        <OutlinedButton containerClassName="w-[170px] lg:w-[227px]" className="h-[41px] rounded-lg self-end group">
+        <OutlinedButton
+          containerClassName="w-[170px] lg:w-[227px]"
+          className="h-[41px] rounded-lg self-end group"
+        >
           <Text size="base">Learn More</Text>
         </OutlinedButton>
       </Link>
