@@ -68,11 +68,6 @@ export const getAppContract = (
       ethereumChainId: EthereumChainId.Mainnet,
       rpcUrl: rpcUrl,
     },
-    //TODO: burası sorunlu kütüphanede yeri değişmiş sanırım 
-    /* endpoints: {
-      rest: injectivePrivRest,
-      rpc: injectivePrivRpc,
-    }, */
     wallet: injSdkWallet,
   });
 
@@ -81,10 +76,15 @@ export const getAppContract = (
   const msgBroadcastClient = new MsgBroadcaster({
     walletStrategy,
     network: Network.Mainnet,
+    endpoints: {
+      indexer: "",
+      rest: injectivePrivRest,
+      rpc: injectivePrivRpc,
+      grpc: injectivePrivGrpc
+    },
     networkEndpoints: {
       indexerApi: "",
       sentryHttpApi: injectivePrivRest, //rest: injectivePrivRest,
-      //rpc: injectivePrivRpc,
       sentryGrpcApi: injectivePrivGrpc, //grpc: injectivePrivGrpc
     },
   });
