@@ -166,10 +166,10 @@ const LeaderboardTab = () => {
         result.status !== 500 && result
           ? {
               ...result,
-              rank: rank || result.rank || "N/A ",
+              rank: (rank !== -1 ? rank : false) || result.rank || "N/A ",
             }
           : {
-              rank: rank || "N/A  ",
+              rank: (rank !== -1 ? rank : false) || "N/A  ",
               xp: 0,
               level: 1,
             };

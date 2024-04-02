@@ -126,6 +126,7 @@ const AppTheme = () => {
   useEffect(() => {
     address && getPointsInfo();
   }, [address]);
+  
   async function getCheckPoint(address: string) {
     try {
       setProcessLoading(true);
