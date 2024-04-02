@@ -43,11 +43,11 @@ const RedeemTab: FC<Props> = ({
   const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const contract = useAppContract();
-
+  console.log("basePrice", redeemAmount / basePrice)
   const changeRedeemAmount = useCallback(
     (values: NumberFormatValues) => {
       setRedeemAmount(Number(values.value));
-      setInjAmount(getValueByRatio(values.value, pageData.baseMinRedeemAmount));
+      setInjAmount(Number(values.value) / basePrice);
     },
     [pageData]
   );
