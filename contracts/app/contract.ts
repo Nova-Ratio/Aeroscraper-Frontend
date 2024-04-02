@@ -9,21 +9,9 @@ import {
 } from "./types";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { BaseCoin, CollateralAsset } from "@/types/types";
-import {
-  MsgExecuteContractCompat,
-  ChainGrpcWasmApi,
-  toBase64,
-  fromBase64,
-} from "@injectivelabs/sdk-ts";
-import { Network } from "@injectivelabs/networks";
-import { EthereumChainId, ChainId } from "@injectivelabs/ts-types";
+
 import { isNil } from "lodash";
-import {
-  MsgBroadcaster,
-  Wallet,
-  WalletStrategy,
-} from "@injectivelabs/wallet-ts";
-import { WalletType } from "@/enums/WalletType";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { ChainName } from "@/enums/Chain";
 import { Chain } from "@chain-registry/types";
@@ -32,7 +20,7 @@ import {
   getContractAddressesByChain,
   priceIdByChainName,
 } from "@/constants/chainConstants";
-import { InjSdkWalletByCosmosWallet } from "@/constants/walletConstants";
+
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
 
@@ -42,51 +30,17 @@ const injectivePrivGrpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_GRPC as string;
 const injectivePrivRest = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_REST as string;
 
 export const getAppContract = (
-  chain: Chain,
+  client: SigningCosmWasmClient,
   baseCoin: BaseCoin,
   chainName: ChainName,
-  walletType?: WalletType,
   basePrice: number = 0
 ) => {
   const defaultAsset = DefaultAssetByChainName[chainName];
 
-  const { contractAddress, oraclecontractAddress, ausdContractAddress } =
-    getContractAddressesByChain(chainName);
+  const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
+
   const { requestICR, requestRedeemICR } = graphql({
-    selectedChainName: ChainName.INJECTIVE,
-  });
-
-  const rpcUrl = injectivePrivRpc;
-
-  const injSdkWallet = walletType
-    ? InjSdkWalletByCosmosWallet[walletType as WalletType]
-    : Wallet.Keplr;
-
-  const walletStrategy = new WalletStrategy({
-    chainId: chain.chain_id as ChainId,
-    ethereumOptions: {
-      ethereumChainId: EthereumChainId.Mainnet,
-      rpcUrl: rpcUrl,
-    },
-    wallet: injSdkWallet,
-  });
-
-  const chainGrpcWasmApi = new ChainGrpcWasmApi(injectivePrivGrpc);
-
-  const msgBroadcastClient = new MsgBroadcaster({
-    walletStrategy,
-    network: Network.Mainnet,
-    endpoints: {
-      indexer: "",
-      rest: injectivePrivRest,
-      rpc: injectivePrivRpc,
-      grpc: injectivePrivGrpc
-    },
-    networkEndpoints: {
-      indexerApi: "",
-      sentryHttpApi: injectivePrivRest, //rest: injectivePrivRest,
-      sentryGrpcApi: injectivePrivGrpc, //grpc: injectivePrivGrpc
-    },
+    selectedChainName: ChainName.ARCHWAY,
   });
 
   //GET QUERIES
@@ -172,93 +126,49 @@ export const getAppContract = (
   const getTotalCollateralAmounts = async (): Promise<
     TotalCollateralModel[] | undefined
   > => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ total_collateral_amount: {} })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { total_collateral_amounts: {} });
   };
 
   const getTotalDebtAmount = async (): Promise<string | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ total_debt_amount: {} })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { total_debt_amount: {} });
   };
 
   const getTrove = async (
     user_addr: string
   ): Promise<GetTroveResponseV1 | GetTroveResponseV2 | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ trove: { user_addr } })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { trove: { user_addr } });
   };
 
   const getStake = async (
     user_addr: string
   ): Promise<GetStakeResponse | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ stake: { user_addr } })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { stake: { user_addr } });
   };
 
   const getTotalStake = async (): Promise<string | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ total_stake_amount: {} })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { total_stake_amount: {} });
   };
 
   const getCollateralPrice = async () => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ collateral_price: {} })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { collateral_price: {} });
   };
 
   const getAusdBalance = async (
     address: string
   ): Promise<CW20BalanceResponse | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      ausdContractAddress,
-      toBase64({ balance: { address } })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(ausdContractAddress, { balance: { address } })
   };
 
   const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      ausdContractAddress,
-      toBase64({ token_info: {} })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(ausdContractAddress, { token_info: {} })
   };
 
   const getReward = async (user_addr: string): Promise<string | undefined> => {
-    const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ liquidation_gains: { user_addr } })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data;
+    return await client.queryContractSmart(contractAddress, { liquidation_gains: { user_addr } })
   };
 
   //EXECUTE QUERIES
+
   const openTrove = async (
     senderAddress: string,
     amount: number,
@@ -272,34 +182,20 @@ export const getAppContract = (
       senderAddress
     );
 
-    const msg = MsgExecuteContractCompat.fromJSON({
-      contractAddress: asset.oracleContractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    });
-
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: contractAddress,
-      sender: senderAddress,
-      msg: {
+    return await client.execute(
+      senderAddress,
+      contractAddress,
+      {
         open_trove: {
           loan_amount: getRequestAmount(loanAmount, asset.ausdDecimal),
           prev_node_id,
           next_node_id,
-        },
+        }
       },
-      funds: [coin(getRequestAmount(amount, asset.decimal), asset.denom)],
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Open Trove",
+      [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
+    )
   };
 
   const addCollateral = async (
@@ -314,28 +210,19 @@ export const getAppContract = (
       senderAddress
     );
 
-    const msg = MsgExecuteContractCompat.fromJSON({
-      contractAddress: asset.oracleContractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
+    return await client.execute(
+      senderAddress,
+      contractAddress,
+      {
+        add_collateral: {
+          prev_node_id,
+          next_node_id
+        }
       },
-      funds: [coin("23", asset.denom)],
-    });
-
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: contractAddress,
-      sender: senderAddress,
-      msg: { add_collateral: { prev_node_id, next_node_id } },
-      funds: [coin(getRequestAmount(amount, asset.decimal), asset.denom)],
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Add Collateral",
+      [coin(getRequestAmount(amount, asset.decimal), asset.denom)]
+    )
   };
 
   const removeCollateral = async (
@@ -350,34 +237,20 @@ export const getAppContract = (
       senderAddress
     );
 
-    const msg = MsgExecuteContractCompat.fromJSON({
-      contractAddress: asset.oracleContractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    });
-
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: contractAddress,
-      sender: senderAddress,
-      msg: {
+    return await client.execute(
+      senderAddress,
+      contractAddress,
+      {
         remove_collateral: {
           collateral_denom: asset.denom,
           collateral_amount: getRequestAmount(amount, asset.decimal),
           prev_node_id,
           next_node_id,
-        },
+        }
       },
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Remove Collateral"
+    )
   };
 
   const borrowLoan = async (
@@ -392,33 +265,20 @@ export const getAppContract = (
       senderAddress
     );
 
-    const msg = MsgExecuteContractCompat.fromJSON({
-      contractAddress: asset.oracleContractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    });
-
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: contractAddress,
-      sender: senderAddress,
-      msg: {
+    return await client.execute(
+      senderAddress,
+      contractAddress,
+      {
         borrow_loan: {
-          loan_amount: getRequestAmount(amount, baseCoin.ausdDecimal),
+          loan_amount:
+            getRequestAmount(amount, baseCoin.ausdDecimal),
           prev_node_id,
           next_node_id,
-        },
+        }
       },
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg, msg1],
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Borrow Loan"
+    )
   };
 
   const repayLoan = async (
@@ -455,27 +315,13 @@ export const getAppContract = (
 
     const vaa = await getVAA(asset);
 
-    const msgVAA = MsgExecuteContractCompat.fromJSON({
-      contractAddress: asset.oracleContractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    });
-
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: ausdContractAddress,
-      sender: senderAddress,
+    return await client.execute(
+      senderAddress,
+      ausdContractAddress,
       msg,
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: [msgVAA, msg1],
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Repay Loan"
+    )
   };
 
   const stake = async (senderAddress: string, amount: number) => {
@@ -487,31 +333,23 @@ export const getAppContract = (
       },
     };
 
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: ausdContractAddress,
-      sender: senderAddress,
+    return client.execute(
+      senderAddress,
+      ausdContractAddress,
       msg,
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: msg1,
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Stake"
+    )
   };
 
   const unstake = async (senderAddress: string, amount: number) => {
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: contractAddress,
-      sender: senderAddress,
-      msg: {
-        unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) },
-      },
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: msg1,
-      injectiveAddress: senderAddress,
-    });
+    return await client.execute(
+      senderAddress,
+      contractAddress,
+      { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
+      "auto",
+      "Unstake"
+    )
   };
 
   const processRedeemICR = async (amount: string) => {
@@ -572,27 +410,13 @@ export const getAppContract = (
 
     const vaa = await getVAA(asset);
 
-    const msg0 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: oraclecontractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    });
-
-    const msg1 = MsgExecuteContractCompat.fromJSON({
-      contractAddress: ausdContractAddress,
-      sender: senderAddress,
+    return await client.execute(
+      senderAddress,
+      ausdContractAddress,
       msg,
-    });
-
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg0, msg1],
-      injectiveAddress: senderAddress,
-    });
+      "auto",
+      "Redeem"
+    )
   };
 
   const liquidateTroves = async (
@@ -601,7 +425,7 @@ export const getAppContract = (
   ) => {
     const vaa = await getVAA(asset);
 
-    const msg0 = MsgExecuteContractCompat.fromJSON({
+    const msg0 = {
       contractAddress: oraclecontractAddress,
       sender: senderAddress,
       msg: {
@@ -610,18 +434,30 @@ export const getAppContract = (
         },
       },
       funds: [coin("23", asset.denom)],
-    });
+    };
 
-    const msg1 = MsgExecuteContractCompat.fromJSON({
+    const msg1 = {
       contractAddress,
       sender: senderAddress,
       msg: { liquidate_troves: {} },
-    });
+    };
 
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg0, msg1],
-      injectiveAddress: senderAddress,
-    });
+    return await client.executeMultiple(
+      senderAddress,
+      [
+        {
+          contractAddress: oraclecontractAddress,
+          msg: msg0,
+          funds: [{ amount: "1", denom: "aarch" }],
+        },
+        {
+          contractAddress,
+          msg: msg1
+        }
+      ],
+      "auto",
+      "Liquidate Troves",
+    )
   };
 
   const liquidateTrovesV2 = async (
@@ -631,7 +467,7 @@ export const getAppContract = (
   ) => {
     const vaa = await getVAA(asset);
 
-    const msg0 = MsgExecuteContractCompat.fromJSON({
+    const msg0 = {
       contractAddress: oraclecontractAddress,
       sender: senderAddress,
       msg: {
@@ -640,9 +476,9 @@ export const getAppContract = (
         },
       },
       funds: [coin("23", asset.denom)],
-    });
+    };
 
-    const msg1 = MsgExecuteContractCompat.fromJSON({
+    const msg1 = {
       contractAddress,
       sender: senderAddress,
       msg: {
@@ -650,16 +486,34 @@ export const getAppContract = (
           liquidation_list: [owner],
         },
       },
-    });
+    };
 
-    return await msgBroadcastClient.broadcast({
-      msgs: [msg0, msg1],
-      injectiveAddress: senderAddress,
-    });
+    return await client.executeMultiple(
+      senderAddress,
+      [
+        {
+          contractAddress: oraclecontractAddress,
+          msg: {
+            update_price_feeds: {
+              data: [
+                vaa
+              ]
+            }
+          },
+          funds: [{ amount: "1", denom: "aarch" }],
+        },
+        {
+          contractAddress,
+          msg: { liquidate_troves: {} }
+        }
+      ],
+      "auto",
+      "Liquidate Troves",
+    )
   };
 
   const updateReward = async (senderAddress: string) => {
-    const unstake = MsgExecuteContractCompat.fromJSON({
+    const unstake = {
       contractAddress: contractAddress,
       sender: senderAddress,
       msg: {
@@ -667,7 +521,7 @@ export const getAppContract = (
           amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal),
         },
       },
-    });
+    };
 
     const msg = {
       send: {
@@ -677,29 +531,44 @@ export const getAppContract = (
       },
     };
 
-    const stake = MsgExecuteContractCompat.fromJSON({
+    const stake = {
       contractAddress: ausdContractAddress,
       sender: senderAddress,
       msg,
-    });
+    };
 
-    return await msgBroadcastClient.broadcast({
-      msgs: [unstake, stake],
-      injectiveAddress: senderAddress,
-    });
+    return await client.executeMultiple(
+      senderAddress,
+      [
+        {
+          contractAddress: oraclecontractAddress,
+          msg: unstake,
+          funds: [{ amount: "1", denom: "aarch" }],
+        },
+        {
+          contractAddress,
+          msg: stake
+        }
+      ],
+      "auto",
+      "Liquidate Troves",
+    )
   };
 
   const withdrawLiquidationGains = async (senderAddress: string) => {
-    const msg = MsgExecuteContractCompat.fromJSON({
+    const msg = {
       contractAddress,
       sender: senderAddress,
       msg: { withdraw_liquidation_gains: {} },
-    });
+    }
 
-    return await msgBroadcastClient.broadcast({
-      msgs: msg,
-      injectiveAddress: senderAddress,
-    });
+    return await client.execute(
+      senderAddress,
+      contractAddress,
+      msg,
+      "auto",
+      "Withdraw Liquidation Gains"
+    )
   };
 
   return {

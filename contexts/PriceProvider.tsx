@@ -21,7 +21,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const getInjPrice = useCallback(async () => {
         try {
-            const denom = BaseCoinByChainName[ChainName.INJECTIVE].denom;
+            const denom = BaseCoinByChainName[ChainName.ARCHWAY].denom;
             const connection = new PriceServiceConnection(
                 "https://hermes.pyth.network/",
                 {

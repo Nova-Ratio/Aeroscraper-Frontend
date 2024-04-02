@@ -29,7 +29,7 @@ const CollateralPanel: FC = () => {
 
     // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
     const [selectedAsset] = useState<CollateralAsset>(
-        DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
+        DefaultAssetByChainName[selectedChainName ?? ChainName.ARCHWAY]
     );
 
     const { addNotification, processLoading, setProcessLoading } = useNotification();
@@ -115,7 +115,7 @@ const CollateralPanel: FC = () => {
 
             addNotification({
                 status: "success",
-                directLink: res?.txHash,
+                directLink: res?.transactionHash,
                 message: `${collateralAmount} ${selectedAsset?.shortName} Collateral Added`,
             });
             getPageData();
@@ -144,7 +144,7 @@ const CollateralPanel: FC = () => {
 
             addNotification({
                 status: "success",
-                directLink: res?.txHash,
+                directLink: res?.transactionHash,
                 message: `${collateralAmount} ${selectedAsset?.shortName} Collateral Removed`,
             });
             getPageData();

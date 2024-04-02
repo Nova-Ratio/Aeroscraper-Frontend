@@ -15,7 +15,7 @@ type ChainAdapterValue = ChainContext & AppContextState & {
 
 const useChainAdapter = () => {
     const appContextValue = useAppContext();
-    const chainContextValue = useChain(appContextValue.selectedChainName ?? ChainName.INJECTIVE);
+    const chainContextValue = useChain(appContextValue.selectedChainName ?? ChainName.ARCHWAY);
 
     const address = useMemo<string | undefined>(() =>
         appContextValue.selectedWallet === WalletType.METAMASK ?

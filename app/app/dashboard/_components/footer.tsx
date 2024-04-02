@@ -317,7 +317,7 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
-            {selectedChainName === ChainName.INJECTIVE && (
+            {selectedChainName === ChainName.ARCHWAY && (
             <Link
               href={"https://zealy.io/c/aeroscraper/questboard"}
               target="_blank"
@@ -349,7 +349,7 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
-            {selectedChainName === ChainName.INJECTIVE && (
+            {selectedChainName === ChainName.ARCHWAY && (
             <Link
               href={"https://guild.xyz/aeroscraper"}
               target="_blank"

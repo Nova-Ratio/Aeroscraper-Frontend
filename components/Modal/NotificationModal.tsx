@@ -57,7 +57,7 @@ const NotificationModal: FC = () => {
 
   const [moreInfo, setMoreInfo] = useState(false);
 
-  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.INJECTIVE]?.txDetailUrl;
+  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.ARCHWAY]?.txDetailUrl;
 
   useEffect(() => {
     setMoreInfo(false);

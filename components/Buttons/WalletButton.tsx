@@ -242,7 +242,7 @@ const WalletButton: FC<Props> = ({
                     </div>
                   );
                 })}
-                {selectedChainName === ChainName.INJECTIVE && (
+                {selectedChainName === ChainName.ARCHWAY && (
                   <div className="mr-auto md:inline-block hidden">
                     {walletExtensions?.installed.some(
                       (item: any) => item.name === WalletType.METAMASK
@@ -364,7 +364,7 @@ const WalletButton: FC<Props> = ({
                     </motion.div>
                   );
                 })}
-                {onHoverChain === ChainName.INJECTIVE && (
+                {onHoverChain === ChainName.ARCHWAY && (
                   <motion.div
                     key={WalletType.METAMASK}
                     className={`inline-block mr-auto duration-300 transition-all`}
@@ -525,7 +525,7 @@ const WalletButton: FC<Props> = ({
                         />
                       );
                     })}
-                    {selectedChainName === ChainName.INJECTIVE && (
+                    {selectedChainName === ChainName.ARCHWAY && (
                       <img
                         alt={metamaskWalletInfo.name}
                         className="w-6 h-6 object-contain md:inline-block hidden"

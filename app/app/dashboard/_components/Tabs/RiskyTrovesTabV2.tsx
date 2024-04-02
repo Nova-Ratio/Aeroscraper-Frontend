@@ -32,7 +32,7 @@ type Props = {
 
 const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-    const { selectedChainName = ChainName.INJECTIVE, baseCoin } = useChainAdapter();
+    const { selectedChainName = ChainName.ARCHWAY, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
     const contract = useAppContract();
     const [loading, setLoading] = useState(true);

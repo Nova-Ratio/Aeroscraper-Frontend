@@ -33,7 +33,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
       signerOptions={{
         signingCosmwasm: (chain) => {
           switch (typeof chain === "string" ? chain : chain.chain_name) {
-            case ChainName.INJECTIVE:
+            case ChainName.ARCHWAY:
               return {
                 gasPrice: GasPrice.fromString("0.025inj"),
               };

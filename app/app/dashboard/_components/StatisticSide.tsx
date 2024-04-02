@@ -26,7 +26,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
   const [content, setContent] = useState(defaultContent);
   useEffect(() => {
     setContent(
-      ChainName.INJECTIVE === selectedChainName ? injContent : defaultContent
+    defaultContent
     );
   }, [selectedChainName]);
   const { pageData } = usePageData();

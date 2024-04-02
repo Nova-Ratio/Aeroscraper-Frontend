@@ -4,8 +4,7 @@ import { WalletInfo } from "@/types/types";
 import { Wallet } from "@injectivelabs/wallet-ts";
 
 export const WalletsByChainName: Record<ChainName, WalletType[]> = {
-    [ChainName.INJECTIVE]: [
-        WalletType.METAMASK,
+    [ChainName.ARCHWAY]: [
         WalletType.LEAP,
         WalletType.KEPLR,
         WalletType.NINJI,

@@ -30,7 +30,7 @@ import { isNil } from "lodash";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 
 const FilterParamByChainName: Record<ChainName, string> = {
-  [ChainName.INJECTIVE]: "INJECTIVE",
+  [ChainName.ARCHWAY]: "INJECTIVE",
 };
 
 type DashboardContextValue = {
@@ -70,7 +70,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const { requestTotalTroves } = useMemo(
     () =>
-      graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }),
+      graphql({ selectedChainName: selectedChainName ?? ChainName.ARCHWAY }),
     [selectedChainName]
   );
   const contract = useAppContract();
@@ -284,9 +284,9 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       setTotalInfoLoading(true);
       let chainNameQuery =
-        FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
+        FilterParamByChainName[selectedChainName ?? ChainName.ARCHWAY];
 
-      if (selectedChainName === ChainName.INJECTIVE) {
+      if (selectedChainName === ChainName.ARCHWAY) {
         chainNameQuery = `${chainNameQuery}_MAINNET`;
       }
 

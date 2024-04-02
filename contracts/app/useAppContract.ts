@@ -1,10 +1,11 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { isNil } from "lodash";
 import { getAppContract } from "./contract";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
 import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 const useAppContract = () => {
   const {
@@ -14,18 +15,21 @@ const useAppContract = () => {
     selectedChainName,
     address,
     chain,
-    basePrice
+    basePrice,
+    getSigningCosmWasmClient
   } = useChainAdapter();
-
+  const [client, setClient] = useState<SigningCosmWasmClient>();
+  
   const contract = useMemo(
     () =>
       isWalletConnected &&
         !isNil(baseCoin) &&
         !isNil(walletInfo) &&
         !isNil(selectedChainName) &&
-        !isNil(chain)
+        !isNil(chain) &&
+        !isNil(client)
         ?
-        getAppContract(chain, baseCoin, selectedChainName ?? ChainName.INJECTIVE, walletInfo.name as WalletType, basePrice)
+        getAppContract(client, baseCoin, selectedChainName ?? ChainName.ARCHWAY, basePrice)
         :
         undefined,
     [
@@ -231,6 +235,20 @@ const useAppContract = () => {
       updateReward
     ]
   );
+
+  const getClient = useCallback(async () => {
+    try {
+      const newClient = await getSigningCosmWasmClient();
+      setClient(newClient);
+    } catch (err) {
+      setClient(undefined);
+    }
+  }, [address,selectedChainName]);
+
+  useEffect(() => {
+    getClient();
+  }, [getClient]);
+
 
   return value;
 };

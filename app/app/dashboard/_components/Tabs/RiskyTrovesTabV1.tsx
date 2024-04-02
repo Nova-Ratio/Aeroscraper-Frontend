@@ -27,7 +27,7 @@ type Props = {
 
 const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const { baseCoin, selectedChainName = ChainName.INJECTIVE } = useChainAdapter();
+  const { baseCoin, selectedChainName = ChainName.ARCHWAY } = useChainAdapter();
   const contract = useAppContract();
   const [loading, setLoading] = useState(true);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV1[]>([]);
@@ -175,7 +175,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                   decimalScale={2}
                   displayType="text"
                   renderText={(value) =>
-                    selectedChainName === ChainName.INJECTIVE ?
+                    selectedChainName === ChainName.ARCHWAY ?
                       <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
                       :
                       <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}%</Text>

@@ -1,24 +1,24 @@
 import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
 
-const injAsset: CollateralAsset = {
-    name: "Injective",
-    shortName: "INJ",
-    denom: "inj",
-    decimal: 18,
-    ausdDecimal: 18,
-    imageURL: "/images/token-images/inj.svg",
-    priceId: "7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592",
+const archAsset: CollateralAsset = {
+    name: "Archway",
+    shortName: "ARCH",
+    denom: "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+    decimal: 6,
+    ausdDecimal: 6,
+    imageURL: "/images/token-images/archway-coin.png",
+    priceId: "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819",
     priceServiceUrl: "https://hermes.pyth.network/",
-    oracleContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
+    oracleContractAddress: ''
 }
 
 export const collateralAssets: CollateralAsset[] = [
-    injAsset
+    archAsset
 ]
 
 export const DefaultAssetByChainName: Record<ChainName, CollateralAsset> = {
-    [ChainName.INJECTIVE]: injAsset
+    [ChainName.ARCHWAY]: archAsset
 }
 
 export const assetByDenom: Record<string, CollateralAsset | undefined> = Object
