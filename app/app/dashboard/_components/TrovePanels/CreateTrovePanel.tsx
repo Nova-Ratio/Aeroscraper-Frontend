@@ -10,7 +10,7 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
 import { ChainName } from "@/enums/Chain";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import { checkPoint } from "@/hooks/usePointer";
+import { checkPoint, firstTrove } from "@/hooks/usePointer";
 import { CollateralAsset } from "@/types/types";
 import {
   convertAmount,
@@ -127,7 +127,7 @@ const CreateTrovePanel: FC = () => {
         directLink: res?.txHash,
         message: "Trove Opened",
       });
-      address && checkPoint(address);
+      address && firstTrove(address);
       getPageData();
       refreshBalance();
     } catch (err: any) {
