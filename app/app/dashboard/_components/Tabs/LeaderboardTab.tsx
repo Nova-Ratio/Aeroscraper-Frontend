@@ -251,7 +251,7 @@ const LeaderboardTab = () => {
                         textColor="text-gray-400"
                         className="ml-2 mb-1"
                       >
-                        points
+                        xp
                       </Text>
                       <ChevronUpIcon className="w-5 h-5 mb-1 ml-1 text-white rotate-180" />
                     </div>

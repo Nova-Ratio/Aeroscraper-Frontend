@@ -23,7 +23,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             const denom = BaseCoinByChainName[ChainName.INJECTIVE].denom;
             const connection = new PriceServiceConnection(
-                "https://hermes-beta.pyth.network/",
+                "https://hermes.pyth.network/",
                 {
                     priceFeedRequestConfig: {
                         binary: true,
@@ -31,7 +31,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
                 }
             )
 
-            const priceId = ["2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3"];
+            const priceId = ["7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592"];
 
             const currentPrices = await connection.getLatestPriceFeeds(priceId);
 

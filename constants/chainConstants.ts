@@ -57,7 +57,7 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
 }
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
-    [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" }
+    [ChainName.INJECTIVE]: { priceId: "7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592", serviceUrl: "https://hermes.pyth.network/" }
 }
 
 export const appChainURLs: ChainNavigator[] = [
