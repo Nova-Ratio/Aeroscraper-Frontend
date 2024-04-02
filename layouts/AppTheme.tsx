@@ -131,12 +131,14 @@ const AppTheme = () => {
       setProcessLoading(true);
       const res: any = await checkPoint(address);
       console.log("res", res);
+      console.log("getCheckPoint message:", res?.message);
       if (res?.updated) {
         addNotification({
           status: "check",
           directLink: "",
           message: "Your point updated successfully",
         });
+
         getPointsInfo();
       } else {
         addNotification({
