@@ -23,6 +23,7 @@ interface ZealyUser {
   userId: string;
   xp: number;
   name: string;
+  total: number;
   avatar: string;
   numberOfQuests: number;
   addresses: Record<string, any>;
@@ -375,7 +376,7 @@ const LeaderboardTab = () => {
                     text="XXXXXX"
                     value={
                       <NumericFormat
-                        value={item.xp}
+                        value={item.total}
                         thousandsGroupStyle="thousand"
                         thousandSeparator=","
                         fixedDecimalScale
