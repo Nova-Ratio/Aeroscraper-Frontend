@@ -49,7 +49,7 @@ interface ZealyUserInformation {
   total?: number;
   trove?: number;
   stability?: number;
-  referral?: number,
+  referral?: number;
   xp: number;
   rank: number;
   invites: number;
@@ -79,7 +79,8 @@ const LeaderboardTab = () => {
   const { address } = useChainAdapter();
 
   const [leaderboard, setLeaderboard] = useState<ZealyUser[]>([]);
-  const [userInformation, setUserInformation] = useState<ZealyUserInformation | null>(null);
+  const [userInformation, setUserInformation] =
+    useState<ZealyUserInformation | null>(null);
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   const [informationLoading, setInformationLoading] = useState(false);
@@ -145,22 +146,33 @@ const LeaderboardTab = () => {
     setInformationLoading(true);
 
     try {
-      const result = await fetch(`/api/zealy/userInformation/${zealyId}`, {
-        next: {
-          revalidate: 0,
-        },
-        cache: "no-store",
-      })
-        .then((res) => res.json())
-        .catch((err) => false);
+      const result = zealyId
+        ? await fetch(`/api/zealy/userInformation/${zealyId}`, {
+            next: {
+              revalidate: 0,
+            },
+            cache: "no-store",
+          })
+            .then((res) => res.json())
+            .catch((err) => false)
+        : false;
 
-      const data = result.status !== 500 && result
-        ? result
-        : {
-          rank: "N/A  ",
-          xp: 0,
-          level: 1,
-        };
+      const allData: any = await pb.collection("total_points").getFullList({
+        sort: "-total",
+      });
+      const rank = allData.findIndex((item: any) => item.address === address);
+      const data =
+        result.status !== 500 && result
+          ? {
+              ...result,
+              rank: rank || result.rank || "N/A ",
+            }
+          : {
+              rank: rank || "N/A  ",
+              xp: 0,
+              level: 1,
+            };
+
       //console.log("api.zealy.io", data);
       const res: any = await pb
         .collection("total_points")
@@ -186,7 +198,6 @@ const LeaderboardTab = () => {
   };
 
   console.log(userInformation);
-
 
   return (
     <div ref={ref}>
@@ -241,7 +252,7 @@ const LeaderboardTab = () => {
                       >
                         points
                       </Text>
-                      <ChevronUpIcon className="w-5 h-5 mb-1 ml-1 text-white rotate-180"/>
+                      <ChevronUpIcon className="w-5 h-5 mb-1 ml-1 text-white rotate-180" />
                     </div>
                   }
                 >
@@ -250,25 +261,71 @@ const LeaderboardTab = () => {
                     className="relative p-4 overflow-auto space-y-3"
                   >
                     <div className="flex justify-between">
-                      <Text size="sm" textColor="text-white" weight="font-medium">Trove Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.trove?.toFixed(0)}</Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-medium"
+                      >
+                        Trove xp:
+                      </Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-semibold"
+                      >
+                        {userInformation?.trove?.toFixed(0)}
+                      </Text>
                     </div>
                     <div className="flex justify-between">
-                      <Text size="sm" textColor="text-white" weight="font-medium">Stability Pool Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.stability?.toFixed(0)}</Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-medium"
+                      >
+                        Stability Pool xp:
+                      </Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-semibold"
+                      >
+                        {userInformation?.stability?.toFixed(0)}
+                      </Text>
                     </div>
                     <div className="flex justify-between">
-                      <Text size="sm" textColor="text-white" weight="font-medium">Referral Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.referral?.toFixed(0)}</Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-medium"
+                      >
+                        Referral xp:
+                      </Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-semibold"
+                      >
+                        {userInformation?.referral?.toFixed(0)}
+                      </Text>
                     </div>
                     <div className="flex justify-between">
-                      <Text size="sm" textColor="text-white" weight="font-medium">Zealy Points:</Text>
-                      <Text size="sm" textColor="text-white" weight="font-semibold">{userInformation?.xp?.toFixed(0)}</Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-medium"
+                      >
+                        Zealy xp:
+                      </Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-semibold"
+                      >
+                        {userInformation?.xp?.toFixed(0)}
+                      </Text>
                     </div>
-
                   </BorderedContainer>
                 </Dropdown>
-
               </div>
             </div>
           </div>
