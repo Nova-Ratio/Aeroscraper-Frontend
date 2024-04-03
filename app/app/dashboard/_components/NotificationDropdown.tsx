@@ -84,7 +84,7 @@ const NotificationDropdown: FC = () => {
               )
             );
           })}
-          {notifications.filter((item) => item.status === "success").length ===
+          {notifications.length ===
             0 && (
               <div className="flex flex-col h-full gap-4 mt-20 items-center justify-center">
                 <Text size="sm">Your notifications are empty</Text>
