@@ -34,6 +34,7 @@ export type TotalTrovesResponse = {
 
 export type BaseCoin = {
     name: string,
+    symbol:string,
     denom: string,
     image: string,
     tokenImage: string,

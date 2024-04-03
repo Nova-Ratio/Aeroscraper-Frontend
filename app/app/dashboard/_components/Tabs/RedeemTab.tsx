@@ -43,7 +43,7 @@ const RedeemTab: FC<Props> = ({
   const { addNotification, setProcessLoading, processLoading } = useNotification();
 
   const contract = useAppContract();
-  console.log("basePrice", redeemAmount / basePrice)
+
   const changeRedeemAmount = useCallback(
     (values: NumberFormatValues) => {
       setRedeemAmount(Number(values.value));
@@ -71,15 +71,11 @@ const RedeemTab: FC<Props> = ({
     try {
       setProcessLoading(true);
 
-      console.log("redeemAmount", redeemAmount);
       const res: any = await contract.redeem(redeemAmount);
-      console.log("res", res);
-
 
       transactionHash = getIsInjectiveResponse(res)
         ? res?.txHash
         : res?.transactionHash;
-      console.log("transactionHash", transactionHash);
 
       addNotification({
         status: "success",

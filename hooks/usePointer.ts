@@ -1,7 +1,6 @@
 export const checkPoint = async (address: string) => {
   try {
     const local = localStorage.getItem("referralCode");
-    console.log("referralCode", local);
 
     let res = await fetch(
       process.env.NEXT_PUBLIC_WEBSITE_REF_API +
@@ -10,7 +9,7 @@ export const checkPoint = async (address: string) => {
         "&ref=" +
         local
     );
-    console.log(res);
+
     if (res.ok) {
       return res.json();
     }
@@ -24,7 +23,7 @@ export const checkPoint = async (address: string) => {
 export const firstTrove = async (address: string) => {
   try {
     const local = localStorage.getItem("referralCode");
-    console.log("referralCode", local);
+
     let res = await fetch(
       process.env.NEXT_PUBLIC_WEBSITE_REF_API +
         "/first-trove?address=" +
@@ -32,7 +31,7 @@ export const firstTrove = async (address: string) => {
         "&ref=" +
         local
     );
-    console.log(res);
+
     if (res.ok) {
       return res.json();
     }

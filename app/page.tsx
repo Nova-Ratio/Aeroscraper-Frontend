@@ -25,7 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     const ref = search.get("ref");
-    console.log(ref);
+
     if (ref) {
       localStorage.setItem("referralCode", ref);
     }

@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
   });
   
   const data = await result.json();
-  console.log("api.zealy.io", data );
 
   if (result.status !== 200) {
     return NextResponse.json({

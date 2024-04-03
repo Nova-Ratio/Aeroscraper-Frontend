@@ -159,11 +159,6 @@ const useAppContract = () => {
     [address, contract]
   );
 
-  const liquidateTroves = useCallback(async () => {
-    if (isNil(contract) || isNil(address)) return;
-    return await contract.liquidateTroves(address);
-  }, [address, contract]);
-
   const liquidateTrovesV2 = useCallback(
     async (owner: string) => {
       if (isNil(contract) || isNil(address)) return;
@@ -205,7 +200,6 @@ const useAppContract = () => {
       stake,
       unstake,
       redeem,
-      liquidateTroves,
       liquidateTrovesV2,
       withdrawLiquidationGains,
       updateReward
@@ -229,7 +223,6 @@ const useAppContract = () => {
       stake,
       unstake,
       redeem,
-      liquidateTroves,
       liquidateTrovesV2,
       withdrawLiquidationGains,
       updateReward

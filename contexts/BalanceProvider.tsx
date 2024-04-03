@@ -16,19 +16,22 @@ const BalanceContext = React.createContext<BalanceContextValue>({
 
 const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
     const debounceRef = useRef<NodeJS.Timeout | undefined>();
-    const { chain, address, baseCoin, selectedChainName } = useChainAdapter();
+    const { chain, address, baseCoin, selectedChainName,getSigningCosmWasmClient } = useChainAdapter();
     const [balanceByDenom, setBalanceByDenom] = useState<Dictionary<Coin | undefined>>({});
 
     const getBalances = useCallback(async () => {
+    
         try {
             if (!address || !baseCoin) return;
-
-            const client = await SigningCosmWasmClient.connect("https://inj-priv-rpc.kingnodes.com" ?? '')
+    
+            const client = await getSigningCosmWasmClient();
             const balance = await client.getBalance(address, baseCoin.denom);
+       
+            
             setBalanceByDenom({ [balance.denom]: balance });
         }
         catch (err) {
-            console.log(err)
+            console.log(123,err)
         }
     }, [chain, address, baseCoin, selectedChainName])
 

@@ -98,8 +98,7 @@ const AppTheme = () => {
     try {
       setProcessLoading(true);
       const res: any = await checkPoint(address);
-      console.log("res", res);
-      console.log("getCheckPoint message:", res?.message);
+
       if (res?.updated) {
         addNotification({
           status: "check",
@@ -154,7 +153,7 @@ const AppTheme = () => {
               <Tooltip
                 containerClassName="flex items-center text-white"
                 width="w-fit"
-                title="aARCH"
+                title="ARCH"
               >
                 <img
                   alt={baseCoin.name}

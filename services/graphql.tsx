@@ -16,7 +16,7 @@ export default function graphql({
   const URL = (): string => {
     switch (selectedChainName) {
       case ChainName.ARCHWAY:
-        return process.env.NEXT_PUBLIC_INDEXER_INJ as string;
+        return process.env.NEXT_PUBLIC_INDEXER_ARCH as string;
       default:
         return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
     }

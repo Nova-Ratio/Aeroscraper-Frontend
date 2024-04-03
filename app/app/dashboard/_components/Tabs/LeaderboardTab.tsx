@@ -174,13 +174,11 @@ const LeaderboardTab = () => {
               level: 1,
             };
 
-      //console.log("api.zealy.io", data);
       const res: any = await pb
         .collection("total_points")
         .getFirstListItem(`address = '${address}'`)
         .then((res) => res)
         .catch((err) => false);
-      //console.log("total_points", res);
 
       setUserInformation({
         ...data,
@@ -197,8 +195,6 @@ const LeaderboardTab = () => {
       console.error("Error fetching data:", error);
     }
   };
-
-  console.log(userInformation);
 
   return (
     <div ref={ref}>

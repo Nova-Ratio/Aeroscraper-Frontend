@@ -1,5 +1,7 @@
 import { BaseCoinByChainName } from "@/constants/chainConstants";
 import { ChainName } from "@/enums/Chain";
+import useChainAdapter from "@/hooks/useChainAdapter";
+import { convertAmount } from "@/utils/contractUtils";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { isNil } from "lodash";
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -18,38 +20,35 @@ const PriceContext = createContext<PriceContextValue>({
 
 const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const [coinPricesByDenom, setCoinPricesByDenom] = useState<Record<string, number>>({});
+    const { address, baseCoin, getSigningCosmWasmClient } = useChainAdapter();
 
-    const getInjPrice = useCallback(async () => {
+    const getArchwayPrice = useCallback(async () => {
         try {
-            const denom = BaseCoinByChainName[ChainName.ARCHWAY].denom;
-            const connection = new PriceServiceConnection(
-                "https://hermes.pyth.network/",
-                {
-                    priceFeedRequestConfig: {
-                        binary: true,
-                    },
-                }
-            )
 
-            const priceId = ["7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592"];
+            const client = await getSigningCosmWasmClient();
+            const { symbol, denom } = BaseCoinByChainName[ChainName.ARCHWAY];
 
-            const currentPrices = await connection.getLatestPriceFeeds(priceId);
+            const result = await client.queryContractSmart(
+                String(process.env.NEXT_PUBLIC_ARCHWAY_OJO_CONTRACT_ADDRESS),
+                { get_reference_data: { symbol_pair: [symbol, "USD"] } }
+            );
+console.log("xxx",result);
 
-            if (currentPrices) {
+            if (result) {
                 setCoinPricesByDenom(prev => ({
                     ...prev,
-                    [denom]: Number(currentPrices[0].getPriceUnchecked().price) / 100000000
+                    [denom]: convertAmount(Number(result.rate) ?? 0, BaseCoinByChainName.archway.decimal)
                 }))
             }
         }
         catch (err) {
             console.log(err);
         }
-    }, [])
+    }, [address])
 
     const getAllPrices = useCallback(async () => {
-        getInjPrice();
-    }, [getInjPrice])
+        getArchwayPrice();
+    }, [getArchwayPrice])
 
     const getPriceByChainName = useCallback((chainName?: ChainName) => {
         if (isNil(chainName)) return 0;
@@ -64,7 +63,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
 
     useEffect(() => {
         getAllPrices();
-    }, [getAllPrices]);
+    }, [getAllPrices, address]);
 
     return (
         <PriceContext.Provider value={contextValue}>

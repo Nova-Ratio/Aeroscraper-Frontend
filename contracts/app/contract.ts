@@ -37,39 +37,13 @@ export const getAppContract = (
 ) => {
   const defaultAsset = DefaultAssetByChainName[chainName];
 
-  const { contractAddress, oraclecontractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
+  const { contractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
 
   const { requestICR, requestRedeemICR } = graphql({
     selectedChainName: ChainName.ARCHWAY,
   });
 
   //GET QUERIES
-  const getVAA = async (asset?: CollateralAsset): Promise<any> => {
-    if (isNil(chainName)) {
-      throw new Error("Error getting client");
-    }
-
-    const priceId = isNil(asset)
-      ? priceIdByChainName[chainName].priceId
-      : asset.priceId;
-    const serviceUrl = isNil(asset)
-      ? priceIdByChainName[chainName].serviceUrl
-      : asset.priceServiceUrl;
-
-    const connection = new PriceServiceConnection(serviceUrl, {
-      priceFeedRequestConfig: {
-        binary: true,
-      },
-    });
-
-    const res = await connection.getLatestPriceFeeds([priceId]);
-
-    if (res) {
-      return res[0].getVAA();
-    } else {
-      throw new Error("Error getting price feed");
-    }
-  };
 
   const findSortedTroveInsertPosition = async (
     collRatio: number,
@@ -176,7 +150,7 @@ export const getAppContract = (
     collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const vaa = await getVAA(asset);
+
     const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(
       collRatio,
       senderAddress
@@ -204,7 +178,7 @@ export const getAppContract = (
     collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const vaa = await getVAA(asset);
+
     const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(
       collRatio,
       senderAddress
@@ -231,7 +205,7 @@ export const getAppContract = (
     collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const vaa = await getVAA(asset);
+
     const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(
       collRatio,
       senderAddress
@@ -259,7 +233,7 @@ export const getAppContract = (
     collRatio: number,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const vaa = await getVAA(asset);
+
     const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(
       collRatio,
       senderAddress
@@ -313,7 +287,7 @@ export const getAppContract = (
       },
     };
 
-    const vaa = await getVAA(asset);
+
 
     return await client.execute(
       senderAddress,
@@ -408,7 +382,7 @@ export const getAppContract = (
       },
     };
 
-    const vaa = await getVAA(asset);
+
 
     return await client.execute(
       senderAddress,
@@ -419,66 +393,14 @@ export const getAppContract = (
     )
   };
 
-  const liquidateTroves = async (
-    senderAddress: string,
-    asset: CollateralAsset = defaultAsset
-  ) => {
-    const vaa = await getVAA(asset);
-
-    const msg0 = {
-      contractAddress: oraclecontractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    };
-
-    const msg1 = {
-      contractAddress,
-      sender: senderAddress,
-      msg: { liquidate_troves: {} },
-    };
-
-    return await client.executeMultiple(
-      senderAddress,
-      [
-        {
-          contractAddress: oraclecontractAddress,
-          msg: msg0,
-          funds: [{ amount: "1", denom: "aarch" }],
-        },
-        {
-          contractAddress,
-          msg: msg1
-        }
-      ],
-      "auto",
-      "Liquidate Troves",
-    )
-  };
-
   const liquidateTrovesV2 = async (
     senderAddress: string,
     owner: string,
     asset: CollateralAsset = defaultAsset
   ) => {
-    const vaa = await getVAA(asset);
 
-    const msg0 = {
-      contractAddress: oraclecontractAddress,
-      sender: senderAddress,
-      msg: {
-        update_price_feeds: {
-          data: [vaa],
-        },
-      },
-      funds: [coin("23", asset.denom)],
-    };
 
-    const msg1 = {
+    const msg = {
       contractAddress,
       sender: senderAddress,
       msg: {
@@ -488,25 +410,10 @@ export const getAppContract = (
       },
     };
 
-    return await client.executeMultiple(
+    return await client.execute(
       senderAddress,
-      [
-        {
-          contractAddress: oraclecontractAddress,
-          msg: {
-            update_price_feeds: {
-              data: [
-                vaa
-              ]
-            }
-          },
-          funds: [{ amount: "1", denom: "aarch" }],
-        },
-        {
-          contractAddress,
-          msg: { liquidate_troves: {} }
-        }
-      ],
+      contractAddress,
+      msg,
       "auto",
       "Liquidate Troves",
     )
@@ -514,7 +421,7 @@ export const getAppContract = (
 
   const updateReward = async (senderAddress: string) => {
     const unstake = {
-      contractAddress: contractAddress,
+      contractAddress,
       sender: senderAddress,
       msg: {
         unstake: {
@@ -541,12 +448,12 @@ export const getAppContract = (
       senderAddress,
       [
         {
-          contractAddress: oraclecontractAddress,
+          contractAddress,
           msg: unstake,
-          funds: [{ amount: "1", denom: "aarch" }],
+          funds: [{ amount: "1", denom: "ARCH" }],
         },
         {
-          contractAddress,
+          contractAddress: ausdContractAddress,
           msg: stake
         }
       ],
@@ -589,7 +496,6 @@ export const getAppContract = (
     stake,
     unstake,
     redeem,
-    liquidateTroves,
     liquidateTrovesV2,
     withdrawLiquidationGains,
     updateReward,

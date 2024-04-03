@@ -74,7 +74,6 @@ const CreateTrovePanel: FC = () => {
       balanceByDenom,
     ]
   );
-  console.log("borrowamount", borrowAmount);
 
   const openTroveErrorText = useMemo(
     () =>
@@ -85,7 +84,7 @@ const CreateTrovePanel: FC = () => {
             balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
             selectedAsset!.decimal
           )
-        ? "Insufficient INJ balance."
+        ? "Insufficient ARCH balance."
         : collacteralRatio < 1.15
         ? "Collateral ratio should be at least 115%."
         : collacteralRatio < selectedMinCollateral - 0.00001

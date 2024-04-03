@@ -75,7 +75,7 @@ const MobileHamburgerMenu: FC<Props> = ({
     try {
       setProcessLoading(true);
       const res = await checkPoint(address);
-      console.log("res", res);
+
       if (res?.updated) {
         addNotification({
           status: "check",

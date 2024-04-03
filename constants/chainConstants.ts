@@ -11,11 +11,12 @@ export const availableChains = Object.values(chains).filter(chain => visibleChai
 export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
     [ChainName.ARCHWAY]: {
         name: "ARCHWAY",
+        symbol:"ARCH",
         denom: "aarch",
         image: "/images/token-images/archway-coin.png",
-        tokenImage: "/images/token-images/atom.svg",
-        decimal: 6,
-        ausdDecimal: 6
+        tokenImage: "/images/token-images/archway-coin.png",
+        decimal: 18,
+        ausdDecimal: 18
     }
 }
 
