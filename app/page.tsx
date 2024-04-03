@@ -46,14 +46,18 @@ export default function Home() {
                 Your decentralized lending-borrowing protocol
               </h1>
               <h2 className="text-base text-ghost-white font-medium mt-10">
-                Empowering you with autonomy and direct transactions.
-                Interest-free, over-collateralized stablecoin and DeFi loans.
-                Fully automated and governance-free, which enables unauthorized
-                lending and borrowing.
+              Empowering you with autonomy and direct transactions. 
                 <br />
                 <br />
-                The protocol only charges a one-time fee. Deposit collateral and
-                access loans in stablecoins pegged to the US dollar.
+                Interest-free, over-collateralized stablecoin and DeFi loans. 
+                <br />
+                <br />
+                Fully automated and governance-free.
+                <br />
+                <br />
+                The protocol only charges a one-time fee. Deposit collateral and access loans in stablecoins pegged to the US dollar.
+                <br />
+                <br />
               </h2>
               <LaunchButtons />
             </div>
