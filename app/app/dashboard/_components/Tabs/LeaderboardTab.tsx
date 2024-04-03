@@ -161,15 +161,17 @@ const LeaderboardTab = () => {
       const allData: any = await pb.collection("total_points").getFullList({
         sort: "-total",
       });
-      const rank = allData.findIndex((item: any) => item.address === address);
+      const rank = address ?  allData.findIndex((item: any) => item.address.toLowerCase() === address.toLowerCase()): false;
+      console.log("rank", rank);
+      
       const data =
         result.status !== 500 && result
           ? {
               ...result,
-              rank: (rank !== -1 ? rank : false) || result.rank || "N/A ",
+              rank: (rank !== -1 ? (rank+1) : false) || "N/A ",
             }
           : {
-              rank: (rank !== -1 ? rank : false) || "N/A  ",
+              rank: (rank !== -1 ? (rank+1) : false) || "N/A  ",
               xp: 0,
               level: 1,
             };
