@@ -287,7 +287,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         FilterParamByChainName[selectedChainName ?? ChainName.ARCHWAY];
 
       if (selectedChainName === ChainName.ARCHWAY) {
-        chainNameQuery = `${chainNameQuery}_MAINNET`;
+        chainNameQuery = `ARCH_MAINNET`;
       }
 
       /* const { data } = await axios.get<
