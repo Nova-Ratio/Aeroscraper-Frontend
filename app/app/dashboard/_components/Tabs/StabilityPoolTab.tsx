@@ -5,7 +5,6 @@ import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion";
 import useAppContract from "@/contracts/app/useAppContract";
 import { useNotification } from "@/contexts/NotificationProvider";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import { PageData } from "../../_types/types";
 import Checkbox from "@/components/Checkbox";
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
@@ -70,9 +69,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       setStakeAmount(0);
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${stakeAmount} aUSD Staked to Stability Pool`,
       });
       getPageData();
@@ -96,9 +93,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       setUnstakeAmount(0);
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${unstakeAmount} aUSD Unstaked from Stability Pool`,
       });
       getPageData();

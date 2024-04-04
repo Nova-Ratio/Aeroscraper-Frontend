@@ -1,7 +1,6 @@
 import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
 import { WalletInfo } from "@/types/types";
-import { Wallet } from "@injectivelabs/wallet-ts";
 
 export const WalletsByChainName: Record<ChainName, WalletType[]> = {
     [ChainName.ARCHWAY]: [
@@ -11,15 +10,6 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
         // WalletType.LEDGER,
         WalletType.COSMOSTATION
     ]
-}
-
-export const InjSdkWalletByCosmosWallet: Record<WalletType, Wallet> = {
-    [WalletType.KEPLR]: Wallet.Keplr,
-    [WalletType.LEAP]: Wallet.Leap,
-    [WalletType.METAMASK]: Wallet.Metamask,
-    [WalletType.NINJI]: Wallet.Ninji,
-    [WalletType.LEDGER]: Wallet.Ledger,
-    [WalletType.COSMOSTATION]: Wallet.Cosmostation
 }
 
 export const metamaskWalletInfo: WalletInfo = {

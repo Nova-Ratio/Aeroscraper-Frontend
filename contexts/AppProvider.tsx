@@ -1,7 +1,6 @@
 import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
 import { ChainInfo } from "@/types/types";
-import { getInjectiveAddress } from "@injectivelabs/sdk-ts";
 import { isEmpty, isNil } from "lodash";
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { usePrice } from "./PriceProvider";
@@ -45,7 +44,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
             setIsConnecting(true);
             const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
             const ethAddress = accounts[0];
-            setUserAddress(getInjectiveAddress(ethAddress));
+ 
             setIsConnecting(false);
         }
         catch (err) {

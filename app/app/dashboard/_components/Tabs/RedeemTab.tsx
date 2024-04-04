@@ -5,7 +5,7 @@ import {
   useNotification,
 } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
-import { getValueByRatio, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { getValueByRatio } from "@/utils/contractUtils";
 import { isNil } from "lodash";
 import { NumberFormatValues, NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
@@ -73,9 +73,7 @@ const RedeemTab: FC<Props> = ({
 
       const res: any = await contract.redeem(redeemAmount);
 
-      transactionHash = getIsInjectiveResponse(res)
-        ? res?.txHash
-        : res?.transactionHash;
+      transactionHash = res?.transactionHash,
 
       addNotification({
         status: "success",

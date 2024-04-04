@@ -6,7 +6,6 @@ import { isNil } from "lodash";
 import { NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 
@@ -37,9 +36,7 @@ const ClaimRewardTab: FC<Props> = ({
       const res: any = await contract.withdrawLiquidationGains();
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${pageData.rewardAmount} ${coinName} Reward Received`,
       });
       getPageData();
@@ -61,9 +58,7 @@ const ClaimRewardTab: FC<Props> = ({
     try {
       const res: any = await contract.updateReward();
 
-      transactionHash = getIsInjectiveResponse(res)
-      ? res?.txHash
-      : res?.transactionHash;
+      transactionHash = res?.transactionHash,
 
       addNotification({
         status: "success",
