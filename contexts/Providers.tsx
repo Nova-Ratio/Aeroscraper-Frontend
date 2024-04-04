@@ -35,7 +35,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
           switch (typeof chain === "string" ? chain : chain.chain_name) {
             case ChainName.ARCHWAY:
               return {
-                gasPrice: GasPrice.fromString("0.025inj"),
+                gasPrice: GasPrice.fromString("0.02aarch"),
               };
             default:
               return {
