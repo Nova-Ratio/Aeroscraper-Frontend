@@ -161,17 +161,26 @@ const LeaderboardTab = () => {
       const allData: any = await pb.collection("total_points").getFullList({
         sort: "-total",
       });
-      const rank = address ?  allData.findIndex((item: any) => item.address.toLowerCase() === address.toLowerCase()): false;
+      console.log("allData", allData);
+      console.log("address", address);
+
+      const rank = address
+        ? allData.findIndex(
+            (item: any) =>
+              item?.address && typeof item.address.toLowerCase === 'function' &&
+              item?.address?.toLowerCase() == address?.toLowerCase()
+          )
+        : false;
       console.log("rank", rank);
-      
+
       const data =
         result.status !== 500 && result
           ? {
               ...result,
-              rank: (rank !== -1 ? (rank+1) : false) || "N/A ",
+              rank: (rank !== -1 ? rank + 1 : false) || "N/A ",
             }
           : {
-              rank: (rank !== -1 ? (rank+1) : false) || "N/A  ",
+              rank: (rank !== -1 ? rank + 1 : false) || "N/A  ",
               xp: 0,
               level: 1,
             };
@@ -192,11 +201,12 @@ const LeaderboardTab = () => {
         stability: res?.stability || 0,
         referral: res?.referralPoint || 0,
       });
-      setInformationLoading(false);
 
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setInformationLoading(false);
     }
   };
 
