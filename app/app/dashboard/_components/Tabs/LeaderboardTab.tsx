@@ -188,11 +188,12 @@ const LeaderboardTab = () => {
         stability: res?.stability || 0,
         referral: res?.referralPoint || 0,
       });
-      setInformationLoading(false);
 
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setInformationLoading(false);
     }
   };
 
