@@ -161,7 +161,13 @@ const LeaderboardTab = () => {
       const allData: any = await pb.collection("total_points").getFullList({
         sort: "-total",
       });
-      const rank = allData.findIndex((item: any) => item.address === address);
+      const rank = address
+        ? allData.findIndex(
+            (item: any) =>
+              item?.address && typeof item.address.toLowerCase === 'function' &&
+              item?.address?.toLowerCase() == address?.toLowerCase()
+          )
+        : false;
       const data =
         result.status !== 500 && result
           ? {
