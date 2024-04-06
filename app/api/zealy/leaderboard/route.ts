@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "edge";
 export async function GET(req: NextRequest) {
 
-  const result = await fetch("https://db.aeroscraper.io/api/collections/total_points/records?page=1&perPage=500&sort=-total", {
+  const result = await fetch("https://db.aeroscraper.io/api/collections/"+process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string+"/records?page=1&perPage=500&sort=-total", {
     headers: {
-      "x-api-key": `${process.env.NEXT_PUBLIC_ZEALY_API_KEY}`,
       "Access-Control-Allow-Origin": "*",
     },
     method: req.method,

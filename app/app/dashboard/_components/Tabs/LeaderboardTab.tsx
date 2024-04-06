@@ -158,7 +158,7 @@ const LeaderboardTab = () => {
             .catch((err) => false)
         : false;
 
-      const allData: any = await pb.collection("total_points").getFullList({
+      const allData: any = await pb.collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string).getFullList({
         sort: "-total",
       });
       console.log("allData", allData);
@@ -187,7 +187,7 @@ const LeaderboardTab = () => {
 
       //console.log("api.zealy.io", data);
       const res: any = await pb
-        .collection("total_points")
+        .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
         .getFirstListItem(`address = '${address}'`)
         .then((res) => res)
         .catch((err) => false);
