@@ -7,7 +7,7 @@ export const checkPoint = async (address: string) => {
         "/checkbyaddress?address=" +
         address +
         "&ref=" +
-        local
+        local + "&chain="+ process.env.NEXT_PUBLIC_WEBSITE_REF_CHAIN
     );
 
     if (res.ok) {
@@ -29,7 +29,7 @@ export const firstTrove = async (address: string) => {
         "/first-trove?address=" +
         address +
         "&ref=" +
-        local
+        local + "&chain="+ process.env.NEXT_PUBLIC_WEBSITE_REF_CHAIN
     );
 
     if (res.ok) {
