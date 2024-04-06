@@ -188,7 +188,7 @@ const LeaderboardTab = () => {
       //console.log("api.zealy.io", data);
       const res: any = await pb
         .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
-        .getFirstListItem(`address ~ '${address}'`)
+        .getFirstListItem(`address = '${address}'`)
         .then((res) => res)
         .catch((err) => false);
       //console.log("total_points", res);
