@@ -100,10 +100,10 @@ const MobileHamburgerMenu: FC<Props> = ({
   const getPointsInfo = async () => {
     try {
       const res = await pb
-        .collection("points")
+        .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
         .getFirstListItem(`address = '${address}'`);
       setUserId(res?.id || "");
-      setExpTime(new Date(res?.updated).getTime() + 86400000);
+      setExpTime(res?.expTime || 0);
     } catch (error) {
       console.log("error", error);
       setExpTime(0);

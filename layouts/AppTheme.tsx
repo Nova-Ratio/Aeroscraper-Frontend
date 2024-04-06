@@ -78,7 +78,7 @@ const AppTheme = () => {
     try {
       setLoading(true);
       const res = await pb
-        .collection("points")
+        .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
         .getFirstListItem(`address = '${address}'`);
       setUserId(res?.id || "");
       setExpTime(res?.expTime || 0);
