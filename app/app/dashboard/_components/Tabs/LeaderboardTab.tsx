@@ -312,22 +312,7 @@ const LeaderboardTab = () => {
                         {userInformation?.referral?.toFixed(0)}
                       </Text>
                     </div>
-                    <div className="flex justify-between">
-                      <Text
-                        size="sm"
-                        textColor="text-white"
-                        weight="font-medium"
-                      >
-                        Zealy xp:
-                      </Text>
-                      <Text
-                        size="sm"
-                        textColor="text-white"
-                        weight="font-semibold"
-                      >
-                        {userInformation?.xp?.toFixed(0)}
-                      </Text>
-                    </div>
+                    
                   </BorderedContainer>
                 </Dropdown>
               </div>

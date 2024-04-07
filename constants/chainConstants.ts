@@ -53,7 +53,7 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
         name: ChainName.ARCHWAY,
         displayName: "ARCH",
         logo: "/images/token-images/archway-coin.png",
-        bech32Prefix: "archway"
+        bech32Prefix: "ARCH"
     }
 }
 

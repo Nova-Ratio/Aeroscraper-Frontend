@@ -23,14 +23,14 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
   const isMobile = useIsMobile();
   const { baseCoin, walletInfo, selectedChainName, isWalletConnected } = useChainAdapter();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
-  const [content, setContent] = useState(ArchwayContent);
+  const [content, setContent] = useState(defaultContent);
 
   const { pageData } = usePageData();
   const [showContentIdx, setShowContentIdx] = useState(0);
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    setContent(ArchwayContent);
+    setContent(defaultContent);
   }, [selectedChainName]);
 
   useEffect(() => {

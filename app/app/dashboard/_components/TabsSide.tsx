@@ -146,7 +146,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
               />
             )}
             {selectedTab === "leaderboard" && <LeaderboardTab />}
-            {selectedTab === "missions" && <Missions />}
+            {/* {selectedTab === "missions" && <Missions />} */}
           </motion.main>
         )}
       </div>

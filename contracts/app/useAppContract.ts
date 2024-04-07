@@ -19,15 +19,15 @@ const useAppContract = () => {
     getSigningCosmWasmClient
   } = useChainAdapter();
   const [client, setClient] = useState<SigningCosmWasmClient>();
-  
+
   const contract = useMemo(
     () =>
-      isWalletConnected &&
+      (isWalletConnected &&
         !isNil(baseCoin) &&
         !isNil(walletInfo) &&
         !isNil(selectedChainName) &&
         !isNil(chain) &&
-        !isNil(client)
+        !isNil(client))
         ?
         getAppContract(client, baseCoin, selectedChainName ?? ChainName.ARCHWAY, basePrice)
         :
@@ -38,7 +38,9 @@ const useAppContract = () => {
       walletInfo,
       selectedChainName,
       chain,
-      basePrice
+      address,
+      basePrice,
+      client
     ]
   );
 
@@ -230,18 +232,19 @@ const useAppContract = () => {
   );
 
   const getClient = useCallback(async () => {
+    if (client) return;
+
     try {
       const newClient = await getSigningCosmWasmClient();
       setClient(newClient);
     } catch (err) {
       setClient(undefined);
     }
-  }, [address,selectedChainName]);
+  }, [address]);
 
   useEffect(() => {
     getClient();
   }, [getClient]);
-
 
   return value;
 };

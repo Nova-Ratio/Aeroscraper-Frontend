@@ -11,7 +11,7 @@ export type DashboardTabs =
     | "riskyTroves"
     | "rewards"
     | "leaderboard"
-    | "missions";
+    // | "missions";
 
 type ProfileContextValue = {
     selectedTab: DashboardTabs;
@@ -47,7 +47,7 @@ const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
             "riskyTroves",
             "rewards",
             "leaderboard",
-            "missions",
+            // "missions",
         ];
         
         return tempTablist;

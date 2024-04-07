@@ -27,7 +27,6 @@ const ClaimRewardTab: FC<Props> = ({
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();
 
-  const coinName = baseCoin?.name;
 
   const rewardClaim = async () => {
     setProcessLoading(true);
@@ -37,7 +36,7 @@ const ClaimRewardTab: FC<Props> = ({
       addNotification({
         status: "success",
         directLink: res?.transactionHash,
-        message: `${pageData.rewardAmount} ${coinName} Reward Received`,
+        message: `${pageData.rewardAmount} ${baseCoin?.name} Reward Received`,
       });
       getPageData();
       refreshBalance();
@@ -81,7 +80,7 @@ const ClaimRewardTab: FC<Props> = ({
   };
   return (
     <section>
-      <Text size="3xl">Claim your rewards in {coinName ?? ""}</Text>
+      <Text size="3xl">Claim your rewards in {baseCoin?.name ?? ""}</Text>
       <div className="mt-6">
         <div className="w-full bg-cetacean-dark-blue border border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex items-end justify-between mt-6">
           <div>
@@ -96,7 +95,7 @@ const ClaimRewardTab: FC<Props> = ({
                   className="w-6 h-6"
                 />
                 <Text size="base" weight="font-medium">
-                  {coinName}
+                  {baseCoin?.symbol}
                 </Text>
               </div>
             ) : (

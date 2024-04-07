@@ -220,7 +220,7 @@ const AccountModal: FC<Props> = (props: Props) => {
                       <Text size='lg' className='mt-2 whitespace-nowrap flex gap-2 items-center ml-6'>
                         {baseCoin && <img alt={baseCoin.name} className="w-5 h-5" src={baseCoin.tokenImage} />}
                         {value}&nbsp;
-                        {baseCoin?.name}
+                        {baseCoin?.symbol}
                       </Text>
                     }
                   />
