@@ -8,7 +8,7 @@ import React, { FC, useEffect, useState } from "react";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { ChainName } from "@/enums/Chain";
 import RenderContent from "./renderContent";
-import { defaultContent, injContent } from "@/data/injContent";
+import { ArchwayContent, defaultContent } from "@/data/injContent";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import NotificationDropdown from "./NotificationDropdown";
 import Text from "@/components/Texts/Text";
@@ -23,19 +23,20 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
   const isMobile = useIsMobile();
   const { baseCoin, walletInfo, selectedChainName, isWalletConnected } = useChainAdapter();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
-  const [content, setContent] = useState(defaultContent);
-  useEffect(() => {
-    setContent(
-    defaultContent
-    );
-  }, [selectedChainName]);
+  const [content, setContent] = useState(ArchwayContent);
+
   const { pageData } = usePageData();
   const [showContentIdx, setShowContentIdx] = useState(0);
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
+    setContent(ArchwayContent);
+  }, [selectedChainName]);
+
+  useEffect(() => {
     isMobile && setShowStatistic(false);
   }, [isMobile]);
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -55,7 +56,6 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
   const handleHover = (isHovering: boolean) => {
     setHovering(isHovering);
   };
-
 
   return (
     <div
