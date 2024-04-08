@@ -1,7 +1,6 @@
 
-import { ethers } from "ethers";
-import { callBorrowerOperationsContract, callTroveManagerContract, callStabilityPoolContract, callSortedTrovesContract, callAUSDTTokenContract,callPriceFeedContract } from "./ethereumContracts";
-import { useMemo } from 'react';
+import { callBorrowerOperationsContract, callTroveManagerContract, callStabilityPoolContract, callSortedTrovesContract, callAUSDTTokenContract, callPriceFeedContract, callAUSDStakingContract } from "./ethereumContracts";
+import { ethers } from 'ethers';
 
 //StabilityPool Contract
 export const callStabilityPoolSetAddresses = async (_borrowerOperationsAddress: string, _troveManagerAddress: string, _activePoolAddress: string, _AUSDTokenAddress: string, _sortedTrovesAddress: string, _priceFeedAddress: string) => {
@@ -125,9 +124,9 @@ export const callOpenTrove = async (_maxFeePercentage: number, _AUSDAmount: numb
         return false;
     }
 };
-export const callAddColl = async (_upperHint: string, _lowerHint: string,_value: ethers.BigNumberish) => {
+export const callAddColl = async (_upperHint: string, _lowerHint: string) => {
     try {
-        const addColl = await (await callBorrowerOperationsContract()).contractWithSigner.addColl(_upperHint, _lowerHint,{ value: _value });
+        const addColl = await (await callBorrowerOperationsContract()).contractWithSigner.addColl(_upperHint, _lowerHint);
         return await addColl;
     } catch (error) {
         console.log(error);
@@ -168,9 +167,9 @@ export const callGetAUSDValue = async (_coll: number) => {
     }
 };
 
-export const callCloseTrove = async (_borrower: string) => {
+export const callCloseTrove = async () => {
     try {
-        const closeTrove = await (await callBorrowerOperationsContract()).contractWithSigner.closeTrove(_borrower);
+        const closeTrove = await (await callBorrowerOperationsContract()).contractWithSigner.closeTrove();
         return await closeTrove;
     } catch (error) {
         console.log(error);
@@ -549,6 +548,7 @@ export const callGetTroveStake = async (borrower: string) => {
         return false;
     }
 };
+
 export const callGetTroveDebt = async (borrower: string) => {
     try {
         const getTroveDebt = await (await callTroveManagerContract()).contractWithSigner.getTroveDebt(borrower);
@@ -660,3 +660,34 @@ export const callFetchPrice = async () => {
         return false;
     }
 };
+
+//AUSDStaking Contract Functions
+export const callStake = async (_amount: number) => {
+    try {
+        const stake = await (await callAUSDStakingContract()).contractWithSigner.stake(_amount);
+        return await stake;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export const callUnstake = async (_amount: number) => {
+    try {
+        const unstake = await (await callAUSDStakingContract()).contractWithSigner.unstake(_amount);
+        return await unstake;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export const callGetTotalAUSDStaked = async () => {
+    try {
+        const getTotalAUSDStaked = await (await callAUSDStakingContract()).contractWithSigner.getTotalAUSDStaked();
+        return await getTotalAUSDStaked;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}

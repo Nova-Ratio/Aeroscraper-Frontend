@@ -4,12 +4,15 @@ import {
   callTroveManagerContract,
   callStabilityPoolContract,
   callAUSDTTokenContract,
+  callPriceFeedContract,
+  callAUSDStakingContract,
 } from "./ethereumContracts";
 import { CollateralAsset } from "@/types/types";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import { getRequestAmount } from "@/utils/contractUtils";
 import { ChainName } from "@/enums/Chain";
 import { useNotification } from "@/contexts/NotificationProvider";
+import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 export const getAppEVMContract = () => {
   let _maxFeePercentage = "5000000000000000";
   let _upperHint = "0x0000000000000000000000000000000000000000";
@@ -130,12 +133,11 @@ export const getAppEVMContract = () => {
     isAllAmount: boolean
   ) => {
     console.log("isAllAmount", isAllAmount);
-    
+
     try {
       let tx;
       console.log("senderAddress", senderAddress);
       if (isAllAmount) {
-        
         tx = await closeTrove();
       } else {
         const { contractWithSigner } = await callBorrowerOperationsContract();
@@ -152,17 +154,26 @@ export const getAppEVMContract = () => {
       return undefined;
     }
   };
-  const borrowLoan = async (senderAddress: string, amount: number, collRatio: number) => {
+  const borrowLoan = async (
+    senderAddress: string,
+    amount: number,
+    collRatio: number
+  ) => {
     try {
       const { contractWithSigner } = await callBorrowerOperationsContract();
-      const tx = await contractWithSigner.withdrawAUSD(_maxFeePercentage, getRequestAmount(amount, defaultAsset.ausdDecimal), _upperHint, _lowerHint);
+      const tx = await contractWithSigner.withdrawAUSD(
+        _maxFeePercentage,
+        getRequestAmount(amount, defaultAsset.ausdDecimal),
+        _upperHint,
+        _lowerHint
+      );
       await tx.wait();
       return await tx;
-  } catch (error) {
+    } catch (error) {
       console.log(error);
       return false;
-  }
-};
+    }
+  };
   const getAusdBalance = async (borrower: string) => {
     try {
       const { contractWithSigner } = await callAUSDTTokenContract();
@@ -183,7 +194,6 @@ export const getAppEVMContract = () => {
       const getTroveStake = await contractWithSigner.getTroveStake(borrower);
       let data = await getTroveStake;
       console.log("getTroveStake", data);
-
       return {
         amount: Number(data).toString(),
         percentage: _maxFeePercentage,
@@ -193,6 +203,119 @@ export const getAppEVMContract = () => {
       return undefined;
     }
   };
+  const getTotalCollateralAmounts = async (): Promise<
+    TotalCollateralModel[] | undefined
+  > => {
+    try {
+      const { contractWithSigner } = await callTroveManagerContract();
+      const tx = await contractWithSigner.entireSystemColl();
+      await tx.wait();
+      let res = await tx;
+      return [
+        {
+          amount: Number(res),
+          denom: "eth",
+        },
+      ];
+    } catch (error) {
+      console.log(error);
+      return undefined;
+    }
+  };
+  const getTotalDebtAmount = async (): Promise<string | undefined> => {
+    try {
+      const { contractWithSigner } = await callBorrowerOperationsContract();
+      const entireSystemDebt = await contractWithSigner.entireSystemDebt();
+      return await entireSystemDebt;
+    } catch (error) {
+      console.log(error);
+      return undefined;
+    }
+  };
+  const getTotalStake = async (): Promise<string | undefined> => {
+    try {
+      const { contractWithSigner } = await callAUSDStakingContract();
+      const getTotalAUSDStaked = await contractWithSigner.getTotalAUSDStaked();
+      return await getTotalAUSDStaked;
+  } catch (error) {
+      console.log(error);
+      return undefined;
+  }
+  };
+  const getCollateralPrice = async () => {
+    try {
+      const { contractWithSigner } = await callPriceFeedContract();
+      const fetchPrice = await contractWithSigner.fetchPrice();
+      return await fetchPrice;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  const stake = async (senderAddress: string, amount: number) => {
+    try {
+      console.log("amount :" ,amount) ;
+      console.log("amountDecimals :", getRequestAmount(amount, defaultAsset.decimal)) ;
+      
+      const { contractWithSigner } = await callAUSDStakingContract();
+      const tx = await contractWithSigner.stake(
+        getRequestAmount(amount, defaultAsset.decimal).toString()
+      );
+      await tx.wait();
+      let res = await tx;
+      return res;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  const unstake = async (senderAddress: string, amount: number) => {
+    try {
+      const { contractWithSigner } = await callAUSDStakingContract();
+      const tx = await contractWithSigner.unstake(
+        getRequestAmount(amount, defaultAsset.decimal)
+      );
+      await tx.wait();
+      let res = await tx;
+      return res;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  const redeem = async (senderAddress: string, amount: number) => {
+    try {
+      const { contractWithSigner } = await callTroveManagerContract();
+      const tx = await contractWithSigner.redeemCollateral(
+        getRequestAmount(amount, defaultAsset.decimal)
+        /* _firstRedemptionHint,
+        _upperPartialRedemptionHint,
+        _lowerPartialRedemptionHint,
+        _partialRedemptionHintNICR,
+        _maxIterations,
+        _maxFeePercentage */
+        // TODO: tuğgüne sor
+      );
+      await tx.wait();
+      let res = await tx;
+      return res;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  const liquidateTroves = async (senderAddress: string) => {
+    try {
+      const { contractWithSigner } = await callTroveManagerContract();
+      const tx = await contractWithSigner.liquidateTroves(/* n */); // TODO: tuğgüne sor
+      await tx.wait();
+      let res = await tx;
+      return res;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
   return {
     getTrove,
     getAusdBalance,
@@ -200,20 +323,20 @@ export const getAppEVMContract = () => {
     removeCollateral,
     repayLoan,
     borrowLoan,
-    /*  getTotalCollateralAmounts,
+    getTotalCollateralAmounts,
     getTotalDebtAmount,
-    getTotalStake,
     getCollateralPrice,
-    getAusdInfo,
-    getReward, */
+    getTotalStake,
     openTrove,
     addCollateral,
-    /*,
-    stake,
     unstake,
+    stake,
     redeem,
     liquidateTroves,
-    liquidateTrovesV2,
-    withdrawLiquidationGains */
+    /*,
+    getAusdInfo,
+    getReward,
+    withdrawLiquidationGains ,
+    */
   };
 };
