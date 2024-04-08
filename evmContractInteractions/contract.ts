@@ -242,6 +242,7 @@ export const getAppEVMContract = () => {
       return undefined;
   }
   };
+
   const getCollateralPrice = async () => {
     try {
       const { contractWithSigner } = await callPriceFeedContract();
@@ -252,6 +253,7 @@ export const getAppEVMContract = () => {
       return false;
     }
   };
+
   const stake = async (senderAddress: string, amount: number) => {
     try {
       console.log("amount :" ,amount) ;
@@ -304,10 +306,10 @@ export const getAppEVMContract = () => {
       return false;
     }
   };
-  const liquidateTroves = async (senderAddress: string) => {
+  const liquidateTroves = async (senderAddress: string, n=5) => {
     try {
       const { contractWithSigner } = await callTroveManagerContract();
-      const tx = await contractWithSigner.liquidateTroves(/* n */); // TODO: tuğgüne sor
+      const tx = await contractWithSigner.liquidateTroves(n); // TODO: tuğgüne sor
       await tx.wait();
       let res = await tx;
       return res;
@@ -336,7 +338,7 @@ export const getAppEVMContract = () => {
     /*,
     getAusdInfo,
     getReward,
-    withdrawLiquidationGains ,
+    withdrawLiquidationGains,
     */
   };
 };
