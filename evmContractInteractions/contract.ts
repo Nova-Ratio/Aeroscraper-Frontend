@@ -253,19 +253,7 @@ export const getAppEVMContract = () => {
       return false;
     }
   };
-  const callApprove = async (spender: string, amount: number) => {
-    try {
-      const { contractWithSigner } = await callAUSDTTokenContract();
-      const approve = await contractWithSigner.approve(
-        spender,
-        getRequestAmount(amount, defaultAsset.decimal)
-      );
-      return await approve;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
+
   const stake = async (senderAddress: string, amount: number) => {
     try {
       console.log("amount :", amount);
@@ -273,13 +261,21 @@ export const getAppEVMContract = () => {
         "amountDecimals :",
         getRequestAmount(amount, defaultAsset.decimal)
       );
-      
-      let approve = callApprove(senderAddress, amount);
+      let _amount = getRequestAmount(amount, defaultAsset.decimal);
+      let spender = (await callAUSDStakingContract()).Address;
+      let owner = senderAddress;
+      let checker = await (
+        await callAUSDTTokenContract()
+      ).contractWithSigner.allowance(owner, spender);
+      if (checker < _amount) {
+        let tx = await (
+          await callAUSDTTokenContract()
+        ).contractWithSigner.approve(spender, _amount);
+        await tx.wait();
+      }
 
       const { contractWithSigner } = await callAUSDStakingContract();
-      const tx = await contractWithSigner.stake(
-        getRequestAmount(amount, defaultAsset.decimal).toString()
-      );
+      const tx = await contractWithSigner.stake(_amount);
       await tx.wait();
       let res = await tx;
       return res;

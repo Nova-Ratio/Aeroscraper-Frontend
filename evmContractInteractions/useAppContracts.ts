@@ -920,10 +920,10 @@ export const callFetchPrice = async () => {
 };
 
 //AUSDStaking Contract Functions
-export const callStake = async (adres: string, _amount: number) => {
+export const callStake = async (address: string, _amount: number) => {
     try {
         let spender = (await callAUSDStakingContract()).Address;
-        let owner = adres;
+        let owner = address;
 
         let checker = await (await callAUSDTTokenContract()).contractWithSigner.allowance(owner, spender);
         if (checker < _amount) {
