@@ -1,5 +1,5 @@
 import { useAppContext } from "@/contexts/AppProvider";
-import { defaultContent, injContent } from "@/data/injContent";
+import { defaultContent } from "@/data/injContent";
 import { ChainName } from "@/enums/Chain";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
