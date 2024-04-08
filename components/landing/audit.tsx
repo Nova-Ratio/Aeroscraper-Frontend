@@ -8,7 +8,7 @@ export default function Audit() {
     <div>
       <h2 className="text-4xl font-semibold text-white mb-4 mt-14">Audits</h2>
       <div className="gap-6 mt-10 md:grid grid-cols-3 w-full hidden">
-        <div className=" w-full gradientBorderBlue  flex flex-col gap-6 p-4 md:p-6 items-center bg-white mt-10 h-fit text-white text-center">
+        <div className=" w-full gradientBorderBlue  flex flex-col gap-6 p-4 md:p-6 items-center bg-white h-fit text-white text-center">
           <div className="flex items-center gap-6">
             <Image
               src={"/images/audit.png"}
