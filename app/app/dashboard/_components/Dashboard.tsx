@@ -9,10 +9,9 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import Footer from "./footer";
 import { DashboardTabs } from "@/contexts/TabsProvider";
-import { getAppEVMContract } from "@/evmContractInteractions/contract";
 
 export default function Dashboard() {
-  const { openTrove } = getAppEVMContract();
+  /* const { openTrove } = getAppEVMContract(); */
   const { basePrice } = useChainAdapter();
   const [tabPosition, setTabPosition] = useState<DashboardTabs>("redeem");
 
@@ -111,20 +110,7 @@ export default function Dashboard() {
       )}
       <div className="flex gap-4 flex-col md:flex-row md:gap-24 z-10 relative md:min-h-[720px] ">
         <StatisticSide basePrice={basePrice} />
-        <button
-          onClick={() =>
-            openTrove(
-              "",//sender
-              3,//amount
-              1800,//loanAmount
-              0,//collRatio
-              "x"
-            )
-          }
-          className="text-white font-bold bg-black p-3 h-fit rounded"
-        >
-          DENEME
-        </button>
+        {/*  */}
         <TabsSide setTabPosition={changeTabPosition} />
       </div>
       <Footer />

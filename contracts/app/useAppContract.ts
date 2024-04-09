@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { isNil } from "lodash";
-import { getAppContract } from "./contract";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
 import { ChainName } from "@/enums/Chain";
@@ -173,8 +172,9 @@ const useAppContract = () => {
 
   const liquidateTrovesV2 = useCallback(
     async (owner: string) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.liquidateTrovesV2(address, owner);
+      /* if (isNil(contract) || isNil(address)) return;
+      return await contract.liquidateTrovesV2(address, owner); */
+      return undefined
     },
     [address, contract]
   );

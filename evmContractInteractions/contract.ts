@@ -13,6 +13,7 @@ import { getRequestAmount } from "@/utils/contractUtils";
 import { ChainName } from "@/enums/Chain";
 import { useNotification } from "@/contexts/NotificationProvider";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
+import { CW20TokenInfoResponse } from "@/contracts/app/types";
 export const getAppEVMContract = () => {
   let _maxFeePercentage = "5000000000000000";
   let _upperHint = "0x0000000000000000000000000000000000000000";
@@ -331,6 +332,37 @@ export const getAppEVMContract = () => {
       return false;
     }
   };
+  const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
+    /* const res = await chainGrpcWasmApi.fetchSmartContractState(
+      ausdContractAddress,
+      toBase64({ token_info: {} })
+    );
+    const data: any = fromBase64(res.data as any);
+    return data; */
+    return undefined;
+  };
+  const getReward = async (user_addr: string): Promise<string | undefined> => {
+    /* const res = await chainGrpcWasmApi.fetchSmartContractState(
+      contractAddress,
+      toBase64({ liquidation_gains: { user_addr } })
+    );
+    const data: any = fromBase64(res.data as any);
+    return data; */
+    return undefined;
+  };
+  const withdrawLiquidationGains = async (senderAddress: string) => {
+    /* const msg = MsgExecuteContractCompat.fromJSON({
+      contractAddress,
+      sender: senderAddress,
+      msg: { withdraw_liquidation_gains: {} }
+    })
+
+    return await msgBroadcastClient.broadcast({
+      msgs: msg,
+      injectiveAddress: senderAddress,      
+    }) */
+    return undefined
+  }
   return {
     getTrove,
     getAusdBalance,
@@ -348,10 +380,10 @@ export const getAppEVMContract = () => {
     stake,
     redeem,
     liquidateTroves,
-    /*,
     getAusdInfo,
-    getReward,
+    getReward, 
     withdrawLiquidationGains,
+    /*,
     */
   };
 };
