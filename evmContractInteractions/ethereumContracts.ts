@@ -1,13 +1,12 @@
 import { ethers } from 'ethers';
 
-import StabilityPoolABI from "./ABI/StabilityPoolABI.json";
-import AUSDTTokenABI from "./ABI/AUSDTTokenABI.json";
-import PriceFeedABI from "./ABI/PriceFeedABI.json";
-import SortedTrovesABI from "./ABI/SortedTrovesABI.json";
-import BorrowerOperationsABI from "./ABI/BorrowerOperations.json";
-import TroveManagerABI from "./ABI/TroveManager.json";
-import AUSDStakingABI from "./ABI/AUSDStaking.json";
-
+import StabilityPoolABI from "@/abi/StabilityPoolABI.json";
+import AUSDTTokenABI from "@/abi/AUSDTTokenABI.json";
+import PriceFeedABI from "@/abi/PriceFeedABI.json";
+import SortedTrovesABI from "@/abi/SortedTrovesABI.json";
+import BorrowerOperationsABI from "@/abi/BorrowerOperations.json";
+import TroveManagerABI from "@/abi/TroveManager.json";
+import AUSDStakingABI from "@/abi/AUSDStaking.json";
 
 const BORROWER_OPERATIONS = process.env.NEXT_PUBLIC_BORROWER_OPERATIONS_CONTRACT_ADDRESS as string; 
 const TROVE_MANAGER = process.env.NEXT_PUBLIC_TROVE_MANAGER_CONTRACT_ADDRESS as string; 
