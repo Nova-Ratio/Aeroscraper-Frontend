@@ -47,7 +47,7 @@ const RedeemTab: FC<Props> = ({
   const changeRedeemAmount = useCallback(
     (values: NumberFormatValues) => {
       setRedeemAmount(Number(values.value));
-      setInjAmount(getValueByRatio(values.value, pageData.baseMinRedeemAmount));
+      setInjAmount(Number(values.value) / basePrice);
     },
     [pageData]
   );
