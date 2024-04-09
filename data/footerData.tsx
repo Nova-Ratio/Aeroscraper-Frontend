@@ -87,6 +87,10 @@
           title: "Guild",
           link: "https://guild.xyz/aeroscraper",
         },
+        {
+          title: "Galxe",
+          link: "https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd",
+        },
       ],
     },
   ];

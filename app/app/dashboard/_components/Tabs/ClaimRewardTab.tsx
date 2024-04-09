@@ -36,7 +36,7 @@ const ClaimRewardTab: FC<Props> = ({
       addNotification({
         status: "success",
         directLink: res?.transactionHash,
-        message: `${pageData.rewardAmount} ${baseCoin?.name} Reward Received`,
+        message: `${pageData.rewardAmount} ${baseCoin?.denom} Reward Received`,
       });
       getPageData();
       refreshBalance();
@@ -80,7 +80,7 @@ const ClaimRewardTab: FC<Props> = ({
   };
   return (
     <section>
-      <Text size="3xl">Claim your rewards in {baseCoin?.name ?? ""}</Text>
+      <Text size="3xl">Claim your rewards in {baseCoin?.denom ?? ""}</Text>
       <div className="mt-6">
         <div className="w-full bg-cetacean-dark-blue border border-white/10 rounded-xl md:rounded-2xl px-3 pt-4 pb-3 md:px-6 md:py-8 flex items-end justify-between mt-6">
           <div>

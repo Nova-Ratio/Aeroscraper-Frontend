@@ -164,7 +164,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
             className="w-[191px] h-14"
             tooltip="The Total Collateral Amount (TCA) is the total value of ARCH locked as collateral in the system."
             tooltipPlacement="bottom"
-            coinName={baseCoin?.name}
+            coinName={baseCoin?.denom}
             isNumeric
           />
           <StatisticCard
