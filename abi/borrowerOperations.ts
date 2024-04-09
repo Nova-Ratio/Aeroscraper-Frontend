@@ -1,4 +1,4 @@
-[
+export const BorrowerOperationsABI = [
 	{
 		"anonymous": false,
 		"inputs": [

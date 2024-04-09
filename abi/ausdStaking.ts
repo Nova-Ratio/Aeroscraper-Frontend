@@ -1,4 +1,4 @@
-[
+export const AUSDStakingABI = [
 	{
 		"anonymous": false,
 		"inputs": [

@@ -1,4 +1,4 @@
-[
+export const PriceFeedABI =[
     {
         "anonymous": false,
         "inputs": [

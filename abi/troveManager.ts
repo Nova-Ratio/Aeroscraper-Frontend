@@ -1,4 +1,4 @@
-[
+export const TroveManagerABI = [
     {
         "anonymous": false,
         "inputs": [

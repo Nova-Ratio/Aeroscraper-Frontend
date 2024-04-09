@@ -1,4 +1,4 @@
-[
+export const StabilityPoolABI = [
     {
         "anonymous": false,
         "inputs": [
