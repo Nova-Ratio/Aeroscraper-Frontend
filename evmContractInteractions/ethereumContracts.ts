@@ -1,5 +1,5 @@
-import { Contract, ethers } from 'ethers';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { ethers } from 'ethers';
+
 import StabilityPoolABI from "./ABI/StabilityPoolABI.json";
 import AUSDTTokenABI from "./ABI/AUSDTTokenABI.json";
 import PriceFeedABI from "./ABI/PriceFeedABI.json";
@@ -8,12 +8,6 @@ import BorrowerOperationsABI from "./ABI/BorrowerOperations.json";
 import TroveManagerABI from "./ABI/TroveManager.json";
 import AUSDStakingABI from "./ABI/AUSDStaking.json";
 
-
-
-
-// declare global {
-//     interface Window { ethereum: any; }
-// }
 
 const BORROWER_OPERATIONS = process.env.NEXT_PUBLIC_BORROWER_OPERATIONS_CONTRACT_ADDRESS as string; 
 const TROVE_MANAGER = process.env.NEXT_PUBLIC_TROVE_MANAGER_CONTRACT_ADDRESS as string; 
