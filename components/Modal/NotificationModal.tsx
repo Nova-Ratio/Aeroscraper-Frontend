@@ -51,7 +51,7 @@ const VARIANTS: Record<Status, any> = {
     icon: (
       <img alt='transaction-success' src='/images/transaction-success.svg' />
     ),
-    title: "Created Your Account",
+    title: "Your account created successfully. Please click Daily Check-In again.",
     borderColor: "border-[#00CF30]/70",
     backgroundColor: "bg-[#001A0666]/40"
   }

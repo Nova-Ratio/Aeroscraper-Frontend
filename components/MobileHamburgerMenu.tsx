@@ -81,7 +81,7 @@ const MobileHamburgerMenu: FC<Props> = ({
           addNotification({
             status: "create",
             directLink: "",
-            message: "Created Your Account",
+            message: "Your account created successfully. Please click Daily Check-In again.",
           });
         } else {
           addNotification({
