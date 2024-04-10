@@ -12,7 +12,8 @@ const bgColor = {
   'default': 'main-gradient',
   "networkchange": 'success-gradient',
   'check': 'success-gradient',
-  'checkError': 'error-gradient'
+  'checkError': 'error-gradient',
+  "create": 'success-gradient'
 }
 
 type Props = {

@@ -111,7 +111,9 @@ const AppTheme = () => {
     try {
       setLoading(true);
       const res = await pb
-        .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
+        .collection(
+          process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string
+        )
         .getFirstListItem(`address = '${address}'`);
       setUserId(res?.id || "");
       setExpTime(res?.expTime || 0);
@@ -126,7 +128,7 @@ const AppTheme = () => {
   useEffect(() => {
     address && getPointsInfo();
   }, [address]);
-  
+
   async function getCheckPoint(address: string) {
     try {
       setProcessLoading(true);
@@ -134,11 +136,19 @@ const AppTheme = () => {
       console.log("res", res);
       console.log("getCheckPoint message:", res?.message);
       if (res?.updated) {
-        addNotification({
-          status: "check",
-          directLink: "",
-          message: "Your point updated successfully",
-        });
+        if (res?.data?.message.includes("Created")) {
+          addNotification({
+            status: "create",
+            directLink: "",
+            message: "Your account created successfully. Please click Daily Check-In again.",
+          });
+        } else {
+          addNotification({
+            status: "check",
+            directLink: "",
+            message: "Your point updated successfully",
+          });
+        }
 
         getPointsInfo();
       } else {
