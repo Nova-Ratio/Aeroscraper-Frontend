@@ -46,10 +46,18 @@ const VARIANTS: Record<Status, any> = {
     title: "Already Checked-In Today",
     borderColor: "border-[#ED0E00]/70",
     backgroundColor: "bg-[#2E030066]/40"
+  },
+  create: {
+    icon: (
+      <img alt='transaction-success' src='/images/transaction-success.svg' />
+    ),
+    title: "Created Your Account",
+    borderColor: "border-[#00CF30]/70",
+    backgroundColor: "bg-[#001A0666]/40"
   }
 };
 
-type Status = "error" | "success" | "networkchange" | "check" | "checkError";
+type Status = "error" | "success" | "networkchange" | "check" | "checkError" | "create";
 
 const NotificationModal: FC = () => {
   const { selectedChainName } = useChainAdapter();
@@ -79,14 +87,14 @@ const NotificationModal: FC = () => {
               duration: 0.5,
               ease: "backInOut"
             }}
-            className={`fixed z-[999] right-4 md:right-20 backdrop-blur-2xl top-[112px] border-[0.6px] rounded-lg px-6 py-4 ${VARIANTS[notification.status].borderColor} ${VARIANTS[notification.status].backgroundColor}`}>
+            className={`fixed z-[999] right-4 md:right-20 backdrop-blur-2xl top-[112px] border-[0.6px] rounded-lg px-6 py-4 ${VARIANTS[notification.status]?.borderColor} ${VARIANTS[notification.status]?.backgroundColor}`}>
             <div className=''>
               <div className="flex justify-center items-center gap-5 whitespace-nowrap">
                 <div className='w-5 h-5 text-white'>
-                  {VARIANTS[notification.status].icon}
+                  {VARIANTS[notification.status]?.icon}
                 </div>
                 <span className="text-base font-medium text-white flex-1">
-                  {VARIANTS[notification.status].title}
+                  {VARIANTS[notification.status]?.title}
                 </span>
               </div>
               {notification.status === "error" && (

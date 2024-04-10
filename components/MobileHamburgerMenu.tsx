@@ -77,11 +77,19 @@ const MobileHamburgerMenu: FC<Props> = ({
       const res = await checkPoint(address);
       console.log("res", res);
       if (res?.updated) {
-        addNotification({
-          status: "check",
-          directLink: "",
-          message: "Your point updated successfully",
-        });
+        if (res?.data?.message.includes("Created")) {
+          addNotification({
+            status: "create",
+            directLink: "",
+            message: "Created Your Account",
+          });
+        } else {
+          addNotification({
+            status: "check",
+            directLink: "",
+            message: "Your point updated successfully",
+          });
+        }
         getPointsInfo();
       } else {
         addNotification({
@@ -100,7 +108,9 @@ const MobileHamburgerMenu: FC<Props> = ({
   const getPointsInfo = async () => {
     try {
       const res = await pb
-        .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
+        .collection(
+          process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string
+        )
         .getFirstListItem(`address = '${address}'`);
       setUserId(res?.id || "");
       setExpTime(res?.expTime || 0);
