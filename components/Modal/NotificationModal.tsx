@@ -43,7 +43,7 @@ const VARIANTS: Record<Status, any> = {
     icon: (
       <CloseIcon className='w-5 h-5' />
     ),
-    title: "already checked today",
+    title: "Already Checked-In Today",
     borderColor: "border-[#ED0E00]/70",
     backgroundColor: "bg-[#2E030066]/40"
   }
