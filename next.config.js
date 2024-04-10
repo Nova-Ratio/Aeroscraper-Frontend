@@ -13,7 +13,7 @@ const nextConfig = withBundleAnalyzer({
   experimental: {
     forceSwcTransforms: true,
   },
-  swcMinify: true,
+  swcMinify: true
 });
 
 module.exports = nextConfig;

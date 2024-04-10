@@ -12,11 +12,12 @@
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.32.2",
-    "@cosmjs/crypto": "^0.32.2",
-    "@cosmjs/math": "^0.32.2",
-    "@cosmjs/proto-signing": "^0.32.2",
-    "@cosmjs/stargate": "^0.32.2",
+    "@cosmjs/cosmwasm-stargate": "^0.32.3",
+    "@cosmjs/crypto": "^0.32.3",
+    "@cosmjs/math": "^0.32.3",
+    "@cosmjs/proto-signing": "^0.32.3",
+    "@cosmjs/stargate": "^0.32.3",
+    "@cosmjs/tendermint-rpc": "^0.32.3",
     "@cosmos-kit/core": "^2.8.2",
     "@cosmos-kit/cosmos-extension-metamask": "^0.3.4",
     "@cosmos-kit/cosmostation": "^2.6.2",
@@ -26,9 +27,9 @@
     "@cosmos-kit/ninji": "^2.6.2",
     "@cosmos-kit/react": "^2.10.2",
     "@injectivelabs/networks": "^1.14.6",
-    "@injectivelabs/sdk-ts": "^1.14.5",
-    "@injectivelabs/utils": "^1.14.5",
-    "@injectivelabs/wallet-ts": "^1.14.5",
+    "@injectivelabs/sdk-ts": "^1.14.7",
+    "@injectivelabs/utils": "^1.14.6",
+    "@injectivelabs/wallet-ts": "^1.14.7",
     "@pythnetwork/price-service-client": "^1.6.2",
     "@stytch/nextjs": "^17.0.0",
     "@stytch/vanilla-js": "^4.4.1",
@@ -45,9 +46,10 @@
     "framer-motion": "^10.12.18",
     "graphql-request": "^6.1.0",
     "lodash": "^4.17.21",
-    "next": "13.4.8",
+    "next": "^14.1.4",
     "nextjs-toploader": "^1.6.4",
     "pino-pretty": "^10.3.1",
+    "pocketbase": "^0.21.1",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -64,5 +66,9 @@
     "@next/bundle-analyzer": "^14.1.0",
     "@types/lodash": "^4.14.195",
     "cross-env": "^7.0.3"
+  },
+  "browser": {
+    "crypto": false,
+    "stream": false
   }
 }

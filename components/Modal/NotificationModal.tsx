@@ -30,10 +30,26 @@ const VARIANTS: Record<Status, any> = {
     title: "Network Changed",
     borderColor: "border-[#00CF30]/70",
     backgroundColor: "bg-[#001A0666]/40"
+  },
+  check : {
+    icon: (
+      <img alt='transaction-success' src='/images/transaction-success.svg' />
+    ),
+    title: "Your point updated successfully",
+    borderColor: "border-[#00CF30]/70",
+    backgroundColor: "bg-[#001A0666]/40"
+  },
+  checkError : {
+    icon: (
+      <CloseIcon className='w-5 h-5' />
+    ),
+    title: "already checked today",
+    borderColor: "border-[#ED0E00]/70",
+    backgroundColor: "bg-[#2E030066]/40"
   }
 };
 
-type Status = "error" | "success" | "networkchange";
+type Status = "error" | "success" | "networkchange" | "check" | "checkError";
 
 const NotificationModal: FC = () => {
   const { selectedChainName } = useChainAdapter();

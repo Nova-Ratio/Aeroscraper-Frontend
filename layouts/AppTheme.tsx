@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Text from "@/components/Texts/Text";
 import { ExitIcon, LogoSecondary } from "@/components/Icons/Icons";
 import NotificationDropdown from "@/app/app/dashboard/_components/NotificationDropdown";
-import { isNil } from "lodash";
+import { isNil, set } from "lodash";
 import AccountModal from "@/components/AccountModal/AccountModal";
 import { convertAmount } from "@/utils/contractUtils";
 import NotificationModal from "@/components/Modal/NotificationModal";
@@ -20,6 +20,10 @@ import ChainData from "@/services/data/chain.json";
 import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import OutlinedButton from "@/components/Buttons/OutlinedButton";
+import { checkPoint } from "@/hooks/usePointer";
+import pb from "@/lib/pocketbase";
+import ReferralModal from "@/components/AccountModal/RefModal";
 
 const chainID = EthereumChainId.Mainnet;
 
@@ -34,9 +38,10 @@ const AppTheme = () => {
     selectedWallet,
     disconnect,
     disconnectMetamask,
-    basePrice
+    basePrice,
   } = useChainAdapter();
-  const { addNotification } = useNotification();
+  const { addNotification, processLoading, setProcessLoading } =
+    useNotification();
   const { balanceByDenom } = useBalances();
   const { pageData } = usePageData();
   const { profileDetail } = useProfile();
@@ -57,7 +62,8 @@ const AppTheme = () => {
     if (
       window.ethereum &&
       typeof window !== "undefined" &&
-      selectedWallet === WalletType.METAMASK && selectedChainName === ChainName.INJECTIVE &&
+      selectedWallet === WalletType.METAMASK &&
+      selectedChainName === ChainName.INJECTIVE &&
       isWalletConnected
     ) {
       const getChainId = async () => {
@@ -88,9 +94,69 @@ const AppTheme = () => {
       });
     }
   }, [selectedWallet, isWalletConnected]);
+  const [expTime, setExpTime] = useState<number>(0);
+
+  const [getTime, setGetTime] = useState<number>(new Date().getTime());
+
+  useEffect(() => {
+    //if (localTime && parseInt(localTime) < new Date().getTime()) {}
+    const interval = setInterval(() => {
+      setGetTime(new Date().getTime());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  const [userId, setUserId] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  async function getPointsInfo() {
+    try {
+      setLoading(true);
+      const res = await pb
+        .collection(process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string)
+        .getFirstListItem(`address = '${address}'`);
+      setUserId(res?.id || "");
+      setExpTime(res?.expTime || 0);
+    } catch (error) {
+      console.log("error", error);
+      setExpTime(0);
+      setUserId("");
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => {
+    address && getPointsInfo();
+  }, [address]);
+  
+  async function getCheckPoint(address: string) {
+    try {
+      setProcessLoading(true);
+      const res: any = await checkPoint(address);
+      console.log("res", res);
+      console.log("getCheckPoint message:", res?.message);
+      if (res?.updated) {
+        addNotification({
+          status: "check",
+          directLink: "",
+          message: "Your point updated successfully",
+        });
+
+        getPointsInfo();
+      } else {
+        addNotification({
+          status: "checkError",
+          directLink: "",
+          message: "Failed to update your point",
+        });
+      }
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setProcessLoading(false);
+    }
+  }
 
   const [chainData, setChainData] = useState<any>(ChainData);
-
+  const [refModal, setRefModal] = useState<boolean>(false);
   const CheckChain = (id: number) => {
     try {
       id = Number(id);
@@ -161,10 +227,16 @@ const AppTheme = () => {
           <Text size="2xl">Aeroscraper</Text>
         </div>
         <div className="flex items-center">
-          <Text size="base" className="mr-2 md:block hidden">Price Data:</Text>
+          <Text size="base" className="mr-2 md:block hidden">
+            Price Data:
+          </Text>
           <div className="items-center gap-2 mr-8 md:flex hidden">
             <Text size="base">$1.00</Text>
-            <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="aUSD">
+            <Tooltip
+              containerClassName="flex items-center text-white"
+              width="w-fit"
+              title="aUSD"
+            >
               <img
                 alt="ausd"
                 className="w-5 h-5"
@@ -175,7 +247,11 @@ const AppTheme = () => {
           {!isNil(baseCoin) && (
             <div className="items-center gap-2 mr-6 md:flex hidden">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
-              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="INJ">
+              <Tooltip
+                containerClassName="flex items-center text-white"
+                width="w-fit"
+                title="INJ"
+              >
                 <img
                   alt={baseCoin.name}
                   className="w-5 h-5"
@@ -187,12 +263,50 @@ const AppTheme = () => {
 
           <div className="flex md:hidden items-center gap-4">
             <ChainSelector />
-            <MobileHamburgerMenu setAccountModal={setAccountModal} disconnectWallet={disconnectWallet} />
+            <MobileHamburgerMenu
+              setAccountModal={setAccountModal}
+              disconnectWallet={disconnectWallet}
+            />
           </div>
-          <div className="md:flex hidden">
+          <div className="md:flex hidden items-center">
             {isWalletConnected && !isNil(baseCoin) ? (
               <>
-                <div className="md:flex hidden mr-6">
+                <div className="md:flex hidden mr-3">
+                  <OutlinedButton
+                    disabledText="Already checked in today"
+                    disabled={getTime < expTime}
+                    loading={processLoading}
+                    onClick={() => {
+                      address && getCheckPoint(address);
+                    }}
+                    className="rounded-lg w-[128px] md:w-[128px] ml-2 text-center h-[52px]"
+                  >
+                    {getTime < expTime ? (
+                      <div className="w-full flex flex-col items-center justify-start">
+                        <Text size="base">Daily Check-In</Text>
+                        <Text
+                          size="sm"
+                          className="text-white main-gradient w-fit px-6 mb-1 rounded-full"
+                        >
+                          {` ${new Date(expTime - getTime)
+                            .toISOString()
+                            .substr(11, 8)}`}
+                        </Text>
+                      </div>
+                    ) : (
+                      <Text size="base">Daily Check-In</Text>
+                    )}
+                  </OutlinedButton>
+                </div>
+                <button
+                  onClick={() => {
+                    setRefModal(true);
+                  }}
+                  className="text-base font-semibold text-gradient w-full h-10"
+                >
+                  Create Referral
+                </button>
+                <div className="md:flex hidden mr-3">
                   <NotificationDropdown />
                 </div>
                 <div>
@@ -254,30 +368,30 @@ const AppTheme = () => {
                   baseCoinBalance={
                     !isNil(baseCoin)
                       ? Number(
-                        convertAmount(
-                          balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                          baseCoin.decimal
+                          convertAmount(
+                            balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                            baseCoin.decimal
+                          )
                         )
-                      )
                       : 0
                   }
                   basePrice={0}
                 />
               </>
             )}
-          </div >
-        </div >
+          </div>
+        </div>
         <NotificationModal />
         <AccountModal
           balance={{
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                convertAmount(
-                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                  baseCoin?.decimal
+                  convertAmount(
+                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                    baseCoin?.decimal
+                  )
                 )
-              )
               : 0,
           }}
           basePrice={basePrice}
@@ -286,7 +400,15 @@ const AppTheme = () => {
             setAccountModal(false);
           }}
         />
-      </header >
+        <ReferralModal
+          showModal={refModal}
+          userId={userId}
+          onClose={() => setRefModal(false)}
+          refresh={getPointsInfo}
+          loading={loading}
+          setLoading={setLoading}
+        />
+      </header>
     </>
   );
 };

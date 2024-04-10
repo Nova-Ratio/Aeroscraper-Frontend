@@ -1,7 +1,5 @@
-"use client"
-
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Text from '../Texts/Text';
 import GradientButton from '../Buttons/GradientButton';
@@ -23,6 +21,10 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
         const isCookieAccepted = getCookie('aeroscraper-cookie-accept') === 'true';
         setOpen(!isCookieAccepted);
     }, [])
+
+    if (typeof document === 'undefined') {
+        return null; // Return null if running in a non-browser environment
+    }
 
     return ReactDOM.createPortal((
         <AnimatePresence>
@@ -60,4 +62,4 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
     ), document.body)
 }
 
-export default CookieAccept
+export default CookieAccept;
