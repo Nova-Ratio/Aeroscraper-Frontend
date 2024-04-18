@@ -1,7 +1,5 @@
-"use client"
-
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Text from '../Texts/Text';
 import GradientButton from '../Buttons/GradientButton';
@@ -24,6 +22,10 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
         setOpen(!isCookieAccepted);
     }, [])
 
+    if (typeof document === 'undefined') {
+        return null; // Return null if running in a non-browser environment
+    }
+
     return ReactDOM.createPortal((
         <AnimatePresence>
             {
@@ -41,7 +43,7 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
                                     This website uses cookies to enhance the user experience.
                                 </Text>
                                 <Text size='sm' className='leading-[28px]'>
-                                    We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you{"’"}ve provided to them or that they{"’"}ve collected from your use of their services.
+                                    We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services.
                                 </Text>
                             </div>
                             <GradientButton
@@ -57,7 +59,7 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
                 </motion.div>
             }
         </AnimatePresence>
-    ), document?.body)
+    ), document.body)
 }
 
-export default CookieAccept
+export default CookieAccept;
