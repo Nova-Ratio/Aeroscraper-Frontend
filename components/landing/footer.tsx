@@ -14,41 +14,41 @@ export default function Footer() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-20">
         <div className="flex flex-col content-start justify-start gap-4">
           <Text size="sm" textColor="text-white" weight="font-semibold">
-            Product 
+            Product
           </Text>
-          
-            <Link
-              href={"https://beosin.com/audits/Aeroscraper_202402020919.pdf"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
-            >
-              <Text size="sm" textColor="text-white" className="cursor-pointer">
-                Beosin Audit
-              </Text>
-              <img
-                alt="external-link"
-                src="/images/external-link.svg"
-                className="w-4 h-4"
-              />
-            </Link>
-            <Link
-              href={
-                "/documents/aeroscraper_iron-node_security_audit_report_v1.pdf"
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-105 transition-all flex gap-2"
-            >
-              <Text size="sm" textColor="text-white" className="cursor-pointer">
-                IronNode Audit
-              </Text>
-              <img
-                alt="external-link"
-                src="/images/external-link.svg"
-                className="w-4 h-4"
-              />
-            </Link>
+
+          <Link
+            href={"https://beosin.com/audits/Aeroscraper_202402020919.pdf"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:scale-105 transition-all flex gap-2"
+          >
+            <Text size="sm" textColor="text-white" className="cursor-pointer">
+              Beosin Audit
+            </Text>
+            <img
+              alt="external-link"
+              src="/images/external-link.svg"
+              className="w-4 h-4"
+            />
+          </Link>
+          <Link
+            href={
+              "/documents/aeroscraper_iron-node_security_audit_report_v1.pdf"
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:scale-105 transition-all flex gap-2"
+          >
+            <Text size="sm" textColor="text-white" className="cursor-pointer">
+              IronNode Audit
+            </Text>
+            <img
+              alt="external-link"
+              src="/images/external-link.svg"
+              className="w-4 h-4"
+            />
+          </Link>
           <Link
             href={"/?scroll=FAQ"}
             target="_parent"
