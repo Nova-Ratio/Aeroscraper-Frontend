@@ -48,13 +48,22 @@ export default function Partners() {
       <Text size="base" className="mt-8" textColor="text-white/60">
         Security
       </Text>
-      <Link className="flex gap-6" href={"https://beosin.com/"}>
-        <img
-          alt={"beosin security"}
-          src={"/images/beosin.svg"}
-          className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
-        />
-      </Link>
+      <div className="flex gap-4">
+        <Link className="flex gap-6" href={"https://beosin.com/"}>
+          <img
+            alt={"beosin security"}
+            src={"/images/beosin.svg"}
+            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+        <Link className="flex gap-6" href={"https://www.ironnode.io/"}>
+          <img
+            alt={"iron node security"}
+            src={"/images/iron-node.svg"}
+            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+      </div>
       <Text size="base" className="mt-8" textColor="text-white/60">
         Oracle
       </Text>
@@ -68,7 +77,10 @@ export default function Partners() {
       <Text size="base" className="mt-8" textColor="text-white/60">
         Defi / Dex
       </Text>
-      <Link className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center" href={"https://dojo.trading/"}>
+      <Link
+        className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center"
+        href={"https://dojo.trading/"}
+      >
         <img
           alt={"dojoswap"}
           src={"/images/dojoswap.png"}
