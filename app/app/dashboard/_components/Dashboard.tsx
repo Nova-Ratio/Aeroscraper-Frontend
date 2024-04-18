@@ -9,7 +9,7 @@ import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { useNotification } from "@/contexts/NotificationProvider";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import Footer from "./footer";
+import Footer from "@/components/landing/footer";
 import { DashboardTabs } from "@/contexts/TabsProvider";
 
 export default function Dashboard() {
