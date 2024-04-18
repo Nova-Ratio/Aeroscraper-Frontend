@@ -7,8 +7,9 @@ import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { useNotification } from "@/contexts/NotificationProvider";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import Footer from "./footer";
+
 import { DashboardTabs } from "@/contexts/TabsProvider";
+import Footer from "@/components/landing/footer";
 
 export default function Dashboard() {
   /* const { openTrove } = getAppEVMContract(); */
