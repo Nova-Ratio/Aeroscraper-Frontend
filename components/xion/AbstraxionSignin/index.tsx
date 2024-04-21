@@ -32,7 +32,7 @@ export const AbstraxionSignin = () => {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const { setConnectionType, setAbstraxionError, chainInfo } = useContext(
-    AbstraxionContext,
+    AbstraxionContext
   ) as AbstraxionContextProps;
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +88,7 @@ export const AbstraxionSignin = () => {
   };
 
   function handleKeplr() {
-    const {keplr} = window as any;
+    const { keplr } = window as any;
     if (!keplr) {
       alert("Please install the Keplr wallet extension");
       return;
@@ -105,7 +105,7 @@ export const AbstraxionSignin = () => {
       return;
     }
     try {
-      const accounts:any = await window.ethereum.request({
+      const accounts: any = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
       const primaryAccount = accounts[0];
@@ -133,11 +133,11 @@ export const AbstraxionSignin = () => {
     <ModalSection>
       {isOnOtpStep ? (
         <>
-          <div className="ui-flex ui-flex-col ui-w-full ui-text-center">
-            <h1 className="ui-w-full ui-leading-[38.40px] ui-tracking-tighter ui-text-3xl ui-font-light ui-text-white ui-uppercase ui-mb-3">
+          <div className="flex flex-col w-full text-center">
+            <h1 className="w-full leading-[38.40px] tracking-tighter text-3xl font-light text-white uppercase mb-3">
               Input 6 digit code
             </h1>
-            <h2 className="ui-w-full ui-mb-4 ui-text-center ui-text-sm ui-font-normal ui-leading-tight ui-text-white/50">
+            <h2 className="w-full mb-4 text-center text-sm font-normal leading-tight text-white/50">
               Please check your email for the verification code
             </h2>
           </div>
@@ -147,7 +147,7 @@ export const AbstraxionSignin = () => {
             onChange={handleOtpChange}
             error={otpError}
           />
-          <div className="ui-flex ui-w-full ui-flex-col ui-items-center ui-gap-4">
+          <div className="flex w-full flex-col items-center gap-4">
             <Button fullWidth={true} onClick={handleOtp} disabled={!!otpError}>
               Confirm
             </Button>
@@ -157,17 +157,19 @@ export const AbstraxionSignin = () => {
               onClick={handleEmail}
               disabled={!!timeLeft}
             >
-              Resend Code {timeLeft && `in ${timeLeft} seconds`}
+              <span className="text-white/60">
+                Resend Code {timeLeft && `in ${timeLeft} seconds`}
+              </span>
             </Button>
           </div>
         </>
       ) : (
         <>
-          <div className="ui-flex ui-flex-col ui-w-full ui-text-center ui-font-akkuratLL">
-            <h1 className="ui-w-full ui-leading-[38.40px] ui-tracking-tighter ui-text-3xl ui-font-light ui-text-white ui-uppercase ui-mb-3">
+          <div className="flex flex-col w-full text-center font-akkuratLL">
+            <h1 className="w-full leading-[38.40px] tracking-tighter text-3xl font-light text-white uppercase mb-3">
               Welcome
             </h1>
-            <h2 className="ui-w-full ui-mb-4 ui-text-center ui-text-sm ui-font-normal ui-leading-tight ui-text-white/50">
+            <h2 className="w-full mb-4 text-center text-sm font-normal leading-tight text-white/50">
               Log in or sign up with your email
             </h2>
           </div>
@@ -186,13 +188,13 @@ export const AbstraxionSignin = () => {
             Log in / Sign up
           </Button>
           <button
-            className="ui-text-white ui-text-sm ui-underline ui-w-full"
+            className="text-white text-sm underline w-full"
             onClick={() => setShowAdvanced((showAdvanced) => !showAdvanced)}
           >
             Advanced Options
           </button>
           {showAdvanced ? (
-            <div className="ui-flex ui-w-full ui-gap-2">
+            <div className="flex w-full gap-2">
               <Button
                 fullWidth={true}
                 onClick={handleKeplr}

@@ -17,15 +17,15 @@ export const ErrorDisplay = ({
   ) as AbstraxionContextProps;
 
   return (
-    <div className="ui-flex ui-h-full ui-w-full ui-flex-col ui-items-start ui-justify-center ui-gap-4 ui-p-8">
-      <h1 className="ui-text-3xl ui-font-bold ui-uppercase ui-tracking-tighter ui-text-black dark:ui-text-white">
+    <div className="flex h-full w-full flex-col items-start justify-center gap-4 p-8">
+      <h1 className="text-3xl font-bold uppercase tracking-tighter text-white">
         Uh oh.
       </h1>
-      <h2 className="ui-tracking-tight ui-text-black dark:ui-text-white">
+      <h2 className="tracking-tight text-white">
         Something went wrong.
       </h2>
       {message && (
-        <p className="ui-tracking-tight ui-text-zinc-400 dark:ui-text-zinc-700">
+        <p className="tracking-tight text-zinc-400 ">
           {message}
         </p>
       )}

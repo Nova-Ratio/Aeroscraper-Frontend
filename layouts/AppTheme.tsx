@@ -254,7 +254,7 @@ const AppTheme = () => {
               </div>
               <WalletButton
                 ausdBalance={0}
-                className="rounded-lg w-[200px] md:w-[287px] ml-2 h-[36px] md:h-[48px]"
+                className="rounded-lg w-fit px-3 md:w-[287px] ml-2 h-[36px] md:h-[48px]"
                 baseCoinBalance={
                   !isNil(baseCoin)
                     ? Number(

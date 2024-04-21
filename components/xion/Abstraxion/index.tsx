@@ -31,11 +31,11 @@ export const Abstraxion = ({ isOpen, onClose }: ModalProps) => {
   const { isConnected, data: account } = useAbstraxionAccount();
 
   const contracts = searchParams.get("contracts");
-  const stake = Boolean(searchParams.get("stake"));
+  /* const stake = Boolean(searchParams.get("stake"));
   const bank = searchParams.get("bank");
   const contractsArray = contracts?.split(",") || [];
 
-  const grantee = searchParams.get("grantee");
+  const grantee = searchParams.get("grantee"); */
   useEffect(() => {
     const closeOnEscKey = (e: any) => (e.key === "Escape" ? onClose() : null);
     document.addEventListener("keydown", closeOnEscKey);
@@ -50,6 +50,26 @@ export const Abstraxion = ({ isOpen, onClose }: ModalProps) => {
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent>
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4"
+            aria-label="Close"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
           {abstraxionError ? (
             <ErrorDisplay
               message={abstraxionError}
@@ -70,21 +90,7 @@ export const Abstraxion = ({ isOpen, onClose }: ModalProps) => {
           ) : (
             <AbstraxionSignin />
           )}
-        </DialogContent>
-      </Dialog>
-      {!isConnected && (
-        <div className="absolute pointer-events-auto w-full z-[1000] py-6 px-10 bottom-0 flex flex-col sm:flex-row sm:justify-between sm:items-end">
-          <div className="font-akkuratLL text-xs sm:text-sm font-normal text-center sm:text-left">
-            <span className="text-neutral-400">
-              By continuing, you agree to and acknowledge that you have read and
-              understand the
-            </span>
-            <a href="https://burnt.com" className="pl-1 text-white">
-              Disclaimer
-            </a>
-            <span className="text-neutral-400">.</span>
-          </div>
-          <div className="flex gap-2 justify-center items-end my-6 sm:my-0">
+          <div className="flex gap-2 justify-center items-end text-white -mt-0 lg:-mt-10 ">
             <p className="font-akkuratLL text-sm text-zinc-100 opacity-50 leading-tight">
               Powered by
             </p>
@@ -108,8 +114,8 @@ export const Abstraxion = ({ isOpen, onClose }: ModalProps) => {
               </a>
             </div>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
