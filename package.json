@@ -13,8 +13,7 @@
   },
   "dependencies": {
     "@archwayhq/arch3.js": "^0.4.0",
-    "@burnt-labs/abstraxion": "^0.1.0-alpha.23",
-    "@burnt-labs/ui": "^0.1.0-alpha.4",
+    "@burnt-labs/abstraxion": "^1.0.0-alpha.40",
     "@cosmjs/cosmwasm-stargate": "^0.32.2",
     "@cosmjs/crypto": "^0.32.2",
     "@cosmjs/math": "^0.32.2",
@@ -34,6 +33,8 @@
     "@pythnetwork/price-service-client": "^1.6.2",
     "@stytch/nextjs": "^17.0.0",
     "@stytch/vanilla-js": "^4.4.1",
+    "@tanstack/react-query": "^4.36.1",
+    "graz": "^0.0.51",
     "@types/node": "20.4.0",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",

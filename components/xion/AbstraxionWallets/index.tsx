@@ -1,29 +1,27 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDisconnect } from "graz";
 import { useStytch, useStytchUser } from "@stytch/nextjs";
 import { useQuery } from "@apollo/client";
-import { decodeJwt } from "jose";
-import { AccountWalletLogo, Button, Spinner } from "@burnt-labs/ui";
+import { Button, Spinner } from "@burnt-labs/ui";
 import {
   AbstraxionContext,
   AbstraxionContextProps,
 } from "../AbstraxionContext";
 import { AllSmartWalletQuery } from "@/utils/xion/queries";
 import { truncateAddress } from "@/utils/xion";
-import { useAbstraxionAccount, useAbstraxionSigningClient } from "@/hooks/xion";
+import { useAbstraxionAccount } from "@/hooks/xion";
 import { Loading } from "../Loading";
 import { WalletIcon } from "../Icons";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import { BaseCoinByChainName } from "@/constants/chainConstants";
-import { coin } from "@cosmjs/proto-signing";
 
-export const AbstraxionWallets = ({ onClose }: { onClose: () => void }) => {
+export const AbstraxionWallets = () => {
   const {
     connectionType,
     setConnectionType,
     abstractAccount,
     setAbstractAccount,
     setAbstraxionError,
+    apiUrl,
   } = useContext(AbstraxionContext) as AbstraxionContextProps;
   const { selectXionChain, disconnectXion } = useChainAdapter();
 
@@ -32,17 +30,14 @@ export const AbstraxionWallets = ({ onClose }: { onClose: () => void }) => {
   const session_jwt = stytchClient.session.getTokens()?.session_jwt;
   const session_token = stytchClient.session.getTokens()?.session_token;
 
-  const { aud, sub } = decodeJwt(session_jwt || "");
-  /*console.log("aud", aud, "sub", sub);
-  console.log(`${Array.isArray(aud) ? aud[0] : aud}.${sub}`); */
-  
+  const { loginAuthenticator } = useAbstraxionAccount();
+
   const { disconnect } = useDisconnect();
-  const { data: account } = useAbstraxionAccount();
-  /* const { client } = useAbstraxionSigningClient(); */
+
   const { loading, error, data, startPolling, stopPolling, previousData } =
     useQuery(AllSmartWalletQuery, {
       variables: {
-        authenticator: `${Array.isArray(aud) ? aud[0] : aud}.${sub}`,
+        authenticator: loginAuthenticator,
       },
       fetchPolicy: "network-only",
       notifyOnNetworkStatusChange: true,
@@ -52,63 +47,69 @@ export const AbstraxionWallets = ({ onClose }: { onClose: () => void }) => {
   const [fetchingNewWallets, setFetchingNewWallets] = useState(false);
 
   useEffect(() => {
+    async function onStartup() {
+      if (!loading && data && !previousData && !isGeneratingNewWallet) {
+        if (
+          data?.smartAccounts?.nodes.length === 0 &&
+          connectionType === "stytch"
+        ) {
+          await handleJwtAALoginOrCreate();
+        }
+      }
+    }
+
+    onStartup();
+  }, [loading, data]);
+
+  useEffect(() => {
     if (previousData && data !== previousData) {
       stopPolling();
       setFetchingNewWallets(false);
     }
-    console.log("data", data, "previousData", previousData, "error", error);
-    
-  }, [data, previousData,error]);
+  }, [data, previousData]);
+
+  useEffect(() => {
+    if (abstractAccount && previousData && data !== previousData) {
+      // Updating abstract account in context on poll
+      setAbstractAccount(
+        data?.smartAccounts?.nodes.find(
+          (smartAccount:any) => smartAccount.id === abstractAccount.id,
+        ),
+      );
+    }
+  }, [data, previousData]);
 
   const handleDisconnect = async () => {
     if (connectionType === "stytch") {
       await stytchClient.session.revoke();
-    } else if (connectionType === "graz") {
-      disconnect();
     }
-
+    disconnect();
     setConnectionType("none");
     setAbstractAccount(undefined);
+    localStorage.removeItem("loginType");
+    localStorage.removeItem("loginAuthenticator");
     disconnectXion();
   };
-  const body= {
-    salt: Date.now().toString(),
-    session_jwt,
-    session_token,
-  };
-  
-  
-  const handleJwtAALoginOrCreate = async (
-    session_jwt?: string,
-    session_token?: string
-  ) => {
-    console.log("body", body);
+
+  const handleJwtAALoginOrCreate = async () => {
     try {
-      if (!session_jwt || !session_token) {
-        throw new Error("Missing token/jwt");
-      }
       setIsGeneratingNewWallet(true);
-      const res = await fetch(
-        "https://aa.xion-testnet-1.burnt.com/api/v1/jwt-accounts/create",
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            salt: Date.now().toString(),
-            session_jwt,
-            session_token,
-          }),
-        }
-      );
+      const res = await fetch(`${apiUrl}/api/v1/jwt-accounts/create`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          salt: Date.now().toString(),
+          session_jwt,
+          session_token,
+        }),
+      });
       const body = await res.json();
-      console.log("handleJwtAALoginOrCreate", body);
-      
       if (!res.ok) {
         throw new Error(body.error);
       }
-      startPolling(500);
+      startPolling(3000);
       setFetchingNewWallets(true);
       return;
     } catch (error) {
@@ -119,114 +120,91 @@ export const AbstraxionWallets = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
-  const registerWebAuthn = useCallback(async () => {
-    try {
-      await stytchClient.webauthn.register({
-        domain: window.location.hostname,
-        session_duration_minutes: 60,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [stytchClient]);
-
   if (error) {
     setAbstraxionError((error as Error).message);
     return null;
   }
 
-  /* async function sendXion() {
-    const to = "xion1d35h0gjmc3tw922mulsquzh032eq4mnc7ztnul";
-    const sendRes: any =
-      account?.bech32Address &&
-      (await client?.sendTokens(
-        account?.bech32Address,
-        to,
-
-        [coin("10000000", BaseCoinByChainName["xion"].denom)],
-        {
-          amount: [{ amount: "0", denom: "uxion" }],
-          gas: "500000",
-        },
-        "send xion"
-      ));
-    console.log("sendRes", sendRes);
-  } */
   return (
     <>
       {isGeneratingNewWallet ? (
         <Loading />
       ) : (
-        <div className="ui-flex ui-h-full ui-w-full ui-flex-col ui-items-start ui-justify-between ui-gap-8 ui-p-10 ui-text-white">
-          <div className="ui-flex ui-flex-col ui-w-full ui-text-center">
-            <h1 className="ui-w-full ui-leading-[38.40px] ui-tracking-tighter ui-text-3xl ui-font-light ui-text-white ui-uppercase ui-mb-3">
+        <div className="flex h-full w-full flex-col items-start justify-between gap-8 sm:p-10 text-white">
+          <div className="flex flex-col w-full text-center">
+            <h1 className="w-full leading-[38.40px] tracking-tighter text-3xl font-light text-white uppercase mb-3">
               Welcome
             </h1>
-            <h2 className="ui-w-full ui-mb-4 ui-text-center ui-text-sm ui-font-normal ui-leading-tight ui-text-white/50">
+            <h2 className="w-full mb-4 text-center text-sm font-normal leading-tight text-white/50">
               Select an account to continue
             </h2>
           </div>
-          {connectionType === "graz" ? (
-            <div className="ui-flex ui-w-full ui-items-center ui-gap-4 ui-rounded-lg ui-p-4 ui-bg-transparent ui-border-2 ui-border-white hover:ui-cursor-pointer">
-              <AccountWalletLogo />
-              <div className="ui-flex ui-flex-col ui-gap-1">
-                <h1 className="ui-text-sm ui-font-bold">{account?.name}</h1>
-                <h2 className="ui-text-xs text-zinc-300">
-                  {truncateAddress(account?.bech32Address)}
-                </h2>
-              </div>
+          <div className="flex w-full flex-col items-start justify-center gap-4">
+            <div className="text-white text-base font-bold font-akkuratLL leading-tight">
+              Accounts
             </div>
-          ) : (
-            <div className="ui-flex ui-w-full ui-flex-col ui-items-start ui-justify-center ui-gap-4">
-              <div className="ui-text-white ui-text-base ui-font-bold ui-font-akkuratLL ui-leading-tight">
-                Accounts
-              </div>
-              <div className="ui-flex ui-max-h-64 ui-w-full ui-flex-col ui-items-center ui-gap-4 overflow-auto">
-                {loading || fetchingNewWallets ? (
-                  <Spinner />
-                ) : data?.smartAccounts.nodes.length >= 1 ? (
-                  data?.smartAccounts?.nodes?.map((node: any, i: number) => (
-                    <div
-                      className={`ui-w-full ui-items-center ui-gap-4 ui-rounded-lg ui-p-6 ui-flex ui-bg-transparent hover:ui-cursor-pointer ui-border-[1px] ui-border-white hover:ui-bg-white/5 ${node.id === abstractAccount?.id
+            <div className="flex max-h-64 w-full flex-col items-center gap-4 overflow-auto">
+              {loading || fetchingNewWallets ? (
+                <Spinner />
+              ) : data?.smartAccounts?.nodes.length >= 1 ? (
+                data?.smartAccounts?.nodes?.map((node: any, i: number) => (
+                  <div
+                    className={`w-full items-center gap-4 rounded-lg p-6 flex bg-transparent hover:cursor-pointer border-[1px] border-white hover:bg-white/5 ${
+                      node.id === abstractAccount?.id
                         ? ""
-                        : "opacity-50"
-                        }`}
-                      key={i}
-                      onClick={() => {
-                        setAbstractAccount({ ...node, userId: user?.user_id });
-                        selectXionChain();
-                        console.log("node", node);
-                      }}
-                    >
-                      <WalletIcon color="white" backgroundColor="#363635" />
-                      <div className="ui-flex ui-flex-col ui-gap-1">
-                        <h1 className="ui-text-sm ui-font-bold ui-font-akkuratLL ui-leading-none">
-                          Personal Account {i + 1}
-                        </h1>
-                        <h2 className="ui-text-xs ui-text-neutral-400 ui-font-akkuratLL ui-leading-tight">
-                          {truncateAddress(node.id)}
-                        </h2>
-                      </div>
+                        : "border-opacity-30"
+                    }`}
+                    key={i}
+                    onClick={() => {
+                      setAbstractAccount({
+                        ...node,
+                        userId: user?.user_id,
+                        currentAuthenticatorIndex:
+                          node.authenticators.nodes.find(
+                            (authenticator:any) =>
+                              authenticator.authenticator ===
+                              loginAuthenticator,
+                          ).authenticatorIndex,
+                      });
+                      selectXionChain();
+                    }}
+                  >
+                    <WalletIcon color="white" backgroundColor="#363635" />
+                    <div className="flex flex-col gap-1">
+                      <h1 className="text-sm font-bold font-akkuratLL leading-none">
+                        Personal Account {i + 1}
+                      </h1>
+                      <h2 className="text-xs text-neutral-400 font-akkuratLL leading-tight">
+                        {truncateAddress(node.id)}
+                      </h2>
                     </div>
-                  ))
-                ) : (
+                  </div>
+                ))
+              ) : (
+                <>
                   <p>No Accounts Found.</p>
-                )}
-              </div>
-              <div className="ui-w-full ui-flex ui-justify-center">
-                <Button
-                  structure="naked"
-                  onClick={async () => {
-                    await handleJwtAALoginOrCreate(session_jwt, session_token);
-                  }}
-                >
-                  Create a new account
-                </Button>
-              </div>
-              {/* <button onClick={sendXion}>Send Xion</button> */}
+                  {connectionType !== "stytch" ? (
+                    <p className="text-center text-neutral-400">
+                      This authenticator can only be used as a backup right now.
+                      Please log in with email to create an account.
+                    </p>
+                  ) : null}
+                </>
+              )}
             </div>
-          )}
-          <div className="ui-flex ui-w-full ui-flex-col ui-items-center ui-gap-4">
+          </div>
+          <div className="flex w-full flex-col items-center gap-4">
+            {!fetchingNewWallets &&
+            data?.smartAccounts?.nodes.length < 1 &&
+            connectionType === "stytch" ? (
+              <Button
+                structure="naked"
+                fullWidth={true}
+                onClick={handleJwtAALoginOrCreate}
+              >
+                Create
+              </Button>
+            ) : null}
             <Button
               structure="outlined"
               fullWidth={true}

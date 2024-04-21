@@ -3,7 +3,7 @@ import { ModalSection, Spinner } from "@burnt-labs/ui";
 export const Loading = () => {
   return (
     <ModalSection>
-      <div className="ui-text-black dark:ui-text-white">
+      <div className="text-white">
         <h1 className="ui-mb-3 ui-text-2xl ui-font-bold ui-tracking-tighter">
           Let&apos;s Go
         </h1>

@@ -1,68 +1,132 @@
-import { useContext, useEffect, useState } from "react";
-import { GasPrice } from "graz/dist/cosmjs";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useStytch } from "@stytch/nextjs";
-import { useCosmWasmSigningClient } from "graz";
-import { AAClient, AbstractAccountJWTSigner } from "@burnt-labs/signers";
-import { testnetChainInfo } from "@burnt-labs/constants";
+import {
+  AAClient,
+  AADirectSigner,
+  AbstractAccountJWTSigner,
+  GasPrice,
+} from "@burnt-labs/signers";
 import {
   AbstraxionContext,
   AbstraxionContextProps,
 } from "@/components/xion/AbstraxionContext";
-import Swal from "sweetalert2";
+import { getKeplr, useOfflineSigners } from "graz";
+import { testnetChainInfo } from "@burnt-labs/constants";
+import { AAEthSigner } from "@burnt-labs/signers";
+import { getEnvStringOrThrow } from "@/utils/xion";
 
 export const useAbstraxionSigningClient = () => {
-  const { connectionType, abstractAccount } = useContext(
+  const { connectionType, abstractAccount, chainInfo } = useContext(
     AbstraxionContext
   ) as AbstraxionContextProps;
 
   const stytch = useStytch();
   const sessionToken = stytch.session.getTokens()?.session_token;
-  const { data: grazClient } = useCosmWasmSigningClient();
+
+  const { data } = useOfflineSigners();
+  const keplr = (window as any)?.keplr ? getKeplr() : undefined;
 
   const [abstractClient, setAbstractClient] = useState<AAClient | undefined>(
     undefined
   );
 
-  useEffect(() => {
-    async function getStytchSigner() {
-      try {
-        const jwtSigner = new AbstractAccountJWTSigner(
-          abstractAccount.bech32Address,
-          sessionToken
-        );
-
-        const jwtClient = await AAClient.connectWithSigner(
-          "https://xion-test-priv-rpc.kingnodes.com",
-          jwtSigner,
-          {
-            gasPrice: GasPrice.fromString("0uxion"),
-          }
-        );
-
-        setAbstractClient(jwtClient);
-      } catch (error: any) {
-        Swal.fire({
-          title: "Error",
-          text:
-            error.message || "An error occurred while connecting to the signer",
-          icon: "error",
-        });
-        //reload page
-        window.location.reload();
-      }
+  async function ethSigningFn(msg: any) {
+    if (!window.ethereum) {
+      alert("Please install the Metamask wallet extension");
+      return;
     }
-
-    if (connectionType === "stytch" && abstractAccount) {
-      getStytchSigner();
-    }
-  }, [sessionToken, abstractAccount, connectionType]);
-
-  switch (connectionType) {
-    case "stytch":
-      return { client: abstractClient };
-    case "graz":
-      return { client: grazClient };
-    default:
-      return { client: undefined };
+    const accounts: any = await window.ethereum?.request({
+      method: "eth_requestAccounts",
+    });
+    return window.ethereum?.request({
+      method: "personal_sign",
+      params: [msg, accounts[0]],
+    });
   }
+
+  const getSigner = useCallback(async () => {
+    let signer:
+      | AbstractAccountJWTSigner
+      | AADirectSigner
+      | AAEthSigner
+      | undefined = undefined;
+
+    switch (connectionType) {
+      case "stytch":
+        signer = new AbstractAccountJWTSigner(
+          abstractAccount.id,
+          abstractAccount.currentAuthenticatorIndex,
+          sessionToken,
+          getEnvStringOrThrow(
+            "NEXT_PUBLIC_DEFAULT_INDEXER_URL",
+            process.env.NEXT_PUBLIC_DEFAULT_INDEXER_URL
+          ),
+          getEnvStringOrThrow(
+            "NEXT_PUBLIC_DEFAULT_API_URL",
+            process.env.NEXT_PUBLIC_DEFAULT_API_URL
+          )
+        );
+        break;
+      case "graz":
+        if (data && data.offlineSigner && keplr) {
+          signer = new AADirectSigner(
+            data?.offlineSigner as any, // Temp solution. TS doesn't like this
+            abstractAccount.id,
+            abstractAccount.currentAuthenticatorIndex,
+            // @ts-ignore - signArbitrary function exists on Keplr although it doesn't show
+            keplr.signArbitrary,
+            getEnvStringOrThrow(
+              "NEXT_PUBLIC_DEFAULT_INDEXER_URL",
+              process.env.NEXT_PUBLIC_DEFAULT_INDEXER_URL
+            )
+          );
+          break;
+        }
+      case "metamask":
+        if (window.ethereum) {
+          signer = new AAEthSigner(
+            abstractAccount.id,
+            abstractAccount.currentAuthenticatorIndex,
+            ethSigningFn,
+            getEnvStringOrThrow(
+              "NEXT_PUBLIC_DEFAULT_INDEXER_URL",
+              process.env.NEXT_PUBLIC_DEFAULT_INDEXER_URL
+            )
+          );
+        }
+        break;
+      case "none":
+        signer = undefined;
+        break;
+    }
+
+    if (!signer) {
+      console.warn("No signer found");
+      return;
+    }
+
+    const abstractClient = await AAClient.connectWithSigner(
+      // Should be set in the context but defaulting here just in case.
+      chainInfo.rpc || testnetChainInfo.rpc,
+      signer,
+      {
+        gasPrice: GasPrice.fromString("0uxion"),
+      }
+    );
+
+    setAbstractClient(abstractClient);
+  }, [sessionToken, abstractAccount, connectionType, data, keplr]);
+
+  useEffect(() => {
+    if (abstractAccount) {
+      getSigner();
+    }
+  }, [abstractAccount]);
+
+  const memoizedClient = useMemo(
+    () => ({ client: abstractClient }),
+    [abstractClient]
+  );
+
+  return memoizedClient as any;
 };
