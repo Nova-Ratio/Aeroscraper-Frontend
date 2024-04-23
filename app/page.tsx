@@ -9,7 +9,9 @@ import {
   MedalIcon,
 } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
+import Audit from "@/components/landing/audit";
 import Footer from "@/components/landing/footer";
+import Hackathons from "@/components/landing/hackathons";
 import Partners from "@/components/landing/partners";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,33 +51,21 @@ export default function Home() {
             </h2>
             <LaunchButtons />
           </div>
-          <div className=" w-1/2 gradientBorderGray flex flex-col gap-6 p-4 md:p-6 items-center bg-white mt-32 -mr-[100px] h-fit text-white text-center">
-            <div className="flex items-center gap-6">
-              <Image
-                src={"/images/audit.png"}
-                width={100}
-                height={100}
-                alt="audit"
-              />
-              <h3 className="tertiary-gradient-text auditCard-text">
-                Audit is completed!
-              </h3>
+          <div className="w-full md:w-1/2 max-w-[510px] gradientBorderGray flex flex-col gap-6 p-4 md:p-6 py-10 md:py-16 items-center bg-white mt-32 -mr-12 h-fit text-white text-center">
+              <div className="flex items-center gap-6">
+                <h3 className="tertiary-gradient-text auditCard-text md:text-[40px] text-4xl">
+                  Aeroscraper is Live on XION Mainnet
+                </h3>
+              </div>
+              <p>
+                We are proud to announce that the Aeroscraper protocol <br /> is live
+                on the Injective Mainnet. <br /> Enjoy decentralized lending and
+                stablecoin borrowing by <br /> creating your first trove now.
+              </p>
             </div>
-            <p>
-              Security and reliability are the top priorities for Aeroscraper.
-            </p>
-            <p className="text-white/60 text-xs">
-              You can visit the link to access the audit results:
-            </p>
-            <Link
-              className=" text-[#5C5CFF] underline text-base"
-              href={"https://beosin.com/audits/Aeroscraper_202402020919.pdf"}
-              target="_blank"
-            >
-              https://beosin.com/audits/Aeroscraper_202402020919.pdf
-            </Link>
-          </div>
         </div>
+        <Audit />
+        <Hackathons />
         <div className="max-w-[626px]">
           <Faq />
         </div>

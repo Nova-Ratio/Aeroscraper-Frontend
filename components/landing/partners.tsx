@@ -19,7 +19,7 @@ export default function Partners() {
           <img
             alt={"injective"}
             src={"/images/token-images/injective.svg"}
-            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+            className="px-4 w-[148px] h-[70px] mt-4 border border-white/10 rounded-md"
           />
         </Link>
         <Link
@@ -30,32 +30,40 @@ export default function Partners() {
           <img
             alt={"sei"}
             src={"/images/token-images/sei.svg"}
-            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+            className="px-4 w-[148px] h-[70px] mt-4 border border-white/10 rounded-md"
           />
         </Link>
         <Link
-          className="flex py-3 text-white text-base font-semibold px-4 justify-center items-center gap-3 w-[148px] h-[60px] border mt-4 border-white/10 rounded-md"
+          className="flex gap-6"
           href={"https://xion.bonusblock.io/"}
           target="_blank"
         >
           <img
             alt={"sei"}
-            src={"/images/token-images/xion.png"}
-            className=" h-full w-fit  "
+            src={"/images/token-images/xion.svg"}
+            className="px-4 w-[120px] h-[70px] mt-4 border border-white/10 rounded-md"
           />
-          XION
         </Link>
       </div>
       <Text size="base" className="mt-8" textColor="text-white/60">
         Security
       </Text>
-      <Link className="flex gap-6" href={"https://beosin.com/"}>
-        <img
-          alt={"beosin security"}
-          src={"/images/beosin.svg"}
-          className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
-        />
-      </Link>
+      <div className="flex gap-4">
+        <Link className="flex gap-6" href={"https://beosin.com/"}>
+          <img
+            alt={"beosin security"}
+            src={"/images/beosin.svg"}
+            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+        <Link className="flex gap-6" href={"https://www.ironnode.io/"}>
+          <img
+            alt={"iron node security"}
+            src={"/images/iron-node.svg"}
+            className="px-4 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+      </div>
       <Text size="base" className="mt-8" textColor="text-white/60">
         Oracle
       </Text>
@@ -64,6 +72,19 @@ export default function Partners() {
           alt={"pyth"}
           src={"/images/pyth2.svg"}
           className="px-8 w-[148px] h-[60px] mt-4 border border-white/10 rounded-md"
+        />
+      </Link>
+      <Text size="base" className="mt-8" textColor="text-white/60">
+        Defi / Dex
+      </Text>
+      <Link
+        className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center"
+        href={"https://dojo.trading/"}
+      >
+        <img
+          alt={"dojoswap"}
+          src={"/images/dojoswap.png"}
+          className="w-[148px] h-fit  "
         />
       </Link>
     </div>
