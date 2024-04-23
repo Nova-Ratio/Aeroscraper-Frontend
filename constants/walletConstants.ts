@@ -6,7 +6,7 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
     [ChainName.ARCHWAY]: [
         WalletType.LEAP,
         WalletType.KEPLR,
-        WalletType.NINJI,
+        /* WalletType.NINJI, */
         // WalletType.LEDGER,
         WalletType.COSMOSTATION
     ]
