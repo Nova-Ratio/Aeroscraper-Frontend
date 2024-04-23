@@ -2,8 +2,8 @@ import { useCallback, useMemo } from "react";
 import { isEmpty, isNil } from "lodash";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { CollateralAsset } from "@/types/types";
-import { useAbstraxionSigningClient } from "@/hooks/xion";
 import { getXionContract } from "./getXionContract";
+import { useAbstraxionSigningClient } from "@burnt-labs/abstraxion";
 
 const useAppContract = () => {
   const {

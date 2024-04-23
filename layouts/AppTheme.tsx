@@ -22,10 +22,12 @@ import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
+import { useAbstraxionAccount } from "@burnt-labs/abstraxion";
 
 const chainID = EthereumChainId.Goerli;
 
 const AppTheme = () => {
+  const {data:account} = useAbstraxionAccount();
   const {
     selectedChainName,
     isWalletConnected,
@@ -189,7 +191,7 @@ const AppTheme = () => {
               </Tooltip>
             </div>
           )}
-          {isWalletConnected && !isNil(baseCoin) ? (
+          {account?.bech32Address && !isNil(baseCoin) ? (
             <>
               {/* <div className="md:flex hidden mr-4">
                 {selectedChainName === ChainName.INJECTIVE && (

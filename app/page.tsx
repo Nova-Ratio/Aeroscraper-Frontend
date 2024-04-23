@@ -11,7 +11,6 @@ import {
 import Text from "@/components/Texts/Text";
 import Footer from "@/components/landing/footer";
 import Partners from "@/components/landing/partners";
-import { AbstraxionAccount } from "@/hooks/xion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

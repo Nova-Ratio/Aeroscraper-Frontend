@@ -2,7 +2,7 @@ import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
 import { AppVersion, ChainInfo } from "@/types/types";
 import { getInjectiveAddress } from "@injectivelabs/sdk-ts";
-import { isEmpty, isNil, set } from "lodash";
+import { isEmpty, isNil, } from "lodash";
 import {
   PropsWithChildren,
   createContext,
@@ -13,9 +13,9 @@ import {
   useState,
 } from "react";
 import { usePrice } from "./PriceProvider";
-import { useAbstraxionAccount } from "@/hooks/xion";
 import { ChainInfoByName } from "@/constants/chainConstants";
-import { Abstraxion } from "@/components/xion/Abstraxion";
+import { Abstraxion, useAbstraxionAccount, useModal } from "@burnt-labs/abstraxion";
+
 
 export type AppContextState = {
   selectedAppVersion: AppVersion;
@@ -50,7 +50,7 @@ const AppContext = createContext<AppContextState>({
 });
 
 const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [abstraxionOpen, setAbstraxionOpen] = useState(false);
+  const [abstraxionOpen, setAbstraxionOpen] = useModal();
   const [selectedAppVersion, setSelectedAppVersion] = useState<AppVersion>(
     AppVersion.V2
   );
@@ -59,7 +59,8 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [userAddress, setUserAddress] = useState<string | undefined>(); //This state is used to override cosmos-kit address
   const [isConnecting, setIsConnecting] = useState<boolean>(false); //This state is used to override cosmos-kit loading
   const { data: abstraxionData } = useAbstraxionAccount();
-
+  console.log(abstraxionData);
+  
   const { getPriceByChainName } = usePrice();
 
   const basePrice = useMemo(
@@ -195,7 +196,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }, [getMetamaskAccount]);
   useEffect(() => {
     if (selectedChainName === ChainName.XION && !isNil(abstraxionData)) {
-      setUserAddress(abstraxionData?.id);
+      setUserAddress(abstraxionData?.bech32Address);
     }
   }, [selectedChainName, abstraxionData]);
 
@@ -203,7 +204,6 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     <AppContext.Provider value={value}>
       {children}
       <Abstraxion
-        isOpen={abstraxionOpen}
         onClose={() => setAbstraxionOpen(false)}
       />
     </AppContext.Provider>
