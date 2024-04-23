@@ -138,14 +138,14 @@ const WalletButton: FC<Props> = ({
       });
     // anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
     // anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
-    anyWindow.ethereum
+    /* anyWindow.ethereum
       ? walletExtensions.installed.push({ name: WalletType.METAMASK })
       : walletExtensions.otherWallets.push({
         name: WalletType.METAMASK,
         downloadLink:
           "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1",
           img: "/images/wallet-images/metamask.png"
-      });
+      }); */
     /* anyWindow.ninji ? walletExtensions.installed.push({ name: WalletType.NINJI }) : walletExtensions.otherWallets.push({ name: WalletType.NINJI, downloadLink: "https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm",
     img: "/images/wallet-images/ninji.png" }); */
     anyWindow.cosmostation ? walletExtensions.installed.push({ name: WalletType.COSMOSTATION }) : walletExtensions.otherWallets.push({ name: WalletType.COSMOSTATION, downloadLink: "https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf",
@@ -242,7 +242,7 @@ const WalletButton: FC<Props> = ({
                     </div>
                   );
                 })}
-                {selectedChainName === ChainName.ARCHWAY && (
+               {/*  {selectedChainName === ChainName.ARCHWAY && (
                   <div className="mr-auto md:inline-block hidden">
                     {walletExtensions?.installed.some(
                       (item: any) => item.name === WalletType.METAMASK
@@ -286,7 +286,7 @@ const WalletButton: FC<Props> = ({
                       </Button>
                     )}
                   </div>
-                )}
+                )} */}
                 {otherWallets.map((wallet: any, idx: any) => (
                   <div
                     key={idx}
@@ -364,7 +364,7 @@ const WalletButton: FC<Props> = ({
                     </motion.div>
                   );
                 })}
-                {onHoverChain === ChainName.ARCHWAY && (
+               {/*  {onHoverChain === ChainName.ARCHWAY && (
                   <motion.div
                     key={WalletType.METAMASK}
                     className={`inline-block mr-auto duration-300 transition-all`}
@@ -414,7 +414,7 @@ const WalletButton: FC<Props> = ({
                       </Button>
                     )}
                   </motion.div>
-                )}
+                )} */}
                 {otherHoveredWallets.map((wallet: any, idx: any) => {
                   return (
                     <motion.div
@@ -525,13 +525,13 @@ const WalletButton: FC<Props> = ({
                         />
                       );
                     })}
-                    {selectedChainName === ChainName.ARCHWAY && (
+                    {/* {selectedChainName === ChainName.ARCHWAY && (
                       <img
                         alt={metamaskWalletInfo.name}
                         className="w-6 h-6 object-contain md:inline-block hidden"
                         src={metamaskWalletInfo.logo}
                       />
-                    )}
+                    )} */}
                   </div>
                   <Text size="base" textColor="text-[#989396]">
                     If you want to connect an installed wallet, you can log in
