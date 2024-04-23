@@ -23,6 +23,7 @@ import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
 import { useAbstraxionAccount } from "@burnt-labs/abstraxion";
+import { useAppContext } from "@/contexts/AppProvider";
 
 const chainID = EthereumChainId.Goerli;
 
@@ -30,6 +31,7 @@ const AppTheme = () => {
   const {data:account} = useAbstraxionAccount();
   const {
     selectedChainName,
+    selectChainName,
     isWalletConnected,
     baseCoin,
     walletInfo,
@@ -43,9 +45,8 @@ const AppTheme = () => {
   } = useChainAdapter();
   const { addNotification } = useNotification();
   const { balanceByDenom } = useBalances();
-  const { pageData, getPageData } = usePageData();
+  const { pageData, getPageData ,  } = usePageData();
   const { profileDetail } = useProfile();
-
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
@@ -61,6 +62,7 @@ const AppTheme = () => {
   };
 
   useEffect(() => {
+    selectChainName(ChainName.XION);
     if (
       window.ethereum &&
       typeof window !== "undefined" &&
@@ -98,7 +100,8 @@ const AppTheme = () => {
   }, [selectedWallet, isWalletConnected]);
 
   const [chainData, setChainData] = useState<any>(ChainData);
-
+  console.log(baseCoin, "baseCoin");
+  
   const CheckChain = (id: number) => {
     try {
       id = Number(id);

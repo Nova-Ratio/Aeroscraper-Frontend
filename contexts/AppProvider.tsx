@@ -14,7 +14,7 @@ import {
 } from "react";
 import { usePrice } from "./PriceProvider";
 import { ChainInfoByName } from "@/constants/chainConstants";
-import { Abstraxion, useAbstraxionAccount, useModal } from "@burnt-labs/abstraxion";
+import { Abstraxion, useAbstraxionAccount, useAbstraxionSigningClient, useModal } from "@burnt-labs/abstraxion";
 
 
 export type AppContextState = {
@@ -36,10 +36,10 @@ export type AppContextState = {
 
 const AppContext = createContext<AppContextState>({
   selectedAppVersion: AppVersion.V2,
-  selectedChainName: ChainName.INJECTIVE,
+  selectedChainName: ChainName.XION,
   isConnecting: false,
   basePrice: 0,
-  chainInfo: ChainInfoByName[ChainName.INJECTIVE],
+  chainInfo: ChainInfoByName[ChainName.XION],
   selectChainName: () => {},
   selectWallet: () => {},
   disconnectMetamask: () => {},
@@ -54,13 +54,13 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [selectedAppVersion, setSelectedAppVersion] = useState<AppVersion>(
     AppVersion.V2
   );
+  const {client: abstraxionClient , logout} = useAbstraxionSigningClient();
   const [selectedChainName, setSelectedChainName] = useState<ChainName>();
   const [selectedWallet, setSelectedWallet] = useState<WalletType>();
   const [userAddress, setUserAddress] = useState<string | undefined>(); //This state is used to override cosmos-kit address
   const [isConnecting, setIsConnecting] = useState<boolean>(false); //This state is used to override cosmos-kit loading
   const { data: abstraxionData } = useAbstraxionAccount();
-  console.log(abstraxionData);
-  
+
   const { getPriceByChainName } = usePrice();
 
   const basePrice = useMemo(
@@ -113,9 +113,8 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const disconnectXion = useCallback(() => {
     setUserAddress(undefined);
-    setSelectedWallet(undefined);
-    setSelectedChainName(undefined);
-    setAbstraxionOpen(false);
+    setAbstraxionOpen(true);
+    logout && logout();
     localStorage.removeItem("selectedWallet");
     localStorage.removeItem("savedChainName");
   }, []);
