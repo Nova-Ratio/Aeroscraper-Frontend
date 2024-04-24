@@ -1,13 +1,12 @@
 import useAppContract from '@/contracts/app/useAppContract';
 import { ChainName } from '@/enums/Chain';
 import useChainAdapter from '@/hooks/useChainAdapter';
-import { useAbstraxionSigningClient } from '@/hooks/xion';
-import { getRequestAmount } from '@/utils/contractUtils';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Coin } from '@cosmjs/proto-signing';
 import { Dictionary, isNil } from 'lodash';
 import React, { FC, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { usePrice } from './PriceProvider';
+import { useAbstraxionSigningClient } from '@burnt-labs/abstraxion';
 
 type BalanceContextValue = {
     balanceByDenom: Dictionary<Coin | undefined>;
