@@ -71,7 +71,7 @@ export default function Home() {
               </div>
               <p>
                 We are proud to announce that the Aeroscraper protocol <br /> is live
-                on the Injective Mainnet. <br /> Enjoy decentralized lending and
+                on the Archway Mainnet. <br /> Enjoy decentralized lending and
                 stablecoin borrowing by <br /> creating your first trove now.
               </p>
             </div>
