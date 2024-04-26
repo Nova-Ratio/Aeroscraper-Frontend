@@ -9,13 +9,13 @@ import {
 import { request, gql } from "graphql-request";
 
 export default function graphql({
-  selectedChainName = ChainName.ARCHWAY
+  selectedChainName = ChainName.NIBIRU
 }: {
   selectedChainName?: ChainName;
 }) {
   const URL = (): string => {
     switch (selectedChainName) {
-      case ChainName.ARCHWAY:
+      case ChainName.NIBIRU:
         return process.env.NEXT_PUBLIC_INDEXER_ARCH as string;
       default:
         return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
@@ -76,6 +76,18 @@ export default function graphql({
   }
 `;
 
+  const nibiruPriceQuery = gql`
+  {
+    oracle {
+      oraclePrices {
+        pair
+        price
+      }
+    }
+  }
+`;
+
+
   const requestRiskyTroves = async (): Promise<RiskyTrovesResponse> => {
     return await request(URL(), getRiskyTrovesQuery);
   };
@@ -93,10 +105,15 @@ export default function graphql({
     return await request(URL(), redeemICRQuery);
   }
 
+  const requestNibiruPrice = async (): Promise<any> => {
+    return await request('https://hm-graphql.nibiru.fi/query', nibiruPriceQuery);
+  }
+
   return {
     requestRiskyTroves,
     requestTotalTroves,
     requestICR,
-    requestRedeemICR
+    requestRedeemICR,
+    requestNibiruPrice
   };
 }

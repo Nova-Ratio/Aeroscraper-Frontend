@@ -332,7 +332,7 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
-            {selectedChainName === ChainName.ARCHWAY && (
+            {selectedChainName === ChainName.NIBIRU && (
             <Link
               href={"https://guild.xyz/aeroscraper"}
               target="_blank"
@@ -349,7 +349,7 @@ export default function Footer({}) {
               />
             </Link>
             )}
-            {selectedChainName === ChainName.ARCHWAY && (
+            {selectedChainName === ChainName.NIBIRU && (
             <Link
               href={"https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd"}
               target="_blank"

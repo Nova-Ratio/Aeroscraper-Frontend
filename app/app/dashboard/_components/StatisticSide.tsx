@@ -8,7 +8,7 @@ import React, { FC, useEffect, useState } from "react";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { ChainName } from "@/enums/Chain";
 import RenderContent from "./renderContent";
-import { ArchwayContent, defaultContent } from "@/data/injContent";
+import { defaultContent } from "@/data/injContent";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import NotificationDropdown from "./NotificationDropdown";
 import Text from "@/components/Texts/Text";

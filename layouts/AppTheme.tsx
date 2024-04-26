@@ -153,7 +153,7 @@ const AppTheme = () => {
               <Tooltip
                 containerClassName="flex items-center text-white"
                 width="w-fit"
-                title="ARCH"
+                title={baseCoin.symbol}
               >
                 <img
                   alt={baseCoin.name}

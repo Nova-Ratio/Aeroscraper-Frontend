@@ -1,5 +1,5 @@
 export enum ChainName {
-    ARCHWAY = "archway"
+    NIBIRU = "nibiru"
 }
 
 export type ChainNavigator = {

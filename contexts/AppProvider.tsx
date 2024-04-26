@@ -19,17 +19,17 @@ export type AppContextState = {
 }
 
 const AppContext = createContext<AppContextState>({
-    selectedChainName: ChainName.ARCHWAY,
+    selectedChainName: ChainName.NIBIRU,
     isConnecting: false,
     basePrice: 0,
-    chainInfo: ChainInfoByName[ChainName.ARCHWAY],
+    chainInfo: ChainInfoByName[ChainName.NIBIRU],
     selectChainName: () => { },
     selectWallet: () => { },
     disconnectMetamask: () => { }
 });
 
 const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(ChainName.ARCHWAY);
+    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(ChainName.NIBIRU);
     const [selectedWallet, setSelectedWallet] = useState<WalletType>();
     const [userAddress, setUserAddress] = useState<string>();  //This state is used to override cosmos-kit address
     const [isConnecting, setIsConnecting] = useState<boolean>(false);  //This state is used to override cosmos-kit loading
@@ -37,7 +37,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const { getPriceByChainName } = usePrice();
 
     const basePrice = useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]);
-    const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? ChainName.ARCHWAY], [selectedChainName])
+    const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? ChainName.NIBIRU], [selectedChainName])
 
     const getMetamaskAccount = useCallback(async () => {
         try {

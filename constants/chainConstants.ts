@@ -3,18 +3,18 @@ import { BaseCoin, ChainInfo } from "@/types/types";
 import { chains } from 'chain-registry'
 
 const visibleChains: ChainName[] = [
-    ChainName.ARCHWAY
+    ChainName.NIBIRU
 ]
 
 export const availableChains = Object.values(chains).filter(chain => visibleChains.includes(chain.chain_name as ChainName));
 
 export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
-    [ChainName.ARCHWAY]: {
-        name: "ARCHWAY",
-        symbol:"ARCH",
-        denom: "aarch",
-        image: "/images/token-images/archway-coin.png",
-        tokenImage: "/images/token-images/archway-coin.png",
+    [ChainName.NIBIRU]: {
+        name: "NIBIRU",
+        denom: "nibi",
+        symbol: "NIBI",
+        image: "/images/token-images/nibiru.png",
+        tokenImage: "/images/token-images/nibiru.png",
         decimal: 18,
         ausdDecimal: 18
     }
@@ -26,18 +26,18 @@ export const BaseCoinByDenom = Object.values(BaseCoinByChainName).reduce<Record<
 }, {});
 
 export const TransactionDomainByChainName: Record<ChainName, { accountUrl: string, txDetailUrl: string }> = {
-    [ChainName.ARCHWAY]: {
-        txDetailUrl: "https://www.mintscan.io/archway/transactions/",
-        accountUrl: "https://www.mintscan.io/archway/account/"
+    [ChainName.NIBIRU]: {
+        txDetailUrl: "https://nibiru.explorers.guru/transaction/",
+        accountUrl: "https://nibiru.explorers.guru/account/"
     }
 }
 
 export const getContractAddressesByChain = (chainName?: ChainName) => {
-    if (chainName === ChainName.ARCHWAY) {
+    if (chainName === ChainName.NIBIRU) {
         return {
-            contractAddress: process.env.NEXT_PUBLIC_ARCHWAY_CONTRACT_ADDRESS as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_ARCHWAY_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_ARCHWAY_ORACLE_CONTRACT_ADDRESS as string
+            contractAddress: process.env.NEXT_PUBLIC_NIBIRU_CONTRACT_ADDRESS as string,
+            ausdContractAddress: process.env.NEXT_PUBLIC_NIBIRU_AUSD_CONTRACT_ADDRESS as string,
+            oraclecontractAddress: process.env.NEXT_PUBLIC_NIBIRU_ORACLE_CONTRACT_ADDRESS as string
         }
     }
 
@@ -49,22 +49,23 @@ export const getContractAddressesByChain = (chainName?: ChainName) => {
 }
 
 export const ChainInfoByName: Record<ChainName, ChainInfo> = {
-    [ChainName.ARCHWAY]: {
-        name: ChainName.ARCHWAY,
-        displayName: "ARCH",
-        logo: "/images/token-images/archway-coin.png",
-        bech32Prefix: "ARCH"
+    [ChainName.NIBIRU]: {
+        name: ChainName.NIBIRU,
+        displayName: "NIBI",
+        logo: "/images/token-images/nibiru.png",
+        bech32Prefix: "nibiru"
     }
 }
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
-    [ChainName.ARCHWAY]: { priceId: "b00b60f88b03a6a625a8d1c048c3f66653edf217439983d037e7222c4e612819", serviceUrl: "https://hermes.pyth.network/" }
+    [ChainName.NIBIRU]: { priceId: "", serviceUrl: "" }
 }
 
 export const appChainURLs: ChainNavigator[] = [
     /* { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscraper.io/app/dashboard", env: "Mainnet" }, */
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscraper.io/app/dashboard", env: "Mainnet" },
-    { chainName: "Archway", image: "/images/token-images/archway-coin.png", url: "https://archway.aeroscraper.io/app/dashboard", env: "Mainnet", isSelected: true },
+    { chainName: "Nibiru", image: "/images/token-images/nibiru.png", url: "https://nibiru.aeroscraper.io", env: "Mainnet", isSelected: true },
+    { chainName: "Archway", image: "/images/token-images/archway-coin.png", url: "https://archway.aeroscraper.io/app/dashboard", env: "Mainnet" },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]
 

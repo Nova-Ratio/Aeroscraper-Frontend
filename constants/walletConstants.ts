@@ -3,11 +3,9 @@ import { WalletType } from "@/enums/WalletType";
 import { WalletInfo } from "@/types/types";
 
 export const WalletsByChainName: Record<ChainName, WalletType[]> = {
-    [ChainName.ARCHWAY]: [
+    [ChainName.NIBIRU]: [
         WalletType.LEAP,
         WalletType.KEPLR,
-        /* WalletType.NINJI, */
-        // WalletType.LEDGER,
         WalletType.COSMOSTATION
     ]
 }

@@ -9,8 +9,8 @@ export const defaultContent: {
       desc: "Welcome to the Aeroscraper app. Here you can open a trove to borrow aUSD, earn aUSD rewards by depositing aUSD to the Stability pool, or Liquidate Risky Troves.",
     },
     {
-      title: "Aeroscraper is Live on Archway Mainnet",
-      desc: "Feel free to participate in Decentralized Lending and stable coin Borrowing at Archway",
+      title: "Aeroscraper is Live on Nibiru Mainnet",
+      desc: "Feel free to participate in Decentralized Lending and stable coin Borrowing at Nibiru",
     },
     {
       title: "Open your Trove and Mint aUSD",
@@ -32,7 +32,7 @@ export const defaultContent: {
     }
   ];
   
-export const ArchwayContent: {
+export const NibiruContent: {
     title: string;
     desc: string;
     linkStr?: string;
@@ -40,8 +40,8 @@ export const ArchwayContent: {
   }[] = [
     ...defaultContent,
     {
-      title: "Don't miss our Archway Mainnet Galxe campaign",
-      desc: "Get a chance to win exclusive rewards by participating in our current Archway Mainnet Galxe campaign.",
+      title: "Don't miss our Nibiru Mainnet Galxe campaign",
+      desc: "Get a chance to win exclusive rewards by participating in our current Nibiru Mainnet Galxe campaign.",
       linkStr: "participating",
       linkUrl: "https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd",
     },

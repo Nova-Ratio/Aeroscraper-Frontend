@@ -2,12 +2,12 @@ import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
 
 const archAsset: CollateralAsset = {
-    name: "Archway",
-    shortName: "ARCH",
-    denom: "aarch",
-    decimal: 18,
-    ausdDecimal: 18,
-    imageURL: "/images/token-images/archway-coin.png",
+    name: "Nibiru",
+    shortName: "NIBI",
+    denom: "nibi",
+    decimal: 6,
+    ausdDecimal: 6,
+    imageURL: "/images/token-images/nibiru.png",
     priceId: "",
     priceServiceUrl: "",
     oracleContractAddress: ''
@@ -18,7 +18,7 @@ export const collateralAssets: CollateralAsset[] = [
 ]
 
 export const DefaultAssetByChainName: Record<ChainName, CollateralAsset> = {
-    [ChainName.ARCHWAY]: archAsset
+    [ChainName.NIBIRU]: archAsset
 }
 
 export const assetByDenom: Record<string, CollateralAsset | undefined> = Object

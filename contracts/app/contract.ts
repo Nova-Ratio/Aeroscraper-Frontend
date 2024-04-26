@@ -7,14 +7,10 @@ import {
   GetTroveResponseV1,
   GetTroveResponseV2,
 } from "./types";
-import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { BaseCoin, CollateralAsset } from "@/types/types";
-
-import { isNil } from "lodash";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { ChainName } from "@/enums/Chain";
-import { Chain } from "@chain-registry/types";
 import {
   BaseCoinByChainName,
   getContractAddressesByChain,
@@ -25,9 +21,6 @@ import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
 
 const updateRewardAmount = 0.01;
-const injectivePrivRpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_RPC as string;
-const injectivePrivGrpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_GRPC as string;
-const injectivePrivRest = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_REST as string;
 
 export const getAppContract = (
   client: SigningCosmWasmClient,
@@ -40,7 +33,7 @@ export const getAppContract = (
   const { contractAddress, ausdContractAddress } = getContractAddressesByChain(chainName);
 
   const { requestICR, requestRedeemICR } = graphql({
-    selectedChainName: ChainName.ARCHWAY,
+    selectedChainName: ChainName.NIBIRU,
   });
 
   //GET QUERIES

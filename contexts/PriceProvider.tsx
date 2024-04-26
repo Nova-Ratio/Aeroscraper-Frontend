@@ -1,6 +1,7 @@
 import { BaseCoinByChainName } from "@/constants/chainConstants";
 import { ChainName } from "@/enums/Chain";
 import useChainAdapter from "@/hooks/useChainAdapter";
+import graphql from "@/services/graphql";
 import { convertAmount } from "@/utils/contractUtils";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { isNil } from "lodash";
@@ -21,34 +22,33 @@ const PriceContext = createContext<PriceContextValue>({
 const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const [coinPricesByDenom, setCoinPricesByDenom] = useState<Record<string, number>>({});
     const { address, baseCoin, getSigningCosmWasmClient } = useChainAdapter();
+    const { requestNibiruPrice } = graphql({ selectedChainName: ChainName.NIBIRU, });
 
-    const getArchwayPrice = useCallback(async () => {
+    const getNibiruPrice = useCallback(async () => {
         try {
+            const { denom } = BaseCoinByChainName[ChainName.NIBIRU];
 
-            const client = await getSigningCosmWasmClient();
-            const { symbol, denom } = BaseCoinByChainName[ChainName.ARCHWAY];
+            const result = await requestNibiruPrice();
 
-            const result = await client.queryContractSmart(
-                String(process.env.NEXT_PUBLIC_ARCHWAY_OJO_CONTRACT_ADDRESS),
-                { get_reference_data: { symbol_pair: [symbol, "USD"] } }
-            );
-console.log("xxx",result);
+            const nibiruPrice = result.oracle.oraclePrices.find((i: any) => i.pair === "unibi:uusd").price
 
             if (result) {
                 setCoinPricesByDenom(prev => ({
                     ...prev,
-                    [denom]: convertAmount(Number(result.rate) ?? 0, BaseCoinByChainName.archway.decimal)
+                    [denom]: convertAmount(nibiruPrice ?? 0, 0)
                 }))
             }
+
         }
         catch (err) {
             console.log(err);
         }
     }, [address])
+console.log(coinPricesByDenom);
 
     const getAllPrices = useCallback(async () => {
-        getArchwayPrice();
-    }, [getArchwayPrice])
+        getNibiruPrice();
+    }, [getNibiruPrice])
 
     const getPriceByChainName = useCallback((chainName?: ChainName) => {
         if (isNil(chainName)) return 0;

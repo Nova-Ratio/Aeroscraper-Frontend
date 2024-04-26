@@ -29,7 +29,7 @@ const useAppContract = () => {
         !isNil(chain) &&
         !isNil(client))
         ?
-        getAppContract(client, baseCoin, selectedChainName ?? ChainName.ARCHWAY, basePrice)
+        getAppContract(client, baseCoin, selectedChainName ?? ChainName.NIBIRU, basePrice)
         :
         undefined,
     [
