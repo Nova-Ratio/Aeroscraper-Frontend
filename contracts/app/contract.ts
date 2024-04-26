@@ -421,27 +421,17 @@ export const getAppContract = (
 
   const updateReward = async (senderAddress: string) => {
     const unstake = {
-      contractAddress,
-      sender: senderAddress,
-      msg: {
         unstake: {
           amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal),
         },
-      },
     };
-
-    const msg = {
+    
+    const stake = {
       send: {
         contract: contractAddress,
         amount: getRequestAmount(updateRewardAmount, baseCoin.ausdDecimal),
         msg: jsonToBinary({ stake: {} }),
       },
-    };
-
-    const stake = {
-      contractAddress: ausdContractAddress,
-      sender: senderAddress,
-      msg,
     };
 
     return await client.executeMultiple(
