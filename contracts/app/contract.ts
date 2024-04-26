@@ -450,7 +450,6 @@ export const getAppContract = (
         {
           contractAddress,
           msg: unstake,
-          funds: [{ amount: "1", denom: "ARCH" }],
         },
         {
           contractAddress: ausdContractAddress,
@@ -458,7 +457,7 @@ export const getAppContract = (
         }
       ],
       "auto",
-      "Liquidate Troves",
+      "Update Reward",
     )
   };
 
