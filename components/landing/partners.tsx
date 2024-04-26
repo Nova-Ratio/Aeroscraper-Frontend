@@ -39,9 +39,20 @@ export default function Partners() {
           target="_blank"
         >
           <img
-            alt={"sei"}
+            alt={"xion"}
             src={"/images/token-images/xion.svg"}
             className="px-4 w-[120px] h-[70px] mt-4 border border-white/10 rounded-md"
+          />
+        </Link>
+        <Link
+          className="flex gap-6"
+          href={"https://archway.io/"}
+          target="_blank"
+        >
+          <img
+            alt={"archway"}
+            src={"/images/token-images/archway-logo.svg"}
+            className="px-4 w-[148px] h-[70px] mt-4 border border-white/10 rounded-md"
           />
         </Link>
       </div>
@@ -77,16 +88,28 @@ export default function Partners() {
       <Text size="base" className="mt-8" textColor="text-white/60">
         Defi / Dex
       </Text>
-      <Link
-        className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center"
-        href={"https://dojo.trading/"}
-      >
-        <img
-          alt={"dojoswap"}
-          src={"/images/dojoswap.png"}
-          className="w-[148px] h-fit  "
-        />
-      </Link>
+      <div className="flex gap-4">
+        <Link
+          className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center"
+          href={"https://dojo.trading/"}
+        >
+          <img
+            alt={"dojoswap"}
+            src={"/images/dojoswap.png"}
+            className="w-[148px] h-fit  "
+          />
+        </Link>
+        <Link
+          className="flex gap-6 border border-white/10 mt-4 rounded-md py-4 px-3 w-fit items-center"
+          href={"https://astrovault.io/"}
+        >
+          <img
+            alt={"astro-vault"}
+            src={"/images/astro-vault.png"}
+            className="w-[80px] h-fit  "
+          />
+        </Link>
+      </div>
     </div>
   );
 }
