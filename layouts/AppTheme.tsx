@@ -196,12 +196,13 @@ const AppTheme = () => {
               popup: " lg:!p-10",
             },
           }).then((result) => {
+            const {ethereum} = window as any;
             if (result.isConfirmed) {
-              window.ethereum?.request({
+              ethereum.request({
                 method: "wallet_switchEthereumChain",
                 params: [{ chainId: chainData[chainID.toString()].chainId }],
               }) ||
-                window.ethereum.request({
+                ethereum.request({
                   method: "wallet_addEthereumChain",
                   params: [
                     {
