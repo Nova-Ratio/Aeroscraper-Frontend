@@ -52,7 +52,7 @@ export default function Partners() {
           <img
             alt={"archway"}
             src={"/images/token-images/archway-logo.svg"}
-            className="px-4 w-[148px] h-[70px] mt-4 border border-white/10 rounded-md"
+            className="px-4 w-[144px] h-[70px] mt-4 border border-white/10 rounded-md"
           />
         </Link>
       </div>
@@ -106,7 +106,7 @@ export default function Partners() {
           <img
             alt={"astro-vault"}
             src={"/images/astro-vault.png"}
-            className="w-[80px] h-fit  "
+            className="w-[115px] h-fit  "
           />
         </Link>
       </div>
