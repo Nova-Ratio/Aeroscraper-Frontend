@@ -4,7 +4,7 @@ import Text from "../Texts/Text";
 
 export default function Hackathons() {
   return (
-    <div>
+    <div className="hidden md:block">
       <h2 className="text-4xl font-semibold text-white mb-4 mt-14">
         Hackathons
       </h2>
