@@ -24,7 +24,7 @@ const data = [
 
 export default function Audit() {
   return (
-    <div>
+    <div className="hidden md:block">
       <h2 className="text-4xl font-semibold text-white mb-4 mt-14">Audits</h2>
       <div className="gap-6 mt-10 md:grid grid-cols-3 w-full hidden">
         {data.map((item, index) => (
