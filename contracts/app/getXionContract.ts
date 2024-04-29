@@ -436,7 +436,7 @@ export const getXionContract = (
       msg,
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "4000000",
+        gas: "5000000",
       },
       "Redeem"
     );
