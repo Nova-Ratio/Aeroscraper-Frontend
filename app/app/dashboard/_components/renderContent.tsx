@@ -26,7 +26,7 @@ export default function RenderContent({
   const parts = item?.linkStr ? item?.desc.split(item?.linkStr) : [];
   return (
     <>
-      <h1 className="text-white text-2xl md:text-[39px] md:leading-[50px] font-semibold">
+      <h1 className="text-white text-2xl md:text-[34px] md:leading-[50px] font-semibold">
         {item?.title}
       </h1>
       {item?.linkStr && item?.linkUrl ? (
