@@ -93,6 +93,10 @@
           link: "https://discord.gg/3R6yTqB8hC",
         },
         {
+          title: "Discord",
+          link: "https://magic.store/app/aeroscraper",
+        },
+        {
           title: "Zealy",
           link: "https://zealy.io/c/aeroscraper/questboard",
         },
