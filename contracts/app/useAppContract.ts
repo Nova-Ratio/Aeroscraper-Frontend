@@ -24,7 +24,9 @@ const useAppContract = () => {
       !isNil(walletInfo) &&
       !isNil(selectedChainName) &&
       !isNil(chain)
-        ? getAppEVMContract()
+        ? getAppEVMContract({
+            basePrice,
+          })
         : undefined,
     [
       isWalletConnected,
@@ -35,8 +37,8 @@ const useAppContract = () => {
       basePrice,
     ]
   );
- //console.log("selectedChainName", selectedChainName);
- 
+  //console.log("selectedChainName", selectedChainName);
+
   const getTotalCollateralAmounts = useCallback(async () => {
     if (isNil(contract)) return;
     return await contract.getTotalCollateralAmounts();
@@ -174,7 +176,7 @@ const useAppContract = () => {
     async (owner: string) => {
       /* if (isNil(contract) || isNil(address)) return;
       return await contract.liquidateTrovesV2(address, owner); */
-      return undefined
+      return undefined;
     },
     [address, contract]
   );

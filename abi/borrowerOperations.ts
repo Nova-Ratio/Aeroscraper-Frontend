@@ -99,7 +99,7 @@ export const BorrowerOperationsABI = [
 				"type": "address"
 			}
 		],
-		"name": "PriceFeedAddressChanged",
+		"name": "AddressChanged",
 		"type": "event"
 	},
 	{

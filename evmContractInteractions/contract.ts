@@ -14,11 +14,95 @@ import { ChainName } from "@/enums/Chain";
 import { useNotification } from "@/contexts/NotificationProvider";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { CW20TokenInfoResponse } from "@/contracts/app/types";
-export const getAppEVMContract = () => {
+import graphql from "@/services/graphql";
+export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   let _maxFeePercentage = "5000000000000000";
-  let _upperHint = "0x0000000000000000000000000000000000000000";
-  let _lowerHint = "0x0000000000000000000000000000000000000000";
+  let _maxIterations = 2;
+  const defaultAddress = "0x0000000000000000000000000000000000000000";
+  console.log("basePrice", basePrice);
 
+  const { requestICR, requestRedeemICR } = graphql({
+    selectedChainName: ChainName.EVM,
+  });
+  const findSortedTroveInsertPosition = async (
+    collRatio: number,
+    user_addr: string
+  ): Promise<{
+    prev_node_id: string | undefined;
+    next_node_id: string | undefined;
+  }> => {
+    let next_node_id;
+    let prev_node_id;
+
+    try {
+      
+      const data = await requestICR(collRatio * 100);
+      if (data.nextTrove.nodes.length === 2) {
+        if (data.nextTrove.nodes[0].owner === user_addr) {
+          // Skip the first node and check the second
+          next_node_id =
+            data.nextTrove.nodes[1].owner !== user_addr
+              ? data.nextTrove.nodes[1].owner
+              : defaultAddress;
+        } else {
+          // The first node is not the user, so we take it
+          next_node_id = data.nextTrove.nodes[0].owner;
+        }
+      } else if (data.nextTrove.nodes.length === 1) {
+        // If there's only one node, we check if it's not the user
+        next_node_id =
+          data.nextTrove.nodes[0].owner !== user_addr
+            ? data.nextTrove.nodes[0].owner
+            : defaultAddress;
+      } else {
+        next_node_id = defaultAddress;
+      }
+
+      if (data.prevTrove.nodes.length === 2) {
+        prev_node_id = data.prevTrove.nodes.find(
+          (node) => node.owner !== user_addr
+        )?.owner;
+      } else if (
+        data.prevTrove.nodes.length === 1 &&
+        data.prevTrove.nodes[0].owner !== user_addr
+      ) {
+        prev_node_id = data.prevTrove.nodes[0].owner;
+      } else {
+        prev_node_id = defaultAddress;
+      }
+    } catch (err) {
+      console.log("FindSortedTroveInsertPosition error", err);
+    }
+
+    return { prev_node_id, next_node_id };
+  };
+  const processRedeemICR = async (amount: string) => {
+    let remainingAmount = BigInt(amount);
+    let icrdata = (await requestRedeemICR()).troves.nodes.map((i:any) => {
+      console.log("i", i.debtAmount, i.collaterals);
+      
+      return {
+        debt: BigInt(i.debtAmount),
+        collateral: BigInt(i.collaterals),//i.collaterals?.slice(0, -1)
+      };
+    });
+    let selectedidx = 0;
+    for (let idx in icrdata) {
+      let trove = icrdata[idx];
+      if (remainingAmount > trove.debt) {
+        remainingAmount -= trove.debt;
+      } else {
+        selectedidx = Number(idx);
+        break;
+      }
+    }
+    let troveDebt = icrdata[selectedidx].debt - remainingAmount;
+    if (Number(troveDebt) === 0) return 0;
+    let collateraltodecrease = BigInt(Number(remainingAmount) / basePrice);
+    let troveCollateral =
+      icrdata[selectedidx].collateral - collateraltodecrease;
+    return Number(troveCollateral) / Number(troveDebt);
+  };
   const defaultAsset = DefaultAssetByChainName[ChainName.EVM];
   //console.log("asset", asset);
   const { processLoading, addNotification, setProcessLoading, notification } =
@@ -31,6 +115,10 @@ export const getAppEVMContract = () => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
+      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+        await findSortedTroveInsertPosition(collRatio, senderAddress);
+      console.log("openTrove", _lowerHint, _upperHint);
+
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.openTrove(
         _maxFeePercentage,
@@ -45,7 +133,7 @@ export const getAppEVMContract = () => {
       return await tx;
     } catch (error) {
       console.log(error);
-      return false;
+      return undefined;
     }
   };
   const getTrove = async (borrower: string) => {
@@ -74,6 +162,8 @@ export const getAppEVMContract = () => {
     asset: CollateralAsset = DefaultAssetByChainName[ChainName.EVM]
   ) => {
     try {
+      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+        await findSortedTroveInsertPosition(collRatio, address);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.addColl(_upperHint, _lowerHint, {
         value: getRequestAmount(amount, asset.decimal),
@@ -87,7 +177,7 @@ export const getAppEVMContract = () => {
       return hash;
     } catch (error) {
       console.log(error);
-      return false;
+      return undefined;
     }
   };
 
@@ -98,6 +188,8 @@ export const getAppEVMContract = () => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
+      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+        await findSortedTroveInsertPosition(collRatio, senderAddress);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.withdrawColl(
         getRequestAmount(amount, asset.decimal),
@@ -141,6 +233,8 @@ export const getAppEVMContract = () => {
       if (isAllAmount) {
         tx = await closeTrove();
       } else {
+        const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+        await findSortedTroveInsertPosition(collRatio, senderAddress);
         const { contractWithSigner } = await callBorrowerOperationsContract();
         tx = await contractWithSigner.repayAUSD(
           getRequestAmount(amount, defaultAsset.ausdDecimal),
@@ -161,6 +255,8 @@ export const getAppEVMContract = () => {
     collRatio: number
   ) => {
     try {
+      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+        await findSortedTroveInsertPosition(collRatio, senderAddress);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.withdrawAUSD(
         _maxFeePercentage,
@@ -301,16 +397,28 @@ export const getAppEVMContract = () => {
   };
   const redeem = async (senderAddress: string, amount: number) => {
     try {
+      let _lowerPartialRedemptionHint = defaultAddress;
+      let _upperPartialRedemptionHint = defaultAddress;
+      let _partialRedemptionHintNICR = await processRedeemICR(
+        getRequestAmount(amount, defaultAsset.ausdDecimal)
+      );
+      if (_partialRedemptionHintNICR != 0) {
+        const { prev_node_id, next_node_id } =
+          await findSortedTroveInsertPosition(_partialRedemptionHintNICR, senderAddress);
+          _lowerPartialRedemptionHint = prev_node_id || defaultAddress;
+          _upperPartialRedemptionHint = next_node_id || defaultAddress;
+      }
       const { contractWithSigner } = await callTroveManagerContract();
+      console.log("redeemCollateral",  getRequestAmount(amount, defaultAsset.decimal), senderAddress, _upperPartialRedemptionHint, _lowerPartialRedemptionHint, "icr", getRequestAmount(_partialRedemptionHintNICR,defaultAsset.decimal) || 0, _maxIterations, _maxFeePercentage);
+      
       const tx = await contractWithSigner.redeemCollateral(
-        getRequestAmount(amount, defaultAsset.decimal)
-        /* _firstRedemptionHint,
+        getRequestAmount(amount, defaultAsset.decimal),
+        senderAddress,
         _upperPartialRedemptionHint,
         _lowerPartialRedemptionHint,
-        _partialRedemptionHintNICR,
+        getRequestAmount(_partialRedemptionHintNICR,defaultAsset.decimal) || 0,
         _maxIterations,
-        _maxFeePercentage */
-        // TODO: tuğgüne sor
+        _maxFeePercentage
       );
       await tx.wait();
       let res = await tx;
@@ -361,8 +469,8 @@ export const getAppEVMContract = () => {
       msgs: msg,
       injectiveAddress: senderAddress,      
     }) */
-    return undefined
-  }
+    return undefined;
+  };
   return {
     getTrove,
     getAusdBalance,
@@ -381,9 +489,9 @@ export const getAppEVMContract = () => {
     redeem,
     liquidateTroves,
     getAusdInfo,
-    getReward, 
+    getReward,
     withdrawLiquidationGains,
     /*,
-    */
+     */
   };
 };
