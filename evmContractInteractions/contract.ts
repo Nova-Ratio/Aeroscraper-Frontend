@@ -413,7 +413,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       
       const tx = await contractWithSigner.redeemCollateral(
         getRequestAmount(amount, defaultAsset.decimal),
-        senderAddress,
+        "0xe29ddD8F8a8AB5D44a39EF90E1143C26b437f039",
         _upperPartialRedemptionHint,
         _lowerPartialRedemptionHint,
         getRequestAmount(_partialRedemptionHintNICR,defaultAsset.decimal) || 0,

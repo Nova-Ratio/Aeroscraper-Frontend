@@ -15,6 +15,7 @@ import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { DashboardTabs, useTabs } from "@/contexts/TabsProvider";
+import RiskyTrovesTabV1 from "./Tabs/RiskyTrovesTabV1";
 
 interface Props {
   setTabPosition: Dispatch<DashboardTabs>;
@@ -133,7 +134,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
           }
           {
             selectedTab === "riskyTroves" &&
-            <RiskyTrovesTabV2
+            <RiskyTrovesTabV1
               getPageData={getPageData}
               basePrice={basePrice}
             />

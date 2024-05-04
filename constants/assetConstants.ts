@@ -18,7 +18,7 @@ const evm: CollateralAsset = {
     denom: "eth",
     decimal: 18,
     ausdDecimal: 18,
-    imageURL: "/images/wallet-images/metamask-icon.png",
+    imageURL: "/images/token-images/eth.svg",
     priceId: "",
     priceServiceUrl: "",
     oracleContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
