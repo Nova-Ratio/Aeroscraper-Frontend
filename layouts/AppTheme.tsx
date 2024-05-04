@@ -21,7 +21,7 @@ import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
 import Tooltip from "@/components/Tooltip/Tooltip";
 
-const chainID = 11155111;
+const chainID = 534351;
 
 const AppTheme = () => {
   const {
@@ -57,7 +57,7 @@ const AppTheme = () => {
     if (
       window.ethereum &&
       typeof window !== "undefined" &&
-      selectedWallet === WalletType.METAMASK && selectedChainName === ChainName.INJECTIVE &&
+      selectedWallet === WalletType.METAMASK &&
       isWalletConnected
     ) {
       const getChainId = async () => {
@@ -65,7 +65,8 @@ const AppTheme = () => {
         const chainIdMetamask: any = await ethereum?.request({
           method: "eth_chainId",
         });
-
+        console.log("chainIdMetamask", chainIdMetamask);
+        
         if (chainIdMetamask != chainID) {
           CheckChain(chainIdMetamask);
         }
@@ -73,6 +74,8 @@ const AppTheme = () => {
       getChainId();
 
       window.ethereum?.on("chainChanged", (chainId: any) => {
+        console.log("chainChanged", chainId);
+        
         CheckChain(chainId);
         if (chainID === Number(chainId)) {
           /* ToastSuccess.fire({

@@ -95,5 +95,15 @@
     "rpcUrls": ["https://sepolia.infura.io/v3/"],
     "blockExplorerUrls": ["https://sepolia.etherscan.io/"],
     "explorer": "https://sepolia.etherscan.io/"
+  },
+  "534351": {
+    "chainId": "0x8274f",
+    "name": "Scroll Sepolia",
+    "token:": "ETH",
+    "chainName": "Scroll Sepolia",
+    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
+    "rpcUrls": ["https://sepolia-rpc.scroll.io"],
+    "blockExplorerUrls": ["https://sepolia.scrollscan.com"],
+    "explorer": "https://sepolia.scrollscan.com"
   }
 }
