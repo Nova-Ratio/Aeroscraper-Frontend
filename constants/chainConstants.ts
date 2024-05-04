@@ -69,7 +69,7 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
     [ChainName.EVM]: {
         name: ChainName.EVM,
         displayName: "ETH",
-        logo: "/images/wallet-images/metamask-icon.png",
+        logo: "/images/token-images/eth.svg",
         bech32Prefix: "eth"
     }
 }
@@ -81,7 +81,7 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
 
 export const appChainURLs: ChainNavigator[] = [
     { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
-    { chainName: "Sepolia", image: "/images/token-images/eth.png", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
+    { chainName: "Sepolia", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet", isSelected: true },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]
