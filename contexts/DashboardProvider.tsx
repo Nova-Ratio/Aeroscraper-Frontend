@@ -271,8 +271,8 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             setTotalInfoLoading(true);
             let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
 
-            if (selectedChainName === ChainName.INJECTIVE) {
-                chainNameQuery = `${chainNameQuery}2`;
+            if (selectedChainName === ChainName.EVM) {
+                chainNameQuery = `EVM`;
             }
 
             const { data } = await axios.get<TotalInfoResponseV1 | TotalInfoResponseV2>(

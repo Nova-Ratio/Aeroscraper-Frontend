@@ -305,8 +305,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   > => {
     try {
       const { contractWithSigner } = await callTroveManagerContract();
-      const tx = await contractWithSigner.entireSystemColl();
-      await tx.wait();
+      const tx = await contractWithSigner.getEntireSystemColl();
+      console.log("getTotalCollateralAmounts", tx);
       let res = await tx;
       return [
         {
@@ -322,7 +322,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   const getTotalDebtAmount = async (): Promise<string | undefined> => {
     try {
       const { contractWithSigner } = await callBorrowerOperationsContract();
-      const entireSystemDebt = await contractWithSigner.entireSystemDebt();
+      const entireSystemDebt = await contractWithSigner.getEntireSystemDebt();
       return await entireSystemDebt;
     } catch (error) {
       console.log(error);
