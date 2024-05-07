@@ -21,10 +21,16 @@ export const defaultContent: {
       desc: "Collect the rewards you earned from liquid troves.",
     },
     {
-      title: "The Aeroscraper audit is officially complete!",
-      desc: "Security and reliability are the top priorities for Aeroscraper. Aeroscraper has been officially audited, and all errors have been corrected.",
-      linkStr: "audited",
+      title: "An Achievement in Security and Reliability with Beosin!",
+      desc: "We are thrilled to announce the successful completion of the Aeroscraper audit by Beosin team! At Aeroscraper, ensuring the utmost security and reliability of our platform is paramount.",
+      linkStr: "Beosin",
       linkUrl: "https://beosin.com/audits/Aeroscraper_202402020919.pdf",
+    },
+    {
+      title: "Aeroscraper Strengthens Security with IronNode Audit!",
+      desc: "We are excited to announce that Aeroscraper has successfully undergone a comprehensive security audit by IronNode team!",
+      linkStr: "IronNode",
+      linkUrl: "/documents/aeroscraper_iron-node_security_audit_report_v1.pdf",
     }
   ];
   

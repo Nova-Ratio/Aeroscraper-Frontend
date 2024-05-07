@@ -319,6 +319,21 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
+            <Link
+              href={"https://magic.store/app/aeroscraper"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Magic Square
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
             {selectedChainName === ChainName.INJECTIVE && (
             <Link
               href={"https://zealy.io/c/aeroscraper/questboard"}
