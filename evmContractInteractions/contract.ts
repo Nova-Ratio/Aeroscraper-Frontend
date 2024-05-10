@@ -106,10 +106,14 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       NICR: 0,
       firstAddress: firstAddress,
     };
-    let collateraltodecrease = BigInt(Number(remainingAmount) / basePrice);
+    console.log("remainingAmount",remainingAmount,"basePrice",basePrice);
+    
+    let collateraltodecrease = BigInt(Number(remainingAmount) / 3055.38994275);
     let troveCollateral =
       icrdata[selectedidx].collateral - collateraltodecrease;
       NICR  = Number(troveCollateral) * (NICR_PRECISION) / Number(troveDebt)
+      console.log("NICR", NICR, troveCollateral, troveDebt, collateraltodecrease, remainingAmount,icrdata[selectedidx].collateral,icrdata[selectedidx].collateral - collateraltodecrease ,icrdata[selectedidx].debt,icrdata[selectedidx].debt-remainingAmount );
+      
     return { NICR, firstAddress };
   };
   const defaultAsset = DefaultAssetByChainName[ChainName.EVM];
@@ -412,8 +416,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
 
       let _lowerPartialRedemptionHint = defaultAddress;
       let _upperPartialRedemptionHint = defaultAddress;
+      let converAmount = getRequestAmount(amount, defaultAsset.ausdDecimal);
+      console.log("converAmount", converAmount, amount);
+      
       let processRedeem = await processRedeemICR(
-        getRequestAmount(amount, defaultAsset.ausdDecimal)
+        converAmount
       );
       console.log("NICR", processRedeem?.NICR);
       
@@ -430,11 +437,12 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       console.log(
         "redeemCollateral",
         getRequestAmount(amount, defaultAsset.decimal),
-        senderAddress,
+        processRedeem?.firstAddress,
         _upperPartialRedemptionHint,
         _lowerPartialRedemptionHint,
         "icr",
-        getRequestAmount(processRedeem?.NICR, defaultAsset.decimal) || 0,
+        processRedeem,
+        processRedeem?.NICR || 0,
         _maxIterations,
         _maxFeePercentage
       );
@@ -444,7 +452,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         processRedeem?.firstAddress,
         _upperPartialRedemptionHint,
         _lowerPartialRedemptionHint,
-        getRequestAmount(processRedeem?.NICR , defaultAsset.decimal) || 0,
+        processRedeem?.NICR.toString() || 0,
         _maxIterations,
         _maxFeePercentage
       );
