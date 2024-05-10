@@ -16,7 +16,7 @@ import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { CW20TokenInfoResponse } from "@/contracts/app/types";
 import graphql from "@/services/graphql";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
-  let _maxFeePercentage = "5000000000000000";
+  let _maxFeePercentage = "90000000000000000";
   let _maxIterations = 2;
   const defaultAddress = "0x0000000000000000000000000000000000000000";
   console.log("basePrice", basePrice);
