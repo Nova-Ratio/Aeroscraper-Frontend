@@ -71,6 +71,7 @@ export default function graphql({
         nodes {
             collaterals
             debtAmount
+            owner
         }
     }
   }
