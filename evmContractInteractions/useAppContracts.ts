@@ -92,9 +92,9 @@ export const withdrawETHGainToTrove = async (
     }
 };
 
-export const callGetNICR= async (address: string, _maxAUSDamount: number, _price: number) => {
+export const callGetNICR= async (address: string, _maxAUSDamount: string|number | bigint, _price: string) => {
     try {
-        const getNICR = await (await callTroveManagerContract()).contractWithSigner.callGetNICR(address, _maxAUSDamount, _price);
+        const getNICR = await (await callTroveManagerContract()).contractWithSigner.getNICR(address, _maxAUSDamount, _price);
         return await getNICR;
     } catch (error) {
         console.log(error);

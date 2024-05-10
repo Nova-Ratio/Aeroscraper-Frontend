@@ -15,6 +15,7 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { CW20TokenInfoResponse } from "@/contracts/app/types";
 import graphql from "@/services/graphql";
+import { callGetNICR } from "./useAppContracts";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   let _maxFeePercentage = "90000000000000000";
   let _maxIterations = 2;
@@ -75,7 +76,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
 
     return { prev_node_id, next_node_id };
   };
-  const processRedeemICR = async (amount: string) => {
+  const processRedeemICR = async (amount: string,senderAddress:string) => {
     let NICR_PRECISION = 10 ** 20;
     let NICR = 0;
     let remainingAmount = BigInt(amount);
@@ -101,7 +102,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         break;
       }
     }
-    let troveDebt = icrdata[selectedidx].debt - remainingAmount;
+    remainingAmount= icrdata[selectedidx].debt - remainingAmount;
+    console.log("remainingAmount", remainingAmount, firstAddress);
+    
+    NICR = await callGetNICR(firstAddress,amount,"3055389942750000000000");
+    console.log("NICR", NICR);
+    
+    /* let troveDebt = icrdata[selectedidx].debt - remainingAmount;
     if (Number(troveDebt) === 0) return {
       NICR: 0,
       firstAddress: firstAddress,
@@ -112,9 +119,9 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     let troveCollateral =
       icrdata[selectedidx].collateral - collateraltodecrease;
       NICR  = Number(troveCollateral) * (NICR_PRECISION) / Number(troveDebt)
-      console.log("NICR", NICR, troveCollateral, troveDebt, collateraltodecrease, remainingAmount,icrdata[selectedidx].collateral,icrdata[selectedidx].collateral - collateraltodecrease ,icrdata[selectedidx].debt,icrdata[selectedidx].debt-remainingAmount );
+      console.log("NICR", NICR, troveCollateral, troveDebt, collateraltodecrease, remainingAmount,icrdata[selectedidx].collateral,icrdata[selectedidx].collateral - collateraltodecrease ,icrdata[selectedidx].debt,icrdata[selectedidx].debt-remainingAmount ); */
       
-    return { NICR, firstAddress };
+    return { NICR: Number(NICR), firstAddress };
   };
   const defaultAsset = DefaultAssetByChainName[ChainName.EVM];
   //console.log("asset", asset);
@@ -420,9 +427,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       console.log("converAmount", converAmount, amount);
       
       let processRedeem = await processRedeemICR(
-        converAmount
+        converAmount,senderAddress
       );
       console.log("NICR", processRedeem?.NICR);
+      
+
       
       if (processRedeem?.NICR != 0) {
         const { prev_node_id, next_node_id } =
