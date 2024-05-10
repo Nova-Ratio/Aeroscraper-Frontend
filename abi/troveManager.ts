@@ -1,4 +1,4 @@
-export const TroveManagerABI = [
+[
 	{
 		"anonymous": false,
 		"inputs": [
@@ -954,6 +954,35 @@ export const TroveManagerABI = [
 			{
 				"internalType": "uint256",
 				"name": "entireSystemDebt",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_borrower",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_maxAUSDamount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			}
+		],
+		"name": "getNICR",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "newNICR",
 				"type": "uint256"
 			}
 		],
