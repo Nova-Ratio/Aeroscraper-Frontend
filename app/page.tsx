@@ -66,12 +66,12 @@ export default function Home() {
             <div className="w-full md:w-1/2 max-w-[510px] gradientBorderGray flex flex-col gap-6 p-4 md:p-6 py-10 md:py-16 items-center bg-white mt-32 -mr-12 h-fit text-white text-center">
               <div className="flex items-center gap-6">
                 <h3 className="tertiary-gradient-text auditCard-text md:text-[40px] text-4xl">
-                  Aeroscraper is Live on EVM Mainnet
+                  Aeroscraper is Live on EVM Testnet
                 </h3>
               </div>
               <p>
                 We are proud to announce that the Aeroscraper protocol <br /> is live
-                on the Injective Mainnet. <br /> Enjoy decentralized lending and
+                on the EVM Testnet. <br /> Enjoy decentralized lending and
                 stablecoin borrowing by <br /> creating your first trove now.
               </p>
             </div>

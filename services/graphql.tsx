@@ -27,6 +27,8 @@ export default function graphql({
             troves {
               nodes {
                 owner
+                collateral
+                debt
               }
             }
           }
