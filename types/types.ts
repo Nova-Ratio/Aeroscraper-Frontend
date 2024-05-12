@@ -6,6 +6,8 @@ export type RiskyTrovesResponse = {
         nodes: {
             owner: string;
             liquidityThreshold: number;
+            collateralAmount: number;
+            debtAmount: number;
         }[]
     }
 }

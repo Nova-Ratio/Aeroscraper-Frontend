@@ -76,11 +76,15 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
         const batchEnd = (i + 1) * batchSize;
         const batchItems = res.troves.nodes.slice(batchStart, batchEnd);
 
-        const batchPromises = batchItems.map(async (item) => {
+        const batchPromises = batchItems.map(async (item:any) => {
           try {
-            const troveRes = await contract.getTroveByAddress(item.owner);
+            const troveRes = {
+              collateral_amount: item.collaterals,
+              debt_amount: item.debtAmount,
+            };
+            
 
-            const collateralAmount = isV2TroveResponse(troveRes) ? convertAmount(troveRes?.collateral_amounts.find(item => item.denom === baseCoin?.denom)?.amount ?? 0, baseCoin?.decimal) : convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal);
+            const collateralAmount =  convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal);
 
             return {
               owner: item.owner,
