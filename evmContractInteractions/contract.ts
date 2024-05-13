@@ -17,8 +17,8 @@ import { CW20TokenInfoResponse } from "@/contracts/app/types";
 import graphql from "@/services/graphql";
 import { callGetNICR } from "./useAppContracts";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
-  let _maxFeePercentage = "900000000000000000";
-  let _maxIterations = 0;
+  let _maxFeePercentage = "999990000000000000";
+  let _maxIterations = 6;
   const defaultAddress = "0x0000000000000000000000000000000000000000";
   console.log("basePrice", basePrice);
 
@@ -38,7 +38,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     try {
       const data = await requestICR(collRatio * 100);
       console.log("data", data);
-      
+
       if (data.nextTrove.nodes.length === 2) {
         if (data.nextTrove.nodes[0].owner === user_addr) {
           // Skip the first node and check the second
@@ -78,42 +78,53 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
 
     return { prev_node_id, next_node_id };
   };
-  const processRedeemICR = async (amount: string,senderAddress:string) => {
+  const processRedeemICR = async (amount: string, senderAddress: string) => {
     let NICR_PRECISION = 10 ** 20;
     let NICR = 0;
     let remainingAmount = BigInt(amount);
     let requestRedeem = await requestRedeemICR();
-    let icrdata:any[] = await Promise.all(requestRedeem.troves.nodes.map(async (i: any) => {
-      console.log("i", i.debtAmount, i.collaterals);
-      const trove = await getTrove(i.owner)
-      return {
-        debt: BigInt(Number(trove?.debt_amount|| 0)) , // i.debtAmount
-        collateral: BigInt(Number(trove?.collateral_amount|| 0) ), //i.collaterals
-        owner: i.owner,
-      };
-    }));
+    let icrdata: any[] = await Promise.all(
+      requestRedeem.troves.nodes.map(async (i: any) => {
+        console.log("i", i.debtAmount, i.collaterals);
+        const trove = await getTrove(i.owner);
+        return {
+          debt: BigInt(Number(trove?.debt_amount || 0)), // i.debtAmount
+          collateral: BigInt(Number(trove?.collateral_amount || 0)), //i.collaterals
+          owner: i.owner,
+        };
+      })
+    );
     console.log("icrdata", icrdata);
-    let firstAddress = icrdata[0].owner; 
+    let firstAddress = icrdata[0].owner;
     let selectedidx = 0;
     for (let idx in icrdata) {
       let trove = icrdata[idx];
       if (remainingAmount > trove.debt) {
         remainingAmount -= trove.debt;
-        firstAddress = trove.owner;
       } else {
         selectedidx = Number(idx);
         break;
       }
     }
+    let lowerHint = icrdata[selectedidx !== 0 ? selectedidx - 1 : 0].owner;
+    let upperHint = icrdata[
+      selectedidx !== icrdata.length - 1 ? selectedidx + 1 : selectedidx
+    ].owner;
+    remainingAmount = icrdata[selectedidx].debt - remainingAmount;
+    let lastAddress = icrdata[selectedidx].owner;
+    console.log(
+      "remainingAmount",
+      remainingAmount,
+      firstAddress,
+      icrdata[selectedidx].debt,
+      lowerHint,
+      upperHint
+    );
 
-    firstAddress = icrdata[selectedidx].owner;
-    remainingAmount= icrdata[selectedidx].debt - remainingAmount;
-    console.log("remainingAmount", remainingAmount, firstAddress, icrdata[selectedidx].debt);
-    
-    NICR = await callGetNICR(firstAddress,amount,"3000000000000000000000");
+    NICR = await callGetNICR(lastAddress, remainingAmount, "3000000000000000000000");
     console.log("NICR", NICR);
-      
-    return { NICR: NICR, firstAddress };
+
+    return { NICR: NICR, firstAddress, lowerHint, upperHint };
   };
   const defaultAsset = DefaultAssetByChainName[ChainName.EVM];
   //console.log("asset", asset);
@@ -411,20 +422,14 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   };
   const redeem = async (senderAddress: string, amount: number) => {
     try {
-      
-
       let _lowerPartialRedemptionHint = defaultAddress;
       let _upperPartialRedemptionHint = defaultAddress;
       let converAmount = getRequestAmount(amount, defaultAsset.ausdDecimal);
       console.log("converAmount", converAmount, amount);
-      
-      let processRedeem = await processRedeemICR(
-        converAmount,senderAddress
-      );
-      console.log("NICR", processRedeem?.NICR);
-      
 
-      
+      let processRedeem = await processRedeemICR(converAmount, senderAddress);
+      console.log("NICR", processRedeem?.NICR);
+
       if (processRedeem?.NICR != 0) {
         const { prev_node_id, next_node_id } =
           await findSortedTroveInsertPosition(
@@ -439,8 +444,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         "redeemCollateral",
         getRequestAmount(amount, defaultAsset.decimal),
         processRedeem?.firstAddress,
-        _upperPartialRedemptionHint,
-        _lowerPartialRedemptionHint,
+        processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
+        processRedeem?.lowerHint || defaultAddress, //_lowerPartialRedemptionHint,
         processRedeem?.NICR || 0,
         _maxIterations,
         _maxFeePercentage
@@ -449,8 +454,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const tx = await contractWithSigner.redeemCollateral(
         getRequestAmount(amount, defaultAsset.decimal),
         processRedeem?.firstAddress,
-        _lowerPartialRedemptionHint,
-        _upperPartialRedemptionHint,
+        processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
+        processRedeem?.lowerHint || defaultAddress, // _lowerPartialRedemptionHint,
         processRedeem?.NICR || "0",
         _maxIterations,
         _maxFeePercentage
