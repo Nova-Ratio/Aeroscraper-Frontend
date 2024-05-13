@@ -106,11 +106,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         break;
       }
     }
-    let lowerHint = icrdata[selectedidx !== 0 ? selectedidx - 1 : 0].owner;
+    let lowerHint = selectedidx !== 0 ? defaultAddress : icrdata[selectedidx].owner;
     let upperHint = icrdata[
       selectedidx !== icrdata.length - 1 ? selectedidx + 1 : selectedidx
     ].owner;
-    remainingAmount = icrdata[selectedidx].debt - remainingAmount;
+    /* remainingAmount = icrdata[selectedidx].debt - remainingAmount; */
     let lastAddress = icrdata[selectedidx].owner;
     console.log(
       "remainingAmount",
@@ -444,8 +444,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         "redeemCollateral",
         getRequestAmount(amount, defaultAsset.decimal),
         processRedeem?.firstAddress,
-        processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.lowerHint || defaultAddress, //_lowerPartialRedemptionHint,
+        processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.NICR || 0,
         _maxIterations,
         _maxFeePercentage
@@ -454,8 +454,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const tx = await contractWithSigner.redeemCollateral(
         getRequestAmount(amount, defaultAsset.decimal),
         processRedeem?.firstAddress,
-        processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.lowerHint || defaultAddress, // _lowerPartialRedemptionHint,
+        processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.NICR || "0",
         _maxIterations,
         _maxFeePercentage
