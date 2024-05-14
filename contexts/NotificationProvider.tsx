@@ -8,7 +8,7 @@ export type NotificationType = "Reedem"
 
 export interface INotification {
   message?: string;
-  status: 'success' | 'error' | 'networkchange';
+  status: 'success' | 'error' | 'networkchange' | 'check' | 'checkError' | "create";
   directLink?: string;
   type?: NotificationType,
   isRead?: boolean
