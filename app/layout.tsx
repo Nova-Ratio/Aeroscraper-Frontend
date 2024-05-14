@@ -2,6 +2,7 @@ import "./globals.css";
 import "@burnt-labs/ui/dist/index.css";
 import { Exo } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { Suspense } from "react";
 const exo = Exo({ subsets: ["latin"] });
 
 export const metadata = {
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${exo.className} relative min-h-screen flex flex-col xion`}>
-        {children}
+        <Suspense>
+          {children}
+        </Suspense>
         <NextTopLoader
           color="#E4462D"
           initialPosition={0.08}
