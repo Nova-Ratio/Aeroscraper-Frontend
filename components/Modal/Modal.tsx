@@ -11,16 +11,20 @@ interface ModalProps {
   children?: ReactElement,
   showModal: boolean,
   onClose?: () => void,
-  modalSize?: "sm" | "md" | "lg",
+  modalSize?: "xs" | "sm" | "md" | "lg",
   hideCloseButton?: boolean,
   disableOverlayClose?: boolean,
   className?: string
 }
 
 const SIZE_VARIANT = {
+  'xs': {
+    width: 'w-full md:w-[525px]',
+    height: 'h-auto',
+  },
   'sm': {
-    width: 'w-full md:w-[65%]',
-    height: 'h-[65%]',
+    width: 'w-full md:w-[55vw]',
+    height: 'h-[65vh] md:h-[45vh]',
   },
   'md': {
     width: 'w-full md:w-[65%]',
