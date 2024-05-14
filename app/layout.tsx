@@ -17,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${exo.className} relative min-h-screen flex flex-col`}>
-        <Suspense fallback={<Loading />}>{children}</Suspense>
+        <Suspense fallback={<Loading />}>
+          {children}
+        </Suspense>
         <NextTopLoader
           color="#E4462D"
           initialPosition={0.08}

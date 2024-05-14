@@ -24,6 +24,8 @@ const CookieAccept: FC<Props> = ({ hide = false }) => {
         setOpen(!isCookieAccepted);
     }, [])
 
+    if (typeof document == "undefined") return null;
+
     return ReactDOM.createPortal((
         <AnimatePresence>
             {
