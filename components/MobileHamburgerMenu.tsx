@@ -112,7 +112,7 @@ const MobileHamburgerMenu: FC<Props> = ({
           process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string
         )
         .getFirstListItem(`address = '${address}'`);
-      setUserId(res?.id || "");
+      setUserId(res?.refId || "");
       setExpTime(res?.expTime || 0);
     } catch (error) {
       console.log("error", error);

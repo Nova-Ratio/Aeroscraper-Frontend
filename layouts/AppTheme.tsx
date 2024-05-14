@@ -115,7 +115,7 @@ const AppTheme = () => {
           process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string
         )
         .getFirstListItem(`address = '${address}'`);
-      setUserId(res?.id || "");
+      setUserId(res?.refId || "");
       setExpTime(res?.expTime || 0);
     } catch (error) {
       console.log("error", error);
@@ -196,12 +196,13 @@ const AppTheme = () => {
               popup: " lg:!p-10",
             },
           }).then((result) => {
+            const {ethereum} = window as any;
             if (result.isConfirmed) {
-              window.ethereum?.request({
+              ethereum.request({
                 method: "wallet_switchEthereumChain",
                 params: [{ chainId: chainData[chainID.toString()].chainId }],
               }) ||
-                window.ethereum.request({
+                ethereum.request({
                   method: "wallet_addEthereumChain",
                   params: [
                     {
