@@ -15,7 +15,8 @@ export const PLACEMENT_CLASSES = {
     "right-bottom": "bottom-0 left-full translate-x-4",
     "left-top": "top-0 right-full -translate-x-4",
     "left-bottom": "bottom-0 right-full -translate-x-4",
-    "left-bottom-corner": "top-0 left-full translate-y-1/2 -translate-x-[100%]"
+    "left-bottom-corner": "top-0 left-full translate-y-1/2 -translate-x-[100%]",
+    "left-top-corner": "bottom-0 left-full -translate-y-1/2 -translate-x-[100%]"
 }
 
 type Props = {
