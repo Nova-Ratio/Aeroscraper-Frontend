@@ -35,7 +35,13 @@ export const defaultContent: {
       desc: "We are excited to announce that Aeroscraper has successfully undergone a comprehensive security audit by IronNode team!",
       linkStr: "IronNode",
       linkUrl: "/documents/aeroscraper_iron-node_security_audit_report_v1.pdf",
-    }
+    },
+    {
+      title: "Don't miss our Archway Mainnet Galxe campaign",
+      desc: "Get a chance to win exclusive rewards by participating in our current Archway Mainnet Galxe campaign.",
+      linkStr: "participating",
+      linkUrl: "https://app.galxe.com/quest/aeroscraper/GCfuatzpRV",
+    },
   ];
   
 export const ArchwayContent: {
@@ -49,7 +55,7 @@ export const ArchwayContent: {
       title: "Don't miss our Archway Mainnet Galxe campaign",
       desc: "Get a chance to win exclusive rewards by participating in our current Archway Mainnet Galxe campaign.",
       linkStr: "participating",
-      linkUrl: "https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd",
+      linkUrl: "https://app.galxe.com/quest/aeroscraper/GCfuatzpRV",
     },
     {
       title: "Don't miss our latest Galxe campaign",

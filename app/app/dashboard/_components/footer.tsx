@@ -366,7 +366,7 @@ export default function Footer({}) {
             )}
             {selectedChainName === ChainName.ARCHWAY && (
             <Link
-              href={"https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd"}
+              href={"https://app.galxe.com/quest/aeroscraper/GCfuatzpRV"}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:scale-105 transition-all flex gap-2"
