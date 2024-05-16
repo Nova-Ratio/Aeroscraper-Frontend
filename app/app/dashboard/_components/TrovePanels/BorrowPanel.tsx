@@ -55,9 +55,9 @@ const BorrowPanel: FC = () => {
     const borrowDisabled = useMemo(
         () =>
             borrowingAmount <= 0 ||
-            borrowingAmount >
-            (selectedCollateral.amount * basePrice * 100) / 115 -
-            pageData.debtAmount,
+            borrowingAmount.toFixed(2) >
+            ((selectedCollateral.amount * basePrice * 100) / 115 -
+            pageData.debtAmount).toFixed(2),
         [borrowingAmount, pageData, selectedCollateral, basePrice]
     );
 
@@ -75,11 +75,12 @@ const BorrowPanel: FC = () => {
     const repayDisabled = useMemo(
         () =>
             borrowingAmount <= 0 ||
-            borrowingAmount > pageData.debtAmount ||
+            borrowingAmount.toFixed(2) > pageData.debtAmount.toFixed(2) ||
             borrowingAmount > pageData.ausdBalance,
         [borrowingAmount, pageData]
     );
-
+    console.log("repay",repayDisabled, borrowingAmount, pageData.debtAmount, pageData.ausdBalance);
+    
     const repayErrorText = useMemo(() =>
         borrowingAmount <= 0 ?
             "Enter the amount." :
