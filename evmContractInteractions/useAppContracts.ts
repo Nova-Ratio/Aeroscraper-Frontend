@@ -961,6 +961,18 @@ export const callUnstake = async (_amount: number) => {
     }
 };
 
+export const callGetStake = async (_staker: string) => {
+    try {
+        const getStake = await (
+            await callAUSDStakingContract()
+        ).contractWithSigner.getStake(_staker);
+        return await getStake;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
 export const callGetTotalAUSDStaked = async () => {
     try {
         const getTotalAUSDStaked = await (
@@ -972,3 +984,32 @@ export const callGetTotalAUSDStaked = async () => {
         return false;
     }
 };
+
+export const callStakeShare = async (staker: string) => {
+    try {
+        const getStake = await (
+            await callAUSDStakingContract()
+        ).contractWithSigner.getStake(staker);
+        const totalStaked = await (
+            await callAUSDStakingContract()
+        ).contractWithSigner.getTotalAUSDStaked();
+        const stakeShare = getStake / totalStaked;
+        return await stakeShare;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+//AUSDToken Contract Functions
+export const callCirculatedTotalSupply = async () => {
+    try {
+        const circulatedTotalSupply = await (
+            await callAUSDTTokenContract()
+        ).contractWithSigner._circulatedTotalSupply();
+        return await circulatedTotalSupply;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}

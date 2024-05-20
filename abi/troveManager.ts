@@ -1,4 +1,17 @@
-export const TroveManagerABI =[
+export const TroveManagerABI = [
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_AUSDStakingAddress",
+				"type": "address"
+			}
+		],
+		"name": "AUSDStakingAddressChanged",
+		"type": "event"
+	},
 	{
 		"anonymous": false,
 		"inputs": [
@@ -341,12 +354,6 @@ export const TroveManagerABI =[
 			},
 			{
 				"indexed": false,
-				"internalType": "uint256",
-				"name": "stake",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
 				"internalType": "uint8",
 				"name": "operation",
 				"type": "uint8"
@@ -354,6 +361,19 @@ export const TroveManagerABI =[
 		],
 		"name": "TroveUpdated",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "AUSDStaking",
+		"outputs": [
+			{
+				"internalType": "contract IAUSDStaking",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -461,19 +481,6 @@ export const TroveManagerABI =[
 	},
 	{
 		"inputs": [],
-		"name": "MAX_BORROWING_FEE",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "MCR",
 		"outputs": [
 			{
@@ -539,19 +546,6 @@ export const TroveManagerABI =[
 	},
 	{
 		"inputs": [],
-		"name": "REDEMPTION_FEE_FLOOR",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "SECONDS_IN_ONE_MINUTE",
 		"outputs": [
 			{
@@ -600,11 +594,6 @@ export const TroveManagerABI =[
 			{
 				"internalType": "uint256",
 				"name": "coll",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "stake",
 				"type": "uint256"
 			},
 			{
@@ -694,6 +683,19 @@ export const TroveManagerABI =[
 	},
 	{
 		"inputs": [],
+		"name": "arrangableRate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "baseRate",
 		"outputs": [
 			{
@@ -740,13 +742,6 @@ export const TroveManagerABI =[
 			}
 		],
 		"name": "closeTrove",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "decayBaseRateFromBorrowing",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -813,59 +808,27 @@ export const TroveManagerABI =[
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "getArrangableRate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_AUSDDebt",
+				"name": "_Amount",
 				"type": "uint256"
 			}
 		],
 		"name": "getBorrowingFee",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_AUSDDebt",
-				"type": "uint256"
-			}
-		],
-		"name": "getBorrowingFeeWithDecay",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getBorrowingRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getBorrowingRateWithDecay",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -1050,51 +1013,6 @@ export const TroveManagerABI =[
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_ETHDrawn",
-				"type": "uint256"
-			}
-		],
-		"name": "getRedemptionFeeWithDecay",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getRedemptionRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getRedemptionRateWithDecay",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
 				"name": "_price",
 				"type": "uint256"
 			}
@@ -1170,25 +1088,6 @@ export const TroveManagerABI =[
 	{
 		"inputs": [],
 		"name": "getTroveOwnersCount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			}
-		],
-		"name": "getTroveStake",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -1420,27 +1319,9 @@ export const TroveManagerABI =[
 				"internalType": "uint256",
 				"name": "_maxIterations",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_maxFeePercentage",
-				"type": "uint256"
 			}
 		],
 		"name": "redeemCollateral",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			}
-		],
-		"name": "removeStake",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1510,9 +1391,32 @@ export const TroveManagerABI =[
 				"internalType": "address",
 				"name": "_sortedTrovesAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_AUSDStakingAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_systemOwner",
+				"type": "address"
 			}
 		],
 		"name": "setAddresses",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "setArrangableRate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1576,7 +1480,7 @@ export const TroveManagerABI =[
 	},
 	{
 		"inputs": [],
-		"name": "totalCollateralSnapshot",
+		"name": "stableBaseRate",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -1589,7 +1493,20 @@ export const TroveManagerABI =[
 	},
 	{
 		"inputs": [],
-		"name": "totalStakes",
+		"name": "systemOwner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalCollateralSnapshot",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -1611,25 +1528,6 @@ export const TroveManagerABI =[
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			}
-		],
-		"name": "updateStakeAndTotalStakes",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

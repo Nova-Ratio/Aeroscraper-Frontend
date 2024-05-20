@@ -99,7 +99,7 @@ export const BorrowerOperationsABI = [
 				"type": "address"
 			}
 		],
-		"name": "AddressChanged",
+		"name": "PriceFeedAddressChanged",
 		"type": "event"
 	},
 	{
@@ -179,12 +179,6 @@ export const BorrowerOperationsABI = [
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "_coll",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "stake",
 				"type": "uint256"
 			},
 			{
@@ -362,11 +356,6 @@ export const BorrowerOperationsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_maxFeePercentage",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "_collWithdrawal",
 				"type": "uint256"
 			},
@@ -506,11 +495,6 @@ export const BorrowerOperationsABI = [
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_maxFeePercentage",
-				"type": "uint256"
-			},
 			{
 				"internalType": "uint256",
 				"name": "_AUSDAmount",
@@ -675,11 +659,6 @@ export const BorrowerOperationsABI = [
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_maxFeePercentage",
-				"type": "uint256"
-			},
 			{
 				"internalType": "uint256",
 				"name": "_AUSDAmount",
