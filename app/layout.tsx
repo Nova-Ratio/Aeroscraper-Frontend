@@ -1,6 +1,8 @@
+import Loading from "@/components/Loading/Loading";
 import "./globals.css";
 import { Exo } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { Suspense } from "react";
 const exo = Exo({ subsets: ["latin"] });
 
 export const metadata = {
@@ -15,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${exo.className} relative min-h-screen flex flex-col`}>
-        {children}
+        <Suspense fallback={<Loading />}>{children}</Suspense>
         <NextTopLoader
           color="#E4462D"
           initialPosition={0.08}
