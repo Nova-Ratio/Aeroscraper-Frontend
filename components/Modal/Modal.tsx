@@ -78,7 +78,7 @@ export const Modal: FunctionComponent<ModalProps> = ({ modalSize = "lg", ...prop
 
   //#endregion
 
-  if (!props.showModal) return null;
+  if (!props.showModal || typeof document === "undefined") return null;
 
   return ReactDOM.createPortal(
     <div className="inset-0 fixed flex items-center justify-center px-2 z-50">
