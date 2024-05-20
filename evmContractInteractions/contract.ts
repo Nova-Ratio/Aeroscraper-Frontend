@@ -15,7 +15,7 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { CW20TokenInfoResponse } from "@/contracts/app/types";
 import graphql from "@/services/graphql";
-import { callGetNICR } from "./useAppContracts";
+import { callGetNICR, callGetStake, callGetTroveColl, callGetTroveDebt, callStakeShare } from "./useAppContracts";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   let _maxFeePercentage = "999990000000000000";
   let _maxIterations = 6;
@@ -106,10 +106,12 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         break;
       }
     }
-    let lowerHint = selectedidx !== 0 ? defaultAddress : icrdata[selectedidx].owner;
-    let upperHint = icrdata[
-      selectedidx !== icrdata.length - 1 ? selectedidx + 1 : selectedidx
-    ].owner;
+    let lowerHint =
+      selectedidx !== 0 ? defaultAddress : icrdata[selectedidx].owner;
+    let upperHint =
+      icrdata[
+        selectedidx !== icrdata.length - 1 ? selectedidx + 1 : selectedidx
+      ].owner;
     /* remainingAmount = icrdata[selectedidx].debt - remainingAmount; */
     let lastAddress = icrdata[selectedidx].owner;
     console.log(
@@ -121,7 +123,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       upperHint
     );
 
-    NICR = await callGetNICR(lastAddress, remainingAmount, "10000000000000000000000");
+    NICR = await callGetNICR(
+      lastAddress,
+      remainingAmount,
+      "10000000000000000000000"
+    );
     console.log("NICR", NICR);
 
     return { NICR: NICR, firstAddress, lowerHint, upperHint };
@@ -144,7 +150,6 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
 
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.openTrove(
-        _maxFeePercentage,
         getRequestAmount(loanAmount, asset.ausdDecimal),
         _upperHint,
         _lowerHint,
@@ -163,11 +168,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     try {
       let deneme = await requestRedeemICR();
       console.log("deneme", deneme);
-      const { contractWithSigner } = await callTroveManagerContract();
-      const getTroveStake = await contractWithSigner.getTroveStake(borrower);
-      let res = await getTroveStake;
-      console.log("getTroveStake", res);
-      const getTroveDebt = await contractWithSigner.getTroveDebt(borrower);
+      const getStake = await callGetTroveColl(borrower);
+      let res = await getStake;
+      console.log("callGetStake", res);
+
+      const getTroveDebt = await callGetTroveDebt(borrower);
       let res2 = await getTroveDebt;
       console.log("getTroveDebt", res2);
 
@@ -284,7 +289,6 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         await findSortedTroveInsertPosition(collRatio, senderAddress);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.withdrawAUSD(
-        _maxFeePercentage,
         getRequestAmount(amount, defaultAsset.ausdDecimal),
         _upperHint,
         _lowerHint
@@ -312,13 +316,15 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   };
   const getStake = async (borrower: string) => {
     try {
-      const { contractWithSigner } = await callTroveManagerContract();
-      const getTroveStake = await contractWithSigner.getTroveStake(borrower);
+      
+      const getTroveStake = await callGetStake(borrower);
       let data = await getTroveStake;
-      console.log("getTroveStake", data);
+      let percentage = await callStakeShare(borrower);
+      console.log("callGetStake", data);
       return {
         amount: Number(data).toString(),
-        percentage: _maxFeePercentage,
+        percentage: percentage
+        ,
       };
     } catch (error) {
       console.log(error);
@@ -448,7 +454,6 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.NICR || 0,
         _maxIterations,
-        _maxFeePercentage
       );
 
       const tx = await contractWithSigner.redeemCollateral(
@@ -458,7 +463,6 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.NICR || "0",
         _maxIterations,
-        _maxFeePercentage
       );
       await tx.wait();
       let res = await tx;
@@ -481,13 +485,16 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     }
   };
   const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
-    /* const res = await chainGrpcWasmApi.fetchSmartContractState(
-      ausdContractAddress,
-      toBase64({ token_info: {} })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data; */
-    return undefined;
+    try {
+      const circulatedTotalSupply = await (
+        await callAUSDTTokenContract()
+      ).contractWithSigner._circulatedTotalSupply();
+      console.log("circulatedTotalSupply", circulatedTotalSupply);
+      return await circulatedTotalSupply;
+    } catch (error) {
+      console.log(error);
+      return undefined;
+    }
   };
   const getReward = async (user_addr: string): Promise<string | undefined> => {
     /* const res = await chainGrpcWasmApi.fetchSmartContractState(
