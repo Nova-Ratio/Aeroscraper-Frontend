@@ -93,7 +93,7 @@
         },
         {
           title: "Galxe",
-          link: "https://galxe.com/aeroscraper/campaign/GCSxHtT6Sd",
+          link: "https://app.galxe.com/quest/aeroscraper/GCfuatzpRV",
         },
       ],
     },
