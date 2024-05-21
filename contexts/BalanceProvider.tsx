@@ -23,7 +23,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
         try {
             if (!address || !baseCoin) return;
 
-            const client = await SigningCosmWasmClient.connect("https://inj-priv-rpc.kingnodes.com" ?? '')
+            const client = await SigningCosmWasmClient.connect(process.env.NEXT_PUBLIC_INJECTIVE_PRIV_RPC ?? '')
             const balance = await client.getBalance(address, baseCoin.denom);
             setBalanceByDenom({ [balance.denom]: balance });
         }
