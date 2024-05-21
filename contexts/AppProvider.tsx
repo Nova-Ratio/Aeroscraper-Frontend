@@ -22,7 +22,7 @@ export type AppContextState = {
 const AppContext = createContext<AppContextState>({
     selectedChainName: defaultChainName,
     isConnecting: false,
-    basePrice: 0,
+    basePrice: 3000,
     chainInfo: ChainInfoByName[defaultChainName],
     selectChainName: () => { },
     selectWallet: () => { },
@@ -37,7 +37,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const { getPriceByChainName } = usePrice();
 
-    const basePrice = useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]);
+    const basePrice = 3000 /* useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]); */
     const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? defaultChainName], [selectedChainName])
 
     const getMetamaskAccount = useCallback(async () => {
