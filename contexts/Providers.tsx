@@ -30,7 +30,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
     <>
       <AbstraxionProvider
         config={{
-          rpcUrl: "https://xion-test-priv-rpc.kingnodes.com/",
+          rpcUrl: "https://rpc.xion-testnet-1.burnt.com:443",
           contracts: [
             // Usually, you would have a list of different contracts here
             cw20Ausd,
