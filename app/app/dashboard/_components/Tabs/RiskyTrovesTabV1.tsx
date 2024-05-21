@@ -85,10 +85,10 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
             
 
             const collateralAmount =  convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal);
-
+            
             return {
               owner: item.owner,
-              liquidityThreshold: item.liquidityThreshold || Number(isFinite(Number(((collateralAmount * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)) ? Number(((collateralAmount * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100).toFixed(3) : 0),
+              liquidityThreshold:  Number(Number(((collateralAmount * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)),
               collateralAmount,
               debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal),
             };
@@ -182,7 +182,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                     selectedChainName === ChainName.INJECTIVE ?
                       <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
                       :
-                      <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}%</Text>
+                      <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0)).toFixed(3)}%</Text>
                   }
                 />}
               />

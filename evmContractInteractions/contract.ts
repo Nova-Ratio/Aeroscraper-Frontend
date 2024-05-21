@@ -27,7 +27,6 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   let _maxFeePercentage = "999990000000000000";
   let _maxIterations = 6;
   const defaultAddress = "0x0000000000000000000000000000000000000000";
-  console.log("basePrice", basePrice);
 
   const { requestICR, requestRedeemICR } = graphql({
     selectedChainName: ChainName.EVM,
@@ -133,7 +132,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     NICR = await callGetNICR(
       lastAddress,
       remainingAmount,
-      "10000000000000000000000"
+      "3000000000000000000000"
     );
     console.log("NICR", NICR);
 

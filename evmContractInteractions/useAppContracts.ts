@@ -995,7 +995,9 @@ export const callStakeShare = async (staker: string) => {
         ).contractWithSigner.getTotalAUSDStaked();
         console.log(getStake, totalStaked);
         
-        const stakeShare = getStake / totalStaked;
+        const stakeShare = Number(getStake) / Number(totalStaked);
+        console.log(stakeShare, Number(stakeShare) *100, getStake, totalStaked);
+        
         return Number(stakeShare) *100;
     } catch (error) {
         console.log(error);
