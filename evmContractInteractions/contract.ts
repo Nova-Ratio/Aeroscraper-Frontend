@@ -15,7 +15,14 @@ import { useNotification } from "@/contexts/NotificationProvider";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { CW20TokenInfoResponse } from "@/contracts/app/types";
 import graphql from "@/services/graphql";
-import { callGetNICR, callGetStake, callGetTroveColl, callGetTroveDebt, callStakeShare } from "./useAppContracts";
+import {
+  callCirculatedTotalSupply,
+  callGetNICR,
+  callGetStake,
+  callGetTroveColl,
+  callGetTroveDebt,
+  callStakeShare,
+} from "./useAppContracts";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   let _maxFeePercentage = "999990000000000000";
   let _maxIterations = 6;
@@ -168,6 +175,9 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     try {
       let deneme = await requestRedeemICR();
       console.log("deneme", deneme);
+      let ausdInfo = await getAusdInfo();
+      console.log("ausdInfo", ausdInfo);
+
       const getStake = await callGetTroveColl(borrower);
       let res = await getStake;
       console.log("callGetStake", res);
@@ -316,15 +326,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   };
   const getStake = async (borrower: string) => {
     try {
-      
       const getTroveStake = await callGetStake(borrower);
       let data = await getTroveStake;
       let percentage = await callStakeShare(borrower);
       console.log("callGetStake", data);
       return {
         amount: Number(data).toString(),
-        percentage: percentage
-        ,
+        percentage: percentage,
       };
     } catch (error) {
       console.log(error);
@@ -453,7 +461,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         processRedeem?.lowerHint || defaultAddress, //_lowerPartialRedemptionHint,
         processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.NICR || 0,
-        _maxIterations,
+        _maxIterations
       );
 
       const tx = await contractWithSigner.redeemCollateral(
@@ -462,7 +470,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         processRedeem?.lowerHint || defaultAddress, // _lowerPartialRedemptionHint,
         processRedeem?.upperHint || defaultAddress, //_upperPartialRedemptionHint
         processRedeem?.NICR || "0",
-        _maxIterations,
+        _maxIterations
       );
       await tx.wait();
       let res = await tx;
@@ -486,9 +494,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   };
   const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
     try {
-      const circulatedTotalSupply = await (
-        await callAUSDTTokenContract()
-      ).contractWithSigner._circulatedTotalSupply();
+      const circulatedTotalSupply = await callCirculatedTotalSupply()
       console.log("circulatedTotalSupply", circulatedTotalSupply);
       return await circulatedTotalSupply;
     } catch (error) {

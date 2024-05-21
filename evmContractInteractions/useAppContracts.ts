@@ -996,10 +996,10 @@ export const callStakeShare = async (staker: string) => {
         console.log(getStake, totalStaked);
         
         const stakeShare = getStake / totalStaked;
-        return await Number(stakeShare) *100;
+        return Number(stakeShare) *100;
     } catch (error) {
         console.log(error);
-        return false;
+        return undefined;
     }
 }
 
@@ -1008,10 +1008,10 @@ export const callCirculatedTotalSupply = async () => {
     try {
         const circulatedTotalSupply = await (
             await callAUSDTTokenContract()
-        ).contractWithSigner._circulatedTotalSupply();
+        ).contractWithSigner.totalSupply();
         return await circulatedTotalSupply;
     } catch (error) {
         console.log(error);
-        return false;
+        return undefined;
     }
 }
