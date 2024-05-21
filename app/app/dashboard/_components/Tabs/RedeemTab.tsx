@@ -56,7 +56,7 @@ const RedeemTab: FC<Props> = ({
     () =>
       isNil(redeemAmount) ||
       redeemAmount <= 0 ||
-      redeemAmount > pageData.ausdBalance,
+      redeemAmount.toFixed(2) > pageData.ausdBalance.toFixed(2),
     [redeemAmount, pageData]
   );
   const redeemErrorText = useMemo(() =>
