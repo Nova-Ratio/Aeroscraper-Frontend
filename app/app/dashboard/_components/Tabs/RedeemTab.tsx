@@ -21,7 +21,10 @@ import {
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import { DefaultAssetByChainName, assetByDenom } from "@/constants/assetConstants";
+import {
+  DefaultAssetByChainName,
+  assetByDenom,
+} from "@/constants/assetConstants";
 import { ChainName } from "@/enums/Chain";
 
 interface Props {
@@ -40,7 +43,8 @@ const RedeemTab: FC<Props> = ({
   const { baseCoin, selectedChainName } = useChainAdapter();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
-  const { addNotification, setProcessLoading, processLoading } = useNotification();
+  const { addNotification, setProcessLoading, processLoading } =
+    useNotification();
 
   const contract = useAppContract();
 
@@ -56,16 +60,18 @@ const RedeemTab: FC<Props> = ({
     () =>
       isNil(redeemAmount) ||
       redeemAmount <= 0 ||
-      redeemAmount.toFixed(2) > pageData.ausdBalance.toFixed(2),
+      Number(redeemAmount.toFixed(2)) > Number(pageData.ausdBalance.toFixed(2)),
     [redeemAmount, pageData]
   );
-  const redeemErrorText = useMemo(() =>
-    (isNil(redeemAmount) || redeemAmount <= 0) ?
-      "Enter the AUSD amount" :
-      redeemAmount > pageData.ausdBalance ? "Insufficient AUSD balance"
-        :
-        undefined,
-    [redeemAmount, pageData])
+  const redeemErrorText = useMemo(
+    () =>
+      isNil(redeemAmount) || redeemAmount <= 0
+        ? "Enter the AUSD amount"
+        : redeemAmount > pageData.ausdBalance
+        ? "Insufficient AUSD balance"
+        : undefined,
+    [redeemAmount, pageData]
+  );
   const redeem = async () => {
     let transactionHash;
     try {
@@ -74,7 +80,9 @@ const RedeemTab: FC<Props> = ({
       console.log("redeemAmount", redeemAmount);
       const res: any = await contract.redeem(redeemAmount);
       console.log("res", res);
-
+      if (!res?.txHash) {
+        throw new Error(res);
+      }
 
       transactionHash = getIsInjectiveResponse(res)
         ? res?.txHash
@@ -102,7 +110,7 @@ const RedeemTab: FC<Props> = ({
 
     setProcessLoading(false);
   };
-  const coinName = baseCoin?.name
+  const coinName = baseCoin?.name;
   return (
     <section>
       <Text size="3xl">Convert your aUSD directly to {coinName}</Text>
@@ -181,13 +189,13 @@ const RedeemTab: FC<Props> = ({
           />
         </div>
         <TransactionButton
-            loading={processLoading}
-            className="w-full md:w-[375px] h-11 mt-10 ml-auto"
-            onClick={redeem}
-            text="Redeem"
-            disabled={redeemDisabled}
-            disabledText={redeemErrorText}
-          />
+          loading={processLoading}
+          className="w-full md:w-[375px] h-11 mt-10 ml-auto"
+          onClick={redeem}
+          text="Redeem"
+          disabled={redeemDisabled}
+          disabledText={redeemErrorText}
+        />
       </div>
     </section>
   );

@@ -50,17 +50,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     }, [])
     const getEthPrice = useCallback(async () => {
         try {
-           /*  const asset = BaseCoinByChainName[ChainName.EVM];
-            const denom = asset.denom;
-            const currentPrices = await callFetchPrice();
-            console.log("currentPrices", convertAmount(currentPrices, asset.decimal));
-            
-            if (currentPrices) {
-                setCoinPricesByDenom(prev => ({
-                    ...prev,
-                    [denom]: convertAmount(currentPrices, asset.decimal)
-                }))
-            } */
+           
             const denom = BaseCoinByChainName[ChainName.EVM].denom;
             const connection = new PriceServiceConnection(
                 "https://hermes.pyth.network/",
@@ -78,7 +68,8 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
             if (currentPrices) {
                 setCoinPricesByDenom(prev => ({
                     ...prev,
-                    [denom]: Number(currentPrices[0].getPriceUnchecked().price) / 100000000
+                    [denom]: 3000//Number(currentPrices[0].getPriceUnchecked().price) / 100000000
+                    //TODO: remove hardcoded value before production
                 }))
             }
         }

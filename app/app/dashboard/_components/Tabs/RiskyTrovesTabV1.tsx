@@ -1,65 +1,82 @@
-import GradientButton from '@/components/Buttons/GradientButton';
-import SkeletonLoading from '@/components/Table/SkeletonLoading';
-import { Table } from '@/components/Table/Table';
-import { TableBodyCol } from '@/components/Table/TableBodyCol';
-import { TableHeaderCol } from '@/components/Table/TableHeaderCol';
-import { useNotification } from '@/contexts/NotificationProvider';
-import useAppContract from '@/contracts/app/useAppContract';
+import GradientButton from "@/components/Buttons/GradientButton";
+import SkeletonLoading from "@/components/Table/SkeletonLoading";
+import { Table } from "@/components/Table/Table";
+import { TableBodyCol } from "@/components/Table/TableBodyCol";
+import { TableHeaderCol } from "@/components/Table/TableHeaderCol";
+import { useNotification } from "@/contexts/NotificationProvider";
+import useAppContract from "@/contracts/app/useAppContract";
 
-import { RiskyTrovesModelV1 } from '@/types/types';
-import { getIsInjectiveResponse, convertAmount, getRatioColor } from '@/utils/contractUtils';
-import { getCroppedString } from '@/utils/stringUtils';
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { NumericFormat } from 'react-number-format';
-import { PageData } from '../../_types/types';
-import Text from '@/components/Texts/Text';
-import { RocketIcon } from '@/components/Icons/Icons';
-import graphql from '@/services/graphql';
-import { delay } from '@/utils/promiseUtils';
-import useChainAdapter from '@/hooks/useChainAdapter';
-import { ChainName } from '@/enums/Chain';
-import { isV2TroveResponse } from '@/contracts/app/types';
+import { RiskyTrovesModelV1 } from "@/types/types";
+import {
+  getIsInjectiveResponse,
+  convertAmount,
+  getRatioColor,
+} from "@/utils/contractUtils";
+import { getCroppedString } from "@/utils/stringUtils";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { NumericFormat } from "react-number-format";
+import { PageData } from "../../_types/types";
+import Text from "@/components/Texts/Text";
+import { RocketIcon } from "@/components/Icons/Icons";
+import graphql from "@/services/graphql";
+import { delay } from "@/utils/promiseUtils";
+import useChainAdapter from "@/hooks/useChainAdapter";
+import { ChainName } from "@/enums/Chain";
+import { isV2TroveResponse } from "@/contracts/app/types";
 
 type Props = {
   getPageData: () => void;
   basePrice: number;
-}
+};
 
 const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const { baseCoin, selectedChainName = ChainName.INJECTIVE } = useChainAdapter();
+  const { baseCoin, selectedChainName = ChainName.INJECTIVE } =
+    useChainAdapter();
   const contract = useAppContract();
   const [loading, setLoading] = useState(true);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV1[]>([]);
-  const { addNotification, setProcessLoading, processLoading } = useNotification();
+  const { addNotification, setProcessLoading, processLoading } =
+    useNotification();
 
-  const { requestRiskyTroves } = useMemo(() => graphql({ selectedChainName }), [selectedChainName]);
+  const { requestRiskyTroves } = useMemo(
+    () => graphql({ selectedChainName }),
+    [selectedChainName]
+  );
 
   const liquidateTroves = async () => {
     try {
       setProcessLoading(true);
 
       const res: any = await contract.liquidateTroves();
+      if (!res?.txHash) {
+        throw new Error(res);
+      }
       addNotification({
-        status: 'success',
-        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
-        message: 'Risky Troves Liquidated'
+        status: "success",
+        directLink: res?.txHash,
+        message: "Risky Troves Liquidated",
       });
       getPageData();
       getRiskyTroves();
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err);
       addNotification({
         message: "",
-        status: 'error',
-        directLink: ""
-      })
-    }
-    finally {
+        status: "error",
+        directLink: "",
+      });
+    } finally {
       setProcessLoading(false);
     }
-  }
+  };
 
   const getRiskyTroves = useCallback(async () => {
     setLoading(true);
@@ -76,21 +93,35 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
         const batchEnd = (i + 1) * batchSize;
         const batchItems = res.troves.nodes.slice(batchStart, batchEnd);
 
-        const batchPromises = batchItems.map(async (item:any) => {
+        const batchPromises = batchItems.map(async (item: any) => {
           try {
             const troveRes = {
               collateral_amount: item.collaterals,
               debt_amount: item.debtAmount,
             };
-            
 
-            const collateralAmount =  convertAmount(troveRes?.collateral_amount ?? 0, baseCoin?.decimal);
-            
+            const collateralAmount = convertAmount(
+              troveRes?.collateral_amount ?? 0,
+              baseCoin?.decimal
+            );
+
             return {
               owner: item.owner,
-              liquidityThreshold:  Number(Number(((collateralAmount * basePrice) / convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal)) * 100)),
+              liquidityThreshold: Number(
+                Number(
+                  ((collateralAmount * basePrice) /
+                    convertAmount(
+                      troveRes?.debt_amount ?? 0,
+                      baseCoin?.ausdDecimal
+                    )) *
+                    100
+                )
+              ),
               collateralAmount,
-              debtAmount: convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal),
+              debtAmount: convertAmount(
+                troveRes?.debt_amount ?? 0,
+                baseCoin?.ausdDecimal
+              ),
             };
           } catch (err) {
             return {
@@ -108,7 +139,9 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
       }
 
       const data = await Promise.all(getTrovesPromises);
-      setRiskyTroves(data.sort((a, b) => a.liquidityThreshold - b.liquidityThreshold));
+      setRiskyTroves(
+        data.sort((a, b) => a.liquidityThreshold - b.liquidityThreshold)
+      );
     } catch (err) {
       console.error(err);
     } finally {
@@ -125,79 +158,145 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
 
   useEffect(() => {
     selectedChainName && debouncedGetRiskyTroves();
-  }, [debouncedGetRiskyTroves, selectedChainName])
+  }, [debouncedGetRiskyTroves, selectedChainName]);
 
   return (
     <div>
-      <Text size='3xl' className='mb-4'>Liquidate Risky Troves</Text>
-      <div className='-ml-4'>
+      <Text size="3xl" className="mb-4">
+        Liquidate Risky Troves
+      </Text>
+      <div className="-ml-4">
         <Table
           listData={riskyTroves}
-          header={<div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4 mr-6">
-            <TableHeaderCol col={2} text="Owner" />
-            <TableHeaderCol col={1} text="Collateral" textCenter />
-            <TableHeaderCol col={1} text="Debt" textEnd />
-            <TableHeaderCol col={2} text="Coll. Ratio" textEnd />
-          </div>}
-          bodyCss='space-y-1 max-h-[350px] overflow-auto overflow-x-hidden'
+          header={
+            <div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4 mr-6">
+              <TableHeaderCol col={2} text="Owner" />
+              <TableHeaderCol col={1} text="Collateral" textCenter />
+              <TableHeaderCol col={1} text="Debt" textEnd />
+              <TableHeaderCol col={2} text="Coll. Ratio" textEnd />
+            </div>
+          }
+          bodyCss="space-y-1 max-h-[350px] overflow-auto overflow-x-hidden"
           loading={loading}
           renderItem={(item: RiskyTrovesModelV1) => {
-            return <div className="grid grid-cols-6 gap-4 border-b border-white/10">
-              <TableBodyCol col={2} text="XXXXXX" value={
-                <Text size='xs' className='whitespace-nowrap text-start ml-4'>{getCroppedString(item.owner, 6, 8)}</Text>
-              } />
-              <TableBodyCol col={1} text="XXXXXX" value={
-                <NumericFormat
-                  value={item.collateralAmount}
-                  thousandsGroupStyle="thousand"
-                  thousandSeparator=","
-                  fixedDecimalScale
-                  decimalScale={2}
-                  displayType="text"
-                  renderText={(value) =>
-                    <Text size='xs' responsive={true} className='whitespace-nowrap'>{value} {baseCoin?.name}</Text>
+            return (
+              <div className="grid grid-cols-6 gap-4 border-b border-white/10">
+                <TableBodyCol
+                  col={2}
+                  text="XXXXXX"
+                  value={
+                    <Text
+                      size="xs"
+                      className="whitespace-nowrap text-start ml-4"
+                    >
+                      {getCroppedString(item.owner, 6, 8)}
+                    </Text>
                   }
-                />} />
-              <TableBodyCol col={1} text="XXXXXX" value={
-                <NumericFormat
-                  value={item.debtAmount}
-                  thousandsGroupStyle="thousand"
-                  thousandSeparator=","
-                  fixedDecimalScale
-                  decimalScale={2}
-                  displayType="text"
-                  renderText={(value) =>
-                    <Text size='xs' responsive={true} className='whitespace-nowrap'>{value} aUSD</Text>
+                />
+                <TableBodyCol
+                  col={1}
+                  text="XXXXXX"
+                  value={
+                    <NumericFormat
+                      value={item.collateralAmount}
+                      thousandsGroupStyle="thousand"
+                      thousandSeparator=","
+                      fixedDecimalScale
+                      decimalScale={2}
+                      displayType="text"
+                      renderText={(value) => (
+                        <Text
+                          size="xs"
+                          responsive={true}
+                          className="whitespace-nowrap"
+                        >
+                          {value} {baseCoin?.name}
+                        </Text>
+                      )}
+                    />
                   }
-                />} />
-              <TableBodyCol col={2} text="XXXXXX" value={
-                <NumericFormat
-                  value={item.liquidityThreshold}
-                  thousandsGroupStyle="thousand"
-                  thousandSeparator=","
-                  fixedDecimalScale
-                  decimalScale={2}
-                  displayType="text"
-                  renderText={(value) =>
-                    selectedChainName === ChainName.INJECTIVE ?
-                      <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
-                      :
-                      <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0)).toFixed(3)}%</Text>
+                />
+                <TableBodyCol
+                  col={1}
+                  text="XXXXXX"
+                  value={
+                    <NumericFormat
+                      value={item.debtAmount}
+                      thousandsGroupStyle="thousand"
+                      thousandSeparator=","
+                      fixedDecimalScale
+                      decimalScale={2}
+                      displayType="text"
+                      renderText={(value) => (
+                        <Text
+                          size="xs"
+                          responsive={true}
+                          className="whitespace-nowrap"
+                        >
+                          {value} aUSD
+                        </Text>
+                      )}
+                    />
                   }
-                />}
-              />
-            </div>
-          }} />
+                />
+                <TableBodyCol
+                  col={2}
+                  text="XXXXXX"
+                  value={
+                    <NumericFormat
+                      value={item.liquidityThreshold}
+                      thousandsGroupStyle="thousand"
+                      thousandSeparator=","
+                      fixedDecimalScale
+                      decimalScale={2}
+                      displayType="text"
+                      renderText={(value) =>
+                        selectedChainName === ChainName.INJECTIVE ? (
+                          <Text
+                            size="xs"
+                            responsive={true}
+                            className="whitespace-nowrap text-end pr-10"
+                            dynamicTextColor={getRatioColor(
+                              item.liquidityThreshold
+                            )}
+                          >
+                            {item.liquidityThreshold}%
+                          </Text>
+                        ) : (
+                          <Text
+                            size="xs"
+                            responsive={true}
+                            className="whitespace-nowrap text-end pr-10"
+                            dynamicTextColor={
+                              getRatioColor(
+                                (item.liquidityThreshold ?? 0) *
+                                  (basePrice ?? 0)
+                              ) ?? 0
+                            }
+                          >
+                            {Number(item.liquidityThreshold ?? 0).toFixed(3)}%
+                          </Text>
+                        )
+                      }
+                    />
+                  }
+                />
+              </div>
+            );
+          }}
+        />
       </div>
-      {(riskyTroves.length === 0 && !loading) && (
-        <div className='my-10'>
-          <RocketIcon className='w-5 h-5 text-red-500 mx-auto' />
-          <Text size='base' className='whitespace-nowrap text-center mt-6'>Risky troves list is empty</Text>
+      {riskyTroves.length === 0 && !loading && (
+        <div className="my-10">
+          <RocketIcon className="w-5 h-5 text-red-500 mx-auto" />
+          <Text size="base" className="whitespace-nowrap text-center mt-6">
+            Risky troves list is empty
+          </Text>
         </div>
       )}
       <GradientButton
         disabled={riskyTroves.length === 0}
-        className='w-full md:w-[374px] h-11 ml-auto mt-6'
+        className="w-full md:w-[374px] h-11 ml-auto mt-6"
         onClick={liquidateTroves}
         rounded="rounded-lg"
         loading={processLoading}
@@ -205,7 +304,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
         Liquidate Risky Troves
       </GradientButton>
     </div>
-  )
-}
+  );
+};
 
-export default RiskyTrovesTabV1
+export default RiskyTrovesTabV1;

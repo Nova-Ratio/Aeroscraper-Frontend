@@ -101,13 +101,15 @@ const CreateTrovePanel: FC = () => {
         try {
             setProcessLoading(true);
 
-            const res = await contract.openTrove(
+            const res:any = await contract.openTrove(
                 openTroveAmount,
                 borrowAmount,
                 collacteralRatioCalculate,
                 selectedAsset
             );
-
+            if (!res?.txHash) {
+                throw new Error(res);
+              }
             addNotification({
                 status: "success",
                 directLink: res?.txHash,

@@ -164,7 +164,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       console.log("openTrove", tx);
       await tx.wait();
       console.log("tx", tx);
-      return await tx;
+      
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      };
     } catch (error) {
       console.log(error);
       return undefined;
@@ -210,13 +214,15 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       await tx.wait();
 
       console.log("addColl", tx);
-      const hash = tx.transactionHash;
+      const hash = tx.hash;
       console.log("hash", hash);
 
-      return hash;
-    } catch (error) {
-      console.log(error);
-      return undefined;
+      return {
+        txHash: hash,
+      };
+    } catch (error:any) {
+      console.log(error?.message);
+      return error;
     }
   };
 
@@ -236,25 +242,29 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         _lowerHint
       );
       console.log("getRequestAmount", tx);
-
       await tx.wait();
-      const hash = tx.transactionHash;
+      const hash = tx.hash;
       console.log("hash", hash);
-
-      return hash;
+      return {
+        txHash: hash,
+      };
     } catch (error) {
       console.log(error);
-      return undefined;
+      return error;
     }
   };
   const closeTrove = async () => {
     try {
       const { contractWithSigner } = await callBorrowerOperationsContract();
-      const closeTrove = await contractWithSigner.closeTrove();
-      return await closeTrove;
+      const tx = await contractWithSigner.closeTrove();
+      await tx.wait();
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      };
     } catch (error) {
       console.log(error);
-      return undefined;
+      return error;
     }
   };
 
@@ -281,11 +291,14 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
           _lowerHint
         );
       }
-      await tx.wait();
-      return await tx;
+      await tx?.wait();
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      }
     } catch (error) {
       console.log(error);
-      return undefined;
+      return error;
     }
   };
   const borrowLoan = async (
@@ -303,10 +316,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         _lowerHint
       );
       await tx.wait();
-      return await tx;
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      };
     } catch (error) {
       console.log(error);
-      return false;
+      return error;
     }
   };
   const getAusdBalance = async (borrower: string) => {
@@ -385,7 +401,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       return await fetchPrice;
     } catch (error) {
       console.log(error);
-      return false;
+      return undefined;
     }
   };
 
@@ -412,11 +428,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const { contractWithSigner } = await callAUSDStakingContract();
       const tx = await contractWithSigner.stake(_amount);
       await tx.wait();
-      let res = await tx;
-      return res;
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      }
     } catch (error) {
       console.log(error);
-      return undefined;
+      return error;
     }
   };
   const unstake = async (senderAddress: string, amount: number) => {
@@ -426,11 +444,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         getRequestAmount(amount, defaultAsset.decimal)
       );
       await tx.wait();
-      let res = await tx;
-      return res;
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      }
     } catch (error) {
       console.log(error);
-      return false;
+      return error;
     }
   };
   const redeem = async (senderAddress: string, amount: number) => {
@@ -472,11 +492,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         _maxIterations
       );
       await tx.wait();
-      let res = await tx;
-      return res;
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      }
     } catch (error) {
       console.log(error);
-      return false;
+      return error;
     }
   };
   const liquidateTroves = async (senderAddress: string, n = 5) => {
@@ -484,11 +506,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const { contractWithSigner } = await callTroveManagerContract();
       const tx = await contractWithSigner.liquidateTroves(n); // TODO: tuğgüne sor
       await tx.wait();
-      let res = await tx;
-      return res;
+      const hash = tx.hash;
+      return {
+        txHash: hash,
+      }
     } catch (error) {
       console.log(error);
-      return false;
+      return error;
     }
   };
   const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {

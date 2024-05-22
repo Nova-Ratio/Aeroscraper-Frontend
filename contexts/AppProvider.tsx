@@ -37,7 +37,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const { getPriceByChainName } = usePrice();
 
-    const basePrice = 3000 /* useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]); */
+    const basePrice = useMemo(() => getPriceByChainName(selectedChainName), [selectedChainName, getPriceByChainName]);
     const chainInfo = useMemo(() => ChainInfoByName[selectedChainName ?? defaultChainName], [selectedChainName])
 
     const getMetamaskAccount = useCallback(async () => {

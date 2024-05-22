@@ -42,6 +42,7 @@ const CollateralPanel: FC = () => {
             }
         );
     }, [selectedAsset, pageData.collateralAmountsByDenom]);
+    console.log("pageData", pageData);
     
     const selectedMinCollateral = useMemo(() => {
         return pageData.minCollateralRatioByDenom[selectedAsset.denom] ?? 0;
@@ -112,7 +113,11 @@ const CollateralPanel: FC = () => {
                 depositCollRatio,
                 selectedAsset
             );
-
+            
+            if (!res?.txHash) {
+                
+                throw new Error(res);
+            }
             addNotification({
                 status: "success",
                 directLink: res?.txHash,
@@ -122,10 +127,13 @@ const CollateralPanel: FC = () => {
             refreshBalance();
             setCollateralAmount(0);
         } catch (err: any) {
+            console.log("err", err?.message);
+            
             addNotification({
-                message: JSON.stringify(err.message),
+                message: JSON.stringify(err?.message?.message ?? err.message),
                 status: "error",
                 directLink: "",
+
             });
         }
 
@@ -136,12 +144,15 @@ const CollateralPanel: FC = () => {
         setProcessLoading(true);
 
         try {
-            const res = await contract.removeCollateral(
+            const res:any = await contract.removeCollateral(
                 collateralAmount,
                 withdrawCollRatio,
                 selectedAsset
             );
-
+            if (!res?.txHash) {
+                
+                throw new Error(res);
+            }
             addNotification({
                 status: "success",
                 directLink: res?.txHash,

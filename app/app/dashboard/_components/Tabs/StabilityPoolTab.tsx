@@ -67,6 +67,9 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
 
     try {
       const res: any = await contract.stake(stakeAmount);
+      if (!res?.txHash) {
+        throw new Error(res);
+      }
       setStakeAmount(0);
       addNotification({
         status: "success",
@@ -92,7 +95,9 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
 
     try {
       const res: any = await contract.unstake(unstakeAmount);
-
+      if (!res?.txHash) {
+        throw new Error(res);
+      }
       setUnstakeAmount(0);
       addNotification({
         status: "success",
