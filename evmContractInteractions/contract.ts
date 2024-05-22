@@ -164,7 +164,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       console.log("openTrove", tx);
       await tx.wait();
       console.log("tx", tx);
-      
+
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -220,7 +220,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       return {
         txHash: hash,
       };
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error?.message);
       return error;
     }
@@ -278,13 +278,16 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
 
     try {
       let tx;
+      let hash = "";
       console.log("senderAddress", senderAddress);
+      const { contractWithSigner } = await callBorrowerOperationsContract();
       if (isAllAmount) {
-        tx = await closeTrove();
+        tx = await contractWithSigner.closeTrove();
+        await tx.wait();
+        hash = tx.hash;
       } else {
         const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
           await findSortedTroveInsertPosition(collRatio, senderAddress);
-        const { contractWithSigner } = await callBorrowerOperationsContract();
         tx = await contractWithSigner.repayAUSD(
           getRequestAmount(amount, defaultAsset.ausdDecimal),
           _upperHint,
@@ -292,10 +295,12 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         );
       }
       await tx?.wait();
-      const hash = tx.hash;
+      hash = tx.hash;
+      console.log("hash", hash);
+      
       return {
         txHash: hash,
-      }
+      };
     } catch (error) {
       console.log(error);
       return error;
@@ -431,7 +436,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const hash = tx.hash;
       return {
         txHash: hash,
-      }
+      };
     } catch (error) {
       console.log(error);
       return error;
@@ -447,7 +452,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const hash = tx.hash;
       return {
         txHash: hash,
-      }
+      };
     } catch (error) {
       console.log(error);
       return error;
@@ -495,7 +500,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const hash = tx.hash;
       return {
         txHash: hash,
-      }
+      };
     } catch (error) {
       console.log(error);
       return error;
@@ -509,7 +514,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const hash = tx.hash;
       return {
         txHash: hash,
-      }
+      };
     } catch (error) {
       console.log(error);
       return error;
@@ -517,7 +522,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   };
   const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
     try {
-      const circulatedTotalSupply = await callCirculatedTotalSupply()
+      const circulatedTotalSupply = await callCirculatedTotalSupply();
       console.log("circulatedTotalSupply", circulatedTotalSupply);
       return await circulatedTotalSupply;
     } catch (error) {
