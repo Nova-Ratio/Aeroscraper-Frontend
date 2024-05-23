@@ -25,7 +25,7 @@ import { checkPoint } from "@/hooks/usePointer";
 import pb from "@/lib/pocketbase";
 import ReferralModal from "@/components/AccountModal/RefModal";
 
-const chainID = EthereumChainId.Mainnet;
+const chainID =0x8274f //EthereumChainId.Mainnet;
 
 const AppTheme = () => {
   const {
@@ -63,7 +63,6 @@ const AppTheme = () => {
       window.ethereum &&
       typeof window !== "undefined" &&
       selectedWallet === WalletType.METAMASK &&
-      selectedChainName === ChainName.INJECTIVE &&
       isWalletConnected
     ) {
       const getChainId = async () => {
@@ -89,7 +88,7 @@ const AppTheme = () => {
             directLink: "",
             message: "Network Changed",
           });
-          //window.location.reload();
+          window.location.reload();
         }
       });
     }

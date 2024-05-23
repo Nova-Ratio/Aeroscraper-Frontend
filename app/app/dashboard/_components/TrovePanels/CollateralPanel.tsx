@@ -69,7 +69,8 @@ const CollateralPanel: FC = () => {
     const withdrawErrorText = useMemo(() =>
         collateralAmount <= 0 ?
             "Enter the amount." :
-            selectedCollateral.amount < collateralAmount ?
+            selectedCollateral.amount < collateralAmount ||
+            withdrawCollRatio *100 < 115 ?
                 "Insufficient balance." :
                 undefined,
         [collateralAmount, selectedCollateral]
