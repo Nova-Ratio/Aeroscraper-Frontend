@@ -61,7 +61,8 @@ const CollateralPanel: FC = () => {
     const withdrawDisabled = useMemo(
         () =>
             collateralAmount <= 0 ||
-            selectedCollateral.amount < collateralAmount,
+            Number((selectedCollateral.amount).toFixed(2)) < Number((collateralAmount).toFixed(2)) ||
+            withdrawCollRatio *100 < 115,
         [collateralAmount, selectedCollateral]
     );
 
@@ -163,7 +164,7 @@ const CollateralPanel: FC = () => {
             setCollateralAmount(0);
         } catch (err: any) {
             addNotification({
-                message: JSON.stringify(err.message),
+                message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
                 status: "error",
                 directLink: "",
             });

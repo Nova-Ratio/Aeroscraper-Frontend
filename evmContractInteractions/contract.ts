@@ -171,7 +171,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       };
     } catch (error) {
       console.log(error);
-      return undefined;
+      return error;
     }
   };
   const getTrove = async (borrower: string) => {

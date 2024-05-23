@@ -82,8 +82,8 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       refreshBalance();
     } catch (err: any) {
       addNotification({
-        message: JSON.stringify(err.message),
-        status: "error",
+        message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
+        status: "error", 
         directLink: "",
       });
     }
@@ -114,7 +114,7 @@ const StabilityPoolTab: FC<Props> = ({ pageData, getPageData }) => {
       }
     } catch (err: any) {
       addNotification({
-        message: JSON.stringify(err.message),
+        message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
         status: "error",
         directLink: "",
       });

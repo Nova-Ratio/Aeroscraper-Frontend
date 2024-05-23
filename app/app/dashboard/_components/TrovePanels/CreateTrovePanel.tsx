@@ -118,8 +118,10 @@ const CreateTrovePanel: FC = () => {
             getPageData();
             refreshBalance();
         } catch (err: any) {
+            console.log("err?.message", err?.message);
+            
             addNotification({
-                message: JSON.stringify(err.message),
+                message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
                 status: "error",
                 directLink: "",
             });

@@ -102,7 +102,7 @@ const RedeemTab: FC<Props> = ({
       setRedeemAmount(0);
     } catch (err: any) {
       addNotification({
-        message: JSON.stringify(err.message),
+        message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
         status: "error",
         directLink: transactionHash,
       });

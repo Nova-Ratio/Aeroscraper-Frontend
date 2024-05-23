@@ -126,7 +126,7 @@ const BorrowPanel: FC = () => {
       setBorrowingAmount(0);
     } catch (err: any) {
       addNotification({
-        message: JSON.stringify(err.message),
+        message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
         status: "error",
         directLink: "",
       });
@@ -164,7 +164,7 @@ const BorrowPanel: FC = () => {
       refreshBalance();
     } catch (err: any) {
       addNotification({
-        message: JSON.stringify(err.message),
+        message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
         status: "error",
         directLink: "",
       });
