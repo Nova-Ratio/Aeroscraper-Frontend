@@ -294,7 +294,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
           </Text>
         </div>
       )}
-      <GradientButton
+      {/* <GradientButton
         disabled={riskyTroves.length === 0}
         className="w-full md:w-[374px] h-11 ml-auto mt-6"
         onClick={liquidateTroves}
@@ -302,7 +302,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
         loading={processLoading}
       >
         Liquidate Risky Troves
-      </GradientButton>
+      </GradientButton> */}
     </div>
   );
 };
