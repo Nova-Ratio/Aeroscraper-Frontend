@@ -45,7 +45,7 @@ export default function Audit() {
             </div>
             <p className="text-xs md:text-base">{item.description}</p>
             <Link
-              className=" text-[#5C5CFF] underline text-xs"
+              className=" text-[#5C5CFF] underline text-xs w-full overflow-hidden"
               href={item.link}
               target="_blank"
             >
