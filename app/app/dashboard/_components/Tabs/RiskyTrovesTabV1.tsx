@@ -251,7 +251,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                       decimalScale={2}
                       displayType="text"
                       renderText={(value) =>
-                        selectedChainName === ChainName.INJECTIVE ? (
+                        selectedChainName === ChainName.EVM ? (
                           <Text
                             size="xs"
                             responsive={true}
@@ -260,7 +260,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                               item.liquidityThreshold
                             )}
                           >
-                            {item.liquidityThreshold}%
+                            {Number(item.liquidityThreshold ?? 0).toFixed(3)}%
                           </Text>
                         ) : (
                           <Text
