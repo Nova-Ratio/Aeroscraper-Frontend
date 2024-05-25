@@ -12,14 +12,10 @@ import graphql from '@/services/graphql';
 import { AppVersion } from '@/types/types';
 import { convertAmount } from '@/utils/contractUtils';
 import axios from 'axios';
-import { chain, isNil } from 'lodash';
-import { DefaultAssetByChainName, assetByDenom } from '@/constants/assetConstants';
+import { isNil } from 'lodash';
+import { DefaultAssetByChainName } from '@/constants/assetConstants';
 
 const FilterParamByChainName: Record<ChainName, string> = {
-    [ChainName.INJECTIVE]: 'INJECTIVE',
-    [ChainName.SEI]: 'SEI',
-    [ChainName.ARCHWAY]: 'ARCH',
-    [ChainName.NEUTRON]: 'NEUTRON',
     [ChainName.XION]: 'XION'
 }
 
@@ -276,11 +272,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const getTotalInfo = useCallback(async () => {
         try {
             setTotalInfoLoading(true);
-            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.XION];
-
-            if (selectedChainName === ChainName.INJECTIVE && selectedAppVersion === AppVersion.V2) {
-                chainNameQuery = `${chainNameQuery}2`;
-            }
+            let chainNameQuery = FilterParamByChainName[ChainName.XION];
 
             const { data } = await axios.get<TotalInfoResponseV1 | TotalInfoResponseV2>(
                 `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`

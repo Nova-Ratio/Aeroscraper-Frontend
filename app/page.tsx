@@ -6,14 +6,12 @@ import Faq from "@/components/FAQ/Faq";
 import {
   BackgroundWave,
   LogoSecondary,
-  MedalIcon,
 } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
 import Audit from "@/components/landing/audit";
 import Footer from "@/components/landing/footer";
 import Hackathons from "@/components/landing/hackathons";
 import Partners from "@/components/landing/partners";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -52,17 +50,17 @@ export default function Home() {
             <LaunchButtons />
           </div>
           <div className="w-full md:w-1/2 max-w-[510px] gradientBorderGray flex flex-col gap-6 p-4 md:p-6 py-10 md:py-16 items-center bg-white mt-32 -mr-12 h-fit text-white text-center">
-              <div className="flex items-center gap-6">
-                <h3 className="tertiary-gradient-text auditCard-text md:text-[40px] text-4xl">
-                  Aeroscraper is Live on XION Testnet
-                </h3>
-              </div>
-              <p>
-                We are proud to announce that the Aeroscraper protocol <br /> is live
-                on the XION Testnet. <br /> Enjoy decentralized lending and
-                stablecoin borrowing by <br /> creating your first trove now.
-              </p>
+            <div className="flex items-center gap-6">
+              <h3 className="tertiary-gradient-text auditCard-text md:text-[40px] text-4xl">
+                Aeroscraper is Live on XION Testnet
+              </h3>
             </div>
+            <p>
+              We are proud to announce that the Aeroscraper protocol <br /> is live
+              on the XION Testnet. <br /> Enjoy decentralized lending and
+              stablecoin borrowing by <br /> creating your first trove now.
+            </p>
+          </div>
         </div>
         <Audit />
         <Hackathons />

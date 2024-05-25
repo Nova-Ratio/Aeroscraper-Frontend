@@ -18,9 +18,9 @@ export default function RenderContent({
 }) {
   const { selectedChainName } = useAppContext();
 
-  const [content, setContent] = useState( defaultContent);
+  const [content, setContent] = useState(defaultContent);
   useEffect(() => {
-    setContent(ChainName.INJECTIVE === selectedChainName ? injContent : defaultContent);
+    setContent(defaultContent);
   }, [selectedChainName]);
   const item = content[showContentIdx] as Content;
   const parts = item?.linkStr ? item?.desc.split(item?.linkStr) : [];

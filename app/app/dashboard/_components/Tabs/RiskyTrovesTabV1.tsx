@@ -1,17 +1,14 @@
 import GradientButton from '@/components/Buttons/GradientButton';
-import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import { Table } from '@/components/Table/Table';
 import { TableBodyCol } from '@/components/Table/TableBodyCol';
 import { TableHeaderCol } from '@/components/Table/TableHeaderCol';
 import { useNotification } from '@/contexts/NotificationProvider';
 import useAppContract from '@/contracts/app/useAppContract';
-
 import { RiskyTrovesModelV1 } from '@/types/types';
-import { getIsInjectiveResponse, convertAmount, getRatioColor } from '@/utils/contractUtils';
+import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NumericFormat } from 'react-number-format';
-import { PageData } from '../../_types/types';
 import Text from '@/components/Texts/Text';
 import { RocketIcon } from '@/components/Icons/Icons';
 import graphql from '@/services/graphql';
@@ -27,7 +24,7 @@ type Props = {
 
 const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const { baseCoin, selectedChainName = ChainName.INJECTIVE } = useChainAdapter();
+  const { baseCoin, selectedChainName = ChainName.XION } = useChainAdapter();
   const contract = useAppContract();
   const [loading, setLoading] = useState(true);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV1[]>([]);
@@ -39,10 +36,10 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
     try {
       setProcessLoading(true);
 
-      const res:any = await contract.liquidateTroves();
+      const res: any = await contract.liquidateTroves();
       addNotification({
         status: 'success',
-        directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: 'Risky Troves Liquidated'
       });
       getPageData();
@@ -175,10 +172,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                   decimalScale={2}
                   displayType="text"
                   renderText={(value) =>
-                    selectedChainName === ChainName.INJECTIVE ?
-                      <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(item.liquidityThreshold)}>{item.liquidityThreshold}%</Text>
-                      :
-                      <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}%</Text>
+                    <Text size='xs' responsive={true} className='whitespace-nowrap text-end pr-10' dynamicTextColor={getRatioColor(((item.liquidityThreshold ?? 0) * (basePrice ?? 0))) ?? 0}>{Number((item.liquidityThreshold ?? 0) * (basePrice ?? 0)).toFixed(3)}%</Text>
                   }
                 />}
               />

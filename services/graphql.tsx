@@ -10,20 +10,12 @@ import {
 import { request, gql } from "graphql-request";
 
 export default function graphql({
-  selectedChainName = ChainName.INJECTIVE
+  selectedChainName = ChainName.XION
 }: {
   selectedChainName?: ChainName;
 }) {
   const URL = (): string => {
     switch (selectedChainName) {
-      case ChainName.ARCHWAY:
-        return process.env.NEXT_PUBLIC_INDEXER_ARCH as string;
-      case ChainName.SEI:
-        return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
-      case ChainName.NEUTRON:
-        return process.env.NEXT_PUBLIC_INDEXER_NEUTRON as string;
-      case ChainName.INJECTIVE:
-        return process.env.NEXT_PUBLIC_INDEXER_INJ_V2 as string;
       case ChainName.XION:
         return process.env.NEXT_PUBLIC_INDEXER_XION as string;
       default:
@@ -32,18 +24,8 @@ export default function graphql({
   };
 
   const getRiskyTrovesQuery =
-    selectedChainName === ChainName.INJECTIVE
+    selectedChainName === ChainName.XION
       ? gql`
-          query {
-            troves {
-              nodes {
-                owner
-              }
-            }
-          }
-        `
-      : selectedChainName === ChainName.XION
-        ? gql`
           query {
             troves(orderBy: RATIO_ASC) {
               nodes {
@@ -53,7 +35,7 @@ export default function graphql({
             }
           }
         `
-        : gql`
+      : gql`
           query {
             troves {
               nodes {
@@ -117,11 +99,11 @@ export default function graphql({
   };
 
   const requestICR = async (input: number): Promise<ICRGraphqlResponse> => {
-    
+
     return await request(URL(), ICRQuery, { input });
   }
 
-  const requestRedeemICR = async(): Promise<redeemICRresponse> => {
+  const requestRedeemICR = async (): Promise<redeemICRresponse> => {
     return await request(URL(), redeemICRQuery);
   }
 

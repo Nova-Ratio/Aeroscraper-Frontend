@@ -6,7 +6,7 @@ import useChainAdapter from "@/hooks/useChainAdapter";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function Footer({}) {
+export default function Footer({ }) {
   const { selectedChainName, selectedAppVersion } = useAppContext();
 
   return (
@@ -81,23 +81,6 @@ export default function Footer({}) {
               className="w-4 h-4"
             />
           </Link>
-          {selectedChainName === ChainName.INJECTIVE && (
-            <Link
-              href={"https://testnet.faucet.injective.network/"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-105 w-fit transition-all flex gap-2"
-            >
-              <Text size="sm" textColor="text-white">
-                Injective Faucet
-              </Text>
-              <img
-                alt="external-link"
-                src="/images/external-link.svg"
-                className="w-4 h-4"
-              />
-            </Link>
-          )}
         </div>
         <div className="flex flex-col content-start justify-start gap-6">
           <Text size="sm" weight="font-semibold">
@@ -250,23 +233,23 @@ export default function Footer({}) {
             Hackathon
           </Text>
           <div className="flex flex-col content-start gap-3">
-              <Link
-                href={
-                  "https://twitter.com/Injective_/status/1745933949132488934?s=20"
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-105 w-fit transition-all flex gap-2 whitespace-nowrap"
-              >
-                <Text size="sm" textColor="text-white">
-                  Injective Illuminate Hackathon
-                </Text>
-                <img
-                  alt="external-link"
-                  src="/images/external-link.svg"
-                  className="w-4 h-4"
-                />
-              </Link>
+            <Link
+              href={
+                "https://twitter.com/Injective_/status/1745933949132488934?s=20"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 w-fit transition-all flex gap-2 whitespace-nowrap"
+            >
+              <Text size="sm" textColor="text-white">
+                Injective Illuminate Hackathon
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
             <Link
               href={"https://x.com/SeiNetwork/status/1705128171534717322?s=20"}
               target="_blank"
@@ -334,23 +317,6 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
-            {selectedChainName === ChainName.INJECTIVE && (
-            <Link
-              href={"https://zealy.io/c/aeroscraper/questboard"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-105 w-fit transition-all flex gap-2"
-            >
-              <Text size="sm" textColor="text-white">
-                Zealy
-              </Text>
-              <img
-                alt="external-link"
-                src="/images/external-link.svg"
-                className="w-4 h-4"
-              />
-            </Link>
-            )}
             <Link
               href={"https://medium.com/@aeroscraper"}
               target="_blank"
@@ -366,23 +332,6 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
-            {selectedChainName === ChainName.INJECTIVE && (
-            <Link
-              href={"https://guild.xyz/aeroscraper"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-105 w-fit transition-all flex gap-2"
-            >
-              <Text size="sm" textColor="text-white">
-                Guild
-              </Text>
-              <img
-                alt="external-link"
-                src="/images/external-link.svg"
-                className="w-4 h-4"
-              />
-            </Link>
-            )}
           </div>
         </div>
       </div>

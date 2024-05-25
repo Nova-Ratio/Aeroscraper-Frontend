@@ -1,5 +1,3 @@
-import GradientButton from '@/components/Buttons/GradientButton';
-import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import { Table } from '@/components/Table/Table';
 import { TableBodyCol } from '@/components/Table/TableBodyCol';
 import { TableHeaderCol } from '@/components/Table/TableHeaderCol';
@@ -7,12 +5,12 @@ import { useNotification } from '@/contexts/NotificationProvider';
 import useAppContract from '@/contracts/app/useAppContract';
 
 import { RiskyTrovesModelV2 } from '@/types/types';
-import { getIsInjectiveResponse, convertAmount, getRatioColor } from '@/utils/contractUtils';
+import { convertAmount, getRatioColor } from '@/utils/contractUtils';
 import { getCroppedString } from '@/utils/stringUtils';
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NumericFormat } from 'react-number-format';
 import Text from '@/components/Texts/Text';
-import { ChevronUpIcon, RocketIcon } from '@/components/Icons/Icons';
+import { RocketIcon } from '@/components/Icons/Icons';
 import graphql from '@/services/graphql';
 import { delay } from '@/utils/promiseUtils';
 import useChainAdapter from '@/hooks/useChainAdapter';
@@ -21,8 +19,6 @@ import { CollateralInfo, isV2TroveResponse } from '@/contracts/app/types';
 import OutlinedButton from '@/components/Buttons/OutlinedButton';
 import { usePrice } from '@/contexts/PriceProvider';
 import { DefaultAssetByChainName, assetByDenom } from '@/constants/assetConstants';
-import Dropdown from '@/components/Dropdown/Dropdown';
-import BorderedContainer from '@/components/Containers/BorderedContainer';
 import { isNil } from 'lodash';
 
 type Props = {
@@ -32,7 +28,7 @@ type Props = {
 
 const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-    const { selectedChainName = ChainName.INJECTIVE, baseCoin } = useChainAdapter();
+    const { selectedChainName = ChainName.XION, baseCoin } = useChainAdapter();
     const { coinPricesByDenom } = usePrice();
     const contract = useAppContract();
     const [loading, setLoading] = useState(true);
@@ -48,7 +44,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
             const res: any = await contract.liquidateTrovesV2(address);
             addNotification({
                 status: 'success',
-                directLink: getIsInjectiveResponse(res) ? res?.txHash : res?.transactionHash,
+                directLink: res?.transactionHash,
                 message: 'Risky Troves Liquidated'
             });
             getPageData();
@@ -179,7 +175,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                                         decimalScale={2}
                                         displayType="text"
                                         renderText={(value) =>
-                                            <Text size='xs' responsive={true} className='whitespace-nowrap'>{value} {DefaultAssetByChainName[selectedChainName]?.shortName}</Text>
+                                            <Text size='xs' responsive={true} className='whitespace-nowrap'>{value} {DefaultAssetByChainName.xion?.shortName}</Text>
                                         }
                                     />
                                 </div>

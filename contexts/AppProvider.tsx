@@ -1,7 +1,6 @@
 import { ChainName } from "@/enums/Chain";
 import { WalletType } from "@/enums/WalletType";
 import { AppVersion, ChainInfo } from "@/types/types";
-import { getInjectiveAddress } from "@injectivelabs/sdk-ts";
 import { isEmpty, isNil, } from "lodash";
 import {
   PropsWithChildren,
@@ -40,13 +39,13 @@ const AppContext = createContext<AppContextState>({
   isConnecting: false,
   basePrice: 0,
   chainInfo: ChainInfoByName[ChainName.XION],
-  selectChainName: () => {},
-  selectWallet: () => {},
-  disconnectMetamask: () => {},
-  disconnectXion: () => {},
-  changeAppVersion: () => {},
-  selectXionChain: () => {},
-  openXionChainModal: () => {},
+  selectChainName: () => { },
+  selectWallet: () => { },
+  disconnectMetamask: () => { },
+  disconnectXion: () => { },
+  changeAppVersion: () => { },
+  selectXionChain: () => { },
+  openXionChainModal: () => { },
 });
 
 const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
@@ -54,7 +53,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [selectedAppVersion, setSelectedAppVersion] = useState<AppVersion>(
     AppVersion.V2
   );
-  const {client: abstraxionClient , logout} = useAbstraxionSigningClient();
+  const { client: abstraxionClient, logout } = useAbstraxionSigningClient();
   const [selectedChainName, setSelectedChainName] = useState<ChainName>();
   const [selectedWallet, setSelectedWallet] = useState<WalletType>();
   const [userAddress, setUserAddress] = useState<string | undefined>(); //This state is used to override cosmos-kit address
@@ -73,21 +72,6 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     [selectedChainName]
   );
 
-  const getMetamaskAccount = useCallback(async () => {
-    try {
-      setIsConnecting(true);
-      const accounts = await (window as any).ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      const ethAddress = accounts[0];
-      setUserAddress(getInjectiveAddress(ethAddress));
-      setIsConnecting(false);
-    } catch (err) {
-      setUserAddress(undefined);
-      setIsConnecting(false);
-    }
-  }, []);
-
   const selectChainName = useCallback((chainName?: ChainName) => {
     setSelectedChainName(chainName);
     localStorage.setItem("savedChainName", chainName || "");
@@ -97,12 +81,8 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     async (wallet?: WalletType) => {
       setSelectedWallet(wallet);
       localStorage.setItem("selectedWallet", wallet || "");
-
-      if (wallet === WalletType.METAMASK) {
-        getMetamaskAccount();
-      }
     },
-    [getMetamaskAccount]
+    [selectChainName]
   );
 
   const disconnectMetamask = useCallback(() => {
@@ -187,12 +167,9 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const savedWallet = localStorage.getItem("selectedWallet");
     if (!isNil(savedWallet) && !isEmpty(savedWallet)) {
       setSelectedWallet(savedWallet as WalletType);
-
-      if (savedWallet === WalletType.METAMASK) {
-        getMetamaskAccount();
-      }
     }
-  }, [getMetamaskAccount]);
+  }, [selectXionChain]);
+
   useEffect(() => {
     if (selectedChainName === ChainName.XION && !isNil(abstraxionData)) {
       setUserAddress(abstraxionData?.bech32Address);

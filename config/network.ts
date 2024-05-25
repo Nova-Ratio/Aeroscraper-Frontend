@@ -114,15 +114,5 @@ export const uniTestnetConfig: AppConfig = {
 export const getConfig = (network: string, selectedChainName?: ChainName): AppConfig => {
     /* if (network === 'mainnet') return mainnetConfig
     return mainnetConfig */
-    if (selectedChainName === ChainName.ARCHWAY) {
-        return mainnetArchwayConfig
-    }
-    if (selectedChainName === ChainName.NEUTRON) {
-        return mainnetNeutronConfig
-    }
-    if (selectedChainName === ChainName.INJECTIVE) {
-        return testnetInjectiveConfig
-    }
-
     return uniTestnetConfig
 }

@@ -28,7 +28,7 @@ const CreateTrovePanel: FC = () => {
 
     // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
     const [selectedAsset] = useState<CollateralAsset>(
-        DefaultAssetByChainName[selectedChainName ?? ChainName.XION]
+        DefaultAssetByChainName.xion
     );
 
     const { addNotification, processLoading, setProcessLoading } = useNotification();
@@ -49,7 +49,7 @@ const CreateTrovePanel: FC = () => {
     }, [selectedAsset, pageData.minCollateralRatioByDenom]);
 
     const calculateICR = useMemo(
-        () => Number(((openTroveAmount * (1 - MANAGEMENT_FEE)) || 0) ) / (borrowAmount || 0),
+        () => Number(((openTroveAmount * (1 - MANAGEMENT_FEE)) || 0)) / (borrowAmount || 0),
         [openTroveAmount, borrowAmount]
     );
 

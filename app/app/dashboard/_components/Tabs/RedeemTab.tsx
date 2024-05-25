@@ -1,27 +1,21 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import Text from "@/components/Texts/Text";
 import {
-  INotification,
   useNotification,
 } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
-import { getValueByRatio, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { getValueByRatio } from "@/utils/contractUtils";
 import { isNil } from "lodash";
 import { NumberFormatValues, NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
-import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import TransactionButton from "@/components/Buttons/TransactionButton";
 import {
   ArrowDownIcon,
-  ArrowLeftIcon,
-  Logo,
-  LogoSecondary,
-  RedeemIcon,
 } from "@/components/Icons/Icons";
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import useChainAdapter from "@/hooks/useChainAdapter";
-import { DefaultAssetByChainName, assetByDenom } from "@/constants/assetConstants";
+import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import { ChainName } from "@/enums/Chain";
 
 interface Props {
@@ -76,9 +70,7 @@ const RedeemTab: FC<Props> = ({
       console.log("res", res);
 
 
-      transactionHash = getIsInjectiveResponse(res)
-        ? res?.txHash
-        : res?.transactionHash;
+      transactionHash = res?.transactionHash;
       console.log("transactionHash", transactionHash);
 
       addNotification({

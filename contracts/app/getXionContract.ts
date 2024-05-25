@@ -1,6 +1,4 @@
 import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { coin } from "@cosmjs/proto-signing";
 import {
   CW20BalanceResponse,
   CW20TokenInfoResponse,

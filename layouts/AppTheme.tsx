@@ -4,31 +4,24 @@ import { ExitIcon, LogoSecondary } from "@/components/Icons/Icons";
 import NotificationDropdown from "@/app/app/dashboard/_components/NotificationDropdown";
 import { isNil } from "lodash";
 import AccountModal from "@/components/AccountModal/AccountModal";
-import { convertAmount, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 import NotificationModal from "@/components/Modal/NotificationModal";
 import WalletButton from "@/components/Buttons/WalletButton";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
-import VersionSelector from "@/components/VersionSelector/VersionSelector";
 import { useProfile } from "@/contexts/ProfileProvider";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { ChainName } from "@/enums/Chain";
 import { useNotification } from "@/contexts/NotificationProvider";
-import Swal from "sweetalert2";
-import { EthereumChainId } from "@injectivelabs/ts-types";
-import ChainData from "@/services/data/chain.json";
-import useAppContract from "@/contracts/app/useAppContract";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
 import { useAbstraxionAccount } from "@burnt-labs/abstraxion";
-import { useAppContext } from "@/contexts/AppProvider";
 
-const chainID = EthereumChainId.Goerli;
 
 const AppTheme = () => {
-  const {data:account} = useAbstraxionAccount();
+  const { data: account } = useAbstraxionAccount();
   const {
     selectedChainName,
     selectChainName,
@@ -45,7 +38,7 @@ const AppTheme = () => {
   } = useChainAdapter();
   const { addNotification } = useNotification();
   const { balanceByDenom } = useBalances();
-  const { pageData, getPageData ,  } = usePageData();
+  const { pageData } = usePageData();
   const { profileDetail } = useProfile();
   const [accountModal, setAccountModal] = useState(false);
 
@@ -63,105 +56,7 @@ const AppTheme = () => {
 
   useEffect(() => {
     selectChainName(ChainName.XION);
-    if (
-      window.ethereum &&
-      typeof window !== "undefined" &&
-      selectedWallet === WalletType.METAMASK &&
-      selectedChainName === ChainName.INJECTIVE &&
-      isWalletConnected
-    ) {
-      const getChainId = async () => {
-        const { ethereum } = window as any;
-        const chainIdMetamask: any = await ethereum?.request({
-          method: "eth_chainId",
-        });
-
-        if (chainIdMetamask != chainID) {
-          CheckChain(chainIdMetamask);
-        }
-      };
-      getChainId();
-
-      window.ethereum?.on("chainChanged", (chainId: any) => {
-        CheckChain(chainId);
-        if (chainID === Number(chainId)) {
-          /* ToastSuccess.fire({
-            title: "Network Changed",
-          }); */
-          addNotification({
-            status: "networkchange",
-            directLink: "",
-            message: "Network Changed",
-          });
-          //window.location.reload();
-        }
-      });
-    }
   }, [selectedWallet, isWalletConnected]);
-
-  const [chainData, setChainData] = useState<any>(ChainData);
-  console.log(baseCoin, "baseCoin");
-  
-  const CheckChain = (id: number) => {
-    try {
-      id = Number(id);
-      if (id !== chainID) {
-        const { name } = chainData[id.toString()] || { name: "UNKNOW" };
-        const fromNetwork = name || "Unknown Network";
-        const toNetwork =
-          chainData[chainID.toString()]?.name || "GOERLI NETWORK ";
-        const alert = async () =>
-          await Swal.fire({
-            title: "Please Change Network",
-            text: `From ${fromNetwork} to ${toNetwork}`,
-            iconColor: "white",
-            showCancelButton: false,
-            showCloseButton: true,
-            backdrop: true,
-            background: "#150A17",
-            iconHtml: `<img src="/images/checkchain.svg" width="150" height="150" class="w-full shrink-0 " style="background:#150A17" />`,
-            color: "#fff",
-            confirmButtonText: "Change Network",
-            customClass: {
-              icon: "!bg-[#150A17] w-[150px] h-auto !border-0",
-              confirmButton:
-                "w-full md:w-[350px] py-2 px-8 h-[50px] text-base font-normal confirmBtn md:mb-8",
-              htmlContainer: "!text-white/50 !text-sm md:mb-3",
-              title: "!text-[32px] ",
-              popup: " lg:!p-10",
-            },
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.ethereum?.request({
-                method: "wallet_switchEthereumChain",
-                params: [{ chainId: chainData[chainID.toString()].chainId }],
-              }) ||
-                window.ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [
-                    {
-                      chainId: chainData[chainID.toString()].chainId,
-                      chainName: chainData[chainID.toString()].name,
-                      nativeCurrency: {
-                        name: chainData[chainID.toString()].nativeCurrency.name,
-                        symbol:
-                          chainData[chainID.toString()].nativeCurrency.symbol,
-                        decimals: 18,
-                      },
-                      rpcUrls: chainData[chainID.toString()].rpcUrls,
-                      blockExplorerUrls:
-                        chainData[chainID.toString()].blockExplorerUrls,
-                    },
-                  ],
-                });
-            }
-          });
-        alert();
-      }
-    } catch (error) {
-      console.log("CheckChain error:", error);
-    }
-  };
 
   return (
     <>

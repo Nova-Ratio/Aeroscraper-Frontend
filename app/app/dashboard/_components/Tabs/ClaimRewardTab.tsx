@@ -6,7 +6,6 @@ import { isNil } from "lodash";
 import { NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
-import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
@@ -42,14 +41,12 @@ const ClaimRewardTab: FC<Props> = ({
       const res: any = await contract.withdrawLiquidationGains();
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `${pageData.rewardAmount} ${coinName} Reward Received`,
       });
       getPageData();
       refreshBalance();
-    } catch (err:any) {
+    } catch (err: any) {
       console.log(err);
       addNotification({
         message: JSON.stringify(err.message),
@@ -66,9 +63,7 @@ const ClaimRewardTab: FC<Props> = ({
     try {
       const res: any = await contract.updateReward();
 
-      transactionHash = getIsInjectiveResponse(res)
-      ? res?.txHash
-      : res?.transactionHash;
+      transactionHash = res?.transactionHash;
 
       addNotification({
         status: "success",
@@ -78,8 +73,8 @@ const ClaimRewardTab: FC<Props> = ({
 
       getPageData();
       refreshBalance();
-    } catch (err:any) {  
-      console.log(err)    
+    } catch (err: any) {
+      console.log(err)
       addNotification({
         message: JSON.stringify(err.message),
         status: "error",

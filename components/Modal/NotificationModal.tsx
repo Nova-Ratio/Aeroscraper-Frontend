@@ -41,7 +41,7 @@ const NotificationModal: FC = () => {
 
   const [moreInfo, setMoreInfo] = useState(false);
 
-  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.XION]?.txDetailUrl;
+  let scanDomain = TransactionDomainByChainName.xion.txDetailUrl;
 
   useEffect(() => {
     setMoreInfo(false);

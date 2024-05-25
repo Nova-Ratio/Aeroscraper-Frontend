@@ -2,7 +2,7 @@ import GradientButton from "@/components/Buttons/GradientButton";
 import Text from "@/components/Texts/Text";
 import { useNotification } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
-import { convertAmount, getIsInjectiveResponse } from "@/utils/contractUtils";
+import { convertAmount } from "@/utils/contractUtils";
 import { PageData } from "../../_types/types";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { useEffect, useState } from "react";
@@ -23,9 +23,9 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
   const { address } = useChainAdapter();
   const contract = useAppContract();
   const { balanceByDenom, refreshBalance } = useBalances();
-  const { selectedChainName, selectedAppVersion } = useChainAdapter();
+  const { selectedChainName } = useChainAdapter();
   const [selectedAsset, setSelectedAsset] = useState<CollateralAsset>(
-    DefaultAssetByChainName[selectedChainName ?? ChainName.XION]
+    DefaultAssetByChainName[ChainName.XION]
   );
   async function Mint() {
     try {
@@ -35,9 +35,7 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
 
       addNotification({
         status: "success",
-        directLink: getIsInjectiveResponse(res)
-          ? res?.txHash
-          : res?.transactionHash,
+        directLink: res?.transactionHash,
         message: `Mint Success`,
       });
       let time = new Date().getTime() + 86400000;

@@ -57,8 +57,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
   ];
 
   if (
-    selectedChainName === ChainName.XION ||
-    selectedChainName === ChainName.SEI
+    selectedChainName === ChainName.XION
   ) {
     TabList = TabList.filter(
       (tab) => tab !== "missions" && tab !== "leaderboard"

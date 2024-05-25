@@ -8,7 +8,6 @@ import useOutsideHandler from "@/hooks/useOutsideHandler";
 import Loading from "../Loading/Loading";
 import {
   WalletsByChainName,
-  metamaskWalletInfo,
 } from "@/constants/walletConstants";
 import { isNil } from "lodash";
 import { Modal } from "../Modal/Modal";
@@ -39,7 +38,6 @@ const WalletButton: FC<Props> = ({
     isWalletConnected,
     isWalletConnecting,
     selectWallet,
-    selectedWallet,
     openXionChainModal,
   } = useChainAdapter();
 
@@ -59,9 +57,9 @@ const WalletButton: FC<Props> = ({
   const filteredWallets = useMemo(
     () =>
       walletRepo.wallets.filter(
-        (wallet) =>
+        (wallet: any) =>
           selectedChainName &&
-          WalletsByChainName[selectedChainName].includes(
+          WalletsByChainName.xion.includes(
             wallet.walletInfo.name as WalletType
           )
       ),
@@ -71,7 +69,7 @@ const WalletButton: FC<Props> = ({
   const hoveredChainWallets = useMemo(
     () =>
       walletRepo.wallets.filter(
-        (wallet) =>
+        (wallet: any) =>
           onHoverChain &&
           WalletsByChainName[onHoverChain].includes(
             wallet.walletInfo.name as WalletType
@@ -82,12 +80,12 @@ const WalletButton: FC<Props> = ({
 
   const { installedWallets, otherWallets } = useMemo(
     () => ({
-      installedWallets: filteredWallets.filter((item) =>
+      installedWallets: filteredWallets.filter((item: any) =>
         walletExtensions?.installed.some(
           (extension) => extension.name === item.walletInfo.name
         )
       ),
-      otherWallets: filteredWallets.filter((item) =>
+      otherWallets: filteredWallets.filter((item: any) =>
         walletExtensions?.otherWallets.some(
           (extension) => extension.name === item.walletInfo.name
         )
@@ -98,12 +96,12 @@ const WalletButton: FC<Props> = ({
 
   const { installedHoveredWallets, otherHoveredWallets } = useMemo(
     () => ({
-      installedHoveredWallets: hoveredChainWallets.filter((item) =>
+      installedHoveredWallets: hoveredChainWallets.filter((item: any) =>
         walletExtensions?.installed.some(
           (extension) => extension.name === item.walletInfo.name
         )
       ),
-      otherHoveredWallets: hoveredChainWallets.filter((item) =>
+      otherHoveredWallets: hoveredChainWallets.filter((item: any) =>
         walletExtensions?.otherWallets.some(
           (extension) => extension.name === item.walletInfo.name
         )
@@ -239,50 +237,6 @@ const WalletButton: FC<Props> = ({
                     </div>
                   );
                 })}
-                {selectedChainName === ChainName.INJECTIVE && (
-                  <div className="mr-auto md:inline-block hidden">
-                    {walletExtensions?.installed.some(
-                      (item: any) => item.name === WalletType.METAMASK
-                    ) ? (
-                      <Button
-                        onClick={() => selectWallet(WalletType.METAMASK)}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setShowDownloadExtension({
-                            name: metamaskWalletInfo.prettyName,
-                            downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === WalletType.METAMASK
-                            )?.downloadLink!,
-                          });
-                        }}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    )}
-                  </div>
-                )}
                 {otherWallets.map((wallet: any, idx: any) => (
                   <div
                     key={idx}
@@ -359,56 +313,6 @@ const WalletButton: FC<Props> = ({
                     </motion.div>
                   );
                 })}
-                {onHoverChain === ChainName.INJECTIVE && (
-                  <motion.div
-                    key={WalletType.METAMASK}
-                    className={`inline-block mr-auto duration-300 transition-all`}
-                    initial={{ opacity: 0.0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                  >
-                    {walletExtensions?.installed.some(
-                      (item: any) => item.name === WalletType.METAMASK
-                    ) ? (
-                      <Button
-                        onClick={() => selectWallet(WalletType.METAMASK)}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setShowDownloadExtension({
-                            name: metamaskWalletInfo.prettyName,
-                            downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === WalletType.METAMASK
-                            )?.downloadLink!,
-                          });
-                        }}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    )}
-                  </motion.div>
-                )}
                 {otherHoveredWallets.map((wallet: any, idx: any) => {
                   return (
                     <motion.div
@@ -518,13 +422,6 @@ const WalletButton: FC<Props> = ({
                         />
                       );
                     })}
-                    {selectedChainName === ChainName.INJECTIVE && (
-                      <img
-                        alt={metamaskWalletInfo.name}
-                        className="w-6 h-6 object-contain md:inline-block hidden"
-                        src={metamaskWalletInfo.logo}
-                      />
-                    )}
                   </div>
                   <Text size="base" textColor="text-[#989396]">
                     If you want to connect an installed wallet, you can log in
@@ -612,12 +509,12 @@ const WalletButton: FC<Props> = ({
               <div className="flex items-center space-x-2">
                 <img
                   alt={selectedChainName}
-                  src={ChainInfoByName[selectedChainName].logo}
+                  src={ChainInfoByName.xion.logo}
                   className="w-6 h-6"
                 />
                 <Text size="lg">
                   {capitalizeFirstLetter(
-                    ChainInfoByName[selectedChainName].displayName
+                    ChainInfoByName.xion.displayName
                   )}
                 </Text>
               </div>

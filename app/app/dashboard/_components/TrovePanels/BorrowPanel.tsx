@@ -26,7 +26,7 @@ const BorrowPanel: FC = () => {
 
     // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
     const [selectedAsset] = useState<CollateralAsset>(
-        DefaultAssetByChainName[selectedChainName ?? ChainName.XION]
+        DefaultAssetByChainName.xion
     );
 
     const { addNotification, processLoading, setProcessLoading } = useNotification();
@@ -51,13 +51,13 @@ const BorrowPanel: FC = () => {
 
     const borrowCollRatio = useMemo(() => {
 
-        const ratio = Number(selectedCollateral.amount ) * basePrice / Number(pageData.debtAmount + borrowingAmount);
+        const ratio = Number(selectedCollateral.amount) * basePrice / Number(pageData.debtAmount + borrowingAmount);
         return isFinite(ratio) ? ratio : 0;
     }, [selectedCollateral, borrowingAmount, basePrice, pageData.debtAmount])
 
     const borrowICR = useMemo(() => {
 
-        const ratio = Number(selectedCollateral.amount ) / Number(pageData.debtAmount + borrowingAmount);
+        const ratio = Number(selectedCollateral.amount) / Number(pageData.debtAmount + borrowingAmount);
         return isFinite(ratio) ? ratio : 0;
     }, [selectedCollateral, borrowingAmount, pageData.debtAmount])
 

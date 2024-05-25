@@ -1,6 +1,6 @@
 import { CollateralInfo } from "@/contracts/app/types";
+import { ChainName } from "@/enums/Chain";
 import { useAbstraxionSigningClient } from "@burnt-labs/abstraxion";
-import { ChainName } from "@cosmos-kit/core";
 
 export type RiskyTrovesResponse = {
     troves: {
@@ -93,7 +93,7 @@ export type ICRGraphqlResponse = {
 export type redeemICRresponse = {
     troves: {
         nodes: {
-            collaterals:{
+            collaterals: {
                 denom: string
                 amount: string
             }[];
