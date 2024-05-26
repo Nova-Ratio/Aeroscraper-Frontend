@@ -290,19 +290,6 @@ export const AUSDTTokenABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getCirculatedTotalSupply",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
