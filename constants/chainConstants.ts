@@ -11,12 +11,12 @@ export const availableChains = Object.values(chains).filter(chain => visibleChai
 export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
     [ChainName.NIBIRU]: {
         name: "NIBIRU",
-        denom: "nibi",
+        denom: "unibi",
         symbol: "NIBI",
         image: "/images/token-images/nibiru.png",
         tokenImage: "/images/token-images/nibiru.png",
-        decimal: 18,
-        ausdDecimal: 18
+        decimal: 6,
+        ausdDecimal: 6
     }
 }
 
