@@ -1005,6 +1005,18 @@ export const callStakeShare = async (staker: string) => {
     }
 }
 
+export const callClaimReward = async () => {
+    try {
+        const claimReward = await (
+            await callAUSDStakingContract()
+        ).contractWithSigner.claimReward();
+        return await claimReward;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
 //AUSDToken Contract Functions
 export const callCirculatedTotalSupply = async () => {
     try {
