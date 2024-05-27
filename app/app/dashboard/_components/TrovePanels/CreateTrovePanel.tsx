@@ -84,7 +84,7 @@ const CreateTrovePanel: FC = () => {
             balanceByDenom[selectedAsset!.denom]?.amount ?? 0,
             selectedAsset!.decimal
           )
-        ? "Insufficient ARCH balance."
+        ? "Insufficient NIBI balance."
         : collacteralRatio < 1.15
         ? "Collateral ratio should be at least 115%."
         : collacteralRatio < selectedMinCollateral - 0.00001

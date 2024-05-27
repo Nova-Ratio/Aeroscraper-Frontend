@@ -14,7 +14,7 @@ export const defaultContent: {
     },
     {
       title: "Open your Trove and Mint aUSD",
-      desc: "Open your first trove using ARCH and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
+      desc: "Open your first trove using NIBI and mint aUSD. You can add or remove collaterals to your Trove later, mint more aUSD, or pay off your debt.",
     },
     {
       title: "Stake your aUSD to Stability Pool",

@@ -103,7 +103,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
           {!isNil(baseCoin) && (
             <div className="flex items-center gap-2 mr-12">
               <Text size="base">$ {basePrice.toFixed(4)}</Text>
-              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="ARCH">
+              <Tooltip containerClassName='flex items-center text-white' width='w-fit' title="NIBI">
                 <img
                   alt={baseCoin.name}
                   className="w-5 h-5"
@@ -162,7 +162,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : `${Number(pageData.baseTotalCollateralAmount).toFixed(6)}`
             }
             className="w-[191px] h-14"
-            tooltip="The Total Collateral Amount (TCA) is the total value of ARCH locked as collateral in the system."
+            tooltip="The Total Collateral Amount (TCA) is the total value of NIBI locked as collateral in the system."
             tooltipPlacement="bottom"
             coinName={baseCoin?.symbol}
             isNumeric
@@ -219,7 +219,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : 0
               } %`}
             className="w-[191px] h-14"
-            tooltip={`The ratio of the Dollar value of the entire system collateral at the current ARCH:aUSD price, to the entire system debt.`}
+            tooltip={`The ratio of the Dollar value of the entire system collateral at the current NIBI:aUSD price, to the entire system debt.`}
           />
           <StatisticCard
             title="aUSD Supply"

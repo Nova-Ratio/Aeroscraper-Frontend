@@ -66,9 +66,9 @@ const CollateralPanel: FC = () => {
 
     const withdrawErrorText = useMemo(() =>
         collateralAmount <= 0 ?
-            "Enter the ARCH amount." :
+            "Enter the NIBI amount." :
             selectedCollateral.amount < collateralAmount ?
-                "Insufficient in trove ARCH balance." :
+                "Insufficient in trove NIBI balance." :
                 undefined,
         [collateralAmount, selectedCollateral]
     )
@@ -87,14 +87,14 @@ const CollateralPanel: FC = () => {
 
     const depositErrorText = useMemo(() =>
         collateralAmount <= 0 ?
-            "Enter the ARCH amount." :
+            "Enter the NIBI amount." :
             Number(
                 convertAmount(
                     balanceByDenom[selectedAsset.denom]?.amount ?? 0,
                     selectedAsset.decimal
                 )
             ) < collateralAmount ?
-                "Insufficient ARCH balance." :
+                "Insufficient NIBI balance." :
                 undefined,
         [collateralAmount, selectedAsset, balanceByDenom]
     )
