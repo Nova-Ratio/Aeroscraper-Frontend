@@ -16,7 +16,7 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         image: "/images/token-images/nibiru.png",
         tokenImage: "/images/token-images/nibiru.png",
         decimal: 6,
-        ausdDecimal: 6
+        ausdDecimal: 18
     }
 }
 

@@ -6,7 +6,7 @@ const archAsset: CollateralAsset = {
     shortName: "NIBI",
     denom: "unibi",
     decimal: 6,
-    ausdDecimal: 6,
+    ausdDecimal: 18,
     imageURL: "/images/token-images/nibiru.png",
     priceId: "",
     priceServiceUrl: "",
