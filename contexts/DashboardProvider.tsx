@@ -287,7 +287,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
         FilterParamByChainName[selectedChainName ?? ChainName.NIBIRU];
 
       if (selectedChainName === ChainName.NIBIRU) {
-        chainNameQuery = `ARCH_MAINNET`;
+        chainNameQuery = `NIBIRU_MAINNET`;
       }
 
       /* const { data } = await axios.get<
