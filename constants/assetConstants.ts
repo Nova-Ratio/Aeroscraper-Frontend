@@ -4,7 +4,7 @@ import { CollateralAsset } from "@/types/types";
 const archAsset: CollateralAsset = {
     name: "Nibiru",
     shortName: "NIBI",
-    denom: "nibi",
+    denom: "unibi",
     decimal: 6,
     ausdDecimal: 6,
     imageURL: "/images/token-images/nibiru.png",
