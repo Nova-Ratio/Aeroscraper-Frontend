@@ -17,6 +17,7 @@ import { CW20TokenInfoResponse } from "@/contracts/app/types";
 import graphql from "@/services/graphql";
 import {
   callCirculatedTotalSupply,
+  callClaimReward,
   callGetNICR,
   callGetStake,
   callGetTroveColl,
@@ -531,13 +532,14 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     }
   };
   const getReward = async (user_addr: string): Promise<string | undefined> => {
-    /* const res = await chainGrpcWasmApi.fetchSmartContractState(
-      contractAddress,
-      toBase64({ liquidation_gains: { user_addr } })
-    );
-    const data: any = fromBase64(res.data as any);
-    return data; */
-    return undefined;
+   try {
+      let res = await callClaimReward();
+      console.log("callClaimReward", res);
+      return res;
+   } catch (error) {
+    
+     return undefined;
+   }
   };
   const withdrawLiquidationGains = async (senderAddress: string) => {
     /* const msg = MsgExecuteContractCompat.fromJSON({

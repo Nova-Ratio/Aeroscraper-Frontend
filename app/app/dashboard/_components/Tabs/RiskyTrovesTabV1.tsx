@@ -30,6 +30,7 @@ import { delay } from "@/utils/promiseUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { isV2TroveResponse } from "@/contracts/app/types";
+import { callLiquidate } from "@/evmContractInteractions/useAppContracts";
 
 type Props = {
   getPageData: () => void;
@@ -165,22 +166,24 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
       <Text size="3xl" className="mb-4">
         Liquidate Risky Troves
       </Text>
+      
       <div className="-ml-4">
         <Table
           listData={riskyTroves}
           header={
-            <div className="grid-cols-6 grid gap-5 lg:gap-0 mt-4 mr-6">
+            <div className="grid-cols-7 grid gap-5 lg:gap-0 mt-4 mr-6">
               <TableHeaderCol col={2} text="Owner" />
               <TableHeaderCol col={1} text="Collateral" textCenter />
               <TableHeaderCol col={1} text="Debt" textEnd />
               <TableHeaderCol col={2} text="Coll. Ratio" textEnd />
+              <TableHeaderCol col={1} text="Action" textEnd />
             </div>
           }
           bodyCss="space-y-1 max-h-[350px] overflow-auto overflow-x-hidden"
           loading={loading}
           renderItem={(item: RiskyTrovesModelV1) => {
             return (
-              <div className="grid grid-cols-6 gap-4 border-b border-white/10">
+              <div className="grid grid-cols-7 gap-4 border-b border-white/10">
                 <TableBodyCol
                   col={2}
                   text="XXXXXX"
@@ -263,24 +266,34 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                             {Number(item.liquidityThreshold ?? 0).toFixed(3)}%
                           </Text>
                         ) : (
-                          <Text
-                            size="xs"
-                            responsive={true}
-                            className="whitespace-nowrap text-end pr-10"
-                            dynamicTextColor={
-                              getRatioColor(
-                                (item.liquidityThreshold ?? 0) *
-                                  (basePrice ?? 0)
-                              ) ?? 0
-                            }
-                          >
-                            {Number(item.liquidityThreshold ?? 0).toFixed(3)}%
-                          </Text>
+                          <>
+                            <Text
+                              size="xs"
+                              responsive={true}
+                              className="whitespace-nowrap text-end pr-10"
+                              dynamicTextColor={
+                                getRatioColor(
+                                  (item.liquidityThreshold ?? 0) *
+                                    (basePrice ?? 0)
+                                ) ?? 0
+                              }
+                            >
+                              {Number(item.liquidityThreshold ?? 0).toFixed(3)}%
+                            </Text>
+                            <button className="bg-white p-2">add liq</button>
+                          </>
                         )
                       }
                     />
                   }
                 />
+                <div className="flex justify-start items-center">
+                  <button onClick={async () => {
+                    console.log('liquidate', item.owner);
+                    
+                    await callLiquidate(item.owner)
+                  }} className="bg-white/20 border backdrop-blur-sm text-white px-2 py-1.5 flex rounded-md">add liq</button> 
+                </div>
               </div>
             );
           }}

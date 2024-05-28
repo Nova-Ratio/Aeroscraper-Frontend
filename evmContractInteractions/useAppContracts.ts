@@ -1010,6 +1010,7 @@ export const callClaimReward = async () => {
         const claimReward = await (
             await callAUSDStakingContract()
         ).contractWithSigner.claimReward();
+        await claimReward.wait();
         return await claimReward;
     } catch (error) {
         console.log(error);
