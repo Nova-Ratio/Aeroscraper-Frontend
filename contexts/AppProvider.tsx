@@ -22,7 +22,7 @@ export type AppContextState = {
 const AppContext = createContext<AppContextState>({
     selectedChainName: defaultChainName,
     isConnecting: false,
-    basePrice: 3000,
+    basePrice: 1000,
     chainInfo: ChainInfoByName[defaultChainName],
     selectChainName: () => { },
     selectWallet: () => { },
