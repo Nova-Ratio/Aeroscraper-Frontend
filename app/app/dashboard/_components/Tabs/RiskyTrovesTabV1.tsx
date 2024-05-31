@@ -31,6 +31,7 @@ import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { isV2TroveResponse } from "@/contracts/app/types";
 import { callLiquidate } from "@/evmContractInteractions/useAppContracts";
+import OutlinedButton from "@/components/Buttons/OutlinedButton";
 
 type Props = {
   getPageData: () => void;
@@ -52,7 +53,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
     [selectedChainName]
   );
 
-  const liquidateTroves = async () => {
+  const liquidateTroves = async (owner:string) => {
     try {
       setProcessLoading(true);
 
@@ -287,13 +288,24 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                     />
                   }
                 />
-                <div className="flex justify-start items-center">
-                  <button onClick={async () => {
-                    console.log('liquidate', item.owner);
-                    
-                    await callLiquidate(item.owner)
-                  }} className="bg-white/20 border backdrop-blur-sm text-white px-2 py-1.5 flex rounded-md">add liq</button> 
-                </div>
+               <TableBodyCol
+                  col={1}
+                  text="XXXXXX"
+                  value={
+                    item.liquidityThreshold <= 115 ? (
+                      <OutlinedButton
+                        containerClassName="w-[103px] mx-auto shrink-0"
+                        className="text-xs h-8"
+                        onClick={() => liquidateTroves(item.owner)}
+                        loading={processLoading}
+                      >
+                        Liquidate
+                      </OutlinedButton>
+                    ) : (
+                      ""
+                    )
+                  }
+                />
               </div>
             );
           }}
