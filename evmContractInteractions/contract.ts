@@ -22,6 +22,7 @@ import {
   callGetStake,
   callGetTroveColl,
   callGetTroveDebt,
+  callLiquidate,
   callStakeShare,
 } from "./useAppContracts";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
@@ -507,11 +508,9 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       return error;
     }
   };
-  const liquidateTroves = async (senderAddress: string, n = 5) => {
+  const liquidateTroves = async (senderAddress: string) => {
     try {
-      const { contractWithSigner } = await callTroveManagerContract();
-      const tx = await contractWithSigner.liquidateTroves(n); // TODO: tuğgüne sor
-      await tx.wait();
+      const tx = await callLiquidate(senderAddress)
       const hash = tx.hash;
       return {
         txHash: hash,

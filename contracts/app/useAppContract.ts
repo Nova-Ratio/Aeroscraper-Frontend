@@ -167,7 +167,7 @@ const useAppContract = () => {
     [address, contract]
   );
 
-  const liquidateTroves = useCallback(async () => {
+  const liquidateTroves = useCallback(async (owner: string) => {
     if (isNil(contract) || isNil(address)) return;
     return await contract.liquidateTroves(address);
   }, [address, contract]);

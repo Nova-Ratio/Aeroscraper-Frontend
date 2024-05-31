@@ -53,11 +53,11 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
     [selectedChainName]
   );
 
-  const liquidateTroves = async (owner:string) => {
+  const liquidateTroves = async (owner: string) => {
     try {
       setProcessLoading(true);
 
-      const res: any = await contract.liquidateTroves();
+      const res: any = await contract.liquidateTroves(owner);
       if (!res?.txHash) {
         throw new Error(res);
       }
@@ -167,7 +167,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
       <Text size="3xl" className="mb-4">
         Liquidate Risky Troves
       </Text>
-      
+
       <div className="-ml-4">
         <Table
           listData={riskyTroves}
@@ -288,13 +288,13 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                     />
                   }
                 />
-               <TableBodyCol
+                <TableBodyCol
                   col={1}
                   text="XXXXXX"
                   value={
                     item.liquidityThreshold <= 115 ? (
                       <OutlinedButton
-                        containerClassName="w-[103px] mx-auto shrink-0"
+                        containerClassName="w-[80px] mx-auto shrink-0"
                         className="text-xs h-8"
                         onClick={() => liquidateTroves(item.owner)}
                         loading={processLoading}

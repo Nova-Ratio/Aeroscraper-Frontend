@@ -555,7 +555,8 @@ export const callLiquidate = async (borrower: string) => {
         const liquidate = await (
             await callTroveManagerContract()
         ).contractWithSigner.liquidate(borrower);
-        return await liquidate;
+        await liquidate.wait();
+        return liquidate;
     } catch (error) {
         console.log(error);
         return false;
