@@ -169,7 +169,7 @@ const useAppContract = () => {
 
   const liquidateTroves = useCallback(async (owner: string) => {
     if (isNil(contract) || isNil(address)) return;
-    return await contract.liquidateTroves(address);
+    return await contract.liquidateTroves(owner);
   }, [address, contract]);
 
   const liquidateTrovesV2 = useCallback(
