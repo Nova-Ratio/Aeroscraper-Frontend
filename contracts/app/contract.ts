@@ -396,24 +396,12 @@ export const getAppContract = (
   const liquidateTrovesV2 = async (
     senderAddress: string,
     owner: string,
-    asset: CollateralAsset = defaultAsset
   ) => {
-
-
-    const msg = {
-      contractAddress,
-      sender: senderAddress,
-      msg: {
-        liquidate_troves: {
-          liquidation_list: [owner],
-        },
-      },
-    };
 
     return await client.execute(
       senderAddress,
       contractAddress,
-      msg,
+      { liquidate_troves: {liquidation_list: [owner]} },
       "auto",
       "Liquidate Troves",
     )
@@ -452,16 +440,10 @@ export const getAppContract = (
   };
 
   const withdrawLiquidationGains = async (senderAddress: string) => {
-    const msg = {
-      contractAddress,
-      sender: senderAddress,
-      msg: { withdraw_liquidation_gains: {} },
-    }
-
     return await client.execute(
       senderAddress,
       contractAddress,
-      msg,
+      { withdraw_liquidation_gains: {} },
       "auto",
       "Withdraw Liquidation Gains"
     )
