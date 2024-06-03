@@ -137,6 +137,8 @@ const ClaimRewardTab: FC<Props> = ({
           <OutlinedButton
             loading={processLoading}
             onClick={updateReward}
+            disabled={pageData.stakedAmount == 0}
+            disabledText={"Deposit aUSD to Stability Pool."}
             className="w-full md:w-[325px] h-11"
           >
             Update Reward
