@@ -125,6 +125,8 @@ const ClaimRewardTab: FC<Props> = ({
         <div className="flex items-center justify-end pr-4 gap-4 mt-10 md:mt-4">
           <OutlinedButton
             loading={processLoading}
+            disabled={pageData.stakedAmount == 0}
+            disabledText={"Deposit aUSD to Stability Pool."}
             onClick={updateReward}
             className="w-full md:w-[325px] h-11"
           >
