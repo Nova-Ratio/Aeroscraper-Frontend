@@ -7,7 +7,7 @@ const archAsset: CollateralAsset = {
     denom: "unibi",
     decimal: 6,
     ausdDecimal: 18,
-    imageURL: "/images/token-images/nibiru.png",
+    imageURL: "/images/token-images/nibi-logomark-profile-pic.dcbb6a8d.svg",
     priceId: "",
     priceServiceUrl: "",
     oracleContractAddress: ''

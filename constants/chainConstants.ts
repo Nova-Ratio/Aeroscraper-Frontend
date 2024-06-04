@@ -13,8 +13,8 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         name: "NIBIRU",
         denom: "unibi",
         symbol: "NIBI",
-        image: "/images/token-images/nibiru.png",
-        tokenImage: "/images/token-images/nibiru.png",
+        image: "/images/token-images/nibi-logomark-profile-pic.dcbb6a8d.svg",
+        tokenImage: "/images/token-images/nibi-logomark-profile-pic.dcbb6a8d.svg",
         decimal: 6,
         ausdDecimal: 18
     }
@@ -52,7 +52,7 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
     [ChainName.NIBIRU]: {
         name: ChainName.NIBIRU,
         displayName: "NIBI",
-        logo: "/images/token-images/nibiru.png",
+        logo: "/images/token-images/nibi-logomark-profile-pic.dcbb6a8d.svg",
         bech32Prefix: "nibiru"
     }
 }
@@ -64,7 +64,7 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
 export const appChainURLs: ChainNavigator[] = [
     /* { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscraper.io/app/dashboard", env: "Mainnet" }, */
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscraper.io/app/dashboard", env: "Mainnet" },
-    { chainName: "Nibiru", image: "/images/token-images/nibiru.png", url: "https://nibi.aeroscraper.io", env: "Mainnet", isSelected: true },
+    { chainName: "Nibiru", image: "/images/token-images/nibi-logomark-profile-pic.dcbb6a8d.svg", url: "https://nibi.aeroscraper.io", env: "Mainnet", isSelected: true },
     { chainName: "Archway", image: "/images/token-images/archway-coin.png", url: "https://arch.aeroscraper.io/app/dashboard", env: "Mainnet" },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]
