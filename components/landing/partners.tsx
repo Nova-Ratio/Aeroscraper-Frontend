@@ -58,6 +58,11 @@ const data = [
         link: "https://archway.io/",
         image: "/landing/chains/archway.png",
       },
+      {
+        title: "Nibiru",
+        link: "https://nibiru.fi/",
+        image: "/landing/chains/nibiru.png",
+      },
     ],
   },
   {
