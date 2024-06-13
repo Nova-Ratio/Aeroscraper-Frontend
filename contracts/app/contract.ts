@@ -108,7 +108,7 @@ export const getAppContract = (
     const res = await connection.getLatestPriceUpdates([priceId]);
 
     if (res) {
-      return res.binary.data
+      return res.binary.data[0]
     } else {
       throw new Error("Error getting price feed");
     }
