@@ -9,7 +9,7 @@ const injAsset: CollateralAsset = {
     ausdDecimal: 18,
     imageURL: "/images/token-images/inj.svg",
     priceId: "7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592",
-    priceServiceUrl: "https://hermes.pyth.network/",
+    priceServiceUrl: "https://hermes.pyth.network",
     oracleContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
 }
 
