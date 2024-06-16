@@ -105,7 +105,7 @@ export const getAppContract = (
 
     const connection = new HermesClient(serviceUrl, {});
 
-    const res = await connection.getLatestPriceUpdates([priceId]);
+    const res = await connection.getLatestPriceUpdates([priceId], { encoding: "base64" });
 
     if (res) {
       return res.binary.data[0]
