@@ -1,7 +1,6 @@
 import {
     callBorrowerOperationsContract,
     callTroveManagerContract,
-    callStabilityPoolContract,
     callSortedTrovesContract,
     callAUSDTTokenContract,
     callPriceFeedContract,
@@ -10,152 +9,14 @@ import {
 import { ethers } from "ethers";
 
 //StabilityPool Contract
-export const callStabilityPoolSetAddresses = async (
-    _borrowerOperationsAddress: string,
-    _troveManagerAddress: string,
-    _activePoolAddress: string,
-    _AUSDTokenAddress: string,
-    _sortedTrovesAddress: string,
-    _priceFeedAddress: string
-) => {
-    try {
-        const setAddresses = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.setAddresses();
-        return await setAddresses;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
 
-export const getETH = async () => {
-    try {
-        const getETH = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.getETH();
-        return await getETH;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
 
-export const getTotalAUSDDeposits = async () => {
-    try {
-        const totalAUSDDeposits = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.getTotalAUSDDeposits();
-        return await totalAUSDDeposits;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
 
-export const provideToSP = async (_amount: number, _frontEndTag: string) => {
-    try {
-        const provideToSP = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.provideToSP(_amount, _frontEndTag);
-        return await provideToSP;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const withdrawFromSP = async (_amount: number) => {
-    try {
-        const withdrawFromSP = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.withdrawFromSP(_amount);
-        return await withdrawFromSP;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const withdrawETHGainToTrove = async (
-    _upperHint: string,
-    _lowerHint: string
-) => {
-    try {
-        const withdrawETHGainToTrove = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.withdrawETHGainToTrove(_upperHint, _lowerHint);
-        return await withdrawETHGainToTrove;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
 
 export const callGetNICR= async (address: string, _maxAUSDamount: string|number | bigint, _price: string) => {
     try {
         const getNICR = await (await callTroveManagerContract()).contractWithSigner.getNICR(address, _maxAUSDamount, _price);
         return await getNICR;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const offset = async (_debtToOffset: number, _collToAdd: number) => {
-    try {
-        const offset = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.offset(_debtToOffset, _collToAdd);
-        return await offset;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const getDepositorETHGain = async (_depositor: string) => {
-    try {
-        const getDepositorETHGain = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.getDepositorETHGain(_depositor);
-        return await getDepositorETHGain;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const getCompoundedAUSDDeposit = async (_depositor: string) => {
-    try {
-        const getCompoundedAUSDDeposit = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.getCompoundedAUSDDeposit(_depositor);
-        return await getCompoundedAUSDDeposit;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const getCompoundedFrontEndStake = async (_frontEnd: string) => {
-    try {
-        const getCompoundedFrontEndStake = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.getCompoundedFrontEndStake(_frontEnd);
-        return await getCompoundedFrontEndStake;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-export const registerFrontEnd = async (_kickbackRate: number) => {
-    try {
-        const registerFrontEnd = await (
-            await callStabilityPoolContract()
-        ).contractWithSigner.registerFrontEnd(_kickbackRate);
-        return await registerFrontEnd;
     } catch (error) {
         console.log(error);
         return false;

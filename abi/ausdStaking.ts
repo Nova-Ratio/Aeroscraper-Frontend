@@ -18,19 +18,6 @@ export const AUSDStakingABI = [
 			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "_activePoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "ActivePoolAddressSet",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
 				"name": "_borrowerOperationsAddress",
 				"type": "address"
 			}
@@ -55,32 +42,6 @@ export const AUSDStakingABI = [
 			}
 		],
 		"name": "EtherSent",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_F_AUSD",
-				"type": "uint256"
-			}
-		],
-		"name": "F_AUSDUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_F_ETH",
-				"type": "uint256"
-			}
-		],
-		"name": "F_ETHUpdated",
 		"type": "event"
 	},
 	{
@@ -125,41 +86,10 @@ export const AUSDStakingABI = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_staker",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_F_ETH",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_F_AUSD",
-				"type": "uint256"
-			}
-		],
-		"name": "StakerSnapshotsUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "staker",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "AUSDGain",
-				"type": "uint256"
 			},
 			{
 				"indexed": false,
@@ -225,32 +155,6 @@ export const AUSDStakingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "F_AUSD",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "F_ETH",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "NAME",
 		"outputs": [
 			{
@@ -265,19 +169,6 @@ export const AUSDStakingABI = [
 	{
 		"inputs": [],
 		"name": "_feeTaker",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "activePoolAddress",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -325,44 +216,6 @@ export const AUSDStakingABI = [
 		"name": "claimReward",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			}
-		],
-		"name": "getPendingAUSDGain",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			}
-		],
-		"name": "getPendingETHGain",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -430,32 +283,6 @@ export const AUSDStakingABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_AUSDFee",
-				"type": "uint256"
-			}
-		],
-		"name": "increaseF_AUSD",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_ETHFee",
-				"type": "uint256"
-			}
-		],
-		"name": "increaseF_ETH",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "isOwner",
 		"outputs": [
@@ -497,11 +324,6 @@ export const AUSDStakingABI = [
 				"internalType": "address",
 				"name": "_borrowerOperationsAddress",
 				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_activePoolAddress",
-				"type": "address"
 			}
 		],
 		"name": "setAddresses",
@@ -520,9 +342,14 @@ export const AUSDStakingABI = [
 				"internalType": "uint256",
 				"name": "_balance",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_stakeDecrease",
+				"type": "uint256"
 			}
 		],
-		"name": "setBalanceOfRewardPerUser",
+		"name": "setBalanceOfRewardAndStakePerUser",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -543,30 +370,6 @@ export const AUSDStakingABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "snapshots",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "F_ETH_Snapshot",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "F_AUSD_Snapshot",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "_AUSDamount",
 				"type": "uint256"
@@ -575,6 +378,25 @@ export const AUSDStakingABI = [
 		"name": "stake",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "stakerIndex",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

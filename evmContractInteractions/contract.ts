@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import {
   callBorrowerOperationsContract,
   callTroveManagerContract,
-  callStabilityPoolContract,
   callAUSDTTokenContract,
   callPriceFeedContract,
   callAUSDStakingContract,

@@ -35,45 +35,6 @@ export const BorrowerOperationsABI = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_activePoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "ActivePoolAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_collSurplusPoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "CollSurplusPoolAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_defaultPoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "DefaultPoolAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "previousOwner",
@@ -113,19 +74,6 @@ export const BorrowerOperationsABI = [
 			}
 		],
 		"name": "SortedTrovesAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_stabilityPoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "StabilityPoolAddressChanged",
 		"type": "event"
 	},
 	{
@@ -322,19 +270,6 @@ export const BorrowerOperationsABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "activePool",
-		"outputs": [
-			{
-				"internalType": "contract IActivePool",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -387,74 +322,9 @@ export const BorrowerOperationsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "claimCollateral",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "closeTrove",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "defaultPool",
-		"outputs": [
-			{
-				"internalType": "contract IDefaultPool",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_coll",
-				"type": "uint256"
-			}
-		],
-		"name": "getAUSDValue",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getEntireSystemColl",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "entireSystemColl",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getEntireSystemDebt",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "entireSystemDebt",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -468,29 +338,6 @@ export const BorrowerOperationsABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_upperHint",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_lowerHint",
-				"type": "address"
-			}
-		],
-		"name": "moveETHGainToTrove",
-		"outputs": [],
-		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -574,26 +421,6 @@ export const BorrowerOperationsABI = [
 			},
 			{
 				"internalType": "address",
-				"name": "_activePoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_defaultPoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_stabilityPoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_collSurplusPoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
 				"name": "_priceFeedAddress",
 				"type": "address"
 			},
@@ -605,11 +432,6 @@ export const BorrowerOperationsABI = [
 			{
 				"internalType": "address",
 				"name": "_AUSDTokenAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_feeTaker",
 				"type": "address"
 			}
 		],

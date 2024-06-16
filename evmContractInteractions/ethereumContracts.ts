@@ -3,14 +3,12 @@ import { AUSDStakingABI } from '@/abi/ausdStaking';
 import { AUSDTTokenABI } from '@/abi/ausdTokenABI';
 import { BorrowerOperationsABI } from '@/abi/borrowerOperations';
 import { TroveManagerABI } from '@/abi/troveManager';
-import { StabilityPoolABI } from '@/abi/stabilityPoolAbi';
 import { SortedTrovesABI } from '@/abi/sortedTrovesABI';
 import { PriceFeedABI } from '@/abi/priceFeedABI';
 
 
 const BORROWER_OPERATIONS = process.env.NEXT_PUBLIC_BORROWER_OPERATIONS_CONTRACT_ADDRESS as string; 
 const TROVE_MANAGER = process.env.NEXT_PUBLIC_TROVE_MANAGER_CONTRACT_ADDRESS as string; 
-const STABILITY_POOL = process.env.NEXT_PUBLIC_STABILITY_POOL_CONTRACT_ADDRESS as string; 
 const SORTED_TROVES = process.env.NEXT_PUBLIC_SORTED_TROVES_CONTRACT_ADDRESS as string;  
 const AUSDT_TOKEN = process.env.NEXT_PUBLIC_AUSDT_TOKEN_CONTRACT_ADDRESS as string;  
 const PRICE_FEED = process.env.NEXT_PUBLIC_PRICE_FEED_CONTRACT_ADDRESS as string; 
@@ -40,17 +38,6 @@ export const callTroveManagerContract = async () => {
     return { contractWithSigner, Address, abi };
   };
 
-export const callStabilityPoolContract = async () => {
-    let ethereum = (window as any).ethereum;
-    await ethereum.request({ method: "eth_requestAccounts" });
-    const provider = new ethers.BrowserProvider(ethereum);
-    const signer = await provider.getSigner();
-    const abi = StabilityPoolABI;
-    const Address = STABILITY_POOL;
-    const myStabilityPoolContract = new ethers.Contract(Address, abi, signer);
-    const contractWithSigner:any = myStabilityPoolContract.connect(signer);
-    return { contractWithSigner, Address, abi };
-};
 
 export const callSortedTrovesContract = async () => {
     let ethereum = (window as any).ethereum;

@@ -8,7 +8,7 @@ export const AUSDTTokenABI = [
 			},
 			{
 				"internalType": "address",
-				"name": "_stabilityPoolAddress",
+				"name": "_AUSDStaking",
 				"type": "address"
 			},
 			{
@@ -19,6 +19,19 @@ export const AUSDTTokenABI = [
 		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_newAUSDStakingAddress",
+				"type": "address"
+			}
+		],
+		"name": "AUSDStakingChanged",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -81,19 +94,6 @@ export const AUSDTTokenABI = [
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_newStabilityPoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "StabilityPoolAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "from",
@@ -127,6 +127,19 @@ export const AUSDTTokenABI = [
 		],
 		"name": "TroveManagerAddressChanged",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "AUSDStaking",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -417,65 +430,6 @@ export const AUSDTTokenABI = [
 			}
 		],
 		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_poolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_receiver",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "returnFromPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_poolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "sendToPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "stabilityPoolAddress",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{

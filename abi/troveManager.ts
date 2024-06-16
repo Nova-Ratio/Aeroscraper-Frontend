@@ -1,5 +1,16 @@
 export const TroveManagerABI = [
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_ICR",
+				"type": "uint256"
+			}
+		],
+		"name": "ICRShouldBeLowerThanMCR",
+		"type": "error"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -30,19 +41,6 @@ export const TroveManagerABI = [
 		"inputs": [
 			{
 				"indexed": false,
-				"internalType": "address",
-				"name": "_activePoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "ActivePoolAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
 				"internalType": "uint256",
 				"name": "_baseRate",
 				"type": "uint256"
@@ -62,32 +60,6 @@ export const TroveManagerABI = [
 			}
 		],
 		"name": "BorrowerOperationsAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_collSurplusPoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "CollSurplusPoolAddressChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "_defaultPoolAddress",
-				"type": "address"
-			}
-		],
-		"name": "DefaultPoolAddressChanged",
 		"type": "event"
 	},
 	{
@@ -390,32 +362,6 @@ export const TroveManagerABI = [
 	},
 	{
 		"inputs": [],
-		"name": "BETA",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "BOOTSTRAP_PERIOD",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "BORROWING_FEE_FLOOR",
 		"outputs": [
 			{
@@ -455,46 +401,7 @@ export const TroveManagerABI = [
 	},
 	{
 		"inputs": [],
-		"name": "L_AUSDDebt",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "L_ETH",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "MCR",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "MINUTE_DECAY_FACTOR",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -534,19 +441,6 @@ export const TroveManagerABI = [
 	{
 		"inputs": [],
 		"name": "PERCENT_DIVISOR",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "SECONDS_IN_ONE_MINUTE",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -637,19 +531,6 @@ export const TroveManagerABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "activePool",
-		"outputs": [
-			{
-				"internalType": "contract IActivePool",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -669,19 +550,6 @@ export const TroveManagerABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			}
-		],
-		"name": "applyPendingRewards",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "arrangableRate",
 		"outputs": [
@@ -692,32 +560,6 @@ export const TroveManagerABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "baseRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address[]",
-				"name": "_troveArray",
-				"type": "address[]"
-			}
-		],
-		"name": "batchLiquidateTroves",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -742,7 +584,13 @@ export const TroveManagerABI = [
 			}
 		],
 		"name": "closeTrove",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -792,19 +640,6 @@ export const TroveManagerABI = [
 			}
 		],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "defaultPool",
-		"outputs": [
-			{
-				"internalType": "contract IDefaultPool",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -882,16 +717,6 @@ export const TroveManagerABI = [
 				"internalType": "uint256",
 				"name": "coll",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "pendingAUSDDebtReward",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "pendingETHReward",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -917,6 +742,24 @@ export const TroveManagerABI = [
 			{
 				"internalType": "uint256",
 				"name": "entireSystemDebt",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getEntireSystemDebtAndColl",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "_Debt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_Coll",
 				"type": "uint256"
 			}
 		],
@@ -961,44 +804,6 @@ export const TroveManagerABI = [
 			}
 		],
 		"name": "getNominalICR",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			}
-		],
-		"name": "getPendingAUSDDebtReward",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
-			}
-		],
-		"name": "getPendingETHReward",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -1123,25 +928,6 @@ export const TroveManagerABI = [
 				"internalType": "address",
 				"name": "_borrower",
 				"type": "address"
-			}
-		],
-		"name": "hasPendingRewards",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
-				"type": "address"
 			},
 			{
 				"internalType": "uint256",
@@ -1198,45 +984,6 @@ export const TroveManagerABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "lastAUSDDebtError_Redistribution",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "lastETHError_Redistribution",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "lastFeeOperationTime",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -1245,19 +992,6 @@ export const TroveManagerABI = [
 			}
 		],
 		"name": "liquidate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_n",
-				"type": "uint256"
-			}
-		],
-		"name": "liquidateTroves",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1330,24 +1064,18 @@ export const TroveManagerABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "",
+				"name": "recipient",
 				"type": "address"
-			}
-		],
-		"name": "rewardSnapshots",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "ETH",
-				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "AUSDDebt",
+				"name": "amount",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "sendETH",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1355,26 +1083,6 @@ export const TroveManagerABI = [
 			{
 				"internalType": "address",
 				"name": "_borrowerOperationsAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_activePoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_defaultPoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_stabilityPoolAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_collSurplusPoolAddress",
 				"type": "address"
 			},
 			{
@@ -1467,32 +1175,6 @@ export const TroveManagerABI = [
 	},
 	{
 		"inputs": [],
-		"name": "stabilityPool",
-		"outputs": [
-			{
-				"internalType": "contract IStabilityPool",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "stableBaseRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "systemOwner",
 		"outputs": [
 			{
@@ -1506,41 +1188,19 @@ export const TroveManagerABI = [
 	},
 	{
 		"inputs": [],
-		"name": "totalCollateralSnapshot",
+		"name": "troveManager",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "contract ITroveManager",
 				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalStakesSnapshot",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_borrower",
 				"type": "address"
 			}
 		],
-		"name": "updateTroveRewardSnapshots",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
 	}
 ]
