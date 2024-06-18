@@ -133,7 +133,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     NICR = await callGetNICR(
       lastAddress,
       remainingAmount,
-      "1000000000000000000000"
+      "3000000000000000000000"
     );
     console.log("NICR", NICR);
 

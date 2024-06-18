@@ -68,7 +68,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
             if (currentPrices) {
                 setCoinPricesByDenom(prev => ({
                     ...prev,
-                    [denom]: 1000//Number(currentPrices[0].getPriceUnchecked().price) / 100000000
+                    [denom]: 3000//Number(currentPrices[0].getPriceUnchecked().price) / 100000000
                     //TODO: remove hardcoded value before production
                 }))
             }
