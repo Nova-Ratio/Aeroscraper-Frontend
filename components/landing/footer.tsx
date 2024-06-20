@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogoSecondary } from "../Icons/Icons";
+import { LogoSecondary, PoweredbyPythLogo } from "../Icons/Icons";
 import Text from "../Texts/Text";
 
 export default function Footer() {
@@ -10,6 +10,7 @@ export default function Footer() {
         <Text size="2xl" textColor="text-white">
           Aeroscraper
         </Text>
+        <PoweredbyPythLogo />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-20">
         <div className="flex flex-col content-start justify-start gap-4">
