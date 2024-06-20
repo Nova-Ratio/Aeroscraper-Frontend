@@ -25,7 +25,7 @@ export const faqData = [
     },
     {
       question: `Has the protocol been third-party verified, certified, and/or audited?`,
-      answer: `The protocol is currently in the audit process with Beosin and the full report will be made publicly available.`,
+      answer: `Yes. The protocol audited from Beosin and IronNode.`,
     },
     {
       question: `Does anyone “own” or operate the protocol?`,
