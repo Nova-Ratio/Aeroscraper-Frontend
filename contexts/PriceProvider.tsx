@@ -1,6 +1,6 @@
 import { BaseCoinByChainName } from "@/constants/chainConstants";
 import { ChainName } from "@/enums/Chain";
-import { PriceServiceConnection } from "@pythnetwork/price-service-client";
+import { HermesClient } from "@pythnetwork/hermes-client";
 import { isNil } from "lodash";
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
@@ -22,23 +22,16 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const getSeiPrice = useCallback(async () => {
         try {
             const denom = BaseCoinByChainName[ChainName.SEI].denom;
-            const connection = new PriceServiceConnection(
-                "https://hermes.pyth.network/",
-                {
-                    priceFeedRequestConfig: {
-                        binary: true,
-                    },
-                }
-            )
+            const connection = new HermesClient("https://hermes.pyth.network", {});
 
-            const priceId = ["53614f1cb0c031d4af66c04cb9c756234adad0e1cee85303795091499a4084eb"];
+            const priceId = ["7a5bc1d2b56ad029048cd63964b3ad2776eadf812edc1a43a31406cb54bff592"];
 
-            const currentPrices = await connection.getLatestPriceFeeds(priceId);
+            const currentPrices = await connection.getLatestPriceUpdates(priceId);
 
             if (currentPrices) {
                 setCoinPricesByDenom(prev => ({
                     ...prev,
-                    [denom]: Number(currentPrices[0].getPriceUnchecked().price) / 100000000
+                    [denom]: Number(currentPrices?.parsed?.[0]?.price?.price) / 100000000
                 }))
             }
         }

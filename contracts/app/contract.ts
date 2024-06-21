@@ -2,7 +2,6 @@ import { getRequestAmount, jsonToBinary } from "@/utils/contractUtils";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate"
 import { coin } from "@cosmjs/proto-signing";
 import { CW20BalanceResponse, CW20TokenInfoResponse, GetStakeResponse, GetTroveResponseV1, GetTroveResponseV2 } from "./types";
-import { PriceServiceConnection } from '@pythnetwork/price-service-client'
 import { BaseCoin, CollateralAsset } from "@/types/types";
 import { priceIdByChainName } from "@/constants/chainConstants";
 import { isNil } from "lodash";
@@ -12,6 +11,7 @@ import { ChainName } from "@/enums/Chain";
 import { getContractAddressesByChain } from "@/constants/chainConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
+import { HermesClient } from "@pythnetwork/hermes-client";
 
 export const getAppContract = (
   client: SigningCosmWasmClient,
@@ -34,21 +34,16 @@ export const getAppContract = (
     const priceId = isNil(asset) ? priceIdByChainName[chainName].priceId : asset.priceId;
     const serviceUrl = isNil(asset) ? priceIdByChainName[chainName].serviceUrl : asset.priceServiceUrl;
 
-    const connection = new PriceServiceConnection(serviceUrl,
-      {
-        priceFeedRequestConfig: {
-          binary: true,
-        },
-      }
-    )
+    const connection = new HermesClient(serviceUrl, {});
 
-    const res = await connection.getLatestPriceFeeds([priceId]);
+    const res = await connection.getLatestPriceUpdates([priceId], { encoding: "base64" });
 
     if (res) {
-      return res[0].getVAA()
+      return res.binary.data[0]
     } else {
-      throw new Error("Error getting price feed")
+      throw new Error("Error getting price feed");
     }
+
   }
 
   const findSortedTroveInsertPosition = async (
