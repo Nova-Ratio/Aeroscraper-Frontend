@@ -35,6 +35,7 @@ import {
 import { InjSdkWalletByCosmosWallet } from "@/constants/walletConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
+import { HermesClient } from "@pythnetwork/hermes-client";
 
 const updateRewardAmount = 0.01;
 const injectivePrivRpc = process.env.NEXT_PUBLIC_INJECTIVE_PRIV_RPC as string;
@@ -102,16 +103,12 @@ export const getAppContract = (
       ? priceIdByChainName[chainName].serviceUrl
       : asset.priceServiceUrl;
 
-    const connection = new PriceServiceConnection(serviceUrl, {
-      priceFeedRequestConfig: {
-        binary: true,
-      },
-    });
+    const connection = new HermesClient(serviceUrl, {});
 
-    const res = await connection.getLatestPriceFeeds([priceId]);
+    const res = await connection.getLatestPriceUpdates([priceId], { encoding: "base64" });
 
     if (res) {
-      return res[0].getVAA();
+      return res.binary.data[0]
     } else {
       throw new Error("Error getting price feed");
     }
