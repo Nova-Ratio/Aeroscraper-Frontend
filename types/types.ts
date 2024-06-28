@@ -45,7 +45,7 @@ export type BaseCoin = {
 
 export type WalletInfo = {
     name: string;
-    prettyName: string;
+    walletPrettyName: string;
     logo: string;
 }
 

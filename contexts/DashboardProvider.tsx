@@ -7,17 +7,11 @@ import { usePrice } from '@/contexts/PriceProvider';
 import { CollateralAmount, isV2TroveResponse, CollateralInfo, TotalInfoResponseV1, TotalInfoResponseV2 } from '@/contracts/app/types';
 import useAppContract from '@/contracts/app/useAppContract';
 import { ChainName } from '@/enums/Chain';
-import useChainAdapter from '@/hooks/useChainAdapter';
 import graphql from '@/services/graphql';
 import { convertAmount } from '@/utils/contractUtils';
 import axios from 'axios';
 import { isNil } from 'lodash';
-import { DefaultAssetByChainName } from '@/constants/assetConstants';
-
-const FilterParamByChainName: Record<ChainName, string> = {
-    [ChainName.INJECTIVE]: 'INJECTIVE',
-    [ChainName.EVM]: 'ETHERIUM'
-}
+import { useAppContext } from './AppProvider';
 
 type DashboardContextValue = {
     pageData: PageData;
@@ -51,10 +45,10 @@ const DashboardContext = React.createContext<DashboardContextValue>({
 
 const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const debounceTimer = useRef<NodeJS.Timeout | undefined>();
-    const { selectedChainName, baseCoin } = useChainAdapter();
+    const { selectedChainName, baseCoin } = useAppContext();
     const { coinPricesByDenom } = usePrice();
 
-    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
+    const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.HEDERA }), [selectedChainName]);
     const contract = useAppContract();
 
     const [pageData, setPageData] = useState<PageData>({
@@ -269,11 +263,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const getTotalInfo = useCallback(async () => {
         try {
             setTotalInfoLoading(true);
-            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
-
-            if (selectedChainName === ChainName.EVM) {
-                chainNameQuery = `EVM`;
-            }
+            let chainNameQuery = ChainName.HEDERA
 
             const { data } = await axios.get<TotalInfoResponseV1 | TotalInfoResponseV2>(
                 `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`

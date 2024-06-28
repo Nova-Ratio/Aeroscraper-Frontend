@@ -1,7 +1,6 @@
 import StatisticCard from "@/components/Cards/StatisticCard";
 import { ChevronUpIcon } from "@/components/Icons/Icons";
 import useIsMobile from "@/hooks/useIsMobile";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { motion } from "framer-motion";
 import { isNil } from "lodash";
 import React, { FC, useEffect, useState } from "react";
@@ -12,6 +11,7 @@ import { defaultContent, injContent } from "@/data/injContent";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import NotificationDropdown from "./NotificationDropdown";
 import Text from "@/components/Texts/Text";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface Props {
   basePrice: number;
@@ -21,14 +21,10 @@ const INTERVAL_TIME = 12000;
 
 const StatisticSide: FC<Props> = ({ basePrice }) => {
   const isMobile = useIsMobile();
-  const { baseCoin, walletInfo, selectedChainName, isWalletConnected } = useChainAdapter();
+  const { baseCoin, walletInfo, selectedChainName, isConnected } = useAppContext();
   const [showStatistic, setShowStatistic] = useState<boolean>(true);
-  const [content, setContent] = useState(defaultContent);
-  useEffect(() => {
-    setContent(
-      ChainName.INJECTIVE === selectedChainName ? injContent : defaultContent
-    );
-  }, [selectedChainName]);
+  const content = defaultContent;
+
   const { pageData } = usePageData();
   const [showContentIdx, setShowContentIdx] = useState(0);
   const [hovering, setHovering] = useState(false);
@@ -88,7 +84,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
         })}
       </div>
 
-      {isWalletConnected && !isNil(baseCoin) && (
+      {isConnected && !isNil(baseCoin) && (
         <div className="items-center md:hidden flex border h-[50px] border-white/20 -mx-2 rounded-lg my-6 pl-4 z-40">
           <div className="flex items-center gap-2 mr-8">
             <Text size="base">$1.00</Text>
@@ -112,7 +108,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
               </Tooltip>
             </div>
           )}
-          {isWalletConnected && !isNil(baseCoin) && (
+          {isConnected && !isNil(baseCoin) && (
             <div className="ml-auto">
               <NotificationDropdown />
             </div>

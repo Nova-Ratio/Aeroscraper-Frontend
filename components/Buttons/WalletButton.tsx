@@ -6,19 +6,18 @@ import Text from "@/components/Texts/Text";
 import { motion } from "framer-motion";
 import useOutsideHandler from "@/hooks/useOutsideHandler";
 import Loading from "../Loading/Loading";
-import {
-  WalletsByChainName,
-  metamaskWalletInfo,
-} from "@/constants/walletConstants";
+import { Wallets } from "@/constants/walletConstants";
 import { isNil } from "lodash";
 import { Modal } from "../Modal/Modal";
 import Button from "./Button";
 import { capitalizeFirstLetter } from "@/utils/stringUtils";
 import TransactionButton from "./TransactionButton";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
-import { ChainInfoByName, availableChains } from "@/constants/chainConstants";
 import { WalletType } from "@/enums/WalletType";
+import { HashpackWallet } from "@/app/wallet/hashpack-wallet";
+import { BladeWallet } from "@/app/wallet/blade-wallet";
+import { useAppContext } from "@/contexts/AppProvider";
+import { ChainInfoByName } from "@/constants/chainConstants";
 
 type Props = {
   ausdBalance?: number;
@@ -27,67 +26,70 @@ type Props = {
   basePrice?: number;
 };
 
-const WalletButton: FC<Props> = ({
-  className = "w-[268px] h-[69px]",
-}) => {
+const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
-  const {
-    selectedChainName,
-    selectChainName,
-    walletRepo,
-    isWalletConnected,
-    isWalletConnecting,
-    selectWallet,
-  } = useChainAdapter();
 
-  const [walletExtensions, setWalletExtensions] = useState<
-    | {
-      installed: { name: WalletType }[];
-      otherWallets: { name: WalletType; downloadLink: string }[];
+  const { selectedChainName, selectWallet,userInfo, setUserInfo, isConnected, isConnecting, setIsConnecting } = useAppContext();
+
+  const [wallets] = useState({
+    hashpack: {
+      name: 'hashpack',
+      title: 'HashPack',
+      instance: new HashpackWallet(setUserInfo),
+    },
+    blade: {
+      name: 'blade',
+      title: 'Blade',
+      instance: new BladeWallet(setUserInfo),
     }
+  });
+
+  const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
+
+  const [walletExtensions, setWalletExtensions] = useState<{
+    installed: { name: WalletType }[];
+    otherWallets: { name: WalletType; downloadLink: string }[];
+  }
     | undefined
   >();
-  const [showDownloadExtension, setShowDownloadExtension] = useState<
-    { name: string; downloadLink: string } | undefined
-  >();
+  const [showDownloadExtension, setShowDownloadExtension] = useState<{ name: string; downloadLink: string } | undefined>();
 
   const [onHoverChain, setOnHoverChain] = useState<ChainName | null>();
 
   const filteredWallets = useMemo(
     () =>
-      walletRepo.wallets.filter(
-        (wallet) =>
-          selectedChainName &&
-          WalletsByChainName[selectedChainName].includes(
-            wallet.walletInfo.name as WalletType
-          )
-      ),
-    [walletRepo, selectedChainName]
+      Wallets,
+    // Wallets.filter(
+    //   (wallet) =>
+    //     selectedChainName &&
+    //     WalletsByChainName[selectedChainName] === wallet.name
+
+    // ),
+    [selectedChainName]
   );
 
   const hoveredChainWallets = useMemo(
-    () =>
-      walletRepo.wallets.filter(
-        (wallet) =>
-          onHoverChain &&
-          WalletsByChainName[onHoverChain].includes(
-            wallet.walletInfo.name as WalletType
-          )
-      ),
-    [onHoverChain, walletRepo]
+    () => Wallets,
+    // [].filter(
+    //   (wallet:any) =>
+    //     onHoverChain &&
+    //     WalletsByChainName[onHoverChain].includes(
+    //       wallet.name as WalletType
+    //     )
+    // ),
+    [onHoverChain]
   );
 
   const { installedWallets, otherWallets } = useMemo(
     () => ({
-      installedWallets: filteredWallets.filter((item) =>
+      installedWallets: filteredWallets.filter((item: any) =>
         walletExtensions?.installed.some(
-          (extension) => extension.name === item.walletInfo.name
+          (extension) => extension.name === item.name
         )
       ),
-      otherWallets: filteredWallets.filter((item) =>
+      otherWallets: filteredWallets.filter((item: any) =>
         walletExtensions?.otherWallets.some(
-          (extension) => extension.name === item.walletInfo.name
+          (extension) => extension.name === item.name
         )
       ),
     }),
@@ -96,14 +98,14 @@ const WalletButton: FC<Props> = ({
 
   const { installedHoveredWallets, otherHoveredWallets } = useMemo(
     () => ({
-      installedHoveredWallets: hoveredChainWallets.filter((item) =>
+      installedHoveredWallets: hoveredChainWallets.filter((item: any) =>
         walletExtensions?.installed.some(
-          (extension) => extension.name === item.walletInfo.name
+          (extension) => extension.name === item.name
         )
       ),
-      otherHoveredWallets: hoveredChainWallets.filter((item) =>
+      otherHoveredWallets: hoveredChainWallets.filter((item: any) =>
         walletExtensions?.otherWallets.some(
-          (extension) => extension.name === item.walletInfo.name
+          (extension) => extension.name === item.name
         )
       ),
     }),
@@ -122,38 +124,23 @@ const WalletButton: FC<Props> = ({
       otherWallets: { name: WalletType; downloadLink: string }[];
     } = { installed: [], otherWallets: [] };
 
-    anyWindow.keplr?.getOfflineSigner
-      ? walletExtensions.installed.push({ name: WalletType.KEPLR })
-      : walletExtensions.otherWallets.push({
-        name: WalletType.KEPLR,
-        downloadLink: "https://www.keplr.app/",
-      });
-    anyWindow.leap?.getOfflineSigner
-      ? walletExtensions.installed.push({ name: WalletType.LEAP })
-      : walletExtensions.otherWallets.push({
-        name: WalletType.LEAP,
-        downloadLink: "https://www.leapwallet.io/",
-      });
-    // anyWindow.fin?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.FIN }) : walletExtensions.otherWallets.push({ name: WalletType.FIN, downloadLink: "https://chrome.google.com/webstore/detail/fin-wallet-for-sei/dbgnhckhnppddckangcjbkjnlddbjkna" });
-    // anyWindow.compass?.getOfflineSigner ? walletExtensions.installed.push({ name: WalletType.COMPASS }) : walletExtensions.otherWallets.push({ name: WalletType.COMPASS, downloadLink: "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb" });
-    anyWindow.ethereum
-      ? walletExtensions.installed.push({ name: WalletType.METAMASK })
-      : walletExtensions.otherWallets.push({
-        name: WalletType.METAMASK,
-        downloadLink:
-          "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?pli=1",
-      });
-    anyWindow.ninji ? walletExtensions.installed.push({ name: WalletType.NINJI }) : walletExtensions.otherWallets.push({ name: WalletType.NINJI, downloadLink: "https://chromewebstore.google.com/detail/ninji-wallet/kkpllbgjhchghjapjbinnoddmciocphm" });
-    anyWindow.cosmostation ? walletExtensions.installed.push({ name: WalletType.COSMOSTATION }) : walletExtensions.otherWallets.push({ name: WalletType.COSMOSTATION, downloadLink: "https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf" });
+    anyWindow.hashpack ? walletExtensions.installed.push({ name: WalletType.HASHPACK }) : walletExtensions.otherWallets.push({ name: WalletType.HASHPACK, downloadLink: "https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk?hl=tr" });
+    anyWindow.blade ? walletExtensions.installed.push({ name: WalletType.HASHPACK }) : walletExtensions.otherWallets.push({ name: WalletType.HASHPACK, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
 
     setWalletExtensions({
       ...walletExtensions,
-      /* installed: [
-          ...walletExtensions.installed,
-          { name: WalletType.LEDGER }
-      ] */
     });
   };
+
+  const connectWallet = async (name: WalletType) => {
+    setIsConnecting(true);
+
+   await wallets[name].instance.connect(true).finally(() => {
+      setIsConnecting(false);
+    });
+
+    selectWallet(name);
+  }
 
   const toggleWallet = () => {
     setWalletSelectionOpen((prev) => !prev);
@@ -162,35 +149,25 @@ const WalletButton: FC<Props> = ({
   const closeWalletSelection = () => {
     setWalletSelectionOpen(false);
     setShowDownloadExtension(undefined);
-    if (!isWalletConnected) {
-      //Reset client type selection
-      // selectChainName(undefined);
-    }
-  };
+    if (!isConnected) {
 
-  const resetChain = () => {
-    // selectChainName(undefined);
+    }
   };
 
   useOutsideHandler(ref, closeWalletSelection);
-
-  useEffect(() => {
-    if (isWalletConnected) {
-      setWalletSelectionOpen(false);
-    }
-  }, [isWalletConnected]);
 
   return (
     <div className="relative">
       <GradientButton className={className} onClick={() => {
         toggleWallet()
       }}>
-        {isWalletConnecting ? (
+        {isConnecting ? (
           <Loading width={36} height={36} />
         ) : (
           <Text size="base">Connect Wallet</Text>
         )}
       </GradientButton>
+
       <Modal modalSize="lg" showModal={walletSelectionOpen}>
         <div ref={ref} className="md:flex md:h-[644px]">
           <div className="pt-10 pl-8 w-[300px] md:border-r border-white/10 relative">
@@ -202,15 +179,11 @@ const WalletButton: FC<Props> = ({
                 className={`gap-y-4 flex flex-col mt-10 ${isNil(selectedChainName) ? "hidden" : ""
                   }`}
               >
-                {installedWallets.map((wallet: any, idx: any) => {
+                {Wallets.map((wallet: any, idx: any) => {
                   return (
                     <div
                       key={idx}
-                      className={`mr-auto ${wallet.walletInfo.name === WalletType.LEAP ||
-                        wallet.walletInfo.name === WalletType.KEPLR
-                        ? ""
-                        : "md:inline-block hidden"
-                        }`}
+                      className={`mr-auto`}
                     >
                       {idx === 0 && (
                         <Text size="base" className="mb-4">
@@ -219,14 +192,13 @@ const WalletButton: FC<Props> = ({
                       )}
                       <Button
                         onClick={() => {
-                          wallet.connect();
-                          selectWallet(wallet.walletInfo.name as WalletType);
+                          connectWallet(wallet.name)
                         }}
                         startIcon={
                           <img
                             className="w-6 h-6 object-contain"
-                            alt={wallet.walletInfo.name}
-                            src={wallet.walletInfo.logo as string}
+                            alt={wallet.name}
+                            src={wallet.logo as string}
                           />
                         }
                       >
@@ -237,58 +209,10 @@ const WalletButton: FC<Props> = ({
                     </div>
                   );
                 })}
-                {selectedChainName === ChainName.EVM && (
-                  <div className="mr-auto md:inline-block hidden">
-                    {walletExtensions?.installed.some(
-                      (item: any) => item.name === WalletType.METAMASK
-                    ) ? (
-                      <Button
-                        onClick={() => selectWallet(WalletType.METAMASK)}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setShowDownloadExtension({
-                            name: metamaskWalletInfo.prettyName,
-                            downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === WalletType.METAMASK
-                            )?.downloadLink!,
-                          });
-                        }}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    )}
-                  </div>
-                )}
                 {otherWallets.map((wallet: any, idx: any) => (
                   <div
                     key={idx}
-                    className={`mr-auto ${wallet.walletInfo.name === WalletType.LEAP ||
-                      wallet.walletInfo.name === WalletType.KEPLR
-                      ? ""
-                      : "md:inline-block hidden"
-                      }`}
+                    className={`mr-auto md:inline-block hidden`}
                   >
                     {idx === 0 && (
                       <Text size="base" className="mb-4">
@@ -300,15 +224,15 @@ const WalletButton: FC<Props> = ({
                         setShowDownloadExtension({
                           name: wallet.walletPrettyName as WalletType,
                           downloadLink: walletExtensions?.otherWallets.find(
-                            (i) => i.name === wallet.walletInfo.name
+                            (i) => i.name === wallet.name
                           )?.downloadLink!,
                         });
                       }}
                       startIcon={
                         <img
                           className="w-6 h-6 object-contain"
-                          alt={wallet.walletInfo.name}
-                          src={wallet.walletInfo.logo as string}
+                          alt={wallet.name}
+                          src={wallet.logo as string}
                         />
                       }
                     >
@@ -340,13 +264,12 @@ const WalletButton: FC<Props> = ({
                         disabled
                         onClick={() => {
                           wallet.connect();
-                          selectWallet(wallet.walletInfo.name as WalletType);
                         }}
                         startIcon={
                           <img
                             className="w-6 h-6 object-contain"
-                            alt={wallet.walletInfo.name}
-                            src={wallet.walletInfo.logo as string}
+                            alt={wallet.name}
+                            src={wallet.logo as string}
                           />
                         }
                       >
@@ -357,56 +280,7 @@ const WalletButton: FC<Props> = ({
                     </motion.div>
                   );
                 })}
-                {onHoverChain === ChainName.INJECTIVE && (
-                  <motion.div
-                    key={WalletType.METAMASK}
-                    className={`inline-block mr-auto duration-300 transition-all`}
-                    initial={{ opacity: 0.0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                  >
-                    {walletExtensions?.installed.some(
-                      (item: any) => item.name === WalletType.METAMASK
-                    ) ? (
-                      <Button
-                        onClick={() => selectWallet(WalletType.METAMASK)}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setShowDownloadExtension({
-                            name: metamaskWalletInfo.prettyName,
-                            downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === WalletType.METAMASK
-                            )?.downloadLink!,
-                          });
-                        }}
-                        startIcon={
-                          <img
-                            className="w-6 h-6 object-contain"
-                            alt={metamaskWalletInfo.name}
-                            src={metamaskWalletInfo.logo}
-                          />
-                        }
-                      >
-                        <span className="text-[18px] font-medium text-ghost-white">
-                          {capitalizeFirstLetter(metamaskWalletInfo.prettyName)}
-                        </span>
-                      </Button>
-                    )}
-                  </motion.div>
-                )}
+
                 {otherHoveredWallets.map((wallet: any, idx: any) => {
                   return (
                     <motion.div
@@ -427,15 +301,15 @@ const WalletButton: FC<Props> = ({
                           setShowDownloadExtension({
                             name: wallet.walletPrettyName as WalletType,
                             downloadLink: walletExtensions?.otherWallets.find(
-                              (i) => i.name === wallet.walletInfo.name
+                              (i) => i.name === wallet.name
                             )?.downloadLink!,
                           });
                         }}
                         startIcon={
                           <img
                             className="w-6 h-6 object-contain"
-                            alt={wallet.walletInfo.name}
-                            src={wallet.walletInfo.logo as string}
+                            alt={wallet.name}
+                            src={wallet.logo as string}
                           />
                         }
                       >
@@ -488,107 +362,46 @@ const WalletButton: FC<Props> = ({
               </motion.div>
             )}
             {!showDownloadExtension &&
-              (!isNil(selectedChainName) ? (
-                <motion.div
-                  initial={{ opacity: 0.1 }}
-                  animate={{ opacity: 1 }}
-                  className="mx-10 md:mx-[140px] md:block hidden"
+              <motion.div
+                initial={{ opacity: 0.1 }}
+                animate={{ opacity: 1 }}
+                className="mx-10 md:mx-[140px] md:block hidden"
+              >
+                <Text
+                  size="4xl"
+                  textColor="text-white"
+                  className="mb-4 md:mb-10 mt-4"
                 >
-                  <Text
-                    size="4xl"
-                    textColor="text-white"
-                    className="mb-4 md:mb-10 mt-4"
-                  >
-                    How do I connect my wallet?
-                  </Text>
-                  <div className="flex justify-center items-center gap-16 mb-8">
-                    {filteredWallets.map((wallet: any, idx: any) => {
-                      return (
-                        <img
-                          alt={wallet.walletInfo.name}
-                          key={idx}
-                          className={`w-6 h-6 object-contain ${wallet.walletInfo.name === WalletType.LEAP ||
-                            wallet.walletInfo.name === WalletType.KEPLR
-                            ? ""
-                            : "md:inline-block hidden"
-                            }`}
-                          src={wallet.walletInfo.logo as string}
-                        />
-                      );
-                    })}
-                    {selectedChainName === ChainName.INJECTIVE && (
+                  How do I connect my wallet?
+                </Text>
+                <div className="flex justify-center items-center gap-16 mb-8">
+                  {filteredWallets.map((wallet: any, idx: any) => {
+                    return (
                       <img
-                        alt={metamaskWalletInfo.name}
-                        className="w-6 h-6 object-contain md:inline-block hidden"
-                        src={metamaskWalletInfo.logo}
+                        alt={wallet.name}
+                        key={idx}
+                        className={`w-6 h-6 object-contain`}
+                        src={wallet.logo as string}
                       />
-                    )}
-                  </div>
-                  <Text size="base" textColor="text-[#989396]">
-                    If you want to connect an installed wallet, you can log in
-                    by selecting your wallet under &quot;Installed Wallets&quot;
-                    on the left side of the screen and using the browser
-                    extension.
-                  </Text>
-                  <Text
-                    size="base"
-                    textColor="text-[#989396]"
-                    className="mt-2 md:mt-10"
-                  >
-                    If you do not have an installed wallet, you can choose one
-                    of the wallet options on the left side of the screen and
-                    follow the instructions to set up your wallet.
-                  </Text>
-                </motion.div>
-              ) : (
-                <div className="p-10 mt-10 md:mt-0">
-                  <p className="text-base font-medium text-[#989396]">
-                    Before you start,
-                  </p>
-                  <h3 className="text-white text-3xl font-medium">
-                    Please choose your chain
-                  </h3>
-                  <div className="space-y-6 mt-10">
-                    {isNil(selectedChainName) && (
-                      <>
-                        {availableChains.map((chain, idx) => {
-                          return (
-                            <Button
-                              key={idx}
-                              onClick={() => {
-                                selectChainName(chain.chain_name as ChainName);
-                              }}
-                              className={`${chain.bech32_prefix !== "inj"
-                                ? "md:flex hidden"
-                                : ""
-                                }`}
-                              onMouseEnter={() =>
-                                setOnHoverChain(chain.chain_name as ChainName)
-                              }
-                              onMouseLeave={() => setOnHoverChain(null)}
-                              startIcon={
-                                <img
-                                  alt={chain.chain_name}
-                                  src={
-                                    ChainInfoByName[
-                                      chain.chain_name as ChainName
-                                    ].logo
-                                  }
-                                  className="w-8 h-8"
-                                />
-                              }
-                            >
-                              <span className="text-[18px] font-medium text-ghost-white uppercase">
-                                {chain.pretty_name}
-                              </span>
-                            </Button>
-                          );
-                        })}
-                      </>
-                    )}
-                  </div>
+                    );
+                  })}
                 </div>
-              ))}
+                <Text size="base" textColor="text-[#989396]">
+                  If you want to connect an installed wallet, you can log in
+                  by selecting your wallet under &quot;Installed Wallets&quot;
+                  on the left side of the screen and using the browser
+                  extension.
+                </Text>
+                <Text
+                  size="base"
+                  textColor="text-[#989396]"
+                  className="mt-2 md:mt-10"
+                >
+                  If you do not have an installed wallet, you can choose one
+                  of the wallet options on the left side of the screen and
+                  follow the instructions to set up your wallet.
+                </Text>
+              </motion.div>}
           </div>
           {selectedChainName && (
             <div className="flex gap-4 items-center mt-auto absolute bottom-8 left-8">

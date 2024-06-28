@@ -7,15 +7,15 @@ import { CheckIcon } from "@/components/Icons/Icons";
 import { appChainURLs } from "@/constants/chainConstants";
 import Image from "next/image";
 import Text from "../Texts/Text";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import Tooltip from "../Tooltip/Tooltip";
 import { groupBy } from "lodash";
 import { ChainNavigator } from "@/enums/Chain";
+import { useAppContext } from "@/contexts/AppProvider";
 
 const chainsGroupByEnv = groupBy(appChainURLs, 'env');
 
 const ChainSelector: FC = () => {
-    const { chainInfo } = useChainAdapter();
+    const { chainInfo } = useAppContext();
     const [selectedChain, setSelectedChain] = useState<ChainNavigator>();
 
     useEffect(() => {
@@ -46,8 +46,8 @@ const ChainSelector: FC = () => {
                         <div className="md:block hidden">
                             <Image
                                 alt={chainInfo.name}
-                                width={24}
-                                height={24}
+                                width={20}
+                                height={20}
                                 src={chainInfo.logo}
                             />
                         </div>

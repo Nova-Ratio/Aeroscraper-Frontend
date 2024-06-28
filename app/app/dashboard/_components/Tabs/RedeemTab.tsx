@@ -20,12 +20,9 @@ import {
 } from "@/components/Icons/Icons";
 import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
-import useChainAdapter from "@/hooks/useChainAdapter";
-import {
-  DefaultAssetByChainName,
-  assetByDenom,
-} from "@/constants/assetConstants";
+
 import { ChainName } from "@/enums/Chain";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface Props {
   pageData: PageData;
@@ -40,7 +37,7 @@ const RedeemTab: FC<Props> = ({
   refreshBalance,
   basePrice,
 }) => {
-  const { baseCoin, selectedChainName } = useChainAdapter();
+  const { baseCoin, selectedChainName } = useAppContext();
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [injAmount, setInjAmount] = useState(0);
   const { addNotification, setProcessLoading, processLoading } =

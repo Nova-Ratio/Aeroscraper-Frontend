@@ -27,11 +27,11 @@ import Text from "@/components/Texts/Text";
 import { RocketIcon } from "@/components/Icons/Icons";
 import graphql from "@/services/graphql";
 import { delay } from "@/utils/promiseUtils";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { isV2TroveResponse } from "@/contracts/app/types";
 import { callLiquidate } from "@/evmContractInteractions/useAppContracts";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
+import { useAppContext } from "@/contexts/AppProvider";
 
 type Props = {
   getPageData: () => void;
@@ -40,8 +40,7 @@ type Props = {
 
 const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const { baseCoin, selectedChainName = ChainName.INJECTIVE } =
-    useChainAdapter();
+  const { baseCoin, selectedChainName } = useAppContext();
   const contract = useAppContract();
   const [loading, setLoading] = useState(true);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV1[]>([]);
@@ -116,7 +115,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                       troveRes?.debt_amount ?? 0,
                       baseCoin?.ausdDecimal
                     )) *
-                    100
+                  100
                 )
               ),
               collateralAmount,
@@ -255,7 +254,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                       decimalScale={2}
                       displayType="text"
                       renderText={(value) =>
-                        selectedChainName === ChainName.EVM ? (
+                        selectedChainName === ChainName.HEDERA ? (
                           <Text
                             size="xs"
                             responsive={true}
@@ -275,7 +274,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                               dynamicTextColor={
                                 getRatioColor(
                                   (item.liquidityThreshold ?? 0) *
-                                    (basePrice ?? 0)
+                                  (basePrice ?? 0)
                                 ) ?? 0
                               }
                             >

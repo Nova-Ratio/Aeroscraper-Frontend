@@ -1,27 +1,16 @@
 import { ChainName, ChainNavigator } from "@/enums/Chain";
 import { BaseCoin, ChainInfo } from "@/types/types";
-import { chains } from 'chain-registry'
 
 const visibleChains: ChainName[] = [
-    ChainName.INJECTIVE
+    ChainName.HEDERA
 ]
 
-export const availableChains = Object.values(chains).filter(chain => visibleChains.includes(chain.chain_name as ChainName));
-
 export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
-    [ChainName.INJECTIVE]: {
-        name: "INJ",
-        denom: "inj",
-        image: "/images/token-images/inj.svg",
-        tokenImage: "/images/token-images/inj.svg",
-        decimal: 18,
-        ausdDecimal: 18
-    },
-    [ChainName.EVM]: {
-        name: "ETH",
-        denom: "eth",
-        image: "/images/token-images/eth.svg",
-        tokenImage: "/images/token-images/eth.svg",
+    [ChainName.HEDERA]: {
+        name: "HEDERA",
+        denom: "hbar",
+        image: "/images/token-images/hedera.png",
+        tokenImage: "/images/token-images/hedera.png",
         decimal: 18,
         ausdDecimal: 18
     },
@@ -33,22 +22,18 @@ export const BaseCoinByDenom = Object.values(BaseCoinByChainName).reduce<Record<
 }, {});
 
 export const TransactionDomainByChainName: Record<ChainName, { accountUrl: string, txDetailUrl: string }> = {
-    [ChainName.INJECTIVE]: {
-        txDetailUrl: "https://explorer.injective.network/transaction/",
-        accountUrl: "https://explorer.injective.network/account/"
-    },
-    [ChainName.EVM]: {
-        txDetailUrl: "https://etherscan.io/tx/",
-        accountUrl: "https://etherscan.io/address/"
+    [ChainName.HEDERA]: {
+        txDetailUrl: "",
+        accountUrl: ""
     }
 }
 
 export const getContractAddressesByChain = (chainName?: ChainName) => {
-    if (chainName === ChainName.INJECTIVE) {
+    if (chainName === ChainName.HEDERA) {
         return {
-            contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS as string,
-            ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS as string,
-            oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
+            contractAddress: "" as string,
+            ausdContractAddress: "" as string,
+            oraclecontractAddress: "" as string
         }
     }
 
@@ -60,29 +45,23 @@ export const getContractAddressesByChain = (chainName?: ChainName) => {
 }
 
 export const ChainInfoByName: Record<ChainName, ChainInfo> = {
-    [ChainName.INJECTIVE]: {
-        name: ChainName.INJECTIVE,
-        displayName: "INJ",
-        logo: "/images/token-images/inj.svg",
-        bech32Prefix: "inj"
-    },
-    [ChainName.EVM]: {
-        name: ChainName.EVM,
-        displayName: "ETH",
-        logo: "/images/token-images/eth.svg",
-        bech32Prefix: "eth"
+    [ChainName.HEDERA]: {
+        name: ChainName.HEDERA,
+        displayName: "HEDERA",
+        logo: "/images/token-images/hedera.png",
+        bech32Prefix: "hbax"
     }
 }
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
-    [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" },
-    [ChainName.EVM]: { priceId: "", serviceUrl: "" }
+    [ChainName.HEDERA]: { priceId: "", serviceUrl: "" }
 }
 
 export const appChainURLs: ChainNavigator[] = [
     { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
-    { chainName: "Sepolia", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
-    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet", isSelected: true },
+    { chainName: "Hedera", image: "/images/token-images/hedera.svg", url: "https://hedera.aeroscrapertest.tech", env: "Testnet", isSelected: true },
+    { chainName: "Sepolia", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: false },
+    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet", isSelected: false },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]
 

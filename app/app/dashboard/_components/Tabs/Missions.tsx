@@ -3,8 +3,8 @@ import Text from '@/components/Texts/Text';
 import SkeletonLoading from '@/components/Table/SkeletonLoading';
 import MissionCard, { ZealyMission } from '@/components/MissionCard';
 import { isNil } from 'lodash';
-import useChainAdapter from '@/hooks/useChainAdapter';
 import Link from 'next/link';
+import { useAppContext } from '@/contexts/AppProvider';
 
 interface ZealyResponseModel {
   items: ZealyUser[],
@@ -32,7 +32,7 @@ const MissionsTab = () => {
 
   const ref = useRef<any>();
 
-  const { address } = useChainAdapter();
+  const { userInfo } = useAppContext();
 
   const [missionList, setMissionList] = useState<Record<string, ZealyMission> | null>(null);
 
@@ -48,7 +48,7 @@ const MissionsTab = () => {
 
   const getUserId = async () => {
     try {
-      const result = await fetch(`https://db.aeroscraper.io/api/collections/leaderboard/records?filter=address="${address}"`,
+      const result = await fetch(`https://db.aeroscraper.io/api/collections/leaderboard/records?filter=address="${userInfo.address}"`,
         {
           next: {
             revalidate: false

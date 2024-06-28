@@ -1,7 +1,6 @@
 import Text from "@/components/Texts/Text";
 import React, { FC, useMemo, useState } from "react";
 import Checkbox from "@/components/Checkbox";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { CollateralAsset } from "@/types/types";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import { ChainName } from "@/enums/Chain";
@@ -9,6 +8,7 @@ import CreateTrovePanel from "../TrovePanels/CreateTrovePanel";
 import CollateralPanel from "../TrovePanels/CollateralPanel";
 import BorrowPanel from "../TrovePanels/BorrowPanel";
 import { usePageData } from "@/contexts/DashboardProvider";
+import { useAppContext } from "@/contexts/AppProvider";
 
 enum TABS {
   COLLATERAL = 0,
@@ -17,12 +17,10 @@ enum TABS {
 
 const TroveTab: FC = () => {
   const { pageData } = usePageData();
-  const { selectedChainName } = useChainAdapter();
+  const { selectedChainName } = useAppContext();
 
   // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
-  const [selectedAsset] = useState<CollateralAsset>(
-    DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
-  );
+  const [selectedAsset] = useState<CollateralAsset>(DefaultAssetByChainName[selectedChainName ?? ChainName.HEDERA]);
 
   const [selectedTab, setSelectedTab] = useState<TABS>(TABS.COLLATERAL);
 

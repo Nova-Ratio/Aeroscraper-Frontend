@@ -4,12 +4,12 @@ import BorderedNumberInput from '@/components/Input/BorderedNumberInput';
 import Text from '@/components/Texts/Text';
 import { DefaultAssetByChainName } from '@/constants/assetConstants';
 import { MANAGEMENT_FEE } from '@/constants/chainConstants';
+import { useAppContext } from '@/contexts/AppProvider';
 import { useBalances } from '@/contexts/BalanceProvider';
 import { usePageData } from '@/contexts/DashboardProvider';
 import { useNotification } from '@/contexts/NotificationProvider';
 import useAppContract from '@/contracts/app/useAppContract';
 import { ChainName } from '@/enums/Chain';
-import useChainAdapter from '@/hooks/useChainAdapter';
 import { CollateralAsset } from '@/types/types';
 import { convertAmount, AUSD_PRICE, getRatioColor } from '@/utils/contractUtils';
 import { motion } from 'framer-motion';
@@ -20,16 +20,14 @@ import { NumberFormatValues, NumericFormat } from 'react-number-format';
 const CreateTrovePanel: FC = () => {
     const contract = useAppContract();
     const { balanceByDenom, refreshBalance } = useBalances();
-    const { selectedChainName, basePrice } = useChainAdapter();
+    const { selectedChainName, basePrice } = useAppContext();
     const { pageData, getPageData } = usePageData();
 
     const [openTroveAmount, setOpenTroveAmount] = useState<number>(0);
     const [borrowAmount, setBorrowAmount] = useState<number>(0);
 
     // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
-    const [selectedAsset] = useState<CollateralAsset>(
-        DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
-    );
+    const [selectedAsset] = useState<CollateralAsset>(DefaultAssetByChainName[selectedChainName ?? ChainName.HEDERA]);
 
     const { addNotification, processLoading, setProcessLoading } = useNotification();
 

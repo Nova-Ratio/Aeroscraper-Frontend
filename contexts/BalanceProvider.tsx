@@ -1,8 +1,4 @@
 import { ChainName } from "@/enums/Chain";
-import useChainAdapter from "@/hooks/useChainAdapter";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { Coin } from "@cosmjs/proto-signing";
-import { ethers } from "ethers";
 import { Dictionary } from "lodash";
 import React, {
   FC,
@@ -14,6 +10,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useAppContext } from "./AppProvider";
 
 type BalanceContextValue = {
   balanceByDenom: Dictionary<Coin | undefined>;
@@ -22,47 +19,39 @@ type BalanceContextValue = {
 
 const BalanceContext = React.createContext<BalanceContextValue>({
   balanceByDenom: {},
-  refreshBalance: () => {},
+  refreshBalance: () => { },
 });
 
 const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
   const debounceRef = useRef<NodeJS.Timeout | undefined>();
-  const { chain, address, baseCoin, selectedChainName } = useChainAdapter();
+  const { userInfo, baseCoin, selectedChainName } = useAppContext();
   const [balanceByDenom, setBalanceByDenom] = useState<
     Dictionary<Coin | undefined>
   >({});
 
   const getBalances = useCallback(async () => {
     try {
-      if (!address || !baseCoin) return;
+      if (!userInfo.address || !baseCoin) return;
 
-      /*  const client = await SigningCosmWasmClient.connect("https://sentry.tm.injective.network" ?? '')
-            const balance = await client.getBalance(address, baseCoin.denom);
-            setBalanceByDenom({ [balance.denom]: balance }); */
+      if (selectedChainName === ChainName.HEDERA) {
+        // const provider = new ethers.BrowserProvider(window.ethereum);
+        // const signer = await provider.getSigner();
+        // const address = await signer.getAddress();
+        // const balance = await provider.getBalance(address).then((balance: any) => {
+        //   return balance;
+        // });
 
-      // metamask native token get balance
-      if (selectedChainName === ChainName.EVM) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const address = await signer.getAddress();
-        const balance = await provider.getBalance(address).then((balance: any) => {
-          //console.log("getBalance", ethers.formatEther(balance));
-          return balance;
-        });
-        //console.log("baseCoin.denom", baseCoin.denom);
-        //console.log("balance", balance);
-        
-        setBalanceByDenom({
-          [baseCoin.denom]: {
-            denom: baseCoin.denom,
-            amount: balance || "0",
-          },
-        });
+        // setBalanceByDenom({
+        //   [baseCoin.denom]: {
+        //     denom: baseCoin.denom,
+        //     amount: balance || "0",
+        //   },
+        // });
       }
     } catch (err) {
       console.log(err);
     }
-  }, [chain, address, baseCoin, selectedChainName]);
+  }, [userInfo, baseCoin, selectedChainName]);
 
   const debouncedGetBalances = useCallback(() => {
     clearTimeout(debounceRef.current);

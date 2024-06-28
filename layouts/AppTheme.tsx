@@ -7,7 +7,6 @@ import AccountModal from "@/components/AccountModal/AccountModal";
 import { convertAmount } from "@/utils/contractUtils";
 import NotificationModal from "@/components/Modal/NotificationModal";
 import WalletButton from "@/components/Buttons/WalletButton";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
 import { useProfile } from "@/contexts/ProfileProvider";
 import { usePageData } from "@/contexts/DashboardProvider";
@@ -15,7 +14,6 @@ import { useBalances } from "@/contexts/BalanceProvider";
 import { ChainName } from "@/enums/Chain";
 import { useNotification } from "@/contexts/NotificationProvider";
 import Swal from "sweetalert2";
-import { EthereumChainId } from "@injectivelabs/ts-types";
 import ChainData from "@/services/data/chain.json";
 import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import ChainSelector from "@/components/ChainSelector/ChainSelector";
@@ -24,24 +22,22 @@ import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import { checkPoint } from "@/hooks/usePointer";
 import pb from "@/lib/pocketbase";
 import ReferralModal from "@/components/AccountModal/RefModal";
+import { useAppContext } from "@/contexts/AppProvider";
 
-const chainID =0x8274f //EthereumChainId.Mainnet;
+const chainID = 0x8274f //EthereumChainId.Mainnet;
 
 const AppTheme = () => {
   const {
     selectedChainName,
-    isWalletConnected,
+    isConnected,
     baseCoin,
     walletInfo,
-    address,
-    username,
-    selectedWallet,
+    userInfo,
     disconnect,
-    disconnectMetamask,
     basePrice,
-  } = useChainAdapter();
-  const { addNotification, processLoading, setProcessLoading } =
-    useNotification();
+  } = useAppContext();
+
+  const { addNotification, processLoading, setProcessLoading } = useNotification();
   const { balanceByDenom } = useBalances();
   const { pageData } = usePageData();
   const { profileDetail } = useProfile();
@@ -49,50 +45,11 @@ const AppTheme = () => {
   const [accountModal, setAccountModal] = useState(false);
 
   const disconnectWallet = () => {
-    if (walletInfo?.name === WalletType.METAMASK) {
-      disconnectMetamask();
-    } else {
-      disconnect?.();
-    }
+    disconnect?.();
     localStorage.removeItem("selectedWallet");
     localStorage.removeItem("profile-detail");
   };
 
-  useEffect(() => {
-    if (
-      window.ethereum &&
-      typeof window !== "undefined" &&
-      selectedWallet === WalletType.METAMASK &&
-      isWalletConnected
-    ) {
-      const getChainId = async () => {
-        const { ethereum } = window as any;
-        const chainIdMetamask: any = await ethereum?.request({
-          method: "eth_chainId",
-        });
-
-        if (chainIdMetamask != chainID) {
-          CheckChain(chainIdMetamask);
-        }
-      };
-      getChainId();
-
-      window.ethereum?.on("chainChanged", (chainId: any) => {
-        CheckChain(chainId);
-        if (chainID === Number(chainId)) {
-          /* ToastSuccess.fire({
-            title: "Network Changed",
-          }); */
-          addNotification({
-            status: "networkchange",
-            directLink: "",
-            message: "Network Changed",
-          });
-          window.location.reload();
-        }
-      });
-    }
-  }, [selectedWallet, isWalletConnected]);
   const [expTime, setExpTime] = useState<number>(0);
 
   const [getTime, setGetTime] = useState<number>(new Date().getTime());
@@ -113,7 +70,7 @@ const AppTheme = () => {
         .collection(
           process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string
         )
-        .getFirstListItem(`address = '${address}'`);
+        .getFirstListItem(`address = '${userInfo.address}'`);
       setUserId(res?.refId || "");
       setExpTime(res?.expTime || 0);
     } catch (error) {
@@ -125,8 +82,8 @@ const AppTheme = () => {
     }
   }
   useEffect(() => {
-    address && getPointsInfo();
-  }, [address]);
+    userInfo.address && getPointsInfo();
+  }, [userInfo.address]);
 
   async function getCheckPoint(address: string) {
     try {
@@ -166,67 +123,7 @@ const AppTheme = () => {
 
   const [chainData, setChainData] = useState<any>(ChainData);
   const [refModal, setRefModal] = useState<boolean>(false);
-  const CheckChain = (id: number) => {
-    try {
-      id = Number(id);
-      if (id !== chainID) {
-        const { name } = chainData[id.toString()] || { name: "UNKNOW" };
-        const fromNetwork = name || "Unknown Network";
-        const toNetwork =
-          chainData[chainID.toString()]?.name || "ETHERIUM NETWORK ";
-        const alert = async () =>
-          await Swal.fire({
-            title: "Please Change Network",
-            text: `From ${fromNetwork} to ${toNetwork}`,
-            iconColor: "white",
-            showCancelButton: false,
-            showCloseButton: true,
-            backdrop: true,
-            background: "#150A17",
-            iconHtml: `<img src="/images/checkchain.svg" width="150" height="150" class="w-full shrink-0 " style="background:#150A17" />`,
-            color: "#fff",
-            confirmButtonText: "Change Network",
-            customClass: {
-              icon: "!bg-[#150A17] w-[150px] h-auto !border-0",
-              confirmButton:
-                "w-full md:w-[350px] py-2 px-8 h-[50px] text-base font-normal confirmBtn md:mb-8",
-              htmlContainer: "!text-white/50 !text-sm md:mb-3",
-              title: "!text-[32px] ",
-              popup: " lg:!p-10",
-            },
-          }).then((result) => {
-            const {ethereum} = window as any;
-            if (result.isConfirmed) {
-              ethereum.request({
-                method: "wallet_switchEthereumChain",
-                params: [{ chainId: chainData[chainID.toString()].chainId }],
-              }) ||
-                ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [
-                    {
-                      chainId: chainData[chainID.toString()].chainId,
-                      chainName: chainData[chainID.toString()].name,
-                      nativeCurrency: {
-                        name: chainData[chainID.toString()].nativeCurrency.name,
-                        symbol:
-                          chainData[chainID.toString()].nativeCurrency.symbol,
-                        decimals: 18,
-                      },
-                      rpcUrls: chainData[chainID.toString()].rpcUrls,
-                      blockExplorerUrls:
-                        chainData[chainID.toString()].blockExplorerUrls,
-                    },
-                  ],
-                });
-            }
-          });
-        alert();
-      }
-    } catch (error) {
-      console.log("CheckChain error:", error);
-    }
-  };
+
 
   return (
     <>
@@ -260,7 +157,7 @@ const AppTheme = () => {
               <Tooltip
                 containerClassName="flex items-center text-white"
                 width="w-fit"
-                title="INJ"
+                title={baseCoin.denom.toUpperCase()}
               >
                 <img
                   alt={baseCoin.name}
@@ -279,7 +176,7 @@ const AppTheme = () => {
             />
           </div>
           <div className="md:flex hidden items-center">
-            {isWalletConnected && !isNil(baseCoin) ? (
+            {isConnected && !isNil(baseCoin) ? (
               <>
                 <div className="md:flex hidden mr-3">
                   <OutlinedButton
@@ -287,7 +184,7 @@ const AppTheme = () => {
                     disabled={getTime < expTime}
                     loading={processLoading}
                     onClick={() => {
-                      address && getCheckPoint(address);
+                      userInfo.address && getCheckPoint(userInfo.address);
                     }}
                     className="rounded-lg w-[128px] md:w-[128px] ml-2 text-center h-[52px]"
                   >
@@ -348,11 +245,11 @@ const AppTheme = () => {
                         weight="font-regular"
                         className="truncate ml-2"
                       >
-                        {username}
+                        {userInfo.name}
                       </Text>
                     </div>
                     <Text size="sm">
-                      {address?.slice(0, 6)}...{address?.slice(-6)}
+                      {userInfo.address?.slice(0, 6)}...{userInfo.address?.slice(-6)}
                     </Text>
                     <div></div>
                   </div>
@@ -378,11 +275,11 @@ const AppTheme = () => {
                   baseCoinBalance={
                     !isNil(baseCoin)
                       ? Number(
-                          convertAmount(
-                            balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                            baseCoin.decimal
-                          )
+                        convertAmount(
+                          balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                          baseCoin.decimal
                         )
+                      )
                       : 0
                   }
                   basePrice={0}
@@ -397,11 +294,11 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                  convertAmount(
-                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    baseCoin?.decimal
-                  )
+                convertAmount(
+                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                  baseCoin?.decimal
                 )
+              )
               : 0,
           }}
           basePrice={basePrice}

@@ -1,6 +1,7 @@
-import useChainAdapter from "@/hooks/useChainAdapter";
+
 import { FC, PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePageData } from "./DashboardProvider";
+import { useAppContext } from "./AppProvider";
 
 export type DashboardTabs =
     | "faucet"
@@ -37,7 +38,7 @@ const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const { pageData } = usePageData();
 
-    const { selectedChainName } = useChainAdapter();
+    const { selectedChainName } = useAppContext();
 
     const tabList: DashboardTabs[] = useMemo(() => {
         let tempTablist: DashboardTabs[] = [

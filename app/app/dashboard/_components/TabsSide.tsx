@@ -8,7 +8,6 @@ import LeaderboardTab from "./Tabs/LeaderboardTab";
 import RedeemTab from "./Tabs/RedeemTab";
 import StabilityPoolTab from "./Tabs/StabilityPoolTab";
 import TroveTab from "./Tabs/TroveTab";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { useRouter, useSearchParams } from "next/navigation";
 import RiskyTrovesTabV2 from "./Tabs/RiskyTrovesTabV2";
 import Missions from "./Tabs/Missions";
@@ -16,6 +15,7 @@ import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { DashboardTabs, useTabs } from "@/contexts/TabsProvider";
 import RiskyTrovesTabV1 from "./Tabs/RiskyTrovesTabV1";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface Props {
   setTabPosition: Dispatch<DashboardTabs>;
@@ -28,7 +28,7 @@ const TabsSide: FC<Props> = ({ setTabPosition }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { basePrice, walletInfo, selectedChainName } = useChainAdapter();
+  const { basePrice, walletInfo, selectedChainName } = useAppContext();
 
   const { selectedTab, setSelectedTab, isTroveOpened, tabList } = useTabs();
 

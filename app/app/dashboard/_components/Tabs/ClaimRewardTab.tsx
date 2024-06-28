@@ -7,7 +7,7 @@ import { NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
 import { getIsInjectiveResponse } from "@/utils/contractUtils";
-import useChainAdapter from "@/hooks/useChainAdapter";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface Props {
   pageData: PageData;
@@ -21,7 +21,7 @@ const ClaimRewardTab: FC<Props> = ({
   getPageData,
   refreshBalance
 }) => {
-  const { baseCoin } = useChainAdapter();
+  const { baseCoin } = useAppContext();
 
   const contract = useAppContract();
   const { addNotification, processLoading, setProcessLoading } =

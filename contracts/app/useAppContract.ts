@@ -1,39 +1,39 @@
 import { useCallback, useMemo } from "react";
 import { isNil } from "lodash";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { WalletType } from "@/enums/WalletType";
 import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
 import { getAppEVMContract } from "@/evmContractInteractions/contract";
+import { useAppContext } from "@/contexts/AppProvider";
 
 const useAppContract = () => {
   const {
-    isWalletConnected,
+    isConnected,
     baseCoin,
     walletInfo,
     selectedChainName,
-    address,
-    chain,
+    userInfo,
+    chainInfo,
     basePrice,
-  } = useChainAdapter();
+  } = useAppContext();
 
   const contract = useMemo(
     () =>
-      isWalletConnected &&
+      isConnected &&
       !isNil(baseCoin) &&
       !isNil(walletInfo) &&
       !isNil(selectedChainName) &&
-      !isNil(chain)
+      !isNil(chainInfo)
         ? getAppEVMContract({
             basePrice,
           })
         : undefined,
     [
-      isWalletConnected,
+      isConnected,
       baseCoin,
       walletInfo,
       selectedChainName,
-      chain,
+      chainInfo,
       basePrice,
     ]
   );
@@ -50,9 +50,9 @@ const useAppContract = () => {
   }, [contract]);
 
   const getTrove = useCallback(async () => {
-    if (isNil(contract) || isNil(address)) return;
-    return await contract.getTrove(address);
-  }, [address, contract]);
+    if (isNil(contract) || isNil(userInfo.address)) return;
+    return await contract.getTrove(userInfo.address);
+  }, [userInfo.address, contract]);
 
   const getTroveByAddress = useCallback(
     async (address: string) => {
@@ -63,9 +63,9 @@ const useAppContract = () => {
   );
 
   const getStake = useCallback(async () => {
-    if (isNil(contract) || isNil(address)) return;
-    return await contract.getStake(address);
-  }, [address, contract]);
+    if (isNil(contract) || isNil(userInfo.address)) return;
+    return await contract.getStake(userInfo.address);
+  }, [userInfo.address, contract]);
 
   const getTotalStake = useCallback(async () => {
     if (isNil(contract)) return;
@@ -78,9 +78,9 @@ const useAppContract = () => {
   }, [contract]);
 
   const getAusdBalance = useCallback(async () => {
-    if (isNil(contract) || isNil(address)) return;
-    return await contract.getAusdBalance(address);
-  }, [address, contract]);
+    if (isNil(contract) || isNil(userInfo.address)) return;
+    return await contract.getAusdBalance(userInfo.address);
+  }, [userInfo.address, contract]);
 
   const getAusdInfo = useCallback(async () => {
     if (isNil(contract)) return;
@@ -88,9 +88,9 @@ const useAppContract = () => {
   }, [contract]);
 
   const getReward = useCallback(async () => {
-    if (isNil(contract) || isNil(address)) return;
-    return await contract.getReward(address);
-  }, [address, contract]);
+    if (isNil(contract) || isNil(userInfo.address)) return;
+    return await contract.getReward(userInfo.address);
+  }, [userInfo.address, contract]);
 
   const openTrove = useCallback(
     async (
@@ -99,92 +99,92 @@ const useAppContract = () => {
       collRatio: number,
       asset?: CollateralAsset
     ) => {
-      if (isNil(contract) || isNil(address)) return;
+      if (isNil(contract) || isNil(userInfo.address)) return;
       return await contract.openTrove(
-        address,
+        userInfo.address,
         amount,
         loan_amount,
         collRatio,
         asset
       );
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const addCollateral = useCallback(
     async (amount: number, collRatio: number, asset?: CollateralAsset) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.addCollateral(address, amount, collRatio, asset);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.addCollateral(userInfo.address, amount, collRatio, asset);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const removeCollateral = useCallback(
     async (amount: number, collRatio: number, asset?: CollateralAsset) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.removeCollateral(address, amount, collRatio, asset);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.removeCollateral(userInfo.address, amount, collRatio, asset);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const borrowLoan = useCallback(
     async (amount: number, collRatio: number) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.borrowLoan(address, amount, collRatio);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.borrowLoan(userInfo.address, amount, collRatio);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const repayLoan = useCallback(
     async (amount: number, collRatio: number, isAllAmount: boolean) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.repayLoan(address, amount, collRatio, isAllAmount);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.repayLoan(userInfo.address, amount, collRatio, isAllAmount);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const stake = useCallback(
     async (amount: number) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.stake(address, amount);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.stake(userInfo.address, amount);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const unstake = useCallback(
     async (amount: number) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.unstake(address, amount);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.unstake(userInfo.address, amount);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const redeem = useCallback(
     async (amount: number) => {
-      if (isNil(contract) || isNil(address)) return;
-      return await contract.redeem(address, amount);
+      if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.redeem(userInfo.address, amount);
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const liquidateTroves = useCallback(async (owner: string) => {
-    if (isNil(contract) || isNil(address)) return;
+    if (isNil(contract) || isNil(userInfo.address)) return;
     return await contract.liquidateTroves(owner);
-  }, [address, contract]);
+  }, [userInfo.address, contract]);
 
   const liquidateTrovesV2 = useCallback(
     async (owner: string) => {
-      /* if (isNil(contract) || isNil(address)) return;
-      return await contract.liquidateTrovesV2(address, owner); */
+      /* if (isNil(contract) || isNil(userInfo.address)) return;
+      return await contract.liquidateTrovesV2(userInfo.address, owner); */
       return undefined;
     },
-    [address, contract]
+    [userInfo.address, contract]
   );
 
   const withdrawLiquidationGains = useCallback(async () => {
-    if (isNil(contract) || isNil(address)) return;
-    return await contract.withdrawLiquidationGains(address);
-  }, [address, contract]);
+    if (isNil(contract) || isNil(userInfo.address)) return;
+    return await contract.withdrawLiquidationGains(userInfo.address);
+  }, [userInfo.address, contract]);
 
   const value = useMemo(
     () => ({

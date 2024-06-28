@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { FC, useEffect, useState } from 'react'
 import { CloseIcon } from '../Icons/Icons'
 import { TransactionDomainByChainName } from '@/constants/chainConstants';
-import useChainAdapter from '@/hooks/useChainAdapter';
 import { ChainName } from '@/enums/Chain';
+import { useAppContext } from '@/contexts/AppProvider';
 
 const VARIANTS: Record<Status, any> = {
   success: {
@@ -63,12 +63,12 @@ const VARIANTS: Record<Status, any> = {
 type Status = "error" | "success" | "networkchange" | "check" | "checkError" | "create";
 
 const NotificationModal: FC = () => {
-  const { selectedChainName } = useChainAdapter();
+  const { selectedChainName } = useAppContext();
   const { notification, setOnHover } = useNotification();
 
   const [moreInfo, setMoreInfo] = useState(false);
 
-  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.INJECTIVE]?.txDetailUrl;
+  let scanDomain = TransactionDomainByChainName[selectedChainName ?? ChainName.HEDERA]?.txDetailUrl;
 
   useEffect(() => {
     setMoreInfo(false);

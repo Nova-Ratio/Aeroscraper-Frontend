@@ -1,6 +1,5 @@
 export enum ChainName {
-    INJECTIVE = "injective",
-    EVM = "evm"
+    HEDERA = "hedera"
 }
 
 export type ChainNavigator = {

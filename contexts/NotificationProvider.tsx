@@ -1,8 +1,8 @@
 'use client';
 
-import useChainAdapter from '@/hooks/useChainAdapter';
 import { isNil } from 'lodash';
 import React, { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { useAppContext } from './AppProvider';
 
 export type NotificationType = "Reedem"
 
@@ -33,7 +33,7 @@ const NotificationContext = createContext<INotificationContext>({
 });
 
 const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { address } = useChainAdapter();
+  const { userInfo } = useAppContext();
   const [notification, setNotification] = useState<INotification | null>(null);
 
   const [processLoading, setProcessLoading] = useState(false);
@@ -78,10 +78,10 @@ const NotificationProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [onHover, notification]);
 
   useEffect(() => {
-    if (isNil(address)) {
+    if (isNil(userInfo.address)) {
       localStorage.removeItem("notifications");
     }
-  }, [address])
+  }, [userInfo])
 
   const providedValue = React.useMemo(() => ({
     notification,

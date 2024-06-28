@@ -6,11 +6,11 @@ import { TableHeaderCol } from "@/components/Table/TableHeaderCol";
 import { getCroppedString } from "@/utils/stringUtils";
 import { NumericFormat } from "react-number-format";
 import SkeletonLoading from "@/components/Table/SkeletonLoading";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import pb from "@/lib/pocketbase";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import { ChevronUpIcon } from "@/components/Icons/Icons";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface ZealyResponseModel {
   items: ZealyUser[];
@@ -77,7 +77,7 @@ interface ZealyUserInformation {
 const LeaderboardTab = () => {
   const ref = useRef<any>();
 
-  const { address } = useChainAdapter();
+  const { userInfo } = useAppContext();
 
   const [leaderboard, setLeaderboard] = useState<ZealyUser[]>([]);
   const [userInformation, setUserInformation] =
@@ -96,15 +96,15 @@ const LeaderboardTab = () => {
   }, []);
 
   useEffect(() => {
-    if (address || zealyId) {
+    if (userInfo.address || zealyId) {
       getUserInformation();
     }
-  }, [address, zealyId]);
+  }, [userInfo.address, zealyId]);
 
   const getUserId = async () => {
     try {
       const result = await fetch(
-        `https://db.aeroscraper.io/api/collections/leaderboard-evm/records?filter=address="${address}"`,
+        `https://db.aeroscraper.io/api/collections/leaderboard-evm/records?filter=address="${userInfo.address}"`,
         {
           next: {
             revalidate: false,
@@ -166,7 +166,7 @@ const LeaderboardTab = () => {
           sort: "-total",
         });
       console.log("allData", allData);
-      console.log("address", address);
+      console.log("address", userInfo.address);
       allData &&
         setLeaderboard(
           allData.map((item: any) => {
@@ -179,12 +179,12 @@ const LeaderboardTab = () => {
           })
         );
       allData && setTotalUsers(allData.length);
-      const rank = address
+      const rank = userInfo.address
         ? allData.findIndex(
             (item: any) =>
               item?.address &&
               typeof item.address.toLowerCase === "function" &&
-              item?.address?.toLowerCase() == address?.toLowerCase()
+              item?.address?.toLowerCase() == userInfo.address?.toLowerCase()
           )
         : false;
       console.log("rank", rank);
@@ -206,7 +206,7 @@ const LeaderboardTab = () => {
         .collection(
           process.env.NEXT_PUBLIC_WEBSITE_REF_COLLECTION_NAME as string
         )
-        .getFirstListItem(`address = '${address}'`)
+        .getFirstListItem(`address = '${userInfo.address}'`)
         .then((res) => res)
         .catch((err) => false);
       //console.log("total_points", res);

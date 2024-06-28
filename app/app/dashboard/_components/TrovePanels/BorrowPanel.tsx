@@ -5,30 +5,28 @@ import BorderedNumberInput from "@/components/Input/BorderedNumberInput";
 import Text from "@/components/Texts/Text";
 import Tooltip from "@/components/Tooltip/Tooltip";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
+import { useAppContext } from "@/contexts/AppProvider";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useNotification } from "@/contexts/NotificationProvider";
 import useAppContract from "@/contracts/app/useAppContract";
 import { ChainName } from "@/enums/Chain";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { CollateralAsset } from "@/types/types";
 import { getRatioColor } from "@/utils/contractUtils";
 import { motion } from "framer-motion";
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, use, useMemo, useState } from "react";
 import { NumberFormatValues, NumericFormat } from "react-number-format";
 
 const BorrowPanel: FC = () => {
   const contract = useAppContract();
   const { refreshBalance } = useBalances();
-  const { selectedChainName, basePrice } = useChainAdapter();
+  const { selectedChainName, basePrice } = useAppContext();
   const { pageData, getPageData } = usePageData();
 
   const [borrowingAmount, setBorrowingAmount] = useState<number>(0);
 
   // The purpose of using useState instead of constant value is to store the selected asset for future on multi collateral feature
-  const [selectedAsset] = useState<CollateralAsset>(
-    DefaultAssetByChainName[selectedChainName ?? ChainName.INJECTIVE]
-  );
+  const [selectedAsset] = useState<CollateralAsset>(DefaultAssetByChainName[selectedChainName ?? ChainName.HEDERA]);
 
   const { addNotification, processLoading, setProcessLoading } =
     useNotification();

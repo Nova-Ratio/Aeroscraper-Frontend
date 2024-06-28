@@ -8,10 +8,10 @@ import {
   useNotification,
 } from "@/contexts/NotificationProvider";
 import Link from "next/link";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { TransactionDomainByChainName } from "@/constants/chainConstants";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import { useAppContext } from "@/contexts/AppProvider";
 
 type ItemProps = {
   selectedChainName: ChainName;
@@ -23,7 +23,7 @@ type ItemProps = {
 };
 
 const NotificationDropdown: FC = () => {
-  const { selectedChainName } = useChainAdapter();
+  const { selectedChainName } = useAppContext();
   const listenNotification = useNotification();
   const [notifications, setNotifications] = useState<INotification[]>([]);
 

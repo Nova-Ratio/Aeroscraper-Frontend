@@ -1,8 +1,8 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import Text from "../Texts/Text";
 import { Modal } from "../Modal/Modal";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { checkPoint } from "@/hooks/usePointer";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface Props {
   showModal: boolean;
@@ -20,20 +20,11 @@ const ReferralModal: FC<Props> = ({
   refresh,
   loading,
   setLoading,
-}:Props) => {
+}: Props) => {
   const avatarSelectRef = useRef<HTMLDivElement>(null);
   const qrCodeViewRef = useRef<HTMLDivElement>(null);
 
-  const {
-    selectedChainName,
-    username,
-    address,
-    baseCoin,
-    walletInfo,
-    chainInfo,
-    disconnect,
-    disconnectMetamask,
-  } = useChainAdapter();
+  const { userInfo } = useAppContext();
   const [isClipped, setIsClipped] = useState<string | null>(null);
   const closeModal = () => {
     setIsClipped(null);
@@ -42,11 +33,11 @@ const ReferralModal: FC<Props> = ({
   const ref_url = `${process.env.NEXT_PUBLIC_WEBSITE_DOMAIN}?ref=${userId}`;
   async function createUser() {
     try {
-      if (!address || userId) {
+      if (!userInfo.address || userId) {
         return;
       }
       setLoading(true);
-      let res = await checkPoint(address);
+      let res = await checkPoint(userInfo.address);
       console.log(res);
       refresh();
     } catch (error) {

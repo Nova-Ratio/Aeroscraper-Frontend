@@ -3,15 +3,6 @@
 import React, { FC, PropsWithChildren } from "react";
 import AppProvider from "@/contexts/AppProvider";
 import { NotificationProvider } from "@/contexts/NotificationProvider";
-import { ChainProvider } from "@cosmos-kit/react";
-import { chains, assets } from "chain-registry";
-import { wallets as keplrWallets } from "@cosmos-kit/keplr";
-import { wallets as leapWallets } from "@cosmos-kit/leap";
-import { wallets as ninjiWallets } from "@cosmos-kit/ninji";
-import { wallets as ledgerWallets } from "@cosmos-kit/ledger";
-import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
-import { ChainName } from "@/enums/Chain";
-import { GasPrice } from "@cosmjs/stargate";
 import ProfileProvider from "./ProfileProvider";
 import PriceProvider from "./PriceProvider";
 import DashboardProvider from "./DashboardProvider";
@@ -20,47 +11,21 @@ import TabsProvider from "./TabsProvider";
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <ChainProvider
-      chains={chains}
-      assetLists={assets}
-      wallets={[
-        keplrWallets[0],
-        leapWallets[0],
-        ninjiWallets[0],
-        cosmostationWallets[0],
-        ledgerWallets[0],
-      ]}
-      signerOptions={{
-        signingCosmwasm: (chain) => {
-          switch (typeof chain === "string" ? chain : chain.chain_name) {
-            case ChainName.INJECTIVE:
-              return {
-                gasPrice: GasPrice.fromString("0.025inj"),
-              };
-            default:
-              return {
-                gasPrice: GasPrice.fromString("0.025inj"),
-              };
-          }
-        },
-      }}
-    >
-      <PriceProvider>
-        <AppProvider>
-          <NotificationProvider>
-            <ProfileProvider>
-              <BalanceProvider>
-                <DashboardProvider>
-                  <TabsProvider>
-                    {children}
-                  </TabsProvider>
-                </DashboardProvider>
-              </BalanceProvider>
-            </ProfileProvider>
-          </NotificationProvider>
-        </AppProvider>
-      </PriceProvider>
-    </ChainProvider>
+    <PriceProvider>
+      <AppProvider>
+        <NotificationProvider>
+          <ProfileProvider>
+            <BalanceProvider>
+              <DashboardProvider>
+                <TabsProvider>
+                  {children}
+                </TabsProvider>
+              </DashboardProvider>
+            </BalanceProvider>
+          </ProfileProvider>
+        </NotificationProvider>
+      </AppProvider>
+    </PriceProvider>
   );
 };
 

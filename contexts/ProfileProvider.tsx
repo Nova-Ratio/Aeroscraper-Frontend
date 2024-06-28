@@ -1,5 +1,5 @@
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useAppContext } from "./AppProvider";
 
 export interface ProfileDetailModel {
     walletAddress: string;
@@ -19,20 +19,20 @@ const ProfileContext = createContext<ProfileContextValue>({
 });
 
 const ProfileProvider: FC<PropsWithChildren> = ({ children }) => {
-    const { address } = useChainAdapter();
+    const { userInfo } = useAppContext();
     const [profileDetail, setProfileDetail] = useState<ProfileDetailModel | undefined>(undefined);
 
 
     const getProfileDetail = useCallback(async () => {
         
-        if (address) {
+        if (userInfo.address) {
             
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_PROFILE_API}/api/users/profile-detail`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        walletAddress: address,
+                        walletAddress: userInfo.address,
                         appType: 999
                     })
                 });
@@ -49,7 +49,7 @@ const ProfileProvider: FC<PropsWithChildren> = ({ children }) => {
                 console.error(error);
             }
         }
-    }, [address])
+    }, [userInfo])
 
     const value = useMemo<ProfileContextValue>(() => ({
         profileDetail,

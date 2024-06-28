@@ -6,14 +6,13 @@ import TabsSide from "./TabsSide";
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { useNotification } from "@/contexts/NotificationProvider";
-import useChainAdapter from "@/hooks/useChainAdapter";
 
 import { DashboardTabs } from "@/contexts/TabsProvider";
 import Footer from "@/components/landing/footer";
+import { useAppContext } from "@/contexts/AppProvider";
 
 export default function Dashboard() {
-  /* const { openTrove } = getAppEVMContract(); */
-  const { basePrice } = useChainAdapter();
+  const { basePrice } = useAppContext();
   const [tabPosition, setTabPosition] = useState<DashboardTabs>("redeem");
 
   const { processLoading } = useNotification();

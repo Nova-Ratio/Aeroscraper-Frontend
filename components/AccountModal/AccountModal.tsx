@@ -15,12 +15,12 @@ import Button from "../Buttons/Button";
 import { ArrowLeftIcon, ExitIcon } from "../Icons/Icons";
 import { capitalizeFirstLetter } from "@/utils/stringUtils";
 import { isNil } from "lodash";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { TransactionDomainByChainName } from "@/constants/chainConstants";
 import { ChainName } from "@/enums/Chain";
 import { useProfile } from "@/contexts/ProfileProvider";
 import { WalletType } from "@/enums/WalletType";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
+import { useAppContext } from "@/contexts/AppProvider";
 
 interface Props {
   showModal: boolean,
@@ -35,7 +35,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   const avatarSelectRef = useRef<HTMLDivElement>(null);
   const qrCodeViewRef = useRef<HTMLDivElement>(null);
 
-  const { selectedChainName, username, address, baseCoin, walletInfo, chainInfo, disconnect, disconnectMetamask } = useChainAdapter();
+  const { selectedChainName, userInfo, baseCoin, walletInfo, chainInfo, disconnect } = useAppContext();
   const { profileDetail, setProfileDetail } = useProfile();
 
   const [selectedTab, setSelectedTab] = useState<Tabs | null>(null);
@@ -72,12 +72,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   }
 
   const logout = () => {
-    if (walletInfo?.name === WalletType.METAMASK) {
-      disconnectMetamask();
-    }
-    else {
-      disconnect?.();
-    }
+    disconnect?.();
     setProfileDetail(undefined);
     localStorage.removeItem("profile-detail");
     localStorage.removeItem("selectedWallet");
@@ -87,7 +82,7 @@ const AccountModal: FC<Props> = (props: Props) => {
   const updateProfilePhoto = async (photoUrl: string, idx?: number) => {
 
     const previousPhotos = JSON.parse(localStorage.getItem("previous-photos")!) ?? []
-    if (address) {
+    if (userInfo.address) {
       setProcessLoading({ status: true, idx });
 
       try {
@@ -95,7 +90,7 @@ const AccountModal: FC<Props> = (props: Props) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            walletAddress: address,
+            walletAddress: userInfo.address,
             photoUrl: photoUrl,
             appType: 999
           })
@@ -113,7 +108,7 @@ const AccountModal: FC<Props> = (props: Props) => {
           setPhotoUrlInput("");
 
           setProfileDetail({
-            walletAddress: address,
+            walletAddress: userInfo.address,
             photoUrl: photoUrl,
             appType: 999
           });
@@ -169,14 +164,14 @@ const AccountModal: FC<Props> = (props: Props) => {
                     className='w-full h-full rounded-md bg-raisin-black'
                   />
                 </div>
-                <Text size='3xl' textColor='text-white'>{username}</Text>
+                <Text size='3xl' textColor='text-white'>{userInfo.name}</Text>
               </div>
               <div className='flex justify-center gap-4 mt-6'>
-                <Text size='xl'>{address?.slice(0, 24)}...{address?.slice(-6)}</Text>
+                <Text size='xl'>{userInfo.address}</Text>
                 {isClipped === "WALLET" ?
                   <Text size='xs' textColor="text-[#37D489]">Copied!</Text>
                   :
-                  <button className='w-6 h-6 active:scale-90' onClick={() => { setIsClipped("WALLET"); navigator.clipboard.writeText(address ?? ''); }}>
+                  <button className='w-6 h-6 active:scale-90' onClick={() => { setIsClipped("WALLET"); navigator.clipboard.writeText(userInfo.address ?? ''); }}>
                     <img
                       alt="copy-to-clipboard"
                       src='/images/copy-to-clipboard.svg'
@@ -289,24 +284,24 @@ const AccountModal: FC<Props> = (props: Props) => {
                   <Button
                     startIcon={!isNil(walletInfo) && <img alt={walletInfo.name} src={walletInfo.logo as string} className='w-6 h-6' />}
                   >
-                    {capitalizeFirstLetter(walletInfo?.prettyName?.toLocaleLowerCase() ?? "")}
+                    {capitalizeFirstLetter(walletInfo?.walletPrettyName?.toLocaleLowerCase() ?? "")}
                   </Button>
                 </div>
-                <a href={`${scanDomain}${address}`} target='_blank' rel="noreferrer" className='ml-auto underline text-white mt-6 hidden md:flex'>
+                <a href={`${scanDomain}${userInfo.address}`} target='_blank' rel="noreferrer" className='ml-auto underline text-white mt-6 hidden md:flex'>
                   Scan
                   <img alt='link' src="/images/external-link.svg" className='w-full h-full object-contain ml-1.5' />
                 </a>
               </div>
-              <Text size='lg' textColor='text-white' className="mb-3 md:mt-0 mt-4">{username}</Text>
+              <Text size='lg' textColor='text-white' className="mb-3 md:mt-0 mt-4">{userInfo.name}</Text>
               <div className='md:w-[309px] w-[220px] h-[220px] md:h-[309px] bg-white rounded-lg p-3 mx-auto'>
-                <QRCode className='w-full h-full' value={address ?? ''} />
+                <QRCode className='w-full h-full' value={userInfo.address ?? ''} />
               </div>
               <div className='flex gap-4 mt-6 justify-center'>
-                <Text size='xl'>{address?.slice(0, 24)}...{address?.slice(-6)}</Text>
+                <Text size='xl'>{userInfo.address}</Text>
                 {isClipped === "WALLET" ?
                   <Text size='xs' textColor="text-[#37D489]">Copied!</Text>
                   :
-                  <button className='w-6 h-6 active:scale-90' onClick={() => { setIsClipped("WALLET"); navigator.clipboard.writeText(address ?? ''); }}>
+                  <button className='w-6 h-6 active:scale-90' onClick={() => { setIsClipped("WALLET"); navigator.clipboard.writeText(userInfo.address ?? ''); }}>
                     <img
                       alt="copy-to-clipboard"
                       src='/images/copy-to-clipboard.svg'

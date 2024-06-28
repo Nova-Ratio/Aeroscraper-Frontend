@@ -5,13 +5,13 @@ import { ExitIcon, HamburgerIcon } from './Icons/Icons';
 import { convertAmount } from '@/utils/contractUtils';
 import { isNil } from 'lodash';
 import WalletButton from './Buttons/WalletButton';
-import useChainAdapter from '@/hooks/useChainAdapter';
 import { useBalances } from '@/contexts/BalanceProvider';
 import { camelCaseToTitleCase } from '@/utils/stringUtils';
 import NotificationDropdown from '@/app/app/dashboard/_components/NotificationDropdown';
 import { useProfile } from '@/contexts/ProfileProvider';
 import { useTabs } from '@/contexts/TabsProvider';
 import useOutsideHandler from '@/hooks/useOutsideHandler';
+import { useAppContext } from '@/contexts/AppProvider';
 
 interface Props {
     setAccountModal: Dispatch<boolean>,
@@ -21,13 +21,12 @@ interface Props {
 const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) => {
 
     const {
-        isWalletConnected,
+        isConnected,
         baseCoin,
         walletInfo,
-        address,
-        username,
+        userInfo,
         basePrice
-    } = useChainAdapter();
+    } = useAppContext();
 
     const { tabList, selectedTab, setSelectedTab } = useTabs();
 
@@ -82,7 +81,7 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
                                 </motion.li>
                             ))}
                         </ul>
-                        {isWalletConnected && !isNil(baseCoin) ? (
+                        {isConnected && !isNil(baseCoin) ? (
                             <>
                                 <button
                                     onClick={() => {
@@ -110,11 +109,11 @@ const MobileHamburgerMenu: FC<Props> = ({ setAccountModal, disconnectWallet }) =
                                                 weight="font-regular"
                                                 className="truncate ml-2"
                                             >
-                                                {username}
+                                                {userInfo.name}
                                             </Text>
                                         </div>
                                         <Text size="sm">
-                                            {address?.slice(0, 6)}...{address?.slice(-6)}
+                                            {userInfo.address?.slice(0, 6)}...{userInfo.address?.slice(-6)}
                                         </Text>
                                         <div></div>
                                     </div>
