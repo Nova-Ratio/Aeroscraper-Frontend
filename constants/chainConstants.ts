@@ -7,7 +7,7 @@ const visibleChains: ChainName[] = [
 
 export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
     [ChainName.HEDERA]: {
-        name: "HEDERA",
+        name: "HBAR",
         denom: "hbar",
         image: "/images/token-images/hedera.png",
         tokenImage: "/images/token-images/hedera.png",
