@@ -18,6 +18,7 @@ import { HashpackWallet } from "@/app/wallet/hashpack-wallet";
 import { BladeWallet } from "@/app/wallet/blade-wallet";
 import { useAppContext } from "@/contexts/AppProvider";
 import { ChainInfoByName } from "@/constants/chainConstants";
+import { WalletInfo } from "@/types/types";
 
 type Props = {
   ausdBalance?: number;
@@ -29,7 +30,7 @@ type Props = {
 const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { selectedChainName, selectWallet,userInfo, setUserInfo, isConnected, isConnecting, setIsConnecting } = useAppContext();
+  const { selectedChainName, selectWallet, userInfo, setUserInfo, isConnected, isConnecting, setIsConnecting } = useAppContext();
 
   const [wallets] = useState({
     hashpack: {
@@ -46,71 +47,9 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
 
   const [walletSelectionOpen, setWalletSelectionOpen] = useState(false);
 
-  const [walletExtensions, setWalletExtensions] = useState<{
-    installed: { name: WalletType }[];
-    otherWallets: { name: WalletType; downloadLink: string }[];
-  }
-    | undefined
-  >();
-  const [showDownloadExtension, setShowDownloadExtension] = useState<{ name: string; downloadLink: string } | undefined>();
+  const [walletExtensions, setWalletExtensions] = useState<{ installed: WalletInfo[]; otherWallets: (WalletInfo & { downloadLink: string })[]; }>();
 
-  const [onHoverChain, setOnHoverChain] = useState<ChainName | null>();
-
-  const filteredWallets = useMemo(
-    () =>
-      Wallets,
-    // Wallets.filter(
-    //   (wallet) =>
-    //     selectedChainName &&
-    //     WalletsByChainName[selectedChainName] === wallet.name
-
-    // ),
-    [selectedChainName]
-  );
-
-  const hoveredChainWallets = useMemo(
-    () => Wallets,
-    // [].filter(
-    //   (wallet:any) =>
-    //     onHoverChain &&
-    //     WalletsByChainName[onHoverChain].includes(
-    //       wallet.name as WalletType
-    //     )
-    // ),
-    [onHoverChain]
-  );
-
-  const { installedWallets, otherWallets } = useMemo(
-    () => ({
-      installedWallets: filteredWallets.filter((item: any) =>
-        walletExtensions?.installed.some(
-          (extension) => extension.name === item.name
-        )
-      ),
-      otherWallets: filteredWallets.filter((item: any) =>
-        walletExtensions?.otherWallets.some(
-          (extension) => extension.name === item.name
-        )
-      ),
-    }),
-    [filteredWallets, walletExtensions]
-  );
-
-  const { installedHoveredWallets, otherHoveredWallets } = useMemo(
-    () => ({
-      installedHoveredWallets: hoveredChainWallets.filter((item: any) =>
-        walletExtensions?.installed.some(
-          (extension) => extension.name === item.name
-        )
-      ),
-      otherHoveredWallets: hoveredChainWallets.filter((item: any) =>
-        walletExtensions?.otherWallets.some(
-          (extension) => extension.name === item.name
-        )
-      ),
-    }),
-    [hoveredChainWallets, walletExtensions]
-  );
+  const [showDownloadExtension, setShowDownloadExtension] = useState<(WalletInfo & { downloadLink: string }) | undefined>();
 
   useEffect(() => {
     checkWalletExtensions();
@@ -119,23 +58,23 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const checkWalletExtensions = () => {
     const anyWindow: any = window;
 
-    const walletExtensions: {
-      installed: { name: WalletType }[];
-      otherWallets: { name: WalletType; downloadLink: string }[];
-    } = { installed: [], otherWallets: [] };
+    console.log(anyWindow);
 
-    anyWindow.hashpack ? walletExtensions.installed.push({ name: WalletType.HASHPACK }) : walletExtensions.otherWallets.push({ name: WalletType.HASHPACK, downloadLink: "https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk?hl=tr" });
-    anyWindow.blade ? walletExtensions.installed.push({ name: WalletType.HASHPACK }) : walletExtensions.otherWallets.push({ name: WalletType.HASHPACK, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
+    let walletExtensions: { installed: WalletInfo[]; otherWallets: (WalletInfo & { downloadLink: string })[]; } = {
+      installed: [],
+      otherWallets: [],
+    };
 
-    setWalletExtensions({
-      ...walletExtensions,
-    });
+    anyWindow.hashpack ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.HASHPACK)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.HASHPACK)!, downloadLink: "https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk?hl=tr" });
+    anyWindow.blade ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.BLADE)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.BLADE)!, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
+
+    setWalletExtensions(walletExtensions);
   };
 
   const connectWallet = async (name: WalletType) => {
     setIsConnecting(true);
 
-   await wallets[name].instance.connect(true).finally(() => {
+    await wallets[name].instance.connect(true).finally(() => {
       setIsConnecting(false);
     });
 
@@ -179,7 +118,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                 className={`gap-y-4 flex flex-col mt-10 ${isNil(selectedChainName) ? "hidden" : ""
                   }`}
               >
-                {Wallets.map((wallet: any, idx: any) => {
+                {walletExtensions?.installed.map((wallet: any, idx: any) => {
                   return (
                     <div
                       key={idx}
@@ -209,7 +148,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                     </div>
                   );
                 })}
-                {otherWallets.map((wallet: any, idx: any) => (
+                {walletExtensions?.otherWallets.map((wallet: any, idx: any) => (
                   <div
                     key={idx}
                     className={`mr-auto md:inline-block hidden`}
@@ -221,12 +160,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                     )}
                     <Button
                       onClick={() => {
-                        setShowDownloadExtension({
-                          name: wallet.walletPrettyName as WalletType,
-                          downloadLink: walletExtensions?.otherWallets.find(
-                            (i) => i.name === wallet.name
-                          )?.downloadLink!,
-                        });
+                        setShowDownloadExtension(wallet);
                       }}
                       startIcon={
                         <img
@@ -246,7 +180,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
             )}
             {isNil(selectedChainName) && (
               <div className={`gap-y-4 flex-col mt-10 md:flex hidden`}>
-                {installedHoveredWallets.map((wallet: any, idx: any) => {
+                {/* {installedHoveredWallets.map((wallet: any, idx: any) => {
                   return (
                     <motion.div
                       key={idx}
@@ -319,7 +253,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                       </Button>
                     </motion.div>
                   );
-                })}
+                })} */}
               </div>
             )}
           </div>
@@ -335,7 +269,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                 <img
                   className="w-[112px] h-[112px] object-contain mx-auto mb-14"
                   alt={showDownloadExtension.name}
-                  src={""}
+                  src={showDownloadExtension.logo}
                 />
                 <Text size="4xl" textColor="text-white" className="mb-10">
                   {capitalizeFirstLetter(showDownloadExtension.name)} is not
@@ -355,9 +289,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                       "noopener,noreferrer"
                     );
                   }}
-                  text={`Install ${capitalizeFirstLetter(
-                    showDownloadExtension.name
-                  )}`}
+                  text={`Install ${capitalizeFirstLetter(showDownloadExtension.name)}`}
                 />
               </motion.div>
             )}
@@ -375,7 +307,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                   How do I connect my wallet?
                 </Text>
                 <div className="flex justify-center items-center gap-16 mb-8">
-                  {filteredWallets.map((wallet: any, idx: any) => {
+                  {/* {filteredWallets.map((wallet: any, idx: any) => {
                     return (
                       <img
                         alt={wallet.name}
@@ -384,7 +316,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
                         src={wallet.logo as string}
                       />
                     );
-                  })}
+                  })} */}
                 </div>
                 <Text size="base" textColor="text-[#989396]">
                   If you want to connect an installed wallet, you can log in

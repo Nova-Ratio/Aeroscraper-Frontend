@@ -63,7 +63,7 @@ const ChainSelector: FC = () => {
                     {
                         Object.entries(chainsGroupByEnv).map(([env, envChains], idx, arr) => {
                             return (
-                                <>
+                                <div key={idx}>
                                     <div className="flex flex-col gap-4">
                                         <Text size="xl" className="font-bold">
                                             {env}
@@ -96,7 +96,7 @@ const ChainSelector: FC = () => {
                                         idx !== arr.length - 1 &&
                                         <span className='w-full h-[1px] bg-white' />
                                     }
-                                </>
+                                </div>
                             )
                         })
                     }
