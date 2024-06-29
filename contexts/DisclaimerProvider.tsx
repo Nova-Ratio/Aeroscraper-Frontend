@@ -7,11 +7,14 @@ import Loading from '@/components/Loading/Loading'
 import { Modal } from '@/components/Modal/Modal'
 import Text from '@/components/Texts/Text'
 import { usePathname } from 'next/navigation'
-import React, { FC, PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import React, { FC, PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react'
 
 const illegalCountryCodes = ['Unknown'];
 
 const DisclaimerController: FC<PropsWithChildren> = ({ children }) => {
+
+    const scrollRef = useRef<any>(null);
+
     const pathname = usePathname();
     const [showDisclaimer, setShowDisclaimer] = useState(false);
     const [isAgreed, setIsAgreed] = useState(false);
@@ -57,7 +60,7 @@ const DisclaimerController: FC<PropsWithChildren> = ({ children }) => {
                 hideCloseButton
                 disableOverlayClose
             >
-                <div className='flex flex-col md:px-8 md:py-10 px-4 py-6 overflow-auto' style={{ height: '80vh' }}>
+                <div ref={scrollRef} className='flex flex-col md:px-8 md:py-10 px-4 py-6 overflow-auto' style={{ height: '80vh' }}>
                     <Text size='2xl'>
                         Aeroscraper Protocol Disclaimer
                     </Text>
@@ -183,22 +186,23 @@ const DisclaimerController: FC<PropsWithChildren> = ({ children }) => {
                                     label='I agree'
                                     labelClassName='text-lg'
                                     checked={isAgreed}
-                                    onChange={() => setIsAgreed(!isAgreed)}
+                                    onChange={() => {
+                                        setIsAgreed(!isAgreed)
+                                        scrollRef?.current?.scrollIntoView({ behavior: "smooth" })
+                                    }}
                                     className='mt-10'
                                 />
-                                {
-                                    isAgreed &&
-                                    <GradientButton
-                                        className='w-full h-10 mt-10 mx-auto'
-                                        onClick={acceptTerms}
-                                        rounded='rounded-lg'
-                                        style={{
-                                            maxWidth: 375
-                                        }}
-                                    >
-                                        Continue
-                                    </GradientButton>
-                                }
+                                <GradientButton
+                                    disabled={!isAgreed}
+                                    className={`w-full h-10 mt-10 mx-auto`}
+                                    onClick={acceptTerms}
+                                    rounded='rounded-lg'
+                                    style={{
+                                        maxWidth: 375
+                                    }}
+                                >
+                                    Continue
+                                </GradientButton>
                             </>
                     }
                 </div>

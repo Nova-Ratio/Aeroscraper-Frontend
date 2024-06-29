@@ -65,8 +65,8 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
       otherWallets: [],
     };
 
-    anyWindow.hashpack ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.HASHPACK)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.HASHPACK)!, downloadLink: "https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk?hl=tr" });
-    anyWindow.blade ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.BLADE)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.BLADE)!, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
+    true ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.HASHPACK)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.HASHPACK)!, downloadLink: "https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk?hl=tr" });
+    anyWindow.bladeConnect ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.BLADE)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.BLADE)!, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
 
     setWalletExtensions(walletExtensions);
   };
