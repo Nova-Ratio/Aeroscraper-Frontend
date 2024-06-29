@@ -26,7 +26,6 @@ import Text from "@/components/Texts/Text";
 import { ChevronUpIcon, RocketIcon } from "@/components/Icons/Icons";
 import graphql from "@/services/graphql";
 import { delay } from "@/utils/promiseUtils";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { CollateralInfo, isV2TroveResponse } from "@/contracts/app/types";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
@@ -38,6 +37,7 @@ import {
 import Dropdown from "@/components/Dropdown/Dropdown";
 import BorderedContainer from "@/components/Containers/BorderedContainer";
 import { isNil } from "lodash";
+import { useAppContext } from "@/contexts/AppProvider";
 
 type Props = {
   getPageData: () => void;
@@ -46,8 +46,7 @@ type Props = {
 
 const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const { selectedChainName = ChainName.INJECTIVE, baseCoin } =
-    useChainAdapter();
+  const { selectedChainName, baseCoin } = useAppContext();
   const { coinPricesByDenom } = usePrice();
   const contract = useAppContract();
   const [loading, setLoading] = useState(true);
@@ -123,7 +122,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
 
             const baseCollateralAmount = !isNil(baseCoin)
               ? collateralAmounts.find((item) => item.denom === baseCoin.denom)
-                  ?.amount ?? 0
+                ?.amount ?? 0
               : 0;
 
             const totalDollarValue = collateralAmounts.reduce((acc, curr) => {
@@ -144,23 +143,23 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                           troveRes?.debt_amount ?? 0,
                           baseCoin?.ausdDecimal
                         )) *
-                        100
+                      100
                     )
                   )
                     ? Number(
-                        (totalDollarValue /
-                          convertAmount(
-                            troveRes?.debt_amount ?? 0,
-                            baseCoin?.ausdDecimal
-                          )) *
-                          100
-                      ).toFixed(3)
+                      (totalDollarValue /
+                        convertAmount(
+                          troveRes?.debt_amount ?? 0,
+                          baseCoin?.ausdDecimal
+                        )) *
+                      100
+                    ).toFixed(3)
                     : convertAmount(
-                        troveRes?.debt_amount ?? 0,
-                        baseCoin?.ausdDecimal
-                      ) > 0
-                    ? -1
-                    : 0
+                      troveRes?.debt_amount ?? 0,
+                      baseCoin?.ausdDecimal
+                    ) > 0
+                      ? -1
+                      : 0
                 ),
               collateralAmounts,
               baseCollateralAmount,
@@ -263,7 +262,7 @@ const RiskyTrovesTabV2: FC<Props> = ({ getPageData, basePrice }) => {
                           >
                             {value}{" "}
                             {
-                              DefaultAssetByChainName[selectedChainName]
+                              DefaultAssetByChainName?.[selectedChainName ?? ChainName.HEDERA]
                                 ?.shortName
                             }
                           </Text>

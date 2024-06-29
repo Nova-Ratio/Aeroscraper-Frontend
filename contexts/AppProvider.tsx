@@ -17,7 +17,7 @@ export interface UserInfo {
 
 export type AppContextState = {
     userInfo: UserInfo;
-    selectedChainName?: ChainName;
+    selectedChainName: ChainName;
     selectedWallet?: WalletType;
     walletInfo?: WalletInfo,
     baseCoin: BaseCoin;
@@ -25,7 +25,7 @@ export type AppContextState = {
     isConnecting: boolean;
     basePrice: number;
     chainInfo: ChainInfo;
-    selectChainName: (chainName?: ChainName) => void;
+    selectChainName: (chainName: ChainName) => void;
     setUserInfo: (userInfo: UserInfo) => void;
     selectWallet: (wallet?: WalletType) => void;
     setIsConnecting: (isConnecting: boolean) => void;
@@ -60,7 +60,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
         signer: null,
     });
 
-    const [selectedChainName, setSelectedChainName] = useState<ChainName | undefined>(defaultChainName);
+    const [selectedChainName, setSelectedChainName] = useState<ChainName>(defaultChainName);
     const [selectedWallet, setSelectedWallet] = useState<WalletType>();
 
     const [isConnecting, setIsConnecting] = useState<boolean>(false);
@@ -74,7 +74,7 @@ const AppProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const isConnected = useMemo(() => !isEmpty(userInfo.address), [userInfo.address]);
 
-    const selectChainName = useCallback((chainName?: ChainName) => {
+    const selectChainName = useCallback((chainName: ChainName) => {
         setSelectedChainName(chainName);
         localStorage.setItem("savedChainName", chainName || '');
     }, [])

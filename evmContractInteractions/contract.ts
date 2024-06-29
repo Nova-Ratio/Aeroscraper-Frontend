@@ -30,7 +30,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   const defaultAddress = "0x0000000000000000000000000000000000000000";
 
   const { requestICR, requestRedeemICR } = graphql({
-    selectedChainName: ChainName.EVM,
+    selectedChainName: ChainName.HEDERA,
   });
   const findSortedTroveInsertPosition = async (
     collRatio: number,
@@ -139,7 +139,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
 
     return { NICR: NICR, firstAddress, lowerHint, upperHint };
   };
-  const defaultAsset = DefaultAssetByChainName[ChainName.EVM];
+  const defaultAsset = DefaultAssetByChainName[ChainName.HEDERA];
   //console.log("asset", asset);
   const { processLoading, addNotification, setProcessLoading, notification } =
     useNotification();
@@ -203,7 +203,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     address: string,
     amount: number,
     collRatio: number,
-    asset: CollateralAsset = DefaultAssetByChainName[ChainName.EVM]
+    asset: CollateralAsset = DefaultAssetByChainName[ChainName.HEDERA]
   ) => {
     try {
       const { prev_node_id: _lowerHint, next_node_id: _upperHint } =

@@ -1,5 +1,4 @@
 import { CollateralInfo } from "@/contracts/app/types";
-import { ChainName } from "@cosmos-kit/core";
 
 export type RiskyTrovesResponse = {
     troves: {
@@ -62,7 +61,7 @@ export type CollateralAsset = {
 }
 
 export type ChainInfo = {
-    name: ChainName;
+    name: string;
     displayName: string;
     logo: string;
     bech32Prefix: string;

@@ -9,7 +9,6 @@ import {
   ShapeIcon,
 } from "./Icons/Icons";
 import SkeletonLoading from "./Table/SkeletonLoading";
-import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { useAppContext } from "@/contexts/AppProvider";
 import MobileHamburgerMenu from "./MobileHamburgerMenu";

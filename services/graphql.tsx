@@ -9,13 +9,13 @@ import {
 import { request, gql } from "graphql-request";
 
 export default function graphql({
-  selectedChainName = ChainName.INJECTIVE
+  selectedChainName = ChainName.HEDERA
 }: {
   selectedChainName?: ChainName;
 }) {
   const URL = (): string => {
     switch (selectedChainName) {
-      case ChainName.INJECTIVE:
+      case ChainName.HEDERA:
         return process.env.NEXT_PUBLIC_INDEXER_INJ as string;
       default:
         return process.env.NEXT_PUBLIC_INDEXER_DOMAIN as string;
