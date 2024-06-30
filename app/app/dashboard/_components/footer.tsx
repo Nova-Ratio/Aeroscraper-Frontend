@@ -78,7 +78,7 @@ export default function Footer({}) {
               src="/images/external-link.svg"
               className="w-4 h-4"
             />
-          </Link>
+          </Link>          
         </div>
         <div className="flex flex-col content-start justify-start gap-6">
           <Text size="sm" weight="font-semibold">
@@ -213,6 +213,8 @@ export default function Footer({}) {
             </Link>
             <Link
               href={"https://aeroscraper.gitbook.io/aeroscraper/"}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:scale-105 transition-all flex gap-2"
             >
               <Text size="sm" textColor="text-white">
@@ -263,6 +265,21 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
+            <Link
+              href={"https://twitter.com/burnt_xion/status/1761246050415743270"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+              ABSTRACTATHON
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
           </div>
         </div>
         <div className="flex flex-col content-start justify-start gap-6">
@@ -301,6 +318,21 @@ export default function Footer({}) {
               />
             </Link>
             <Link
+              href={"https://magic.store/app/aeroscraper"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Magic Square
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+            <Link
               href={"https://medium.com/@aeroscraper"}
               target="_blank"
               rel="noopener noreferrer"
@@ -315,6 +347,40 @@ export default function Footer({}) {
                 className="w-4 h-4"
               />
             </Link>
+            {selectedChainName === ChainName.HEDERA && (
+            <Link
+              href={"https://guild.xyz/aeroscraper"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Guild
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+            )}
+            {selectedChainName === ChainName.HEDERA && (
+            <Link
+              href={"https://app.galxe.com/quest/aeroscraper/GCfuatzpRV"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-all flex gap-2"
+            >
+              <Text size="sm" textColor="text-white">
+                Galxe
+              </Text>
+              <img
+                alt="external-link"
+                src="/images/external-link.svg"
+                className="w-4 h-4"
+              />
+            </Link>
+            )}
           </div>
         </div>
       </div>

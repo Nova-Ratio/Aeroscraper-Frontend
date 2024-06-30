@@ -158,7 +158,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : `${Number(pageData.baseTotalCollateralAmount).toFixed(6)}`
             }
             className="w-[191px] h-14"
-            tooltip="The Total Collateral Amount (TCA) is the total value of INJ locked as collateral in the system."
+            tooltip="The Total Collateral Amount (TCA) is the total value of HBAR locked as collateral in the system."
             tooltipPlacement="bottom"
             coinName={baseCoin?.name}
             isNumeric
@@ -215,7 +215,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 : 0
               } %`}
             className="w-[191px] h-14"
-            tooltip={`The ratio of the Dollar value of the entire system collateral at the current INJ:aUSD price, to the entire system debt.`}
+            tooltip={`The ratio of the Dollar value of the entire system collateral at the current HBAR:aUSD price, to the entire system debt.`}
           />
           <StatisticCard
             title="aUSD Supply"
