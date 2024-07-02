@@ -16,7 +16,7 @@ import {
     TransactionResponse
 } from "@hashgraph/sdk";
 
-const NETWORK: string = 'testnet';
+const NETWORK: string = 'mainnet';
 
 export class WalletConnect {
     name = 'walletConnect';

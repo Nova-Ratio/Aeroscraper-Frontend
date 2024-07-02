@@ -12,20 +12,20 @@ import TabsProvider from "./TabsProvider";
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
     <PriceProvider>
-      <AppProvider>
-        <NotificationProvider>
-          <ProfileProvider>
-            <BalanceProvider>
-              <DashboardProvider>
-                <TabsProvider>
-                  {children}
-                </TabsProvider>
-              </DashboardProvider>
-            </BalanceProvider>
-          </ProfileProvider>
-        </NotificationProvider>
-      </AppProvider>
-    </PriceProvider>
+        <AppProvider>
+          <NotificationProvider>
+            <ProfileProvider>
+              <BalanceProvider>
+                <DashboardProvider>
+                  <TabsProvider>
+                    {children}
+                  </TabsProvider>
+                </DashboardProvider>
+              </BalanceProvider>
+            </ProfileProvider>
+          </NotificationProvider>
+        </AppProvider>
+      </PriceProvider>
   );
 };
 

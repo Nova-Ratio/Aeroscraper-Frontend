@@ -17,18 +17,19 @@
     "@hashgraph/sdk": "^2.31.0",
     "@pythnetwork/hermes-client": "^1.0.3",
     "@pythnetwork/price-service-client": "^1.6.2",
-    "@types/node": "20.4.0",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@walletconnect/types": "^2.13.1",
+    "@web3modal/ethers": "^5.0.4",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
-    "crypto-js": "4.1.1",
+    "crypto-js": "^4.2.0",
     "encoding": "^0.1.13",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.8",
-    "ethers": "^6.11.1",
+    "ethers": "^6.13.1",
     "framer-motion": "^10.12.18",
+    "graphql": "^16.9.0",
     "graphql-request": "^6.1.0",
     "hashconnect": "^0.2.4",
     "lodash": "^4.17.21",
@@ -50,6 +51,7 @@
   "devDependencies": {
     "@next/bundle-analyzer": "^14.1.0",
     "@types/lodash": "^4.14.195",
+    "@types/node": "^20.14.9",
     "cross-env": "^7.0.3"
   }
 }

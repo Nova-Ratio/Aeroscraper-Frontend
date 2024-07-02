@@ -3,7 +3,6 @@ import { AccountBalanceQuery, Client, TokenAssociateTransaction } from '@hashgra
 import Long from 'long';
 
 const NETWORK: string = 'mainnet';
-
 export class HashpackWallet {
     name = 'hashpack';
     address = '';
@@ -47,7 +46,6 @@ export class HashpackWallet {
 
     async connect(onLoad = false) {
         const initData = await this.hashconnect.init(this.appMetadata, NETWORK, true);
-        
         if (initData?.savedPairings?.[0]?.network === NETWORK) {
             //reload page
             this.connectionData = initData?.savedPairings?.[0];

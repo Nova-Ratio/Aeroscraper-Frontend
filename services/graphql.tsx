@@ -27,7 +27,6 @@ export default function graphql({
             troves {
               nodes {
                 owner
-                ratio
                 collaterals
                 debtAmount
               }

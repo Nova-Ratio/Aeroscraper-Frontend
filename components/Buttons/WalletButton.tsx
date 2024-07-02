@@ -19,6 +19,9 @@ import { BladeWallet } from "@/app/wallet/blade-wallet";
 import { useAppContext } from "@/contexts/AppProvider";
 import { ChainInfoByName } from "@/constants/chainConstants";
 import { WalletInfo } from "@/types/types";
+import { WalletConnect } from "@/app/wallet/wallet-connect";
+
+export const runtime = 'edge';
 
 type Props = {
   ausdBalance?: number;
@@ -27,12 +30,14 @@ type Props = {
   basePrice?: number;
 };
 
+const walletConnect = new WalletConnect();
+
 const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const { selectedChainName, selectWallet, userInfo, setUserInfo, isConnected, isConnecting, setIsConnecting } = useAppContext();
 
-  const [wallets] = useState({
+  const [wallets, setWallets] = useState<any>({
     hashpack: {
       name: 'hashpack',
       title: 'HashPack',
@@ -42,6 +47,11 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
       name: 'blade',
       title: 'Blade',
       instance: new BladeWallet(setUserInfo),
+    },
+    walletconnect: {
+      name: 'walletconnect',
+      title: 'WalletConnect',
+      instance: walletConnect,
     }
   });
 
@@ -52,13 +62,33 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const [showDownloadExtension, setShowDownloadExtension] = useState<(WalletInfo & { downloadLink: string }) | undefined>();
 
   useEffect(() => {
+    walletConnect.init(setUserInfo).then(extensionData => {
+      const walletConnectWallets: any = {};
+      extensionData.forEach(extension => {
+        if (extension.id === 'cnoepnljjcacmnjnopbhjelpmfokpijm') {
+          walletConnectWallets.kabila = {
+            name: 'kabila',
+            title: extension.name || 'Kabila',
+            instance: walletConnect,
+            extensionId: extension.id,
+          };
+        }
+      });
+
+      setWallets({
+        ...wallets,
+        ...walletConnectWallets,
+      })
+    });
+  }, []);
+
+
+  useEffect(() => {
     checkWalletExtensions();
   }, []);
 
   const checkWalletExtensions = () => {
     const anyWindow: any = window;
-
-    console.log(anyWindow);
 
     let walletExtensions: { installed: WalletInfo[]; otherWallets: (WalletInfo & { downloadLink: string })[]; } = {
       installed: [],
@@ -67,19 +97,29 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
 
     true ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.HASHPACK)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.HASHPACK)!, downloadLink: "https://chromewebstore.google.com/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk?hl=tr" });
     anyWindow.bladeConnect ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.BLADE)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.BLADE)!, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
+    true ? walletExtensions.installed.push(Wallets.find(i => i.name === WalletType.WALLETCONNECT)!) : walletExtensions.otherWallets.push({ ...Wallets.find(i => i.name === WalletType.WALLETCONNECT)!, downloadLink: "https://chromewebstore.google.com/detail/blade-%E2%80%93-hedera-web3-digit/abogmiocnneedmmepnohnhlijcjpcifd" });
 
     setWalletExtensions(walletExtensions);
   };
 
-  const connectWallet = async (name: WalletType) => {
+  const connectWallet = (name: WalletType) => {
     setIsConnecting(true);
 
-    await wallets[name].instance.connect(true).finally(() => {
-      setIsConnecting(false);
-    });
+    if (userInfo.address) {
+      if (userInfo.name === name) {
+        return null;
+      }
+
+      wallets[name].instance.disconnect();
+    }
+
+    wallets[name].instance.connect(false, wallets[name]?.extensionId);
 
     selectWallet(name);
+
+    setIsConnecting(false);
   }
+
 
   const toggleWallet = () => {
     setWalletSelectionOpen((prev) => !prev);
@@ -88,6 +128,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const closeWalletSelection = () => {
     setWalletSelectionOpen(false);
     setShowDownloadExtension(undefined);
+
     if (!isConnected) {
 
     }

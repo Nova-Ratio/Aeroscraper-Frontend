@@ -1,5 +1,5 @@
 export enum WalletType {
-    // WALLETCONNECT = "walletconnect",
+    WALLETCONNECT = "walletconnect",
     HASHPACK = "hashpack",
     BLADE = "blade",
 }
