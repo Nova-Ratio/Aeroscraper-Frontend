@@ -21,7 +21,7 @@ import {
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
 import { HermesClient } from "@pythnetwork/hermes-client";
-import { ContractExecuteTransaction, ContractFunctionParameters } from "@hashgraph/sdk";
+import { ContractExecuteTransaction, ContractFunctionParameters, Transaction } from "@hashgraph/sdk";
 import { UserInfo } from "@/contexts/AppProvider";
 import { ethers } from "ethers";
 
@@ -215,39 +215,38 @@ export const getAppContract = (
     ) => {
 
         const contractAddress = process.env.NEXT_PUBLIC_TROVE_MANAGER_CONTRACT_ID as string;
+        const priceContractAddress = process.env.NEXT_PUBLIC_PRICE_FEED_CONTRACT_ID as string;
 
         console.log(contractAddress);
-        
+
         const vaa = await getVAA(asset);
         const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
-        const assetDenom = asset.denom;
 
         const updatePriceFeedsParams = new ContractFunctionParameters()
             .addBytesArray([vaa]);
 
         const openTroveParams = new ContractFunctionParameters()
-            .addUint256(loanAmount)
+            .addUint256(getRequestAmount(loanAmount, asset.ausdDecimal))
             .addString(prev_node_id as string)
             .addString(next_node_id as string);
 
 
         const updatePriceFeedsTx = new ContractExecuteTransaction()
-            .setContractId(asset.oracleContractAddress)
+            .setContractId(priceContractAddress)
             .setFunction("update_price_feeds", updatePriceFeedsParams)
             .setGas(100000)
             .freezeWithSigner(userInfo.signer);
 
 
-        const openTroveTx = new ContractExecuteTransaction()
+        const openTroveTx: Transaction = await new ContractExecuteTransaction()
             .setContractId(contractAddress)
             .setFunction("open_trove", openTroveParams)
             .setGas(100000)
             .freezeWithSigner(userInfo.signer);
 
-        const updatePriceFeedsResult = await updatePriceFeedsTx
-        const openTroveResult = await openTroveTx
-
-     return openTroveResult
+        // const updatePriceFeedsResult = await updatePriceFeedsTx
+  
+        return JSON.stringify(await userInfo.executeTransaction?.(openTroveTx))
     };
 
     //   const addCollateral = async (
