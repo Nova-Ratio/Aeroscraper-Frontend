@@ -2,7 +2,8 @@ import { HashConnect } from 'hashconnect';
 import { AccountBalanceQuery, Client, TokenAssociateTransaction } from '@hashgraph/sdk';
 import Long from 'long';
 
-const NETWORK: string = 'mainnet';
+const NETWORK: string = 'testnet';
+
 export class HashpackWallet {
     name = 'hashpack';
     address = '';

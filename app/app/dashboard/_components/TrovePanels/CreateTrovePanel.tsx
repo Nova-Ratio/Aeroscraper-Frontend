@@ -99,15 +99,17 @@ const CreateTrovePanel: FC = () => {
         try {
             setProcessLoading(true);
 
-            const res:any = await contract.openTrove(
+            const res: any = await contract.openTrove(
                 openTroveAmount,
                 borrowAmount,
                 collacteralRatioCalculate,
                 selectedAsset
             );
+
             if (!res?.txHash) {
                 throw new Error(res);
-              }
+            }
+
             addNotification({
                 status: "success",
                 directLink: res?.txHash,
@@ -116,8 +118,9 @@ const CreateTrovePanel: FC = () => {
             getPageData();
             refreshBalance();
         } catch (err: any) {
+            console.log(err);
             console.log("err?.message", err?.message);
-            
+
             addNotification({
                 message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
                 status: "error",
@@ -266,7 +269,7 @@ const CreateTrovePanel: FC = () => {
                     onClick={openTrove}
                     className="min-w-full md:min-w-[375px] h-11 "
                     rounded="rounded-lg"
-                    disabled={confirmDisabled}
+                    // disabled={confirmDisabled}
                     disabledText={openTroveErrorText}
                 >
                     <Text>Confirm</Text>

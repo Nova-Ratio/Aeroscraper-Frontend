@@ -11,6 +11,8 @@ import React, {
   useState,
 } from "react";
 import { useAppContext } from "./AppProvider";
+import { ethers } from "ethers";
+
 
 type BalanceContextValue = {
   balanceByDenom: Dictionary<Coin | undefined>;
@@ -25,32 +27,24 @@ const BalanceContext = React.createContext<BalanceContextValue>({
 const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
   const debounceRef = useRef<NodeJS.Timeout | undefined>();
   const { userInfo, baseCoin, selectedChainName } = useAppContext();
-  const [balanceByDenom, setBalanceByDenom] = useState<
-    Dictionary<Coin | undefined>
-  >({});
+  const [balanceByDenom, setBalanceByDenom] = useState<Dictionary<Coin | undefined>>({});
 
   const getBalances = useCallback(async () => {
     try {
       if (!userInfo.address || !baseCoin) return;
 
+      await userInfo.updateBalance?.();
+      
       if (selectedChainName === ChainName.HEDERA) {
-        // const provider = new ethers.BrowserProvider(window.ethereum);
-        // const signer = await provider.getSigner();
-        // const address = await signer.getAddress();
-        // const balance = await provider.getBalance(address).then((balance: any) => {
-        //   return balance;
-        // });
-
-        // setBalanceByDenom({
-        //   [baseCoin.denom]: {
-        //     denom: baseCoin.denom,
-        //     amount: balance || "0",
-        //   },
-        // });
+        setBalanceByDenom({
+          [baseCoin.denom]: {
+            denom: baseCoin.denom,
+            amount: userInfo.associatedTokens?.get(baseCoin.name || 'HBAR').div(Math.pow(10, 0.1)).toString() || "0",
+          },
+        });
       }
     } catch (err) {
-      console.log(err);
-    }
+   }
   }, [userInfo, baseCoin, selectedChainName]);
 
   const debouncedGetBalances = useCallback(() => {

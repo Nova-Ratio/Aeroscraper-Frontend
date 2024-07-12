@@ -13,7 +13,13 @@ export interface UserInfo {
     name: string;
     address: string;
     signer: any;
-}
+    associatedTokens?: any;
+    auth?: (...args: any[]) => any;
+    signTransaction?: (...args: any[]) => any;
+    executeTransaction?: (...args: any[]) => any;
+    associateNewToken?: (...args: any[]) => any;
+    updateBalance?: (...args: any[]) => any;
+  }
 
 export type AppContextState = {
     userInfo: UserInfo;

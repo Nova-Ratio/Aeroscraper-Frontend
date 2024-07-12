@@ -2,7 +2,7 @@ import { BladeConnector, ConnectorStrategy } from '@bladelabs/blade-web3.js';
 import { AccountBalanceQuery, Client, TokenAssociateTransaction, TokenBalanceJson } from '@hashgraph/sdk';
 import Long from 'long';
 
-const NETWORK: string = 'mainnet';
+const NETWORK: string = 'testnet';
 
 export class BladeWallet {
     name = 'blade';

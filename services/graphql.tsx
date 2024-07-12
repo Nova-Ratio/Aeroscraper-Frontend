@@ -25,12 +25,10 @@ export default function graphql({
   const getRiskyTrovesQuery = gql`
           query {
             troves {
-              nodes {
                 owner
                 collaterals
                 debtAmount
               }
-            }
           }
         `
 
@@ -49,34 +47,27 @@ export default function graphql({
         orderBy: RATIO_ASC
         first: 2
     ) {
-        nodes {
             owner
             ratio
         } 
-      }
     nextTrove: troves(
         filter: { ratio: { lessThan: $input } }
         orderBy: RATIO_DESC
         first: 2
     ) {
-        nodes {
             owner
             ratio
         }
-      }
   }
   `;
 
   const redeemICRQuery = gql`
   query {
     troves(orderBy: RATIO_ASC) {
-        nodes {
             collaterals
             debtAmount
             owner
         }
-    }
-  }
 `;
 
   const requestRiskyTroves = async (): Promise<RiskyTrovesResponse> => {

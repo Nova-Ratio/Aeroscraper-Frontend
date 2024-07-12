@@ -11,7 +11,7 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         denom: "hbar",
         image: "/images/token-images/hedera.png",
         tokenImage: "/images/token-images/hedera.png",
-        decimal: 18,
+        decimal: 8,
         ausdDecimal: 18
     },
 }
@@ -54,7 +54,7 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
 }
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
-    [ChainName.HEDERA]: { priceId: "", serviceUrl: "" }
+    [ChainName.HEDERA]: { priceId: "0x3728e591097635310e6341af53db8b7ee42da9b3a8d918f9463ce9cca886dfbd", serviceUrl: "https://hermes.pyth.network" }
 }
 
 export const appChainURLs: ChainNavigator[] = [

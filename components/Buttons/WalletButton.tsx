@@ -36,6 +36,7 @@ const WalletButton: FC<Props> = ({ className = "w-[268px] h-[69px]" }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const { selectedChainName, selectWallet, userInfo, setUserInfo, isConnected, isConnecting, setIsConnecting } = useAppContext();
+console.log(userInfo);
 
   const [wallets, setWallets] = useState<any>({
     hashpack: {

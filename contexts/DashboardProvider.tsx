@@ -266,8 +266,9 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             let chainNameQuery = ChainName.HEDERA
 
             const { data } = await axios.get<TotalInfoResponseV1 | TotalInfoResponseV2>(
-                `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`
+                `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery.toUpperCase()}"`
             )
+            
             const res = data.items[0];
 
             const decimal = baseCoin?.decimal;

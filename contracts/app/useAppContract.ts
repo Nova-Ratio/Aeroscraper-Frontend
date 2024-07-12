@@ -3,8 +3,8 @@ import { isNil } from "lodash";
 import { WalletType } from "@/enums/WalletType";
 import { ChainName } from "@/enums/Chain";
 import { CollateralAsset } from "@/types/types";
-import { getAppEVMContract } from "@/evmContractInteractions/contract";
 import { useAppContext } from "@/contexts/AppProvider";
+import { getAppContract } from "./contract";
 
 const useAppContract = () => {
   const {
@@ -14,19 +14,17 @@ const useAppContract = () => {
     selectedChainName,
     userInfo,
     chainInfo,
-    basePrice,
+    basePrice
   } = useAppContext();
 
   const contract = useMemo(
     () =>
       isConnected &&
-      !isNil(baseCoin) &&
-      !isNil(walletInfo) &&
-      !isNil(selectedChainName) &&
-      !isNil(chainInfo)
-        ? getAppEVMContract({
-            basePrice,
-          })
+        !isNil(baseCoin) &&
+        !isNil(walletInfo) &&
+        !isNil(selectedChainName) &&
+        !isNil(chainInfo)
+        ? getAppContract(userInfo, baseCoin, selectedChainName ?? ChainName.HEDERA, walletInfo.name as WalletType, basePrice)
         : undefined,
     [
       isConnected,
@@ -37,7 +35,6 @@ const useAppContract = () => {
       basePrice,
     ]
   );
-  //console.log("selectedChainName", selectedChainName);
 
   const getTotalCollateralAmounts = useCallback(async () => {
     if (isNil(contract)) return;

@@ -16,8 +16,7 @@ import {
     TransactionResponse
 } from "@hashgraph/sdk";
 
-const NETWORK: string = 'mainnet';
-
+const NETWORK: string = 'testnet';
 export class WalletConnect {
     name = 'walletConnect';
     address = '';
@@ -33,7 +32,6 @@ export class WalletConnect {
     dAppConnector: DAppConnector | undefined;
     private projectId = 'c456032a29f47fa1833614114b6ee528'
 
-
     refreshWallet() {
         this.setWallet({
             name: this.name,
@@ -43,7 +41,6 @@ export class WalletConnect {
             auth: this.auth.bind(this),
             signTransaction: this.signTransaction.bind(this),
             executeTransaction: this.executeTransaction.bind(this),
-            associateNewToken: this.associateNewToken.bind(this),
             updateBalance: this.updateBalance.bind(this),
         });
     }
@@ -119,24 +116,6 @@ export class WalletConnect {
             this.associatedTokens = undefined;
         }
         this.refreshWallet();
-    }
-
-    async associateNewToken(tokenAddress: string | null) {
-        if (!tokenAddress) {
-            return;
-        }
-        try {
-            const associateTx = new TokenAssociateTransaction();
-            associateTx.setTokenIds([tokenAddress]);
-            associateTx.setAccountId(this.signer!.getAccountId().toString());
-            await associateTx.freezeWithSigner(this.signer!);
-            const result= await this.executeTransaction(associateTx);
-            this.refreshWallet();
-            return result;
-        } catch (error) {
-            this.refreshWallet();
-            return null;
-        }
     }
 
     async auth({ serverAddress, serverSignature, originalPayload }: any) {

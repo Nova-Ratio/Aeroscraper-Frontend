@@ -4,8 +4,8 @@ import { CollateralAsset } from "@/types/types";
 const hederaAsset: CollateralAsset = {
     name: "hedera",
     shortName: "HBAR",
-    denom: "HBAR",
-    decimal: 18,
+    denom: "hbar",
+    decimal: 8,
     ausdDecimal: 18,
     imageURL: "/images/token-images/hedera.png",
     priceId: "0x3728e591097635310e6341af53db8b7ee42da9b3a8d918f9463ce9cca886dfbd",
