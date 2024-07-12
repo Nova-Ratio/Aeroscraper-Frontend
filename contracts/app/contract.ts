@@ -55,7 +55,7 @@ export const getAppContract = (
 
         const connection = new HermesClient(serviceUrl, {});
 
-        const res = await connection.getLatestPriceUpdates([priceId], { encoding: "base64" });
+        const res = await connection.getLatestPriceUpdates([priceId], { encoding: "hex" });
 
         if (res) {
             return res.binary.data[0]
@@ -217,13 +217,11 @@ export const getAppContract = (
         const contractAddress = process.env.NEXT_PUBLIC_TROVE_MANAGER_CONTRACT_ID as string;
         const priceContractAddress = process.env.NEXT_PUBLIC_PRICE_FEED_CONTRACT_ID as string;
 
-        console.log(contractAddress);
-
         const vaa = await getVAA(asset);
         const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
         const updatePriceFeedsParams = new ContractFunctionParameters()
-            .addBytesArray([vaa]);
+            .addString(vaa)
 
         const openTroveParams = new ContractFunctionParameters()
             .addUint256(getRequestAmount(loanAmount, asset.ausdDecimal))
@@ -244,9 +242,10 @@ export const getAppContract = (
             .setGas(100000)
             .freezeWithSigner(userInfo.signer);
 
-        // const updatePriceFeedsResult = await updatePriceFeedsTx
-  
-        return JSON.stringify(await userInfo.executeTransaction?.(openTroveTx))
+        userInfo.executeTransaction?.(updatePriceFeedsTx)
+        await userInfo.executeTransaction?.(openTroveTx)
+
+        return  
     };
 
     //   const addCollateral = async (
