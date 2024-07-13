@@ -214,20 +214,21 @@ export const getAppContract = (
         asset: CollateralAsset = defaultAsset
     ) => {
 
-        const contractAddress = process.env.NEXT_PUBLIC_TROVE_MANAGER_CONTRACT_ID as string;
+        const contractAddress = process.env.NEXT_PUBLIC_BORROWER_OPERATIONS_CONTRACT_ID as string;
         const priceContractAddress = process.env.NEXT_PUBLIC_PRICE_FEED_CONTRACT_ID as string;
 
         const vaa = await getVAA(asset);
         const { prev_node_id, next_node_id } = await findSortedTroveInsertPosition(collRatio, senderAddress);
 
+        const bytesFromHex = (hex: string) => Uint8Array.from(hex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)));
+
         const updatePriceFeedsParams = new ContractFunctionParameters()
-            .addString(vaa)
+            .addString(`0x${vaa}`)
 
         const openTroveParams = new ContractFunctionParameters()
             .addUint256(getRequestAmount(loanAmount, asset.ausdDecimal))
-            .addString(prev_node_id as string)
-            .addString(next_node_id as string);
-
+            .addString("0x0000000000000000000000000000000000000000" as string)
+            .addString("0x0000000000000000000000000000000000000000" as string);
 
         const updatePriceFeedsTx = new ContractExecuteTransaction()
             .setContractId(priceContractAddress)
@@ -238,14 +239,14 @@ export const getAppContract = (
 
         const openTroveTx: Transaction = await new ContractExecuteTransaction()
             .setContractId(contractAddress)
-            .setFunction("open_trove", openTroveParams)
-            .setGas(100000)
+            .setFunction("openTrove", openTroveParams)
+            .setGas(100_000_000)
             .freezeWithSigner(userInfo.signer);
 
         userInfo.executeTransaction?.(updatePriceFeedsTx)
-        await userInfo.executeTransaction?.(openTroveTx)
 
-        return  
+
+        return JSON.stringify(await userInfo.executeTransaction?.(openTroveTx))
     };
 
     //   const addCollateral = async (
