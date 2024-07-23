@@ -21,7 +21,7 @@ import {
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
 import { HermesClient } from "@pythnetwork/hermes-client";
-import { ContractExecuteTransaction, ContractFunctionParameters, Transaction } from "@hashgraph/sdk";
+import { ContractExecuteTransaction, ContractFunctionParameters, Hbar, Transaction } from "@hashgraph/sdk";
 import { UserInfo } from "@/contexts/AppProvider";
 import { ethers } from "ethers";
 
@@ -214,6 +214,8 @@ export const getAppContract = (
         asset: CollateralAsset = defaultAsset
     ) => {
 
+        console.log(amount);
+
         const contractAddress = process.env.NEXT_PUBLIC_BORROWER_OPERATIONS_CONTRACT_ID as string;
         const priceContractAddress = process.env.NEXT_PUBLIC_PRICE_FEED_CONTRACT_ID as string;
 
@@ -236,12 +238,30 @@ export const getAppContract = (
             .setGas(100000)
             .freezeWithSigner(userInfo.signer);
 
+        const _amount = getRequestAmount(amount, asset.decimal);
+
+        console.log(_amount);
+
+        const lowerHint = "0x0000000000000000000000000000000000000000";
+        const upperHint = "0x0000000000000000000000000000000000000000";
+        const ausdAmount = getRequestAmount(loanAmount, asset.ausdDecimal);
+        
+
 
         const openTroveTx: Transaction = await new ContractExecuteTransaction()
+            .setPayableAmount(new Hbar(3000))
             .setContractId(contractAddress)
-            .setFunction("openTrove", openTroveParams)
-            .setGas(100_000_000)
+            .setFunction("openTrove", new ContractFunctionParameters().addUint256(100000000000000000000).addAddress(lowerHint).addAddress(upperHint))
+            .setMaxTransactionFee(new Hbar(100))
+            .setGas(10000000)
             .freezeWithSigner(userInfo.signer);
+
+
+        /* const contractExecuteTx = new ContractExecuteTransaction()
+        .setContractId(contractId)
+        .setFunction("openTrove", [ausdAmount, upperHint, lowerHint])
+        .setGas(gasLimit)
+        .setPayableAmount(amount); */
 
         userInfo.executeTransaction?.(updatePriceFeedsTx)
 

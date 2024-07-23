@@ -41,7 +41,7 @@ export class HashpackWallet {
             signTransaction: this.signTransaction.bind(this),
             executeTransaction: this.executeTransaction.bind(this),
             associateNewToken: this.associateNewToken.bind(this),
-            updateBalance: this.updateBalance.bind(this),
+            /* updateBalance: this.updateBalance.bind(this), */
         });
     }
 
@@ -66,7 +66,7 @@ export class HashpackWallet {
         }
     }
 
-    async updateBalance() {
+    /* async updateBalance() {
         if (this.hashconnect) {
             const balance = await this.signer.getAccountBalance();
             this.associatedTokens = balance.tokens?._map;
@@ -75,7 +75,7 @@ export class HashpackWallet {
             this.associatedTokens = undefined;
         }
         this.refreshWallet();
-    }
+    } */
 
     async associateNewToken(tokenAddress: string | null) {
         if (!tokenAddress) {
@@ -142,6 +142,18 @@ export class HashpackWallet {
             res: res.response,
         }
     }
+
+        /* async executeTransaction(transaction: any) {
+            const res = await this.hashconnect.sendTransaction;
+            const client = NETWORK === 'testnet' ? Client.forTestnet() : Client.forMainnet();
+            const receipt = await res.getReceipt(client);
+            const status = receipt?.status?.toString();
+    
+            return {
+                error: status === 'SUCCESS' ? null : 'Error execute transaction',
+                res,
+            }
+        } */
 
     async disconnect() {
         await this.hashconnect.disconnect(this.connectionData?.topic);
