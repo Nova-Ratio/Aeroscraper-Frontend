@@ -4,7 +4,7 @@ import GradientButton from "@/components/Buttons/GradientButton";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import CookieAccept from "@/components/CookieAccept/CookieAccept";
 import Faq from "@/components/FAQ/Faq";
-import { BackgroundWave, LogoSecondary } from "@/components/Icons/Icons";
+import { BackgroundWave, LogoSecondary, PoweredbyPythLogo } from "@/components/Icons/Icons";
 import Loading from "@/components/Loading/Loading";
 import Text from "@/components/Texts/Text";
 import Audit from "@/components/landing/audit";
@@ -42,6 +42,7 @@ export default function Home() {
                 <Text size="2xl" textColor="text-white">
                   Aeroscraper
                 </Text>
+                <PoweredbyPythLogo />
               </div>
               <h1 className="text-white text-[36px] md:text-[64px] leading-[46px] md:leading-[72px] font-semibold mt-32 md:mt-10">
                 Your decentralized lending-borrowing protocol

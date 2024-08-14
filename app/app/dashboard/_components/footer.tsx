@@ -1,4 +1,4 @@
-import { LogoSecondary } from "@/components/Icons/Icons";
+import { LogoSecondary, PoweredbyPythLogo } from "@/components/Icons/Icons";
 import Text from "@/components/Texts/Text";
 import { useAppContext } from "@/contexts/AppProvider";
 import { ChainName } from "@/enums/Chain";
@@ -14,6 +14,7 @@ export default function Footer({}) {
         <Text size="2xl" textColor="text-white">
           Aeroscraper
         </Text>
+        <PoweredbyPythLogo />
       </div>
       <div className="grid md:grid-cols-5 gap-10 md:gap-20 md:mt-0 mt-10">
         <div className="flex flex-col content-start justify-start gap-4">
