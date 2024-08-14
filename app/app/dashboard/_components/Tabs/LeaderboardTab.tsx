@@ -50,6 +50,7 @@ interface ZealyUserInformation {
   total?: number;
   trove?: number;
   stability?: number;
+  dojoswap?:number;
   referral?: number;
   xp: number;
   rank: number;
@@ -80,8 +81,7 @@ const LeaderboardTab = () => {
   const { address } = useChainAdapter();
 
   const [leaderboard, setLeaderboard] = useState<ZealyUser[]>([]);
-  const [userInformation, setUserInformation] =
-    useState<ZealyUserInformation | null>(null);
+  const [userInformation, setUserInformation] = useState<ZealyUserInformation | null>(null);
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   const [informationLoading, setInformationLoading] = useState(false);
@@ -191,7 +191,7 @@ const LeaderboardTab = () => {
         .getFirstListItem(`address = '${address}'`)
         .then((res) => res)
         .catch((err) => false);
-      //console.log("total_points", res);
+      console.log("total_points", res);
 
       setUserInformation({
         ...data,
@@ -199,7 +199,8 @@ const LeaderboardTab = () => {
         xp: res?.xp || data?.xp || 0,
         trove: res?.trove || 0,
         stability: res?.stability || 0,
-        referral: res?.referralPoint || 0,
+        dojoswap: res?.dojoswap || 0,
+        referral: res?.referralPoint || 0
       });
 
       setLoading(false);
@@ -270,7 +271,7 @@ const LeaderboardTab = () => {
                   }
                 >
                   <BorderedContainer
-                    containerClassName="-translate-x-[60px] w-[250px] h-36 md:h-[160px] notification-dropdown-gradient p-[1.5px]"
+                    containerClassName="-translate-x-[60px] w-[250px] h-42 md:h-[190px] notification-dropdown-gradient p-[1.5px]"
                     className="relative p-4 overflow-auto space-y-3"
                   >
                     <div className="flex justify-between">
@@ -335,6 +336,22 @@ const LeaderboardTab = () => {
                         weight="font-semibold"
                       >
                         {userInformation?.xp?.toFixed(0)}
+                      </Text>
+                    </div>
+                    <div className="flex justify-between">
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-medium"
+                      >
+                        DojoSwap xp:
+                      </Text>
+                      <Text
+                        size="sm"
+                        textColor="text-white"
+                        weight="font-semibold"
+                      >
+                        {userInformation?.dojoswap?.toFixed(0)}
                       </Text>
                     </div>
                   </BorderedContainer>
