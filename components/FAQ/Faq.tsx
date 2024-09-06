@@ -26,13 +26,13 @@ const Faq = () => {
     },
     {
       question: `What’s the motivation behind Aeroscraper?`,
-      answer: `The protocol was developed to allow owners of a token a method of extracting value from their holdings, without ever selling their tokens. By locking up their collateral and minting aUSD, holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule. <br/>
-      Stablecoins are an essential building block on any blockchain. However, the vast majority of this value is made up of centralized stablecoins. <br/> Decentralized stablecoins make up only a small portion of the total stablecoin supply. <br/>
-      Aeroscraper addresses this by creating a more capital-efficient and user-friendly way to borrow a decentralized stablecoin. Furthermore, Aeroscraper is completely immutable, governance-free, and non-custodial.`,
+      answer: `The protocol was developed to allow owners of INJ, ARCH, XION and NIBI a method of extracting value from their holdings, without ever selling their tokens. By locking up INJ, ARCH, XION, NIBI and minting aUSD, INJ, ARCH, XION, NIBI holders can take a 0% interest-free loan against their holdings, on a timeless repayment schedule. <br/>
+    Stablecoins are an essential building block on any blockchain. However, the vast majority of this value is made up of centralized stablecoins. <br/> Decentralized stablecoins make up only a small portion of the total stablecoin supply. <br/>
+    Aeroscraper addresses this by creating a more capital-efficient and user-friendly way to borrow a decentralized stablecoin. Furthermore, Aeroscraper is completely immutable, governance-free, and non-custodial.`,
     },
     {
       question: `Has the protocol been third-party verified, certified, and/or audited?`,
-      answer: `The protocol is currently in the audit process with Beosin and the full report will be made publicly available.`,
+      answer: `Yes. The protocol audited from Beosin and IronNode.`,
     },
     {
       question: `Does anyone “own” or operate the protocol?`,
