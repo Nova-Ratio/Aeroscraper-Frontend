@@ -62,7 +62,6 @@ export default function MintTap({ pageData, getPageData, basePrice }: Props) {
     }
   }
   const [expTime, setExpTime] = useState<number | null>(null); //86400000 24 hours
-  console.log("expTime", expTime);
 
   const [getTime, setGetTime] = useState<number>(new Date().getTime());
 

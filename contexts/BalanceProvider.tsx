@@ -32,18 +32,16 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
 
             if (selectedChainName === ChainName.XION) {
                 if (isNil(absraxionClient) && isNil(contract)) return;
-
                 //const balance = await absraxionClient.getBalance(address, baseCoin.denom);
                 const getbalance = await contract.getCustomTokenBalance();
                 const getCustomTokenPrice = await contract.getPrice();
-
-                getXionPrice(getCustomTokenPrice[0].price);
 
                 const balance = {
                     denom: baseCoin.denom,
                     amount: getbalance?.balance || "0"
                 }
                 setBalanceByDenom({ [balance.denom]: balance });
+                getXionPrice(getCustomTokenPrice[0].price);
             }
             else {
                 const client = await SigningCosmWasmClient.connect(chain.apis?.rpc?.[0].address ?? '')
