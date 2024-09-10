@@ -66,7 +66,7 @@ export const appChainURLs: ChainNavigator[] = [
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscraper.io/app/dashboard", env: "Mainnet" },
     { chainName: "Archway", image: "/images/token-images/archway-coin.png", url: "https://arch.aeroscraper.io/app/dashboard", env: "Mainnet", isSelected: true },
     { chainName: "Nibiru", image: "/images/token-images/nibiru.svg", url: "https://nibi.aeroscraper.io/app/dashboard", env: "Mainnet" },
-    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
+    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscraper.io/app", env: "Testnet" }
 ]
 
 export const MANAGEMENT_FEE = 0.005;
