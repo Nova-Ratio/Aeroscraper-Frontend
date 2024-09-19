@@ -167,7 +167,7 @@ export const getXionContract = (
       },
       {
         amount: [{ amount: "0", denom: "uxion" }],
-        gas: "250000",
+        gas: "350000",
       },
       "customtokenminter"
     );
