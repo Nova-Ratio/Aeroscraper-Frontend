@@ -6,14 +6,10 @@ import {
     callPriceFeedContract,
     callAUSDStakingContract,
 } from "./ethereumContracts";
-import { ethers } from "ethers";
+import { ethers, BigNumberish } from "ethers";
 
 //StabilityPool Contract
-
-
-
-
-export const callGetNICR= async (address: string, _maxAUSDamount: string|number | bigint, _price: string) => {
+export const callGetNICR = async (address: string, _maxAUSDamount: string | number | bigint, _price: string) => {
     try {
         const getNICR = await (await callTroveManagerContract()).contractWithSigner.getNICR(address, _maxAUSDamount, _price);
         return await getNICR;
@@ -25,7 +21,7 @@ export const callGetNICR= async (address: string, _maxAUSDamount: string|number 
 
 //borrowerOperations Contract Functions
 export const callOpenTrove = async (
-    _maxFeePercentage: number,
+    _borrower: string,
     _AUSDAmount: number,
     _upperHint: string,
     _lowerHint: string,
@@ -35,7 +31,6 @@ export const callOpenTrove = async (
         const openTrove = await (
             await callBorrowerOperationsContract()
         ).contractWithSigner.openTrove(
-            _maxFeePercentage,
             _AUSDAmount,
             _upperHint,
             _lowerHint,
@@ -108,7 +103,7 @@ export const callCloseTrove = async () => {
 };
 
 export const callRepayAUSD = async (
-    _AUSDAmount: number,
+    _AUSDAmount: BigNumberish,
     _upperHint: string,
     _lowerHint: string
 ) => {
@@ -140,7 +135,7 @@ export const callMoveETHGainToTrove = async (
 };
 
 export const callWithdrawColl = async (
-    _collWithdrawal: number,
+    _collWithdrawal: BigNumberish,
     _upperHint: string,
     _lowerHint: string
 ) => {
@@ -156,8 +151,7 @@ export const callWithdrawColl = async (
 };
 
 export const callWithdrawAUSD = async (
-    _maxFeePercentage: number,
-    _AUSDAmount: number,
+    _AUSDAmount: BigNumberish,
     _upperHint: string,
     _lowerHint: string
 ) => {
@@ -165,7 +159,6 @@ export const callWithdrawAUSD = async (
         const withdrawAUSD = await (
             await callBorrowerOperationsContract()
         ).contractWithSigner.withdrawAUSD(
-            _maxFeePercentage,
             _AUSDAmount,
             _upperHint,
             _lowerHint
@@ -178,7 +171,6 @@ export const callWithdrawAUSD = async (
 };
 
 export const callAdjustTrove = async (
-    _maxFeePercentage: number,
     _collWithdrawal: number,
     _AUSDChange: boolean,
     _isDebtIncrease: boolean,
@@ -189,7 +181,6 @@ export const callAdjustTrove = async (
         const adjustTrove = await (
             await callBorrowerOperationsContract()
         ).contractWithSigner.adjustTrove(
-            _maxFeePercentage,
             _collWithdrawal,
             _AUSDChange,
             _isDebtIncrease,
@@ -437,29 +428,61 @@ export const callLiquidateTroves = async (n: number) => {
 };
 
 export const callRedeemCollateral = async (
-    _AUSDamount: number,
-    _firstRedemptionHint: string,
-    _upperPartialRedemptionHint: string,
-    _lowerPartialRedemptionHint: string,
-    _partialRedemptionHintNICR: number,
-    _maxIterations: number,
-    _maxFeePercentage: number
+    _AUSDamount: ethers.BigNumberish, // Amount to redeem
+    _maxIterations: number,  // Maximum number of iterations
 ) => {
     try {
-        const redeemCollateral = await (
-            await callTroveManagerContract()
-        ).contractWithSigner.redeemCollateral(
+        // Fetch current price for NICR calculation
+        const price = await callFetchPrice();
+
+        // Fetch all trove owners and NICR values
+        const allTroveData = await fetchAllTroveOwnersAndNICR();
+
+        if (!allTroveData || allTroveData.length === 0) {
+            throw new Error("No trove data available.");
+        }
+
+        // Find the appropriate hints (prev and next) based on the NICR
+        const firstRedemptionHint = allTroveData[0].owner; // Assume first trove as starting point
+        const upperPartialRedemptionHint = allTroveData[allTroveData.length - 1].owner; // Assume last trove as ending point
+
+        // Calculate partial redemption hints by iterating through the troves
+        let lowerPartialRedemptionHint = ethers.ZeroAddress;
+        let partialRedemptionHintNICR = 0;
+
+        for (let i = 0; i < allTroveData.length; i++) {
+            const { owner, NICR } = allTroveData[i];
+
+            // Use NICR to find the lowerPartialRedemptionHint and partialRedemptionHintNICR
+            if (NICR < partialRedemptionHintNICR || partialRedemptionHintNICR === 0) {
+                lowerPartialRedemptionHint = owner;
+                partialRedemptionHintNICR = NICR;
+            }
+        }
+
+        // Ensure hints are correctly defined
+        if (!firstRedemptionHint || !upperPartialRedemptionHint || !lowerPartialRedemptionHint) {
+            throw new Error("Unable to determine redemption hints.");
+        }
+
+        // Call the TroveManager contract's redeemCollateral function with calculated hints
+        const troveManagerContract = await callTroveManagerContract();
+        const redeemCollateral = await troveManagerContract.contractWithSigner.redeemCollateral(
             _AUSDamount,
-            _firstRedemptionHint,
-            _upperPartialRedemptionHint,
-            _lowerPartialRedemptionHint,
-            _partialRedemptionHintNICR,
-            _maxIterations,
-            _maxFeePercentage
+            firstRedemptionHint,  // _firstRedemptionHint
+            upperPartialRedemptionHint,  // _upperPartialRedemptionHint
+            lowerPartialRedemptionHint,  // _lowerPartialRedemptionHint
+            partialRedemptionHintNICR,  // _partialRedemptionHintNICR
+            _maxIterations  // _maxIterations
         );
-        return await redeemCollateral;
+
+        // Wait for transaction to be mined
+        const receipt = await redeemCollateral.wait();
+
+        // Return receipt or confirmation
+        return receipt;
     } catch (error) {
-        console.log(error);
+        console.log("Error in callRedeemCollateral:", error);
         return false;
     }
 };
@@ -856,11 +879,11 @@ export const callStakeShare = async (staker: string) => {
             await callAUSDStakingContract()
         ).contractWithSigner.getTotalAUSDStaked();
         console.log(getStake, totalStaked);
-        
+
         const stakeShare = Number(getStake) / Number(totalStaked);
-        console.log(stakeShare, Number(stakeShare) *100, getStake, totalStaked);
-        
-        return Number(stakeShare) *100;
+        console.log(stakeShare, Number(stakeShare) * 100, getStake, totalStaked);
+
+        return Number(stakeShare) * 100;
     } catch (error) {
         console.log(error);
         return undefined;
@@ -892,3 +915,128 @@ export const callCirculatedTotalSupply = async () => {
         return undefined;
     }
 }
+
+//New addendums for coping with indexer needs
+// Helper function to calculate NICR
+const calculateNICR = (collateral: ethers.BigNumberish, debt: ethers.BigNumberish): number => {
+    return Number(BigInt(collateral.toString()) * BigInt(1e18) / BigInt(debt.toString()));
+};
+
+// Fetch all trove owners and their NICR values in an array
+export const fetchAllTroveOwnersAndNICR = async (): Promise<{
+    owner: string;
+    NICR: number;
+}[]> => {
+    try {
+        const troveOwnersCount = await callGetTroveOwnersCount(); // Get the number of trove owners
+        const troveDataArray: { owner: string; NICR: number }[] = [];
+
+        // Loop through all trove owners and get their NICR
+        for (let i = 0; i < troveOwnersCount; i++) {
+            const owner = await callGetTroveFromTroveOwnersArray(i);
+            const debt = await callGetTroveDebt(owner);
+            const collateral = await callGetTroveColl(owner);
+
+            if (BigInt(debt.toString()) === BigInt(0)) {
+                continue; // Skip troves with zero debt
+            }
+
+            // Calculate the NICR for each trove
+            const NICR = calculateNICR(collateral, debt);
+
+            // Push the owner address and their NICR to the array
+            troveDataArray.push({
+                owner,
+                NICR
+            });
+        }
+
+        return troveDataArray;
+    } catch (error) {
+        console.log("Error fetching trove owners and NICR values:", error);
+        return [];
+    }
+};
+
+// Function to calculate new prev and next nodes and NICR after opening or modifying a trove
+export const calculateNewPositionAndNICR = async (
+    borrower: string,
+    AUSDChange: ethers.BigNumberish,  // AUSD debt change
+    collateralChange: ethers.BigNumberish,  // Collateral change
+    isNewTrove: boolean, // Flag indicating if the trove is new
+    isDebtIncrease: boolean,  // Flag indicating if the debt is increasing or decreasing
+    isCollIncrease: boolean  // Flag indicating if the collateral is increasing or decreasing
+): Promise<{
+    prev: string;
+    next: string;
+    NICR: number;
+} | null> => {
+    try {
+        let newDebt: ethers.BigNumberish;
+        let newCollateral: ethers.BigNumberish;
+
+        if (!isNewTrove) {
+            // Fetch the current debt and collateral for the borrower
+            const currentDebt = await callGetTroveDebt(borrower);
+            const currentCollateral = await callGetTroveColl(borrower);
+
+            // Calculate the new debt based on whether it's increasing or decreasing
+            newDebt = isDebtIncrease
+                ? ethers.parseUnits(currentDebt.toString(), 0) + (ethers.parseUnits(AUSDChange.toString(), 0))  // Increase the debt
+                : ethers.parseUnits(currentDebt.toString(), 0) - (ethers.parseUnits(AUSDChange.toString(), 0)); // Decrease the debt
+
+            // Calculate the new collateral after the change
+            newCollateral = isCollIncrease
+                ? ethers.parseUnits(currentCollateral.toString(), 0) + (ethers.parseUnits(collateralChange.toString(), 0))  // Increase the collateral
+                : ethers.parseUnits(currentCollateral.toString(), 0) - (ethers.parseUnits(collateralChange.toString(), 0)); // Decrease the collateral
+        } else {
+            // For new troves, use the provided values directly
+            newDebt = ethers.parseUnits(AUSDChange.toString(), 0);
+            newCollateral = ethers.parseUnits(collateralChange.toString(), 0);
+        }
+
+        // Check if the debt has become zero or negative after the operation
+        if (newDebt === BigInt(0) || newDebt < BigInt(0)) {
+            console.log("Error: Debt cannot be zero or negative.");
+            return null;
+        }
+
+        // Calculate the new NICR (collateral / debt)
+        const newNICR = calculateNICR(newCollateral, newDebt);
+
+        // Fetch all trove owners and their NICRs
+        const allTroveData = await fetchAllTroveOwnersAndNICR();
+
+        // Find the appropriate prev and next nodes by comparing the new NICR
+        let prevNode = ethers.ZeroAddress;
+        let nextNode = ethers.ZeroAddress;
+
+        for (let i = 0; i < allTroveData.length; i++) {
+            const { owner, NICR } = allTroveData[i];
+
+            // If the new NICR is smaller, we insert before this trove
+            if (newNICR < NICR) {
+                nextNode = owner;
+                if (i > 0) {
+                    prevNode = allTroveData[i - 1].owner;
+                }
+                break;
+            }
+        }
+
+        // If no nextNode is found, set the prevNode to the last owner
+        if (nextNode === ethers.ZeroAddress && allTroveData.length > 0) {
+            prevNode = allTroveData[allTroveData.length - 1].owner;
+        }
+
+        // Return the prev, next nodes, and the new NICR
+        return {
+            prev: prevNode,
+            next: nextNode,
+            NICR: newNICR
+        };
+    } catch (error) {
+        console.log("Error calculating new position and NICR:", error);
+        return null;
+    }
+};

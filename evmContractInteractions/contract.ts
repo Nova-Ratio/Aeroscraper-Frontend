@@ -23,6 +23,12 @@ import {
   callGetTroveDebt,
   callLiquidate,
   callStakeShare,
+  callOpenTrove,
+  calculateNewPositionAndNICR,
+  callAddColl,
+  callWithdrawColl,
+  callRepayAUSD,
+  callWithdrawAUSD,
 } from "./useAppContracts";
 export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   let _maxFeePercentage = "999990000000000000";
@@ -151,7 +157,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
-      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
         await findSortedTroveInsertPosition(collRatio, senderAddress);
       console.log("openTrove", _lowerHint, _upperHint);
 
@@ -161,7 +167,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         _upperHint,
         _lowerHint,
         { value: getRequestAmount(amount, asset.decimal) }
-      );
+      ); */
+      const helpers = await calculateNewPositionAndNICR(senderAddress,getRequestAmount(loanAmount, asset.ausdDecimal),getRequestAmount(amount, asset.decimal), true, false, false)
+      const upperHint = helpers?.next || defaultAddress;
+      const lowerHint = helpers?.prev || defaultAddress;
+      const tx = await callOpenTrove(senderAddress, Number(getRequestAmount(loanAmount, asset.ausdDecimal)), upperHint, lowerHint, getRequestAmount(amount, asset.decimal));
       console.log("openTrove", tx);
       await tx.wait();
       console.log("tx", tx);
@@ -206,13 +216,18 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     asset: CollateralAsset = DefaultAssetByChainName[ChainName.EVM]
   ) => {
     try {
-      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
         await findSortedTroveInsertPosition(collRatio, address);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.addColl(_upperHint, _lowerHint, {
         value: getRequestAmount(amount, asset.decimal),
       });
-      await tx.wait();
+      await tx.wait(); */
+      const helpers = await calculateNewPositionAndNICR(address, 0 ,getRequestAmount(amount, asset.decimal), false, false, true);
+      const upperHint = helpers?.next || defaultAddress;
+      const lowerHint = helpers?.prev || defaultAddress;
+
+      const tx = await callAddColl(upperHint, lowerHint);
 
       console.log("addColl", tx);
       const hash = tx.hash;
@@ -234,14 +249,18 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
-      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
         await findSortedTroveInsertPosition(collRatio, senderAddress);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.withdrawColl(
         getRequestAmount(amount, asset.decimal),
         _upperHint,
         _lowerHint
-      );
+      ); */
+      const helpers = await calculateNewPositionAndNICR(senderAddress, 0 ,getRequestAmount(amount, asset.decimal), false, false, false);
+      const upperHint = helpers?.next || defaultAddress;
+      const lowerHint = helpers?.prev || defaultAddress;
+      const tx = await callWithdrawColl(getRequestAmount(amount, asset.decimal), upperHint, lowerHint);
       console.log("getRequestAmount", tx);
       await tx.wait();
       const hash = tx.hash;
@@ -287,13 +306,19 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         await tx.wait();
         hash = tx.hash;
       } else {
+        /* 
         const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
           await findSortedTroveInsertPosition(collRatio, senderAddress);
         tx = await contractWithSigner.repayAUSD(
           getRequestAmount(amount, defaultAsset.ausdDecimal),
           _upperHint,
           _lowerHint
-        );
+          );
+        */
+        const helpers = await calculateNewPositionAndNICR(senderAddress, getRequestAmount(amount, defaultAsset.ausdDecimal), 0, false, false, false);
+        const upperHint = helpers?.next || defaultAddress;
+        const lowerHint = helpers?.prev || defaultAddress;
+        tx = callRepayAUSD(getRequestAmount(amount, defaultAsset.ausdDecimal), upperHint, lowerHint);
       }
       await tx?.wait();
       hash = tx.hash;
@@ -313,14 +338,18 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     collRatio: number
   ) => {
     try {
-      const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
+      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
         await findSortedTroveInsertPosition(collRatio, senderAddress);
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.withdrawAUSD(
         getRequestAmount(amount, defaultAsset.ausdDecimal),
         _upperHint,
         _lowerHint
-      );
+      ); */
+      const helpers = await calculateNewPositionAndNICR(senderAddress, getRequestAmount(amount, defaultAsset.ausdDecimal), 0, false, true, false);
+      const upperHint = helpers?.next || defaultAddress;
+      const lowerHint = helpers?.prev || defaultAddress;
+      const tx = await callWithdrawAUSD(getRequestAmount(amount, defaultAsset.ausdDecimal), upperHint, lowerHint);
       await tx.wait();
       const hash = tx.hash;
       return {
