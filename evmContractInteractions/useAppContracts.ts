@@ -917,6 +917,7 @@ export const callCirculatedTotalSupply = async () => {
 }
 
 //New addendums for coping with indexer needs
+
 // Helper function to calculate NICR
 const calculateNICR = (collateral: ethers.BigNumberish, debt: ethers.BigNumberish): number => {
     return Number(BigInt(collateral.toString()) * BigInt(1e18) / BigInt(debt.toString()));
@@ -930,6 +931,7 @@ export const fetchAllTroveOwnersAndNICR = async (): Promise<{
     try {
         const troveOwnersCount = await callGetTroveOwnersCount(); // Get the number of trove owners
         const troveDataArray: { owner: string; NICR: number }[] = [];
+        const price = await callFetchPrice();
 
         // Loop through all trove owners and get their NICR
         for (let i = 0; i < troveOwnersCount; i++) {
