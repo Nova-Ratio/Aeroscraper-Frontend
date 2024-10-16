@@ -188,28 +188,21 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   };
   const getTrove = async (borrower: string) => {
     try {
-      let deneme = await requestRedeemICR();
-      console.log("deneme", deneme);
-      let ausdInfo = await getAusdInfo();
-      console.log("ausdInfo", ausdInfo);
-
       const getStake = await callGetTroveColl(borrower);
-      let res = await getStake;
-      console.log("callGetStake", res);
+      let res = await getStake;      
 
       const getTroveDebt = await callGetTroveDebt(borrower);
       let res2 = await getTroveDebt;
-      console.log("getTroveDebt", res2);
 
       return {
         collateral_amount: Number(res).toString(),
         debt_amount: Number(res2).toString(),
       };
     } catch (error) {
-      console.log(error);
       return undefined;
     }
   };
+
   const addCollateral = async (
     address: string,
     amount: number,
