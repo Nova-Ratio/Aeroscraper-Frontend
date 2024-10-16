@@ -47,7 +47,8 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
         catch (err) {
             console.log(err);
         }
-    }, [])
+    }, []);
+    
     const getEthPrice = useCallback(async () => {
         try {
            
@@ -68,8 +69,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
             if (currentPrices) {
                 setCoinPricesByDenom(prev => ({
                     ...prev,
-                    [denom]: 3000//Number(currentPrices[0].getPriceUnchecked().price) / 100000000
-                    //TODO: remove hardcoded value before production
+                    [denom]: Number(currentPrices[0].getPriceUnchecked().price) / 100000000
                 }))
             }
         }

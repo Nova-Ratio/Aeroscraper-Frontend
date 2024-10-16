@@ -11,6 +11,7 @@ import {
   getIsInjectiveResponse,
   convertAmount,
   getRatioColor,
+  getRequestAmount,
 } from "@/utils/contractUtils";
 import { getCroppedString } from "@/utils/stringUtils";
 import React, {
@@ -30,7 +31,7 @@ import { delay } from "@/utils/promiseUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { isV2TroveResponse } from "@/contracts/app/types";
-import { callLiquidate } from "@/evmContractInteractions/useAppContracts";
+import { callLiquidate, fetchAllTroveOwnersAndNICR } from "@/evmContractInteractions/useAppContracts";
 import OutlinedButton from "@/components/Buttons/OutlinedButton";
 
 type Props = {
@@ -40,18 +41,15 @@ type Props = {
 
 const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
   const debounceTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const { baseCoin, selectedChainName = ChainName.INJECTIVE } =
-    useChainAdapter();
+  const { baseCoin, selectedChainName = ChainName.INJECTIVE } = useChainAdapter();
   const contract = useAppContract();
   const [loading, setLoading] = useState(true);
   const [riskyTroves, setRiskyTroves] = useState<RiskyTrovesModelV1[]>([]);
-  const { addNotification, setProcessLoading, processLoading } =
-    useNotification();
+  const { addNotification, setProcessLoading, processLoading } = useNotification();
 
-  const { requestRiskyTroves } = useMemo(
-    () => graphql({ selectedChainName }),
-    [selectedChainName]
-  );
+  useEffect(() => {
+    getRiskyTroves();
+  }, []);
 
   const liquidateTroves = async (owner: string) => {
     try {
@@ -80,87 +78,30 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
     }
   };
 
-  const getRiskyTroves = useCallback(async () => {
+  const getRiskyTroves = async () => {
     setLoading(true);
     try {
-      const res = await requestRiskyTroves();
-
-      const batchSize = 10;
-      const batches = Math.ceil(res.troves.nodes.length / batchSize);
-
-      const getTrovesPromises = [];
-
-      for (let i = 0; i < batches; i++) {
-        const batchStart = i * batchSize;
-        const batchEnd = (i + 1) * batchSize;
-        const batchItems = res.troves.nodes.slice(batchStart, batchEnd);
-
-        const batchPromises = batchItems.map(async (item: any) => {
-          try {
-            const troveRes = {
-              collateral_amount: item.collaterals,
-              debt_amount: item.debtAmount,
-            };
-
-            const collateralAmount = convertAmount(
-              troveRes?.collateral_amount ?? 0,
-              baseCoin?.decimal
-            );
-
-            return {
-              owner: item.owner,
-              liquidityThreshold: Number(
-                Number(
-                  ((collateralAmount * basePrice) /
-                    convertAmount(
-                      troveRes?.debt_amount ?? 0,
-                      baseCoin?.ausdDecimal
-                    )) *
-                    100
-                )
-              ),
-              collateralAmount,
-              debtAmount: convertAmount(
-                troveRes?.debt_amount ?? 0,
-                baseCoin?.ausdDecimal
-              ),
-            };
-          } catch (err) {
-            return {
-              owner: item.owner,
-              liquidityThreshold: item.liquidityThreshold,
-              collateralAmount: 0,
-              debtAmount: 0,
-            };
-          }
-        });
-
-        getTrovesPromises.push(...batchPromises);
-
-        await delay(1000);
-      }
-
-      const data = await Promise.all(getTrovesPromises);
+      const res = await fetchAllTroveOwnersAndNICR()
       setRiskyTroves(
-        data.sort((a, b) => a.liquidityThreshold - b.liquidityThreshold)
+        res.sort((a, b) => a.NICR - b.NICR).map(item => {
+          const collateral = convertAmount(item.collateral, baseCoin?.ausdDecimal);
+          const debt = convertAmount(item.debt, baseCoin?.ausdDecimal);
+          const liq = Number(((collateral * basePrice) / debt) * 100)
+
+          return {
+            owner: item.owner,
+            liquidityThreshold: liq,
+            collateralAmount: collateral,
+            debtAmount: debt
+          }
+        })
       );
     } catch (err) {
       console.error(err);
-    } finally {
+    } finally {        
       setLoading(false);
     }
-  }, [contract, baseCoin, requestRiskyTroves]);
-
-  const debouncedGetRiskyTroves = useCallback(() => {
-    clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => {
-      getRiskyTroves();
-    }, 1500);
-  }, [getRiskyTroves]);
-
-  useEffect(() => {
-    selectedChainName && debouncedGetRiskyTroves();
-  }, [debouncedGetRiskyTroves, selectedChainName]);
+  }
 
   return (
     <div>
@@ -275,7 +216,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                               dynamicTextColor={
                                 getRatioColor(
                                   (item.liquidityThreshold ?? 0) *
-                                    (basePrice ?? 0)
+                                  (basePrice ?? 0)
                                 ) ?? 0
                               }
                             >

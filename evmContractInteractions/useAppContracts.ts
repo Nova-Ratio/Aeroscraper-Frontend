@@ -926,10 +926,12 @@ const calculateNICR = (collateral: ethers.BigNumberish, debt: ethers.BigNumberis
 export const fetchAllTroveOwnersAndNICR = async (): Promise<{
     owner: string;
     NICR: number;
+    debt: number;
+    collateral: number;
 }[]> => {
     try {
         const troveOwnersCount = await callGetTroveOwnersCount(); // Get the number of trove owners
-        const troveDataArray: { owner: string; NICR: number }[] = [];
+        const troveDataArray: { owner: string, debt: number, collateral: number, NICR: number }[] = [];
 
         // Loop through all trove owners and get their NICR
         for (let i = 0; i < troveOwnersCount; i++) {
@@ -947,12 +949,16 @@ export const fetchAllTroveOwnersAndNICR = async (): Promise<{
             // Push the owner address and their NICR to the array
             troveDataArray.push({
                 owner,
+                debt,
+                collateral,
                 NICR
             });
         }
 
         return troveDataArray;
     } catch (error) {
+        console.log("XXX",error);
+        
         console.log("Error fetching trove owners and NICR values:", error);
         return [];
     }
