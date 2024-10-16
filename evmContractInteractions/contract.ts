@@ -173,7 +173,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const lowerHint = helpers?.prev || defaultAddress;
       console.log("UpperHint: ", upperHint);
       console.log("LowerHint: ", lowerHint);
-      const tx = await callOpenTrove(senderAddress, Number(getRequestAmount(loanAmount, asset.ausdDecimal)), upperHint, lowerHint, getRequestAmount(amount, asset.decimal));
+      const tx = await callOpenTrove(senderAddress, getRequestAmount(loanAmount, asset.ausdDecimal), upperHint, lowerHint, getRequestAmount(amount, asset.decimal));
       console.log("openTrove", tx);
       console.log("tx", tx);
 

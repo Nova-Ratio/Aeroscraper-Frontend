@@ -22,7 +22,7 @@ export const callGetNICR = async (address: string, _maxAUSDamount: string | numb
 //borrowerOperations Contract Functions
 export const callOpenTrove = async (
     _borrower: string,
-    _AUSDAmount: number,
+    _AUSDAmount: BigNumberish,
     _upperHint: string,
     _lowerHint: string,
     _value: ethers.BigNumberish
