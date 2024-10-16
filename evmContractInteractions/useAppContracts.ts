@@ -917,6 +917,7 @@ export const callCirculatedTotalSupply = async () => {
 }
 
 //New addendums for coping with indexer needs
+
 // Helper function to calculate NICR
 const calculateNICR = (collateral: ethers.BigNumberish, debt: ethers.BigNumberish): number => {
     return Number(BigInt(collateral.toString()) * BigInt(1e18) / BigInt(debt.toString()));
