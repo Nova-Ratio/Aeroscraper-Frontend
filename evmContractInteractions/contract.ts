@@ -171,6 +171,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const helpers = await calculateNewPositionAndNICR(senderAddress,getRequestAmount(loanAmount, asset.ausdDecimal),getRequestAmount(amount, asset.decimal), true, false, false)
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
+      console.log("UpperHint: ", upperHint);
+      console.log("LowerHint: ", lowerHint);
       const tx = await callOpenTrove(senderAddress, Number(getRequestAmount(loanAmount, asset.ausdDecimal)), upperHint, lowerHint, getRequestAmount(amount, asset.decimal));
       console.log("openTrove", tx);
       console.log("tx", tx);
