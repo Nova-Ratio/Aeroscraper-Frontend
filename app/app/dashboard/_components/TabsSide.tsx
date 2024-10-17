@@ -10,7 +10,6 @@ import StabilityPoolTab from "./Tabs/StabilityPoolTab";
 import TroveTab from "./Tabs/TroveTab";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { useRouter, useSearchParams } from "next/navigation";
-import RiskyTrovesTabV2 from "./Tabs/RiskyTrovesTabV2";
 import Missions from "./Tabs/Missions";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useBalances } from "@/contexts/BalanceProvider";

@@ -56,7 +56,6 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
     setHovering(isHovering);
   };
 
-
   return (
     <div
       className="md:max-w-[400px] w-full md:w-[379px] px-2 pt-6 md:p-0 group"
@@ -207,15 +206,13 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
               isFinite(
                 Number(
                   ((pageData.baseTotalCollateralAmount * basePrice) /
-                    pageData.totalDebtAmount) *
-                  100
+                    pageData.totalDebtAmount) * 100
                 )
               )
                 ? Number(
                   ((pageData.baseTotalCollateralAmount * basePrice) /
-                    pageData.totalDebtAmount) *
-                  100
-                ).toFixed(3)
+                    pageData.totalDebtAmount) * 100
+                )
                 : 0
               } %`}
             className="w-[191px] h-14"
@@ -224,7 +221,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
           <StatisticCard
             title="aUSD Supply"
             description={isNil(baseCoin)
-              ? "-" : Number(pageData.totalAusdSupply).toFixed(3).toString()}
+              ? "-" : Number(pageData.totalAusdSupply).toString()}
             className="w-[191px] h-14"
             tooltip="The total aUSD minted by the Aeroscraper Protocol."
             tooltipPlacement="left-top-corner"

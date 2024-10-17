@@ -12,7 +12,8 @@ import graphql from '@/services/graphql';
 import { convertAmount } from '@/utils/contractUtils';
 import axios from 'axios';
 import { isNil } from 'lodash';
-import { DefaultAssetByChainName } from '@/constants/assetConstants';
+import { callGetTroveCount } from '@/evmContractInteractions/useAppContracts';
+import { getAppEVMContract } from '@/evmContractInteractions/contract';
 
 const FilterParamByChainName: Record<ChainName, string> = {
     [ChainName.INJECTIVE]: 'INJECTIVE',
@@ -56,6 +57,12 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const { requestTotalTroves } = useMemo(() => graphql({ selectedChainName: selectedChainName ?? ChainName.INJECTIVE }), [selectedChainName]);
     const contract = useAppContract();
+    const {
+        getTotalCollateralAmounts,
+        getTotalDebtAmount,
+        getTotalStake,
+        getAusdInfo,
+    } = getAppEVMContract();
 
     const [pageData, setPageData] = useState<PageData>({
         baseCollateralAmount: 0,
@@ -120,14 +127,14 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const debtAmount = convertAmount(troveRes?.debt_amount ?? 0, baseCoin?.ausdDecimal);
 
             const collateralAmountsByDenom = collateralAmounts.reduce<Record<string, CollateralInfo>>((acc, item) => {
-                
+
                 const denom = item.denom;
                 const decimal = BaseCoinByDenom[denom]?.decimal;
                 console.log('item.amount', item.amount);
-                
+
                 const amount = convertAmount(item.amount, decimal);
                 console.log('amount', amount, denom, decimal);
-                
+
                 return {
                     ...acc,
                     [denom]: {
@@ -136,6 +143,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
                     }
                 }
             }, {});
+
             const baseCollateralAmount = collateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
 
 
@@ -204,7 +212,7 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             setStakeLoading(true);
             const stakeRes = await contract.getStake();
             console.log('stakeRes', stakeRes);
-            
+
             const decimal = baseCoin?.ausdDecimal;
             setPageData(prev => ({
                 ...prev,
@@ -248,12 +256,15 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const getTotalTroves = useCallback(async () => {
         try {
             setTotalTrovesLoading(true);
-            const totalTrovesRes = await requestTotalTroves();
+            const totalTrovesRes = await callGetTroveCount();
 
-            setPageData(prev => ({
-                ...prev,
-                totalTrovesAmount: totalTrovesRes?.troves.totalCount ?? 0
-            }))
+            if (totalTrovesRes) {
+                setPageData(prev => ({
+                    ...prev,
+                    totalTrovesAmount: totalTrovesRes ?? 0
+                }));
+            }
+
         }
         catch (err) {
             setPageData(prev => ({
@@ -269,57 +280,54 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
     const getTotalInfo = useCallback(async () => {
         try {
             setTotalInfoLoading(true);
-            let chainNameQuery = FilterParamByChainName[selectedChainName ?? ChainName.INJECTIVE];
 
-            if (selectedChainName === ChainName.EVM) {
-                chainNameQuery = `EVM`;
-            }
 
-            const { data } = await axios.get<TotalInfoResponseV1 | TotalInfoResponseV2>(
-                `https://db.aeroscraper.io/api/collections/protocol/records?filter=chainName="${chainNameQuery}"`
-            )
-            const res = data.items[0];
-
-            const decimal = baseCoin?.decimal;
-
-            const totalCollateralAmountsByDenom = Array.isArray(res.totalCollateralAmounts) ?
-                res.totalCollateralAmounts.reduce<Record<string, CollateralInfo>>((acc, item) => {
-                    const amount = convertAmount(item.amount, decimal);
+            const totalCollateralAmounts = await getTotalCollateralAmounts();
+            const totalCollateralAmountsByDenom: any = totalCollateralAmounts?.reduce(
+                (acc, item) => {
+                    const amount = item.amount;
                     const denom = item.denom;
-
                     return {
                         ...acc,
                         [denom]: {
                             amount,
-                            denom
-                        }
-                    }
-                }, {}) : { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: convertAmount(res.totalCollateralAmount ?? 0, decimal) } };
+                            denom,
+                        },
+                    };
+                },
+                {}
+            ) ?? { [baseCoin?.denom ?? '']: { denom: baseCoin?.denom ?? '', amount: 0 } };
+
+            const totalDebtAmount = await getTotalDebtAmount();
+
+            const totalStake = await getTotalStake();
+
+            const ausdInfo = await getAusdInfo();
 
             const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
+console.log("XX",totalDebtAmount);
 
-            setPageData(prev => ({
+            setPageData((prev) => ({
                 ...prev,
-                totalStakedAmount: convertAmount(res.totalStake ?? 0, baseCoin?.ausdDecimal),
-                baseTotalCollateralAmount,
-                totalCollateralAmountsByDenom,
-                totalDebtAmount: convertAmount(res.totalDebtAmount ?? 0, baseCoin?.ausdDecimal),
-                totalAusdSupply: convertAmount(res.ausdInfo.total_supply ?? 0, baseCoin?.ausdDecimal),
-            }))
-        }
-        catch (err) {
-            setPageData(prev => ({
+                totalStakedAmount: convertAmount(totalStake ?? 0, baseCoin?.ausdDecimal) ?? 0,
+                baseTotalCollateralAmount: convertAmount(baseTotalCollateralAmount, baseCoin?.ausdDecimal) ?? 0,
+                totalDebtAmount: convertAmount(totalDebtAmount ?? 0, baseCoin?.ausdDecimal) ?? 0,
+                totalAusdSupply: convertAmount(ausdInfo ?? 0, baseCoin?.ausdDecimal) ?? 0,
+                totalCollateralAmountsByDenom
+            }));
+
+        } catch (err) {
+            setPageData((prev) => ({
                 ...prev,
                 totalStakedAmount: 0,
-                totalCollateralAmount: 0,
+                baseTotalCollateralAmount: 0,
                 totalDebtAmount: 0,
-                totalAusdSupply: 0
-            }))
-        }
-        finally {
+                totalAusdSupply: 0,
+            }));
+        } finally {
             setTotalInfoLoading(false);
         }
-    }, [selectedChainName, baseCoin])
+    }, [selectedChainName, baseCoin]);
 
     const getPageData = useCallback(() => {
         getTrove()

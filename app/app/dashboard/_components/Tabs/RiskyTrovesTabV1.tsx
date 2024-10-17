@@ -26,8 +26,6 @@ import { NumericFormat } from "react-number-format";
 import { PageData } from "../../_types/types";
 import Text from "@/components/Texts/Text";
 import { RocketIcon } from "@/components/Icons/Icons";
-import graphql from "@/services/graphql";
-import { delay } from "@/utils/promiseUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
 import { ChainName } from "@/enums/Chain";
 import { isV2TroveResponse } from "@/contracts/app/types";

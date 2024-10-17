@@ -13,7 +13,6 @@ import { ChainName } from "@/enums/Chain";
 import { useNotification } from "@/contexts/NotificationProvider";
 import { TotalCollateralModel } from "@/app/app/dashboard/_types/types";
 import { CW20TokenInfoResponse } from "@/contracts/app/types";
-import graphql from "@/services/graphql";
 import {
   callCirculatedTotalSupply,
   callClaimReward,
@@ -30,7 +29,8 @@ import {
   callRepayAUSD,
   callWithdrawAUSD,
 } from "./useAppContracts";
-export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
+import graphql from "@/services/graphql";
+export const getAppEVMContract = () => {
   let _maxFeePercentage = "999990000000000000";
   let _maxIterations = 6;
   const defaultAddress = "0x0000000000000000000000000000000000000000";
@@ -157,23 +157,13 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
-      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
-        await findSortedTroveInsertPosition(collRatio, senderAddress);
-      console.log("openTrove", _lowerHint, _upperHint);
-
-      const { contractWithSigner } = await callBorrowerOperationsContract();
-      const tx = await contractWithSigner.openTrove(
-        getRequestAmount(loanAmount, asset.ausdDecimal),
-        _upperHint,
-        _lowerHint,
-        { value: getRequestAmount(amount, asset.decimal) }
-      ); */
       const helpers = await calculateNewPositionAndNICR(senderAddress,getRequestAmount(loanAmount, asset.ausdDecimal),getRequestAmount(amount, asset.decimal), true, false, false)
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
       console.log("UpperHint: ", upperHint);
       console.log("LowerHint: ", lowerHint);
       const tx = await callOpenTrove(senderAddress, getRequestAmount(loanAmount, asset.ausdDecimal), upperHint, lowerHint, getRequestAmount(amount, asset.decimal));
+      await tx.wait();
       console.log("openTrove", tx);
       console.log("tx", tx);
 
@@ -210,19 +200,12 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     asset: CollateralAsset = DefaultAssetByChainName[ChainName.EVM]
   ) => {
     try {
-      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
-        await findSortedTroveInsertPosition(collRatio, address);
-      const { contractWithSigner } = await callBorrowerOperationsContract();
-      const tx = await contractWithSigner.addColl(_upperHint, _lowerHint, {
-        value: getRequestAmount(amount, asset.decimal),
-      });
-      await tx.wait(); */
       const helpers = await calculateNewPositionAndNICR(address, 0 ,getRequestAmount(amount, asset.decimal), false, false, true);
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
 
       const tx = await callAddColl(upperHint, lowerHint);
-
+      await tx.wait();
       console.log("addColl", tx);
       const hash = tx.hash;
       console.log("hash", hash);
@@ -243,18 +226,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
-      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
-        await findSortedTroveInsertPosition(collRatio, senderAddress);
-      const { contractWithSigner } = await callBorrowerOperationsContract();
-      const tx = await contractWithSigner.withdrawColl(
-        getRequestAmount(amount, asset.decimal),
-        _upperHint,
-        _lowerHint
-      ); */
       const helpers = await calculateNewPositionAndNICR(senderAddress, 0 ,getRequestAmount(amount, asset.decimal), false, false, false);
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
       const tx = await callWithdrawColl(getRequestAmount(amount, asset.decimal), upperHint, lowerHint);
+      await tx.wait();
       console.log("getRequestAmount", tx);
       const hash = tx.hash;
       console.log("hash", hash);
@@ -270,6 +246,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     try {
       const { contractWithSigner } = await callBorrowerOperationsContract();
       const tx = await contractWithSigner.closeTrove();
+      await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -295,23 +272,14 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const { contractWithSigner } = await callBorrowerOperationsContract();
       if (isAllAmount) {
         tx = await contractWithSigner.closeTrove();
+        await tx.wait();
         hash = tx.hash;
       } else {
-        /* 
-        const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
-          await findSortedTroveInsertPosition(collRatio, senderAddress);
-        tx = await contractWithSigner.repayAUSD(
-          getRequestAmount(amount, defaultAsset.ausdDecimal),
-          _upperHint,
-          _lowerHint
-          );
-        */
         const helpers = await calculateNewPositionAndNICR(senderAddress, getRequestAmount(amount, defaultAsset.ausdDecimal), 0, false, false, false);
         const upperHint = helpers?.next || defaultAddress;
         const lowerHint = helpers?.prev || defaultAddress;
         tx = callRepayAUSD(getRequestAmount(amount, defaultAsset.ausdDecimal), upperHint, lowerHint);
       }
-      hash = tx.hash;
       console.log("hash", hash);
       
       return {
@@ -328,18 +296,11 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     collRatio: number
   ) => {
     try {
-      /* const { prev_node_id: _lowerHint, next_node_id: _upperHint } =
-        await findSortedTroveInsertPosition(collRatio, senderAddress);
-      const { contractWithSigner } = await callBorrowerOperationsContract();
-      const tx = await contractWithSigner.withdrawAUSD(
-        getRequestAmount(amount, defaultAsset.ausdDecimal),
-        _upperHint,
-        _lowerHint
-      ); */
       const helpers = await calculateNewPositionAndNICR(senderAddress, getRequestAmount(amount, defaultAsset.ausdDecimal), 0, false, true, false);
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
       const tx = await callWithdrawAUSD(getRequestAmount(amount, defaultAsset.ausdDecimal), upperHint, lowerHint);
+      await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -403,6 +364,8 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const entireSystemDebt = await contractWithSigner.getEntireSystemDebt();
       return await entireSystemDebt;
     } catch (error) {
+      console.log("XX",error);
+      
       console.log(error);
       return undefined;
     }
@@ -446,10 +409,12 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         let tx = await (
           await callAUSDTTokenContract()
         ).contractWithSigner.approve(spender, _amount);
+        await tx.wait();
       }
 
       const { contractWithSigner } = await callAUSDStakingContract();
       const tx = await contractWithSigner.stake(_amount);
+      await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -465,6 +430,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       const tx = await contractWithSigner.unstake(
         getRequestAmount(amount, defaultAsset.decimal)
       );
+      await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -512,6 +478,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
         processRedeem?.NICR || "0",
         _maxIterations
       );
+      await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -524,6 +491,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
   const liquidateTroves = async (senderAddress: string) => {
     try {
       const tx = await callLiquidate(senderAddress)
+      await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
@@ -533,7 +501,7 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
       return error;
     }
   };
-  const getAusdInfo = async (): Promise<CW20TokenInfoResponse | undefined> => {
+  const getAusdInfo = async (): Promise<number | undefined> => {
     try {
       const circulatedTotalSupply = await callCirculatedTotalSupply();
       console.log("circulatedTotalSupply", circulatedTotalSupply);
@@ -554,16 +522,6 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
    }
   };
   const withdrawLiquidationGains = async (senderAddress: string) => {
-    /* const msg = MsgExecuteContractCompat.fromJSON({
-      contractAddress,
-      sender: senderAddress,
-      msg: { withdraw_liquidation_gains: {} }
-    })
-
-    return await msgBroadcastClient.broadcast({
-      msgs: msg,
-      injectiveAddress: senderAddress,      
-    }) */
     return undefined;
   };
   return {
@@ -586,7 +544,5 @@ export const getAppEVMContract = ({ basePrice }: { basePrice: number }) => {
     getAusdInfo,
     getReward,
     withdrawLiquidationGains,
-    /*,
-     */
   };
 };

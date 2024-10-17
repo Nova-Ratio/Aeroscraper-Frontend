@@ -390,6 +390,18 @@ export const callGetTroveOwnersCount = async () => {
     }
 };
 
+export const callGetTroveCount = async () => {
+    try {
+        const getTrovesCount = await (
+            await callSortedTrovesContract()
+        ).contractWithSigner.getSize();
+        return await Number(getTrovesCount);
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
 export const callGetTroveFromTroveOwnersArray = async (_index: number) => {
     try {
         const getTroveFromTroveOwnersArray = await (
