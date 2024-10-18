@@ -360,7 +360,7 @@ export const getAppEVMContract = () => {
   };
   const getTotalDebtAmount = async (): Promise<string | undefined> => {
     try {
-      const { contractWithSigner } = await callBorrowerOperationsContract();
+      const { contractWithSigner } = await callTroveManagerContract();
       const entireSystemDebt = await contractWithSigner.getEntireSystemDebt();
       return await entireSystemDebt;
     } catch (error) {
