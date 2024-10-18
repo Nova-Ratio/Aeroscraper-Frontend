@@ -212,7 +212,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
                 ? Number(
                   ((pageData.baseTotalCollateralAmount * basePrice) /
                     pageData.totalDebtAmount) * 100
-                )
+                ).toFixed(3)
                 : 0
               } %`}
             className="w-[191px] h-14"
@@ -221,7 +221,7 @@ const StatisticSide: FC<Props> = ({ basePrice }) => {
           <StatisticCard
             title="aUSD Supply"
             description={isNil(baseCoin)
-              ? "-" : Number(pageData.totalAusdSupply).toString()}
+              ? "-" : Number(pageData.totalAusdSupply.toFixed(3)).toString()}
             className="w-[191px] h-14"
             tooltip="The total aUSD minted by the Aeroscraper Protocol."
             tooltipPlacement="left-top-corner"

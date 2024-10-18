@@ -305,7 +305,6 @@ const DashboardProvider: FC<PropsWithChildren> = ({ children }) => {
             const ausdInfo = await getAusdInfo();
 
             const baseTotalCollateralAmount = totalCollateralAmountsByDenom[baseCoin?.denom ?? '']?.amount ?? 0;
-console.log("XX",totalDebtAmount);
 
             setPageData((prev) => ({
                 ...prev,
