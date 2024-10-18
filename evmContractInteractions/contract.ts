@@ -204,7 +204,7 @@ export const getAppEVMContract = () => {
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
 
-      const tx = await callAddColl(upperHint, lowerHint);
+      const tx = await callAddColl(Number(getRequestAmount(amount, asset.decimal)), upperHint, lowerHint);
       await tx.wait();
       console.log("addColl", tx);
       const hash = tx.hash;

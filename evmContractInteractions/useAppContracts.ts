@@ -42,11 +42,11 @@ export const callOpenTrove = async (
         return false;
     }
 };
-export const callAddColl = async (_upperHint: string, _lowerHint: string) => {
+export const callAddColl = async (_value: number, _upperHint: string, _lowerHint: string) => {
     try {
         const addColl = await (
             await callBorrowerOperationsContract()
-        ).contractWithSigner.addColl(_upperHint, _lowerHint);
+        ).contractWithSigner.addColl(_upperHint, _lowerHint,{ value: _value });
         return await addColl;
     } catch (error) {
         console.log(error);
