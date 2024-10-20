@@ -24,9 +24,7 @@ const useAppContract = () => {
       !isNil(walletInfo) &&
       !isNil(selectedChainName) &&
       !isNil(chain)
-        ? getAppEVMContract({
-            basePrice,
-          })
+        ? getAppEVMContract()
         : undefined,
     [
       isWalletConnected,
