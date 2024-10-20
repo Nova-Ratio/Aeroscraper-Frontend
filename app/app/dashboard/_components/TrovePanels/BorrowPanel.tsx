@@ -8,6 +8,7 @@ import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import { useBalances } from "@/contexts/BalanceProvider";
 import { usePageData } from "@/contexts/DashboardProvider";
 import { useNotification } from "@/contexts/NotificationProvider";
+import { usePrice } from "@/contexts/PriceProvider";
 import useAppContract from "@/contracts/app/useAppContract";
 import { ChainName } from "@/enums/Chain";
 import useChainAdapter from "@/hooks/useChainAdapter";
@@ -20,6 +21,7 @@ import { NumberFormatValues, NumericFormat } from "react-number-format";
 const BorrowPanel: FC = () => {
   const contract = useAppContract();
   const { refreshBalance } = useBalances();
+  const { getPriceByChainName } = usePrice();
   const { selectedChainName, basePrice } = useChainAdapter();
   const { pageData, getPageData } = usePageData();
 
@@ -60,12 +62,12 @@ const BorrowPanel: FC = () => {
     () =>
       borrowingAmount <= 0 ||
       Number(borrowingAmount.toFixed(2)) >
-        Number(
-          (
-            (selectedCollateral.amount * basePrice * 100) / 115 -
-            pageData.debtAmount
-          ).toFixed(2)
-        ),
+      Number(
+        (
+          (selectedCollateral.amount * basePrice * 100) / 115 -
+          pageData.debtAmount
+        ).toFixed(2)
+      ),
     [borrowingAmount, pageData, selectedCollateral, basePrice]
   );
 
@@ -75,9 +77,9 @@ const BorrowPanel: FC = () => {
         ? "Enter the amount."
         : borrowingAmount >
           (selectedCollateral.amount * basePrice * 100) / 115 -
-            pageData.debtAmount
-        ? "Insufficient borrowing capacity."
-        : undefined,
+          pageData.debtAmount
+          ? "Insufficient borrowing capacity."
+          : undefined,
     [borrowingAmount, pageData, selectedCollateral, basePrice]
   );
 
@@ -85,7 +87,7 @@ const BorrowPanel: FC = () => {
     () =>
       borrowingAmount <= 0 ||
       Number(borrowingAmount.toFixed(2)) >
-        Number(pageData.debtAmount.toFixed(2)) ||
+      Number(pageData.debtAmount.toFixed(2)) ||
       borrowingAmount > pageData.ausdBalance,
     [borrowingAmount, pageData]
   );
@@ -96,8 +98,8 @@ const BorrowPanel: FC = () => {
         ? "Enter the amount."
         : borrowingAmount > pageData.debtAmount ||
           borrowingAmount > pageData.ausdBalance
-        ? "Insufficient aUSD balance."
-        : undefined,
+          ? "Insufficient aUSD balance."
+          : undefined,
     [borrowingAmount, pageData]
   );
 
@@ -143,7 +145,8 @@ const BorrowPanel: FC = () => {
       const res: any = await contract.repayLoan(
         borrowingAmount,
         repayCollRatio,
-        isAllAmount
+        isAllAmount,
+        getPriceByChainName(selectedChainName)
       );
       if (!res?.txHash) {
         throw new Error(res);

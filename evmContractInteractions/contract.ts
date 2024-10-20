@@ -35,9 +35,11 @@ export const getAppEVMContract = () => {
   let _maxIterations = 6;
   const defaultAddress = "0x0000000000000000000000000000000000000000";
 
+  // Indexer data should be deleted
   const { requestICR, requestRedeemICR } = graphql({
     selectedChainName: ChainName.EVM,
   });
+
   const findSortedTroveInsertPosition = async (
     collRatio: number,
     user_addr: string
@@ -91,6 +93,7 @@ export const getAppEVMContract = () => {
 
     return { prev_node_id, next_node_id };
   };
+
   const processRedeemICR = async (amount: string, senderAddress: string) => {
     let NICR_PRECISION = 10 ** 20;
     let NICR = 0;
@@ -157,7 +160,7 @@ export const getAppEVMContract = () => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
-      const helpers = await calculateNewPositionAndNICR(senderAddress,getRequestAmount(loanAmount, asset.ausdDecimal),getRequestAmount(amount, asset.decimal), true, false, false)
+      const helpers = await calculateNewPositionAndNICR(senderAddress, getRequestAmount(loanAmount, asset.ausdDecimal), getRequestAmount(amount, asset.decimal), true, false, false)
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
       console.log("UpperHint: ", upperHint);
@@ -179,7 +182,7 @@ export const getAppEVMContract = () => {
   const getTrove = async (borrower: string) => {
     try {
       const getStake = await callGetTroveColl(borrower);
-      let res = await getStake;      
+      let res = await getStake;
 
       const getTroveDebt = await callGetTroveDebt(borrower);
       let res2 = await getTroveDebt;
@@ -200,15 +203,14 @@ export const getAppEVMContract = () => {
     asset: CollateralAsset = DefaultAssetByChainName[ChainName.EVM]
   ) => {
     try {
-      const helpers = await calculateNewPositionAndNICR(address, 0 ,getRequestAmount(amount, asset.decimal), false, false, true);
+
+      const helpers = await calculateNewPositionAndNICR(address, 0, getRequestAmount(amount, asset.decimal), false, false, true);
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
 
-      const tx = await callAddColl(Number(getRequestAmount(amount, asset.decimal)), upperHint, lowerHint);
+      const tx = await callAddColl(getRequestAmount(amount, asset.decimal), upperHint, lowerHint);
       await tx.wait();
-      console.log("addColl", tx);
       const hash = tx.hash;
-      console.log("hash", hash);
 
       return {
         txHash: hash,
@@ -226,7 +228,7 @@ export const getAppEVMContract = () => {
     asset: CollateralAsset = defaultAsset
   ) => {
     try {
-      const helpers = await calculateNewPositionAndNICR(senderAddress, 0 ,getRequestAmount(amount, asset.decimal), false, false, false);
+      const helpers = await calculateNewPositionAndNICR(senderAddress, 0, getRequestAmount(amount, asset.decimal), false, false, false);
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
       const tx = await callWithdrawColl(getRequestAmount(amount, asset.decimal), upperHint, lowerHint);
@@ -261,7 +263,9 @@ export const getAppEVMContract = () => {
     senderAddress: string,
     amount: number,
     collRatio: number,
-    isAllAmount: boolean
+    isAllAmount: boolean,
+    //Price data is ready to be used as a parameter @tuggun
+    denomPrice: number
   ) => {
     console.log("isAllAmount", isAllAmount);
 
@@ -278,10 +282,11 @@ export const getAppEVMContract = () => {
         const helpers = await calculateNewPositionAndNICR(senderAddress, getRequestAmount(amount, defaultAsset.ausdDecimal), 0, false, false, false);
         const upperHint = helpers?.next || defaultAddress;
         const lowerHint = helpers?.prev || defaultAddress;
-        tx = callRepayAUSD(getRequestAmount(amount, defaultAsset.ausdDecimal), upperHint, lowerHint);
+        tx = await callRepayAUSD(getRequestAmount(amount, defaultAsset.ausdDecimal), upperHint, lowerHint);
+        await tx.wait();
+        hash = tx.hash;
       }
-      console.log("hash", hash);
-      
+
       return {
         txHash: hash,
       };
@@ -364,8 +369,6 @@ export const getAppEVMContract = () => {
       const entireSystemDebt = await contractWithSigner.getEntireSystemDebt();
       return await entireSystemDebt;
     } catch (error) {
-      console.log("XX",error);
-      
       console.log(error);
       return undefined;
     }
@@ -440,6 +443,8 @@ export const getAppEVMContract = () => {
       return error;
     }
   };
+
+  //This function is triggered from UI @tuggun
   const redeem = async (senderAddress: string, amount: number) => {
     try {
       let _lowerPartialRedemptionHint = defaultAddress;
@@ -512,14 +517,14 @@ export const getAppEVMContract = () => {
     }
   };
   const getReward = async (user_addr: string): Promise<string | undefined> => {
-   try {
+    try {
       let res = await callClaimReward();
       console.log("callClaimReward", res);
       return res;
-   } catch (error) {
-    
-     return undefined;
-   }
+    } catch (error) {
+
+      return undefined;
+    }
   };
   const withdrawLiquidationGains = async (senderAddress: string) => {
     return undefined;

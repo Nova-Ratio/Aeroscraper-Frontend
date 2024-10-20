@@ -80,6 +80,8 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
     setLoading(true);
     try {
       const res = await fetchAllTroveOwnersAndNICR()
+      console.log("XX",res);
+      
       setRiskyTroves(
         res.sort((a, b) => a.NICR - b.NICR).map(item => {
           const collateral = convertAmount(item.collateral, baseCoin?.ausdDecimal);

@@ -72,26 +72,21 @@ const RedeemTab: FC<Props> = ({
         : undefined,
     [redeemAmount, pageData]
   );
+  
   const redeem = async () => {
     let transactionHash;
     try {
       setProcessLoading(true);
 
-      console.log("redeemAmount", redeemAmount);
       const res: any = await contract.redeem(redeemAmount);
-      console.log("res", res);
+
       if (!res?.txHash) {
         throw new Error(res);
       }
 
-      transactionHash = getIsInjectiveResponse(res)
-        ? res?.txHash
-        : res?.transactionHash;
-      console.log("transactionHash", transactionHash);
-
       addNotification({
         status: "success",
-        directLink: transactionHash,
+        directLink: res?.transactionHash,
         message: `${redeemAmount} aUSD has Redeemed, Received ${injAmount.toFixed(
           6
         )} ${coinName}`,

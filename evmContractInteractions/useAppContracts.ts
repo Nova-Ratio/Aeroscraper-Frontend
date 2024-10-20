@@ -42,14 +42,16 @@ export const callOpenTrove = async (
         return false;
     }
 };
-export const callAddColl = async (_value: number, _upperHint: string, _lowerHint: string) => {
+export const callAddColl = async (_value: string, _upperHint: string, _lowerHint: string) => {
     try {
+        console.log("XX",_upperHint, _lowerHint,{ value: _value });
+        
         const addColl = await (
             await callBorrowerOperationsContract()
         ).contractWithSigner.addColl(_upperHint, _lowerHint,{ value: _value });
         return await addColl;
     } catch (error) {
-        console.log(error);
+        console.log("XX",error);
         return false;
     }
 };
@@ -112,7 +114,7 @@ export const callRepayAUSD = async (
             await callBorrowerOperationsContract()
         ).contractWithSigner.repayAUSD(_AUSDAmount, _upperHint, _lowerHint);
         return await repayAUSD;
-    } catch (error) {
+    } catch (error) {        
         console.log(error);
         return false;
     }
@@ -970,8 +972,6 @@ export const fetchAllTroveOwnersAndNICR = async (): Promise<{
 
         return troveDataArray;
     } catch (error) {
-        console.log("XXX",error);
-        
         console.log("Error fetching trove owners and NICR values:", error);
         return [];
     }

@@ -20,10 +20,10 @@ const useAppContract = () => {
   const contract = useMemo(
     () =>
       isWalletConnected &&
-      !isNil(baseCoin) &&
-      !isNil(walletInfo) &&
-      !isNil(selectedChainName) &&
-      !isNil(chain)
+        !isNil(baseCoin) &&
+        !isNil(walletInfo) &&
+        !isNil(selectedChainName) &&
+        !isNil(chain)
         ? getAppEVMContract()
         : undefined,
     [
@@ -134,9 +134,9 @@ const useAppContract = () => {
   );
 
   const repayLoan = useCallback(
-    async (amount: number, collRatio: number, isAllAmount: boolean) => {
+    async (amount: number, collRatio: number, isAllAmount: boolean, denomPrice: number) => {
       if (isNil(contract) || isNil(address)) return;
-      return await contract.repayLoan(address, amount, collRatio, isAllAmount);
+      return await contract.repayLoan(address, amount, collRatio, isAllAmount,denomPrice);
     },
     [address, contract]
   );
