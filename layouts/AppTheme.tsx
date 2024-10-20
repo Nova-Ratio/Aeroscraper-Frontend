@@ -260,7 +260,7 @@ const AppTheme = () => {
               <Tooltip
                 containerClassName="flex items-center text-white"
                 width="w-fit"
-                title="INJ"
+                title="ETH"
               >
                 <img
                   alt={baseCoin.name}
