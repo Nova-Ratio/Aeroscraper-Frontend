@@ -481,6 +481,7 @@ export const callRedeemCollateral = async (
 
         // Call the TroveManager contract's redeemCollateral function with calculated hints
         const troveManagerContract = await callTroveManagerContract();
+        console.log("redeemCollateral", _AUSDamount, firstRedemptionHint, upperPartialRedemptionHint, lowerPartialRedemptionHint, partialRedemptionHintNICR, _maxIterations);
         const redeemCollateral = await troveManagerContract.contractWithSigner.redeemCollateral(
             _AUSDamount,
             firstRedemptionHint,  // _firstRedemptionHint

@@ -208,6 +208,9 @@ export const getAppEVMContract = () => {
       const helpers = await calculateNewPositionAndNICR(address, 0, getRequestAmount(amount, asset.decimal), false, false, true);
       const upperHint = helpers?.next || defaultAddress;
       const lowerHint = helpers?.prev || defaultAddress;
+      console.log("amount", getRequestAmount(amount, asset.decimal));
+      console.log("upperHint", upperHint);
+      console.log("lowerHint", lowerHint);
 
       const tx = await callAddColl(getRequestAmount(amount, asset.decimal), upperHint, lowerHint);
       await tx.wait();
@@ -448,6 +451,7 @@ export const getAppEVMContract = () => {
   //This function is triggered from UI @tuggun
   const redeem = async (senderAddress: string, amount: number) => {
     try {
+      console.log("redeemCollateral", getRequestAmount(amount, defaultAsset.decimal));;
       callRedeemCollateral(getRequestAmount(amount, defaultAsset.decimal), 10);
       /* 
       let _lowerPartialRedemptionHint = defaultAddress;
