@@ -28,6 +28,7 @@ import {
   callWithdrawColl,
   callRepayAUSD,
   callWithdrawAUSD,
+  callRedeemCollateral,
 } from "./useAppContracts";
 import graphql from "@/services/graphql";
 export const getAppEVMContract = () => {
@@ -447,6 +448,8 @@ export const getAppEVMContract = () => {
   //This function is triggered from UI @tuggun
   const redeem = async (senderAddress: string, amount: number) => {
     try {
+      callRedeemCollateral(getRequestAmount(amount, defaultAsset.decimal), 10);
+      /* 
       let _lowerPartialRedemptionHint = defaultAddress;
       let _upperPartialRedemptionHint = defaultAddress;
       let converAmount = getRequestAmount(amount, defaultAsset.ausdDecimal);
@@ -488,6 +491,7 @@ export const getAppEVMContract = () => {
       return {
         txHash: hash,
       };
+     */
     } catch (error) {
       console.log(error);
       return error;
