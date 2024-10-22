@@ -38,8 +38,8 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
         accountUrl: "https://explorer.injective.network/account/"
     },
     [ChainName.EVM]: {
-        txDetailUrl: "https://etherscan.io/tx/",
-        accountUrl: "https://etherscan.io/address/"
+        txDetailUrl: "https://sepolia.scrollscan.com/tx/",
+        accountUrl: "https://sepolia.scrollscan.com/address/"
     }
 }
 

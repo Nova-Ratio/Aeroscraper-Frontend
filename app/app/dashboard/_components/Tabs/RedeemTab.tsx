@@ -74,7 +74,6 @@ const RedeemTab: FC<Props> = ({
   );
   
   const redeem = async () => {
-    let transactionHash;
     try {
       setProcessLoading(true);
 
@@ -86,7 +85,7 @@ const RedeemTab: FC<Props> = ({
 
       addNotification({
         status: "success",
-        directLink: res?.transactionHash,
+        directLink: res?.txHash,
         message: `${redeemAmount} aUSD has Redeemed, Received ${injAmount.toFixed(
           6
         )} ${coinName}`,
@@ -99,7 +98,7 @@ const RedeemTab: FC<Props> = ({
       addNotification({
         message: JSON.stringify(err?.message?.message ?? err?.message ?? err),
         status: "error",
-        directLink: transactionHash,
+        directLink: "",
       });
     }
 
