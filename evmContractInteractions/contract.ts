@@ -452,7 +452,8 @@ export const getAppEVMContract = () => {
     try {
       console.log("redeemCollateral", getRequestAmount(amount, defaultAsset.decimal));;
       const tx = await callRedeemCollateral(senderAddress,getRequestAmount(amount, defaultAsset.decimal), 10);
-      await tx.wait();
+      console.log("XX",tx);
+      
       const hash = tx.hash;
       return {
         txHash: hash,
