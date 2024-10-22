@@ -458,7 +458,7 @@ export const callRedeemCollateral = async (
         }
 
         let remainingAUSD = BigInt(_AUSDamount.toString());
-        let firstRedemptionHint = allTroveData[allTroveData.length - 1].owner; // Start with last trove (riskiest)
+        let firstRedemptionHint = allTroveData[allTroveData.length-1].owner; // Start with last trove (riskiest)
         let partialRedemptionHintBorrower = "";
         let upperPartialRedemptionHint = ethers.ZeroAddress;
         let lowerPartialRedemptionHint = ethers.ZeroAddress;
@@ -830,6 +830,42 @@ export const callGetLast = async () => {
     }
 };
 
+export const callGetFirst = async () => {
+    try {
+        const getFirst = await (
+            await callSortedTrovesContract()
+        ).contractWithSigner.getFirst();
+        return await getFirst;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
+export const callGetPrev = async (address: string) => {
+    try {
+        const getPrev = await (
+            await callSortedTrovesContract()
+        ).contractWithSigner.getPrev(address);
+        return await getPrev;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export const callGetNext = async (address: string) => {
+    try {
+        const getNext = await (
+            await callSortedTrovesContract()
+        ).contractWithSigner.getNext(address);
+        return await getNext;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
 //ASUD Token Contract Functions
 export const callBalanceOf = async (borrower: string) => {
     try {
@@ -1000,8 +1036,9 @@ export const fetchAllTroveOwnersAndNICR = async (): Promise<{
         const troveDataArray: { owner: string, debt: number, collateral: number, NICR: number }[] = [];
 
         // Loop through all trove owners and get their NICR
+        let current = await callGetFirst(); ;
         for (let i = 0; i < troveOwnersCount; i++) {
-            const owner = await callGetTroveFromTroveOwnersArray(i);
+            const owner = current;
             const debt = await callGetTroveDebt(owner);
             const collateral = await callGetTroveColl(owner);
 
@@ -1019,6 +1056,7 @@ export const fetchAllTroveOwnersAndNICR = async (): Promise<{
                 collateral,
                 NICR
             });
+            current = await callGetNext(current);
         }
 
         return troveDataArray;
