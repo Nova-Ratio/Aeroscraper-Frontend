@@ -9,9 +9,9 @@ import {
 import { ethers, BigNumberish } from "ethers";
 
 //StabilityPool Contract
-export const callGetNICR = async (address: string, _maxAUSDamount: string | number | bigint, _price: string) => {
+export const callGetNICR = async (address: string, _maxAUSDamount: string | number | bigint) => {
     try {
-        const getNICR = await (await callTroveManagerContract()).contractWithSigner.getNICR(address, _maxAUSDamount, _price);
+        const getNICR = await (await callTroveManagerContract()).contractWithSigner.getNICR(address, _maxAUSDamount);
         return await getNICR;
     } catch (error) {
         console.log(error);
@@ -442,6 +442,7 @@ export const callLiquidateTroves = async (n: number) => {
 };
 
 export const callRedeemCollateral = async (
+    senderAddress: string, // Address of the sender
     _AUSDamount: ethers.BigNumberish, // Amount to redeem
     _maxIterations: number,  // Maximum number of iterations
 ) => {
@@ -449,34 +450,70 @@ export const callRedeemCollateral = async (
         // Fetch current price for NICR calculation
         const price = await callFetchPrice();
 
-        // Fetch all trove owners and NICR values
+        // Fetch all trove owners and their NICR values
         const allTroveData = await fetchAllTroveOwnersAndNICR();
 
         if (!allTroveData || allTroveData.length === 0) {
             throw new Error("No trove data available.");
         }
 
-        // Find the appropriate hints (prev and next) based on the NICR
-        const firstRedemptionHint = allTroveData[0].owner; // Assume first trove as starting point
-        const upperPartialRedemptionHint = allTroveData[allTroveData.length - 1].owner; // Assume last trove as ending point
-
-        // Calculate partial redemption hints by iterating through the troves
+        let remainingAUSD = BigInt(_AUSDamount.toString());
+        let firstRedemptionHint = allTroveData[allTroveData.length - 1].owner; // Start with last trove (riskiest)
+        let partialRedemptionHintBorrower = "";
+        let upperPartialRedemptionHint = ethers.ZeroAddress;
         let lowerPartialRedemptionHint = ethers.ZeroAddress;
         let partialRedemptionHintNICR = 0;
 
-        for (let i = 0; i < allTroveData.length; i++) {
-            const { owner, NICR } = allTroveData[i];
+        // Iterate through the troves to process the redemption
+        for (let i = allTroveData.length - 1; i >= 0 && remainingAUSD > 0; i--) {
+            const { owner, debt, collateral, NICR } = allTroveData[i];
 
-            // Use NICR to find the lowerPartialRedemptionHint and partialRedemptionHintNICR
-            if (NICR < partialRedemptionHintNICR || partialRedemptionHintNICR === 0) {
-                lowerPartialRedemptionHint = owner;
-                partialRedemptionHintNICR = NICR;
+            // If the current trove's debt is less than or equal to the remaining AUSD, redeem the whole debt
+            if (debt <= remainingAUSD) {
+                // Close the trove fully
+                remainingAUSD -= BigInt(debt);
+                console.log(`Closing trove for owner: ${owner}`);
+            } else {
+                // Partial redemption: calculate new NICR and adjust hints
+                partialRedemptionHintBorrower = owner;
+                let partialDebtReduction = remainingAUSD;
+                let partialCollReduction = (partialDebtReduction * BigInt(collateral)) / BigInt(debt);
+
+                // Calculate new debt and collateral for this trove after partial redemption
+                const newDebt = BigInt(debt) - partialDebtReduction;
+                const newColl = BigInt(collateral) - partialCollReduction;
+
+                // Calculate new NICR for the partially redeemed trove
+                partialRedemptionHintNICR = await callGetNICR(partialRedemptionHintBorrower, remainingAUSD);
+
+                // Now find new upper and lower hints for this trove
+                for (let j = 0; j < allTroveData.length; j++) {
+                    if (allTroveData[j].NICR > partialRedemptionHintNICR) {
+                        upperPartialRedemptionHint = allTroveData[j].owner;
+                        lowerPartialRedemptionHint = j > 0 ? allTroveData[j - 1].owner : ethers.ZeroAddress;
+                        break;
+                    }
+                }
+
+                // In case upper or lower hints are not found, assign ZeroAddress
+                if (!upperPartialRedemptionHint) {
+                    upperPartialRedemptionHint = ethers.ZeroAddress;
+                }
+                if (!lowerPartialRedemptionHint) {
+                    lowerPartialRedemptionHint = ethers.ZeroAddress;
+                }
+
+                console.log("Partial redemption:", {
+                    partialRedemptionHintBorrower,
+                    newDebt,
+                    newColl,
+                    partialRedemptionHintNICR,
+                    upperPartialRedemptionHint,
+                    lowerPartialRedemptionHint,
+                });
+
+                remainingAUSD = BigInt(0); // Stop the loop as we've partially redeemed the last trove
             }
-        }
-
-        // Ensure hints are correctly defined
-        if (!firstRedemptionHint || !upperPartialRedemptionHint || !lowerPartialRedemptionHint) {
-            throw new Error("Unable to determine redemption hints.");
         }
 
         // Call the TroveManager contract's redeemCollateral function with calculated hints
@@ -780,6 +817,19 @@ export const callFindInsertPositon = async (
         return false;
     }
 };
+
+export const callGetLast = async () => {
+    try {
+        const getLast = await (
+            await callSortedTrovesContract()
+        ).contractWithSigner.getLast();
+        return await getLast;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
 //ASUD Token Contract Functions
 export const callBalanceOf = async (borrower: string) => {
     try {

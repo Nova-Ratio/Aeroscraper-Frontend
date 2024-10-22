@@ -142,8 +142,7 @@ export const getAppEVMContract = () => {
 
     NICR = await callGetNICR(
       lastAddress,
-      remainingAmount,
-      "3000000000000000000000"
+      remainingAmount
     );
     console.log("NICR", NICR);
 
@@ -452,7 +451,7 @@ export const getAppEVMContract = () => {
   const redeem = async (senderAddress: string, amount: number) => {
     try {
       console.log("redeemCollateral", getRequestAmount(amount, defaultAsset.decimal));;
-      callRedeemCollateral(getRequestAmount(amount, defaultAsset.decimal), 10);
+      callRedeemCollateral(senderAddress,getRequestAmount(amount, defaultAsset.decimal), 10);
       /* 
       let _lowerPartialRedemptionHint = defaultAddress;
       let _upperPartialRedemptionHint = defaultAddress;

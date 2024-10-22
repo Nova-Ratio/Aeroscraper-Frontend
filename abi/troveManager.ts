@@ -777,11 +777,6 @@ export const TroveManagerABI = [
 				"internalType": "uint256",
 				"name": "_maxAUSDamount",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
 			}
 		],
 		"name": "getNICR",
