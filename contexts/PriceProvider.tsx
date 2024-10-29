@@ -20,34 +20,6 @@ const PriceContext = createContext<PriceContextValue>({
 
 const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const [coinPricesByDenom, setCoinPricesByDenom] = useState<Record<string, number>>({});
-
-    const getInjPrice = useCallback(async () => {
-        try {
-            const denom = BaseCoinByChainName[ChainName.INJECTIVE].denom;
-            const connection = new PriceServiceConnection(
-                "https://hermes-beta.pyth.network/",
-                {
-                    priceFeedRequestConfig: {
-                        binary: true,
-                    },
-                }
-            )
-
-            const priceId = ["2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3"];
-
-            const currentPrices = await connection.getLatestPriceFeeds(priceId);
-
-            if (currentPrices) {
-                setCoinPricesByDenom(prev => ({
-                    ...prev,
-                    [denom]: Number(currentPrices[0].getPriceUnchecked().price) / 100000000
-                }))
-            }
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }, []);
     
     const getEthPrice = useCallback(async () => {
         try {
@@ -62,7 +34,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
                 }
             )
 
-            const priceId = ["0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace"];
+            const priceId = ["0xc3883bcf1101c111e9fcfe2465703c47f2b638e21fef2cce0502e6c8f416e0e2"];
 
             const currentPrices = await connection.getLatestPriceFeeds(priceId);
 
@@ -79,9 +51,8 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     }, [])
 
     const getAllPrices = useCallback(async () => {
-        getInjPrice();
         getEthPrice();
-    }, [getInjPrice])
+    }, [getEthPrice])
 
     const getPriceByChainName = useCallback((chainName?: ChainName) => {
         if (isNil(chainName)) return 0;

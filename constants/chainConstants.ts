@@ -38,8 +38,8 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
         accountUrl: "https://explorer.injective.network/account/"
     },
     [ChainName.EVM]: {
-        txDetailUrl: "https://sepolia.scrollscan.com/tx/",
-        accountUrl: "https://sepolia.scrollscan.com/address/"
+        txDetailUrl: "https://pacific-explorer.sepolia-testnet.manta.network/tx/",
+        accountUrl: "https://pacific-explorer.sepolia-testnet.manta.network/address/"
     }
 }
 
@@ -81,7 +81,7 @@ export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl
 
 export const appChainURLs: ChainNavigator[] = [
     { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
-    { chainName: "Sepolia", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
+    { chainName: "Manta", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
     { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet", isSelected: true },
     { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
 ]
