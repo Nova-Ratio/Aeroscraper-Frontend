@@ -25,7 +25,8 @@ import { checkPoint } from "@/hooks/usePointer";
 import pb from "@/lib/pocketbase";
 import ReferralModal from "@/components/AccountModal/RefModal";
 
-const chainID =0x8274f //EthereumChainId.Mainnet;
+const findNetwork: any = Object.values(ChainData).find((item: any) => item.name == "Scroll Sepolia");
+const chainID = Number(findNetwork.chainId);
 
 const AppTheme = () => {
   const {
@@ -166,15 +167,16 @@ const AppTheme = () => {
 
   const [chainData, setChainData] = useState<any>(ChainData);
   const [refModal, setRefModal] = useState<boolean>(false);
-  const CheckChain = (id: number) => {
+  const CheckChain = async (id: number) => {
     try {
       id = Number(id);
       if (id !== chainID) {
         const { name } = chainData[id.toString()] || { name: "UNKNOW" };
         const fromNetwork = name || "Unknown Network";
         const toNetwork =
-          chainData[chainID.toString()]?.name || "ETHERIUM NETWORK ";
-        const alert = async () =>
+          chainData[chainID.toString()]?.name || "ETHERIUM NETWORK";
+  
+        const alert = async () => {
           await Swal.fire({
             title: "Please Change Network",
             text: `From ${fromNetwork} to ${toNetwork}`,
@@ -183,7 +185,7 @@ const AppTheme = () => {
             showCloseButton: true,
             backdrop: true,
             background: "#150A17",
-            iconHtml: `<img src="/images/checkchain.svg" width="150" height="150" class="w-full shrink-0 " style="background:#150A17" />`,
+            iconHtml: `<img src="/images/checkchain.svg" width="150" height="150" class="w-full shrink-0" style="background:#150A17" />`,
             color: "#fff",
             confirmButtonText: "Change Network",
             customClass: {
@@ -191,42 +193,72 @@ const AppTheme = () => {
               confirmButton:
                 "w-full md:w-[350px] py-2 px-8 h-[50px] text-base font-normal confirmBtn md:mb-8",
               htmlContainer: "!text-white/50 !text-sm md:mb-3",
-              title: "!text-[32px] ",
-              popup: " lg:!p-10",
+              title: "!text-[32px]",
+              popup: "lg:!p-10",
             },
-          }).then((result) => {
-            const {ethereum} = window as any;
-            if (result.isConfirmed) {
-              ethereum.request({
-                method: "wallet_switchEthereumChain",
-                params: [{ chainId: chainData[chainID.toString()].chainId }],
-              }) ||
-                ethereum.request({
-                  method: "wallet_addEthereumChain",
-                  params: [
-                    {
-                      chainId: chainData[chainID.toString()].chainId,
-                      chainName: chainData[chainID.toString()].name,
-                      nativeCurrency: {
-                        name: chainData[chainID.toString()].nativeCurrency.name,
-                        symbol:
-                          chainData[chainID.toString()].nativeCurrency.symbol,
-                        decimals: 18,
-                      },
-                      rpcUrls: chainData[chainID.toString()].rpcUrls,
-                      blockExplorerUrls:
-                        chainData[chainID.toString()].blockExplorerUrls,
-                    },
-                  ],
+          }).then(async (result) => {
+            const { ethereum } = window as any;
+            if (result.isConfirmed && ethereum) {
+              try {
+                await ethereum.request({
+                  method: "wallet_switchEthereumChain",
+                  params: [{ chainId: chainData[chainID.toString()].chainId }],
                 });
+              } catch (error: any) {
+                if (error.code === 4902) {
+                  try {
+                    await ethereum.request({
+                      method: "wallet_addEthereumChain",
+                      params: [
+                        {
+                          chainId: chainData[chainID.toString()].chainId,
+                          chainName: chainData[chainID.toString()].name,
+                          nativeCurrency: {
+                            name: chainData[chainID.toString()].nativeCurrency.name,
+                            symbol: chainData[chainID.toString()].nativeCurrency.symbol,
+                            decimals: 18,
+                          },
+                          rpcUrls: chainData[chainID.toString()].rpcUrls,
+                          blockExplorerUrls: chainData[chainID.toString()].blockExplorerUrls,
+                        },
+                      ],
+                    });
+                  } catch (addError:any) {
+                    await Swal.fire({
+                      title: "Error",
+                      text: `Failed to add custom network: ${addError.message}`,
+                      icon: "error",
+                      background: "#150A17",
+                      color: "#fff",
+                    });
+                  }
+                } else {
+                  await Swal.fire({
+                    title: "Error",
+                    text: `Failed to switch network: ${error.message}`,
+                    icon: "error",
+                    background: "#150A17",
+                    color: "#fff",
+                  });
+                }
+              }
             }
           });
-        alert();
+        };
+  
+        await alert();
       }
-    } catch (error) {
-      console.log("CheckChain error:", error);
+    } catch (error: any) {
+      await Swal.fire({
+        title: "Error",
+        text: `CheckChain error: ${error.message}`,
+        icon: "error",
+        background: "#150A17",
+        color: "#fff",
+      });
     }
   };
+  
 
   return (
     <>
@@ -378,11 +410,11 @@ const AppTheme = () => {
                   baseCoinBalance={
                     !isNil(baseCoin)
                       ? Number(
-                          convertAmount(
-                            balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                            baseCoin.decimal
-                          )
+                        convertAmount(
+                          balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                          baseCoin.decimal
                         )
+                      )
                       : 0
                   }
                   basePrice={0}
@@ -397,11 +429,11 @@ const AppTheme = () => {
             ausd: pageData.ausdBalance,
             base: !isNil(baseCoin)
               ? Number(
-                  convertAmount(
-                    balanceByDenom[baseCoin.denom]?.amount ?? 0,
-                    baseCoin?.decimal
-                  )
+                convertAmount(
+                  balanceByDenom[baseCoin.denom]?.amount ?? 0,
+                  baseCoin?.decimal
                 )
+              )
               : 0,
           }}
           basePrice={basePrice}
