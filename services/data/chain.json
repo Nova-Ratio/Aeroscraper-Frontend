@@ -202,5 +202,23 @@
     "faucets": [
       "https://faucet.pacific-sepolia-testnet.manta.network"
     ]
+  },
+  "59141": {
+    "chainId": "0xe705",
+    "name": "Linea Sepolia",
+    "token": "ETH",
+    "chainName": "Linea Sepolia",
+    "nativeCurrency": {
+      "name": "LineaETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://1rpc.io/linea"
+    ],
+    "blockExplorerUrls": [
+      "https://lineascan.build"
+    ],
+    "explorer": "https://lineascan.build"
   }
 }

@@ -25,7 +25,7 @@ import { checkPoint } from "@/hooks/usePointer";
 import pb from "@/lib/pocketbase";
 import ReferralModal from "@/components/AccountModal/RefModal";
 
-const findNetwork: any = Object.values(ChainData).find((item: any) => item.name == "Scroll Sepolia");
+const findNetwork: any = Object.values(ChainData).find((item: any) => item.name == "Linea Sepolia");
 const chainID = Number(findNetwork.chainId);
 
 const AppTheme = () => {
