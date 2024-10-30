@@ -509,7 +509,7 @@ export const getAppEVMContract = () => {
   const liquidateTroves = async (senderAddress: string) => {
     try {
       const tx = await callLiquidate(senderAddress)
-      await tx.wait();
+      //await tx.wait();
       const hash = tx.hash;
       return {
         txHash: hash,
