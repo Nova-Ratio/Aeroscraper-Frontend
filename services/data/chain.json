@@ -4,13 +4,21 @@
     "name": "Ethereum Mainnet",
     "token": "ETH",
     "chainName": "Ethereum Mainnet",
-    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
+    "nativeCurrency": {
+      "name": "Etherium",
+      "symbol": "ETH",
+      "decimals": 18
+    },
     "rpcUrls": [
       "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
     ],
-    "blockExplorerUrls": ["https://etherscan.io/"],
+    "blockExplorerUrls": [
+      "https://etherscan.io/"
+    ],
     "explorer": "https://etherscan.io/",
-    "faucets": ["https://faucet.metamask.io/"]
+    "faucets": [
+      "https://faucet.metamask.io/"
+    ]
   },
   "97": {
     "chainId": "0x61",
@@ -22,10 +30,16 @@
       "symbol": "tBNB",
       "decimals": 18
     },
-    "rpcUrls": ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
-    "blockExplorerUrls": ["https://testnet.bscscan.com/"],
+    "rpcUrls": [
+      "https://data-seed-prebsc-1-s1.binance.org:8545/"
+    ],
+    "blockExplorerUrls": [
+      "https://testnet.bscscan.com/"
+    ],
     "explorer": "https://testnet.bscscan.com/",
-    "faucets": ["https://testnet.binance.org/faucet-smart"]
+    "faucets": [
+      "https://testnet.binance.org/faucet-smart"
+    ]
   },
   "56": {
     "chainId": "0x38",
@@ -37,73 +51,156 @@
       "symbol": "BNB",
       "decimals": 18
     },
-    "rpcUrls": ["https://bsc-dataseed.binance.org/"],
-    "blockExplorerUrls": ["https://bscscan.com/"],
+    "rpcUrls": [
+      "https://bsc-dataseed.binance.org/"
+    ],
+    "blockExplorerUrls": [
+      "https://bscscan.com/"
+    ],
     "explorer": "https://bscscan.com/",
-    "faucets": ["https://testnet.binance.org/faucet-smart"]
+    "faucets": [
+      "https://testnet.binance.org/faucet-smart"
+    ]
   },
   "137": {
     "chainId": "0x89",
     "name": "Polygon Mainnet",
     "token": "MATIC",
     "chainName": "Polygon Mainnet",
-    "nativeCurrency": { "name": "Matic", "symbol": "MATIC", "decimals": 18 },
-    "rpcUrls": ["https://rpc-mainnet.maticvigil.com/"],
-    "blockExplorerUrls": ["https://polygonscan.com/"],
+    "nativeCurrency": {
+      "name": "Matic",
+      "symbol": "MATIC",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc-mainnet.maticvigil.com/"
+    ],
+    "blockExplorerUrls": [
+      "https://polygonscan.com/"
+    ],
     "explorer": "https://polygonscan.com/",
-    "faucets": ["https://faucet.matic.network/"]
+    "faucets": [
+      "https://faucet.matic.network/"
+    ]
   },
   "80001": {
     "chainId": "0x13881",
     "name": "Mumbai",
     "token": "MATIC",
     "chainName": "Mumbai Testnet",
-    "nativeCurrency": { "name": "Matic", "symbol": "MATIC", "decimals": 18 },
-    "rpcUrls": ["https://rpc-mumbai.maticvigil.com/"],
-    "blockExplorerUrls": ["https://mumbai.polygonscan.com/"],
+    "nativeCurrency": {
+      "name": "Matic",
+      "symbol": "MATIC",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc-mumbai.maticvigil.com/"
+    ],
+    "blockExplorerUrls": [
+      "https://mumbai.polygonscan.com/"
+    ],
     "explorer": "https://mumbai.polygonscan.com/",
-    "faucets": ["https://mumbaifaucet.com/"]
+    "faucets": [
+      "https://mumbaifaucet.com/"
+    ]
   },
   "42161": {
     "chainId": "0xA4B1",
     "name": "Arbitrum One",
     "token": "ETH",
     "chainName": "Arbitrum One",
-    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
-    "rpcUrls": ["https://arbitrum-mainnet.infura.io"],
-    "blockExplorerUrls": ["https://rinkeby-explorer.arbitrum.io/#/"],
+    "nativeCurrency": {
+      "name": "Etherium",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://arbitrum-mainnet.infura.io"
+    ],
+    "blockExplorerUrls": [
+      "https://rinkeby-explorer.arbitrum.io/#/"
+    ],
     "explorer": "https://rinkeby-explorer.arbitrum.io/#/",
-    "faucets": ["https://rinkeby-faucet.arbitrum.io/"]
+    "faucets": [
+      "https://rinkeby-faucet.arbitrum.io/"
+    ]
   },
   "5": {
     "chainId": "0x5",
     "name": "Goerli",
     "token": "ETH",
     "chainName": "Goerli",
-    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
-    "rpcUrls": ["https://rpc.ankr.com/eth_goerli"],
-    "blockExplorerUrls": ["https://goerli.etherscan.io/"],
+    "nativeCurrency": {
+      "name": "Etherium",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc.ankr.com/eth_goerli"
+    ],
+    "blockExplorerUrls": [
+      "https://goerli.etherscan.io/"
+    ],
     "explorer": "https://goerli.etherscan.io/",
-    "faucets": ["https://goerli-faucet.slock.it/"]
+    "faucets": [
+      "https://goerli-faucet.slock.it/"
+    ]
   },
   "11155111": {
     "chainId": "0xaa36a7",
     "name": "Sepolia Testnet",
     "token": "ETH",
     "chainName": "Sepolia Testnet",
-    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
-    "rpcUrls": ["https://sepolia.infura.io/v3/"],
-    "blockExplorerUrls": ["https://sepolia.etherscan.io/"],
+    "nativeCurrency": {
+      "name": "Etherium",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://sepolia.infura.io/v3/"
+    ],
+    "blockExplorerUrls": [
+      "https://sepolia.etherscan.io/"
+    ],
     "explorer": "https://sepolia.etherscan.io/"
   },
   "534351": {
     "chainId": "0x8274f",
     "name": "Scroll Sepolia",
-    "token:": "ETH",
+    "token": "ETH",
     "chainName": "Scroll Sepolia",
-    "nativeCurrency": { "name": "Etherium", "symbol": "ETH", "decimals": 18 },
-    "rpcUrls": ["https://sepolia-rpc.scroll.io"],
-    "blockExplorerUrls": ["https://sepolia.scrollscan.com"],
+    "nativeCurrency": {
+      "name": "Etherium",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://sepolia-rpc.scroll.io"
+    ],
+    "blockExplorerUrls": [
+      "https://sepolia.scrollscan.com"
+    ],
     "explorer": "https://sepolia.scrollscan.com"
+  },
+  "3441006": {
+    "chainId": "0x34816e",
+    "name": "Manta Pacific Sepolia Testnet",
+    "token": "ETH",
+    "chainName": "Manta Pacific Sepolia",
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://pacific-rpc.sepolia-testnet.manta.network/http"
+    ],
+    "blockExplorerUrls": [
+      "https://pacific-explorer.sepolia-testnet.manta.network"
+    ],
+    "explorer": "https://pacific-explorer.sepolia-testnet.manta.network/tx/",
+    "faucets": [
+      "https://faucet.pacific-sepolia-testnet.manta.network"
+    ]
   }
 }
