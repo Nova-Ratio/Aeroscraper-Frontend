@@ -991,6 +991,18 @@ export const callStakeShare = async (staker: string) => {
     }
 }
 
+export const callBalanceOfReward = async (staker: string) => {
+    try {
+        const balanceOfReward = await (
+            await callAUSDStakingContract()
+        ).contractWithSigner.balanceOfReward(staker);
+        return await balanceOfReward;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 export const callClaimReward = async () => {
     try {
         const claimReward = await (

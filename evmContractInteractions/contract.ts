@@ -29,6 +29,7 @@ import {
   callRepayAUSD,
   callWithdrawAUSD,
   callRedeemCollateral,
+  callBalanceOfReward,
 } from "./useAppContracts";
 import graphql from "@/services/graphql";
 export const getAppEVMContract = () => {
@@ -531,7 +532,7 @@ export const getAppEVMContract = () => {
   };
   const getReward = async (user_addr: string): Promise<string | undefined> => {
     try {
-      let res = await callClaimReward();
+      let res = await callBalanceOfReward(user_addr);
       console.log("callClaimReward", res);
       return res;
     } catch (error) {
