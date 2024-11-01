@@ -14,6 +14,9 @@ export const WalletsByChainName: Record<ChainName, WalletType[]> = {
     ],
     [ChainName.EVM]: [
         WalletType.METAMASK
+    ],
+    [ChainName.AVAX]: [
+        WalletType.METAMASK
     ]
 }
 

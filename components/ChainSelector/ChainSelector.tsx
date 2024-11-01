@@ -19,9 +19,12 @@ const ChainSelector: FC = () => {
     const [selectedChain, setSelectedChain] = useState<ChainNavigator>();
 
     useEffect(() => {
-        const chain = appChainURLs.find(chain => chain.isSelected);
+        const chain = appChainURLs.find(chain => chain.isSelected);      
+        console.log("XX",chain);
+          
         setSelectedChain(chain);
     }, [])
+console.log("XXX12312",chainInfo);
 
     return (
         <Dropdown
