@@ -22,7 +22,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const getEthPrice = useCallback(async () => {
         try {
            
-            const denom = BaseCoinByChainName[ChainName.EVM].denom;
+            const denom = BaseCoinByChainName[ChainName.AVAX].denom;
             const connection = new PriceServiceConnection(
                 "https://hermes.pyth.network/",
                 {
