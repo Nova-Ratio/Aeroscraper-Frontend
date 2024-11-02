@@ -8,6 +8,8 @@ import { PageData } from "../../_types/types";
 import TransactionButton from "@/components/Buttons/TransactionButton";
 import { getIsInjectiveResponse } from "@/utils/contractUtils";
 import useChainAdapter from "@/hooks/useChainAdapter";
+import { callClaimReward } from "@/evmContractInteractions/useAppContracts";
+
 
 interface Props {
   pageData: PageData;
@@ -33,7 +35,7 @@ const ClaimRewardTab: FC<Props> = ({
     setProcessLoading(true);
 
     try {
-      const res: any = await contract.withdrawLiquidationGains();
+      const res: any = callClaimReward();
       addNotification({
         status: "success",
         directLink: getIsInjectiveResponse(res)
