@@ -1,7 +1,5 @@
 import { BaseCoinByChainName } from "@/constants/chainConstants";
 import { ChainName } from "@/enums/Chain";
-import { callFetchPrice } from "@/evmContractInteractions/useAppContracts";
-import { convertAmount, getRequestAmount } from "@/utils/contractUtils";
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 import { isNil } from "lodash";
 import { FC, PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -24,7 +22,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
     const getEthPrice = useCallback(async () => {
         try {
            
-            const denom = BaseCoinByChainName[ChainName.EVM].denom;
+            const denom = BaseCoinByChainName[ChainName.AVAX].denom;
             const connection = new PriceServiceConnection(
                 "https://hermes.pyth.network/",
                 {
@@ -34,7 +32,7 @@ const PriceProvider: FC<PropsWithChildren> = ({ children }) => {
                 }
             )
 
-            const priceId = ["0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6"];
+            const priceId = ["0x93da3352f9f1d105fdfe4971cfa80e9dd777bfc5d0f683ebb6e1294b92137bb7"];
 
             const currentPrices = await connection.getLatestPriceFeeds(priceId);
 

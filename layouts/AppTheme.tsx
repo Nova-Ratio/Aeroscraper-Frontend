@@ -24,8 +24,8 @@ import OutlinedButton from "@/components/Buttons/OutlinedButton";
 import { checkPoint } from "@/hooks/usePointer";
 import pb from "@/lib/pocketbase";
 import ReferralModal from "@/components/AccountModal/RefModal";
-//TODO avalanche name eklenecek
-const findNetwork: any = Object.values(ChainData).find((item: any) => item.name == "Linea Sepolia");
+
+const findNetwork: any = Object.values(ChainData).find((item: any) => item.name == "Avalanche Fuji Testnet");
 const chainID = Number(findNetwork.chainId);
 
 const AppTheme = () => {
@@ -292,7 +292,7 @@ const AppTheme = () => {
               <Tooltip
                 containerClassName="flex items-center text-white"
                 width="w-fit"
-                title="ETH"
+                title="Avax"
               >
                 <img
                   alt={baseCoin.name}

@@ -3,8 +3,10 @@ import { BaseCoin, ChainInfo } from "@/types/types";
 import { chains } from 'chain-registry'
 
 const visibleChains: ChainName[] = [
-    ChainName.INJECTIVE
-]
+    ChainName.INJECTIVE,
+    ChainName.AVAX,
+    ChainName.EVM
+];
 
 export const availableChains = Object.values(chains).filter(chain => visibleChains.includes(chain.chain_name as ChainName));
 
@@ -25,7 +27,15 @@ export const BaseCoinByChainName: Record<ChainName, BaseCoin> = {
         decimal: 18,
         ausdDecimal: 18
     },
-}
+    [ChainName.AVAX]: {
+        name: "AVAX",
+        denom: "avax",
+        image: "/images/token-images/avax.png",
+        tokenImage: "/images/token-images/avax.png",
+        decimal: 18,
+        ausdDecimal: 18
+    }
+};
 
 export const BaseCoinByDenom = Object.values(BaseCoinByChainName).reduce<Record<string, BaseCoin>>((acc, baseCoin) => {
     acc[baseCoin.denom] = baseCoin;
@@ -40,8 +50,12 @@ export const TransactionDomainByChainName: Record<ChainName, { accountUrl: strin
     [ChainName.EVM]: {
         txDetailUrl: "https://sepolia.scrollscan.com/tx/",
         accountUrl: "https://sepolia.scrollscan.com/address/"
+    },
+    [ChainName.AVAX]: {
+        txDetailUrl: "https://cchain.explorer.avax.network/tx/",
+        accountUrl: "https://cchain.explorer.avax.network/address/"
     }
-}
+};
 
 export const getContractAddressesByChain = (chainName?: ChainName) => {
     if (chainName === ChainName.INJECTIVE) {
@@ -49,15 +63,15 @@ export const getContractAddressesByChain = (chainName?: ChainName) => {
             contractAddress: process.env.NEXT_PUBLIC_INJECTIVE_CONTRACT_ADDRESS as string,
             ausdContractAddress: process.env.NEXT_PUBLIC_INJECTIVE_AUSD_CONTRACT_ADDRESS as string,
             oraclecontractAddress: process.env.NEXT_PUBLIC_INJECTIVE_ORACLE_CONTRACT_ADDRESS as string
-        }
+        };
     }
 
     return {
         contractAddress: '',
         ausdContractAddress: '',
         oraclecontractAddress: '',
-    }
-}
+    };
+};
 
 export const ChainInfoByName: Record<ChainName, ChainInfo> = {
     [ChainName.INJECTIVE]: {
@@ -71,19 +85,27 @@ export const ChainInfoByName: Record<ChainName, ChainInfo> = {
         displayName: "ETH",
         logo: "/images/token-images/eth.svg",
         bech32Prefix: "eth"
+    },
+    [ChainName.AVAX]: {
+        name: ChainName.AVAX,
+        displayName: "AVAX",
+        logo: "/images/token-images/avax.png",
+        bech32Prefix: "avax"
     }
-}
+};
 
 export const priceIdByChainName: Record<ChainName, { priceId: string, serviceUrl: string }> = {
     [ChainName.INJECTIVE]: { priceId: "2d9315a88f3019f8efa88dfe9c0f0843712da0bac814461e27733f6b83eb51b3", serviceUrl: "https://hermes-beta.pyth.network/" },
-    [ChainName.EVM]: { priceId: "", serviceUrl: "" }
-}
+    [ChainName.EVM]: { priceId: "", serviceUrl: "" },
+    [ChainName.AVAX]: { priceId: "", serviceUrl: "" }
+};
 
 export const appChainURLs: ChainNavigator[] = [
     { chainName: "Sei", image: "/images/token-images/sei.png", url: "https://sei.aeroscrapertest.tech", env: "Mainnet" },
-    { chainName: "Sepolia", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet", isSelected: true },
-    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet", isSelected: true },
-    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" }
-]
+    { chainName: "Sepolia", image: "/images/token-images/eth.svg", url: "https://evm.aeroscrapertest.tech", env: "Testnet" },
+    { chainName: "Injective", image: "/images/token-images/inj.svg", url: "https://inj.aeroscrapertest.tech", env: "Testnet" },
+    { chainName: "Xion", image: "/images/token-images/burntCircle.svg", url: "https://xion.aeroscrapertest.tech/app", env: "Testnet" },
+    { chainName: "Avax", image: "/images/token-images/avax.png", url: "https://avax.aeroscrapertest.tech", env: "Testnet", isSelected: true }
+];
 
 export const MANAGEMENT_FEE = 0.005;
