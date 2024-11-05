@@ -149,7 +149,7 @@ export const getAppEVMContract = () => {
 
     return { NICR: NICR, firstAddress, lowerHint, upperHint };
   };
-  const defaultAsset = DefaultAssetByChainName[ChainName.EVM];
+  const defaultAsset = DefaultAssetByChainName[ChainName.AVAX];
   //console.log("asset", asset);
   const { processLoading, addNotification, setProcessLoading, notification } =
     useNotification();
@@ -176,7 +176,6 @@ export const getAppEVMContract = () => {
         txHash: hash,
       };
     } catch (error) {
-      console.log(error);
       return error;
     }
   };
@@ -453,7 +452,6 @@ export const getAppEVMContract = () => {
     try {
       console.log("redeemCollateral", getRequestAmount(amount, defaultAsset.decimal));;
       const tx = await callRedeemCollateral(senderAddress,getRequestAmount(amount, defaultAsset.decimal), 10);
-      console.log("XX",tx);
       
       const hash = tx.hash;
       return {

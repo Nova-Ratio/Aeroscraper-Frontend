@@ -20,11 +20,9 @@ const ChainSelector: FC = () => {
 
     useEffect(() => {
         const chain = appChainURLs.find(chain => chain.isSelected);      
-        console.log("XX",chain);
           
         setSelectedChain(chain);
     }, [])
-console.log("XXX12312",chainInfo);
 
     return (
         <Dropdown

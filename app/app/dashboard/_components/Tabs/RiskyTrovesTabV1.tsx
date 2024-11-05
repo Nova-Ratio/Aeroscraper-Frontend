@@ -80,7 +80,6 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
     setLoading(true);
     try {
       const res = await fetchAllTroveOwnersAndNICR()
-      console.log("XX",res);
       
       setRiskyTroves(
         res.sort((a, b) => a.NICR - b.NICR).map(item => {
@@ -196,7 +195,7 @@ const RiskyTrovesTabV1: FC<Props> = ({ getPageData, basePrice }) => {
                       decimalScale={2}
                       displayType="text"
                       renderText={(value) =>
-                        selectedChainName === ChainName.EVM ? (
+                        selectedChainName === ChainName.AVAX ? (
                           <Text
                             size="xs"
                             responsive={true}

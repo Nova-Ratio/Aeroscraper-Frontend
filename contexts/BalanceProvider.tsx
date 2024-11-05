@@ -41,7 +41,7 @@ const BalanceProvider: FC<PropsWithChildren> = ({ children }) => {
             setBalanceByDenom({ [balance.denom]: balance }); */
 
       // metamask native token get balance
-      if (selectedChainName === ChainName.EVM) {
+      if (selectedChainName === ChainName.AVAX) {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const address = await signer.getAddress();

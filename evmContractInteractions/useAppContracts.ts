@@ -38,20 +38,20 @@ export const callOpenTrove = async (
         );
         return await openTrove;
     } catch (error) {
+        console.log("XX1",error);
         console.log(error);
         return false;
     }
 };
 export const callAddColl = async (_value: string, _upperHint: string, _lowerHint: string) => {
     try {
-        console.log("XX",_upperHint, _lowerHint,{ value: _value });
         
         const addColl = await (
             await callBorrowerOperationsContract()
         ).contractWithSigner.addColl(_upperHint, _lowerHint,{ value: _value });
         return await addColl;
     } catch (error) {
-        console.log("XX",error);
+        console.log(error);
         return false;
     }
 };
