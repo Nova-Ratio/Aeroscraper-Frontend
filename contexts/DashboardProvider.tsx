@@ -15,11 +15,6 @@ import { isNil } from 'lodash';
 import { callGetTroveCount } from '@/evmContractInteractions/useAppContracts';
 import { getAppEVMContract } from '@/evmContractInteractions/contract';
 
-const FilterParamByChainName: Record<ChainName, string> = {
-    [ChainName.INJECTIVE]: 'INJECTIVE',
-    [ChainName.EVM]: 'ETHERIUM'
-}
-
 type DashboardContextValue = {
     pageData: PageData;
     loading: boolean;
