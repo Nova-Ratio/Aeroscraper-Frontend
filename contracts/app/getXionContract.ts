@@ -20,6 +20,7 @@ import { getContractAddressesByChain } from "@/constants/chainConstants";
 import { DefaultAssetByChainName } from "@/constants/assetConstants";
 import graphql from "@/services/graphql";
 import { usePrice } from "@/contexts/PriceProvider";
+import { TREASURY } from "@/contexts/Providers";
 
 const updateRewardAmount = 0.01;
 
@@ -166,7 +167,8 @@ export const getXionContract = (
         mint: {},
       },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "350000",
       },
       "customtokenminter"
@@ -210,7 +212,8 @@ export const getXionContract = (
       cw20CustomToken as string,
       msg,
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Open Trove"
@@ -231,7 +234,8 @@ export const getXionContract = (
       cw20CustomToken as string,
       msg,
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Add Collateral"
@@ -257,7 +261,8 @@ export const getXionContract = (
         },
       },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Remove Collateral"
@@ -279,7 +284,8 @@ export const getXionContract = (
         },
       },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Borrow Loan"
@@ -308,7 +314,8 @@ export const getXionContract = (
       ausdContractAddress,
       msg,
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Repay Loan"
@@ -329,7 +336,8 @@ export const getXionContract = (
       ausdContractAddress,
       msg,
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Stake"
@@ -342,7 +350,8 @@ export const getXionContract = (
       contractAddress,
       { unstake: { amount: getRequestAmount(amount, baseCoin.ausdDecimal) } },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Unstake"
@@ -379,7 +388,8 @@ export const getXionContract = (
         }
       ],
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000"
       },
       "Update Reward"
@@ -435,7 +445,8 @@ export const getXionContract = (
       ausdContractAddress,
       msg,
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Redeem"
@@ -448,7 +459,8 @@ export const getXionContract = (
       contractAddress,
       { liquidate_troves: {} },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "500000",
       },
       "Liquidate Troves"
@@ -465,7 +477,8 @@ export const getXionContract = (
         }
       },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "5000000",
       },
       "Liquidate Troves"
@@ -478,7 +491,8 @@ export const getXionContract = (
       contractAddress,
       { withdraw_liquidation_gains: {} },
       {
-        amount: [{ amount: "0", denom: "uxion" }],
+        amount: [{ amount: "1", denom: "uxion" }],
+        granter: TREASURY.treasury,
         gas: "800000",
       },
       "Withdraw Liquidation Gains"
